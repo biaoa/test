@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<title>投票详情</title>
+		<#include '/common/base.html'>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" type="text/css" href="${base}/resources/voteFile/css/checkbox.css"/>
+		<style type="text/css" media="all">
+			.get-right {
+				float: left;
+				width: 15px;
+				margin-top: 10px;
+				margin-right: 5px;
+			}
+			
+			a {
+				text-decoration: none;
+			}
+			
+			.skillbar-votenum {
+				position: absolute;
+				top: 0;
+				right: 0;
+				/* width: 110px; */
+				font-weight: bold;
+				font-size: 13px;
+				color: #ffffff;
+				/* background: #6adcfa; */
+				-webkit-border-top-left-radius: 3px;
+				-webkit-border-bottom-left-radius: 4px;
+				-moz-border-radius-topleft: 3px;
+				-moz-border-radius-bottomleft: 3px;
+				border-top-left-radius: 3px;
+				border-bottom-left-radius: 3px;
+			}
+			
+			.skillbar-votenum span {
+				display: block;
+				/* background: rgba(0, 0, 0, 0.1); */
+				padding: 0 20px;
+				height: 35px;
+				line-height: 35px;
+				-webkit-border-top-left-radius: 3px;
+				-webkit-border-bottom-left-radius: 3px;
+				-moz-border-radius-topleft: 3px;
+				-moz-border-radius-bottomleft: 3px;
+				border-top-left-radius: 3px;
+				border-bottom-left-radius: 3px;
+			}
+			.voteCountBtn{
+			    padding: 5px;
+    background: #17cfff;
+    border-radius: 5px;
+    color: white;
+			}
+		</style>
+	</head>
+
+	<body>
+
+		<div class="vote-list">
+			<div class="vote-list-title">
+				<div class="vote-new-list-img">
+					<img src="${base}/${vote.user.logo}" />
+				</div>
+
+				<div class="vote-new-mz">
+					<p>${vote.user.name}</p>
+					<p>${vote.createDateStr}</p>
+				</div>
+				<a class="voter-zter" <#if vote.status==2> style="background: #d4d0ce;" <#else> style="#FF8625;"  </#if>>
+					<#if vote.status==0>
+						    	未开始
+						    	<#elseif vote.status==1>
+						    	进行中
+						    	<#elseif vote.status==2>
+						    	 已结束
+						</#if>
+				</a>
+			</div>
+			<div class="voter-list-mytitle">
+				<p>${vote.content!!}</p>
+				<#if (vote.imgUrl)!="">
+					<img style="margin-top:10px;" src="${base}/${vote.imgUrl}" />
+				</#if>
+				
+			</div>
+			<div class="vote-list-one">
+				<span>
+					<#if vote.pattern==2>
+				    	 多选,最多${vote.patternCount!!}项
+				    	<#else>
+				    	单选
+					</#if>
+					
+					<#if vote.votePrivacy==0>
+				    	(匿名)
+				    	<#else>
+					</#if>
+				</span>
+			</div>
+			<div class="vote-list-style" style="width:48%">
+				<a class="voteCountBtn" title="点击我查看投票人员" 
+				<#if vote.votePrivacy!=0&&(vote.voteCount) gt 0>
+					href="${base}/api/1/getAppVoteUsersById?themeId=${vote.themeId}">
+					<#else>
+					href="javascript:void(0)"
+				</#if>	
+				<span>共${vote.voteCount!!}票</span>
+				</a>
+			</div>
+			 
+		 	<#if (vote.voteOptionsList)?exists && vote.voteOptionsList?size gt 0>
+				<#list vote.voteOptionsList as voteOptions> 
+					<a 
+						<#if  (voteOptions.optionsCount)?exists &&vote.votePrivacy!=0 &&(voteOptions.optionsCount) gt 0>
+								href="${base}/api/1/getAppVoteOptionsById?themeId=${vote.themeId}&optionsId=${voteOptions.optionsId}"
+							<#else>
+							href="javascript:void(0)"
+						</#if>	
+						>
+							<div class="skillbar clearfix " data-percent="${voteOptions.percent!!}%">
+							<#if (voteOptions.isVoteOptions)?exists &&voteOptions.isVoteOptions==1>
+								<img class="get-right" src="${base}/resources/voteFile/img/icon_check.png" />
+							</#if>
+							<div class="skillbar-title"><span class='vote-content-style'>${voteOptions.content}</span></div>
+							<div class="skillbar-bar"></div>
+							<div class="skillbar-votenum"><span>${voteOptions.optionsCount}票</span></div>
+						</div>
+					</a>
+				</#list>
+				<#else>
+					无数据
+			</#if>
+				
+			<div class="endoftime" style="clear: both;">
+				<span>截止时间：${vote.endDate}</span>
+			</div>
+		</div>
+		<script src="${base}/resources/voteFile/js/jquery-1.9.1.js"></script>
+		<script>
+			jQuery(document).ready(function() {
+				jQuery('.skillbar').each(function() {
+					jQuery(this).find('.skillbar-bar').animate({
+						width: jQuery(this).attr('data-percent')
+					});
+				});
+				
+			});
+			
+			
+		</script>
+	</body>
+
+</html>

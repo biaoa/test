@@ -1,0 +1,166 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>管理中心</title>
+<#include '/common/resources.html'>
+</head>
+<body>
+     <div class="fh_right_box">
+        <h3><span class="iconfont" style="font-size:20px;color:#d65b5a">&#xe621;</span>&nbsp;添加子账号</h3>
+        <img src="${base}/resources/images/hr.jpg" class="xian"/>
+      </div>
+	<form id="addchildAccountForm" style="margin-top: 40px;" method="post" class="form-horizontal" action="${base}/sys/createChildAccount">
+           <div class="form-group">
+               <label class="col-sm-3 control-label">用戶名</label>
+               <div class="col-lg-5">
+                   <input type="text" class="col-xs-10 col-sm-5 input-icon input-icon-right form-control" name="userName" id="userName"/>
+               </div>
+           </div>
+           <div class="form-group">
+               <label class="col-sm-3 control-label">姓名</label>
+               <div class="col-lg-5">
+                   <input type="text" class="col-xs-10 col-sm-5 input-icon input-icon-right form-control" name="name"/>
+               </div>
+           </div>
+           <div class="form-group">
+               <label class="col-sm-3 control-label">职位</label>
+               <div class="col-lg-5">
+                   <input type="text" class="col-xs-10 col-sm-5 input-icon input-icon-right form-control" name="position"/>
+               </div>
+           </div>
+           <div class="form-group">
+               <label class="col-sm-3 control-label">电话</label>
+               <div class="col-lg-5">
+                   <input type="text" class="col-xs-10 col-sm-5 input-icon input-icon-right form-control" name="phone"/>
+               </div>
+           </div>
+           <div class="form-group">
+               <label class="col-sm-3 control-label">登录密码</label>
+               <div class="col-lg-5">
+                   <input type="password" class="col-xs-10 col-sm-5 input-icon input-icon-right form-control" name="password"
+                          />
+               </div>
+           </div>
+           <div class="form-group">
+               <label class="col-sm-3 control-label">确认密码</label>
+               <div class="col-lg-5">
+                   <input type="password" class="col-xs-10 col-sm-5 input-icon input-icon-right form-control" name="confirmPassword"
+                      />
+               </div>
+           </div>
+           <div class="form-group">
+                <div class="group">
+                	<label class="col-sm-3 control-label">角色</label>
+            	<div class="col-lg-2">
+           		<#if rolelist?exists && rolelist?size gt 0>
+                <select id="wy_provice"  name="roleId" data-bv-notempty data-bv-notempty-message="The country is required" class="col-xs-4 col-sm-2 xiala">
+                <option value="" >-----选择角色----</option>
+                <#list rolelist as role>
+                	<option value="${role.id}" >${role.cname}</option>
+                </#list>
+                </select>
+           		</#if>
+           		</div>
+                </div>
+           </div>
+           <div class="col-sm-12  col-sm-offset-5 ">
+               <button type="submit" class="btn btn-default">确认
+               </button>
+           </div>
+      </form>     
+</body>
+
+<script type="text/javascript">
+$(document).ready(function() {
+    $('#addchildAccountForm')
+        .bootstrapValidator({
+            message: 'This value is not valid',
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+            	name: {
+                    message: '姓名不能为空',
+                    validators: {
+                        notEmpty: {
+                            message: '姓名不能为空'
+                        },
+                    }
+                },
+            	userName: {
+                    message: '用户名不能为空',
+                    validators: {
+                        notEmpty: {
+                            message: '用户名不能为空'
+                        },
+                        stringLength: {
+                            min: 6,
+                            max: 30,
+                            message: '用户名长度必须为6-30个字符'
+                        },
+                        regexp: {
+                            regexp: /^[a-zA-Z0-9_\.]+$/,
+                            message: '用户名必须为数字和字母组合'
+                        },
+                        remote: {
+                            url: '${base}/sys/checkUserExsit'+$("#userName").val(),
+                            message: '用户名名称已被使用'
+                        }
+                    }
+                },
+                position: {
+                    message: '职位不能为空',
+                    validators: {
+                        notEmpty: {
+                            message: '职位不能为空'
+                        }
+                    }
+                },
+                password: {
+                    validators: {
+                        notEmpty: {
+                            message: '密码不能为空'
+                        },
+                    }
+                },
+                confirmPassword: {
+                    validators: {
+                        notEmpty: {
+                            message: '确认密码不能为空'
+                        },
+                        identical: {
+                            field: 'password',
+                            message: '两次密码不一致'
+                        }
+                    }
+                }
+            }
+        })
+        .on('success.form.bv', function(e) {
+            // Prevent form submission
+            e.preventDefault();
+            // Get the form instance
+            var $form = $(e.target);
+            // Get the BootstrapValidator instance
+            var bv = $form.data('bootstrapValidator');
+            // Use Ajax to submit form data
+            $.post($form.attr('action'), $form.serialize(), function(result) {
+            	layer.msg(result.msg);
+            	/* 	$.gritter.add({  
+        	    title: '',  
+        	    text: result.msg,  
+         	    image: ctx+'admin/clear/notif_icon.png',  
+        	    sticky: false,  
+        	    time: 2000,  
+        	    speed:500,  
+        	    class_name: 'gritter-success'//gritter-center   
+        	});   */
+            }, 'json');
+        });
+});
+    
+</script>
+</html>

@@ -1,0 +1,1140 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.linle.sysOrder.mapper.SysOrderMapper" >
+  <resultMap id="BaseResultMap" type="com.linle.entity.sys.SysOrder" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="order_no" property="orderNo" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="VARCHAR" />
+    <result column="details" property="details" jdbcType="VARCHAR" />
+    <result column="total_money" property="totalMoney" jdbcType="DECIMAL" />
+    <result column="order_status" property="orderStatus" jdbcType="INTEGER" />
+    <result column="user_id" property="userId" jdbcType="BIGINT" />
+    <result column="business_type" property="businessType" jdbcType="VARCHAR" />
+    <result column="business_id" property="businessId" jdbcType="BIGINT" />
+    <result column="business_name" property="businessName" jdbcType="VARCHAR" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="buyer_address" property="buyerAddress"/>
+  	<result column="buyer_phone" property="buyerPhone"/>
+  	<result column="buyer_message" property="buyerMessage"/>
+  	<result column="preferential_amount" property="preferentialAmount"/>
+  	<result column="send_date" property="sendDate"/>
+  	<result column="delivery_fee" property="deliveryFee"/>
+  	<result column="charge_id" property="chargeId"/>
+  	<result column="del_flag" property="delFlag"/>
+  	<result column="community_id" property="communityId"/>
+  	<result column="pay_date" property="payDate"/>
+  	<result column="last_refund_date" property="lastRefundDate"/>
+  	<result column="begin_date" property="beginDate" jdbcType="TIMESTAMP" />
+ 	<result column="end_date" property="endDate" jdbcType="TIMESTAMP" />
+ 	<result column="single" property="single"/>
+ 	<result column="channel" property="channel"/>
+  </resultMap>
+  
+  <resultMap id="shopOrderListResult" type="com.linle.entity.sys.SysOrder"  extends="BaseResultMap">
+  	<result column="name" property="buyer"/>
+  	<collection column="order_id" property="detailList" select="com.linle.orderdetail.mapper.OrderDetailMapper.getDetailList" />
+  </resultMap>
+  
+  <resultMap id="OrderListForAPI" type="com.linle.mobileapi.v1.model.OrderVo">
+  	<result column="order_no" property="orderNo" jdbcType="VARCHAR" />
+  	<result column="total_money" property="totalMoney" jdbcType="DECIMAL" />
+  	<result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+  	<result column="order_status" property="status" jdbcType="INTEGER" />
+  	<result column="type" property="type"/>
+  </resultMap>
+  
+  <resultMap id="OrderListDetailForAPI" type="com.linle.mobileapi.v1.request.OrderDetailVo" extends="OrderListForAPI">
+  	<result column="business_name" property="businessName"/>
+  	<result column="business_id" property="shopId"/>
+  	<result column="refund_time" property="shopRefundTime"/>
+  	<association column="id" property="activityFlag" select="com.linle.sysOrder.mapper.SysOrderMapper.checkOrderIsJoinActivity"/>
+  	<collection column="id" property="productList" select="com.linle.orderdetail.mapper.OrderDetailMapper.getOrderTypeAndProductName"  />
+  </resultMap>
+  
+  <!-- 订单详情 -->
+  <resultMap  id="OrderDetaiResultMap" type="com.linle.mobileapi.v1.request.OrderDetailVo2">
+  	<result column="order_no" property="orderNo" jdbcType="VARCHAR" />
+  	<result column="total_money" property="totalMoney" jdbcType="DECIMAL" />
+  	<result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+  	<result column="order_status" property="status" jdbcType="INTEGER" />
+  	<result column="type" property="type"/>
+  	<result column="business_name" property="businessName"/>
+  	<result column="details" property="businessId"/>
+  	<result column="buyer_address" property="buyerAddress"/>
+  	<result column="buyer_phone" property="buyerPhone"/>
+  	<result column="preferential_amount" property="preferentialAmount"/>
+  	<result column="delivery_fee" property="deliveryAmount"/>
+  	<result column="payEndDate" property="payEndDate"/>
+  	<result column="business_id" property="businessId"/>
+  	<result column="buyer_message" property="remark"/>
+    <association column="id" property="activityFlag" select="com.linle.sysOrder.mapper.SysOrderMapper.checkOrderIsJoinActivity"/>
+  	<association column="user_id" property="user" select="com.linle.user.mapper.UserMapper.selectByPrimaryKey"/>
+  	<collection column="id" property="productList" select="com.linle.orderdetail.mapper.OrderDetailMapper.getOrderTypeAndProductName"  />
+  </resultMap>
+  
+  <resultMap  id="sendInfoResult" type="com.linle.sysOrder.vo.CommodityOrderSendInfo">
+  	<result column="name" property="buyer"/>
+  	<result column="buyer_phone" property="buyerPhone"/>
+  	<result column="buyer_address" property="buyerAddress"/>
+  	<result column="buyer_message" property="message"/>
+  	<result column="delivery_name" property="sendType"/>
+  </resultMap>
+  
+  <resultMap  id="shopSalesResult" type="com.linle.entity.vo.SalesVO">
+  	<result column="dday" property="date"/>
+  	<result column="turnover" property="turnover"/>
+  	<result column="sales" property="sales"/>
+  </resultMap>
+  
+  <resultMap type="com.linle.funds.vo.Incomedetail" id="shopIncomedetailResult">
+  	<result column="order_no" property="orderNo"/>
+  	<result column="create_date" property="createDate"/>
+  	<result column="type" property="type"/>
+  	<result column="total_money" property="totalMoney"/>
+  	<result column="order_status" property="status"/>
+  	<result column="community_id" property="communityId"/>
+  	<result column="remark" property="remark"/>
+  	<result column="pay_date" property="payDate"/>
+  </resultMap>
+  
+  <resultMap  id="shopListResult" type="com.linle.mobileapi.shop.model.OrderInfoVo">
+  	<result column="order_no" property="orderNo"/>
+  	<result column="create_date" property="createDate"/>
+  	<result column="order_status" property="orderStatus"/>
+  	<result column="uname" property="buyersName"/>
+  	<result column="buyer_address" property="buyersAddress"/>
+  	<result column="buyer_phone" property="buyersPhone"/>
+  	<result column="buyer_message" property="buyersRemark"/>
+  	<result column="preferential_amount" property="preferentialAmount"/>
+  	<result column="delivery_fee" property="deliveryAmount"/>
+  	<result column="total_money" property="totalAmount"/>
+  	<result column="refund_type" property="refundType"/>
+  	<result column="description" property="refundDescription"/>
+  	<result column="fail_reason" property="failReason"/>
+  	<result column="refundStatus" property="refundStatus"/>
+  	<result column="single" property="single"/>
+  	<result column="begin_date" property="beginDate"/>
+  	<result column="end_date" property="endDate"/>
+ 	<collection property="productList" column="id" select="com.linle.orderdetail.mapper.OrderDetailMapper.getShopOrderDetail" />
+  </resultMap>
+  
+  <resultMap id="TransactionflowVoResult" type="com.linle.capitalManage.vo.TransactionflowVo">
+  	<result column="user_name" property="userName"/>
+  	<result column="order_no" property="orderNo"/>
+  	<result column="total_money" property="totalMoney"/>
+  	<result column="preferential_amount" property="preferentialAmount"/>
+  	<result column="pay_flag" property="preferentialType"/>
+  	<result column="pay_date" property="payDate"/>
+  	<result column="remark" property="orderRemark"/>
+  	<result column="channel" property="channel"/>
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    id, order_no, type, details, total_money, order_status, user_id, business_type, business_id, 
+    business_name, create_date, update_date, remark,buyer_address,buyer_phone,buyer_message,preferential_amount
+    ,send_date,delivery_fee,charge_id,del_flag,community_id,pay_date,last_refund_date,begin_date,end_date,single,channel
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from sys_order
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from sys_order
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.linle.entity.sys.SysOrder" >
+    insert into sys_order (id, order_no, type, 
+      details, total_money, order_status, 
+      user_id, business_type, business_id, 
+      business_name, create_date, update_date, 
+      remark,buyer_address,buyer_phone,buyer_message,preferential_amount,send_date,delivery_fee,charge_id,del_flag,community_id,pay_date,last_refund_date,
+      begin_date,end_date,single,channel)
+    values (#{id,jdbcType=BIGINT}, #{orderNo,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR}, 
+      #{details,jdbcType=VARCHAR}, #{totalMoney,jdbcType=DECIMAL}, #{orderStatus,jdbcType=INTEGER}, 
+      #{userId,jdbcType=BIGINT}, #{businessType,jdbcType=VARCHAR}, #{businessId,jdbcType=BIGINT}, 
+      #{businessName,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP}, 
+      #{remark,jdbcType=VARCHAR},#{buyerAddress},#{buyerPhone},#{buyerMessage},#{preferentialAmount},#{sendDate},#{deliveryFee},#{chargeId},#{delFlag}
+      ,#{communityId},#{payDate},#{lastRefundDate},#{beginDate},#{endDate},#{single},#{channel})
+  </insert>
+  <insert id="insertSelective" parameterType="com.linle.entity.sys.SysOrder" useGeneratedKeys="true" keyProperty="id">
+    insert into sys_order
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="orderNo != null" >
+        order_no,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="details != null" >
+        details,
+      </if>
+      <if test="totalMoney != null" >
+        total_money,
+      </if>
+      <if test="orderStatus != null" >
+        order_status,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="businessType != null" >
+        business_type,
+      </if>
+      <if test="businessId != null" >
+        business_id,
+      </if>
+      <if test="businessName != null" >
+        business_name,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="updateDate != null" >
+        update_date,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="buyerPhone !=null">
+      	buyer_phone,
+      </if>
+       <if test="buyerAddress !=null">
+      	buyer_address,
+      </if>
+      <if test="buyerMessage !=null">
+      	buyer_message,
+      </if>
+      <if test="preferentialAmount !=null">
+      	preferential_amount,
+      </if>	
+      <if test="sendDate !=null">
+      	send_date,
+      </if>
+      <if test="deliveryFee !=null">
+      	delivery_fee,
+      </if>
+      <if test="chargeId !=null">
+      	charge_id,
+      </if>
+      <if test="delFlag !=null">
+      	del_flag,
+      </if>	
+      <if test="communityId !=null">
+      	community_id,
+      </if>
+      <if test="payDate !=null">
+      	pay_date,
+      </if>
+      <if test="lastRefundDate !=null">
+      	last_refund_date,
+      </if>
+      <if test="beginDate !=null">
+      	begin_date,
+      </if>
+      <if test="endDate !=null">
+      	end_date,
+      </if>
+      <if test="single !=null">
+      	single,
+      </if>
+      <if test="channel !=null">
+      	channel,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="orderNo != null" >
+        #{orderNo,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="details != null" >
+        #{details,jdbcType=VARCHAR},
+      </if>
+      <if test="totalMoney != null" >
+        #{totalMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="orderStatus != null" >
+        #{orderStatus,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="businessType != null" >
+        #{businessType,jdbcType=VARCHAR},
+      </if>
+      <if test="businessId != null" >
+        #{businessId,jdbcType=BIGINT},
+      </if>
+      <if test="businessName != null" >
+        #{businessName,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="buyerPhone !=null">
+      	#{buyerPhone},
+      </if>
+      <if test="buyerAddress !=null">
+      	#{buyerAddress},
+      </if>
+      <if test="buyerMessage !=null">
+      	#{buyerMessage},
+      </if>
+      <if test="preferentialAmount !=null">
+      	#{preferentialAmount},
+      </if>
+      <if test="sendDate !=null">
+      	#{sendDate},
+      </if>
+      <if test="deliveryFee !=null">
+      	#{deliveryFee},
+      </if>
+      <if test="chargeId !=null">
+      	#{chargeId},
+      </if>
+      <if test="delFlag !=null">
+      	#{delFlag},
+      </if>
+      <if test="communityId !=null">
+      	${communityId},
+      </if>
+      <if test="payDate !=null">
+      	${payDate},
+      </if>
+      <if test="lastRefundDate !=null">
+      	#{lastRefundDate},
+      </if>
+      <if test="beginDate !=null">
+      	#{beginDate},
+      </if>
+      <if test="endDate !=null">
+      	#{endDate},
+      </if>
+      <if test="single !=null">
+      	#{single},
+      </if>
+      <if test="channel !=null">
+      	#{channel},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.linle.entity.sys.SysOrder" >
+    update sys_order
+    <set >
+      <if test="orderNo != null" >
+        order_no = #{orderNo,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="details != null" >
+        details = #{details,jdbcType=VARCHAR},
+      </if>
+      <if test="totalMoney != null" >
+        total_money = #{totalMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="orderStatus != null" >
+        order_status = #{orderStatus,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="businessType != null" >
+        business_type = #{businessType,jdbcType=VARCHAR},
+      </if>
+      <if test="businessId != null" >
+        business_id = #{businessId,jdbcType=BIGINT},
+      </if>
+      <if test="businessName != null" >
+        business_name = #{businessName,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="buyerPhone !=null">
+      	buyer_phone = #{buyerPhone},
+      </if>
+       <if test="buyerAddress !=null">
+      	buyer_address = #{buyerAddress},
+      </if>
+      <if test="buyerMessage !=null">
+      	buyer_message = #{buyerMessage},
+      </if>
+      <if test="preferentialAmount !=null">
+      	preferential_amount  = #{preferentialAmount},
+      </if>
+      <if test="sendDate !=null">
+      	send_date = #{sendDate},
+      </if>
+      <if test="deliveryFee !=null">
+      	delivery_fee = #{deliveryFee},
+      </if>
+      <if test="chargeId !=null">
+      	charge_id = #{chargeId},
+      </if>
+      <if test="delFlag !=null">
+      	del_flag = #{delFlag},
+      </if>
+      <if test="communityId !=null">
+      	community_id = ${communityId},
+      </if>
+      <if test="payDate !=null">
+      	pay_date = #{payDate},
+      </if>
+      <if test="lastRefundDate !=null">
+      	last_refund_date = #{lastRefundDate},
+      </if>
+      <if test="beginDate !=null">
+      	 begin_date = #{beginDate},
+      </if>
+      <if test="endDate !=null">
+      	 end_date = #{endDate},
+      </if>
+      <if test="single !=null">
+      	single = #{single},
+      </if>
+      <if test="channel !=null">
+      	channel = #{channel},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.linle.entity.sys.SysOrder" >
+    update sys_order
+    set order_no = #{orderNo,jdbcType=VARCHAR},
+      type = #{type,jdbcType=VARCHAR},
+      details = #{details,jdbcType=VARCHAR},
+      total_money = #{totalMoney,jdbcType=DECIMAL},
+      order_status = #{orderStatus,jdbcType=INTEGER},
+      user_id = #{userId,jdbcType=BIGINT},
+      business_type = #{businessType,jdbcType=VARCHAR},
+      business_id = #{businessId,jdbcType=BIGINT},
+      business_name = #{businessName,jdbcType=VARCHAR},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP},
+      remark = #{remark,jdbcType=VARCHAR},
+      buyer_address =  #{buyerAddress},
+      buyer_phone = #{buyerPhone},
+      buyer_message = #{buyerMessage},
+      preferential_amount = #{preferentialAmount},
+      send_date = #{sendDate},
+      delivery_fee = #{deliveryFee},
+      charge_id = #{chargeId},
+      del_flag = #{delFlag},
+      community_id = #{communityId},
+      pay_date = #{payDate},
+      last_refund_date = #{lastRefundDate},
+      begin_date = #{beginDate},
+      end_date = #{endDate},
+      single = #{single},
+      channel = #{channel}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  <select id="getOrderByOrderNo" parameterType="map" resultMap="BaseResultMap">
+	     select 
+    <include refid="Base_Column_List" />
+    from sys_order
+    where order_no = #{orderNo} and user_id = #{uid}
+  </select>
+  
+  <select id="selectByOrderNo" parameterType="string" resultMap="BaseResultMap">
+      select 
+    <include refid="Base_Column_List" />
+    from sys_order
+    where order_no = #{orderNo}
+  </select>
+  
+  <select id="selectCountByOrderNo" parameterType="string" resultType="int">
+      select 
+    count(*)
+    from sys_order
+    where order_no = #{orderNo}
+  </select>
+  
+  
+  <select id="getOrderList" parameterType="map" resultMap="OrderListForAPI">
+  	select id,order_no,total_money,create_date,order_status,type,business_name
+  	from sys_order
+  	where user_id = #{uid} and del_flag !=1
+  	<if test="status!=null">
+  		and order_status = #{status}
+  	</if>
+  	<if test='type=="space"'>
+  		and (type ='space' or type='spaceRenew') 
+  	</if>
+  	<if test='type!="space" and type!=null'>
+  		and type = #{type}
+  	</if>
+  	order by create_date DESC
+  	limit ${begin},${end}
+  </select>
+  
+  
+  <select id="findOrder" parameterType="map" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from sys_order
+    where order_no = #{orderNo} and user_id  = #{uid}
+  </select>
+  
+  <!-- 根据订单类型和业务ID 获得订单信息 -->
+  <select id="selectByOrderTypeAndBusinessType" parameterType="map" resultMap="BaseResultMap">
+	  select 
+    <include refid="Base_Column_List" />
+    from sys_order
+    where type = #{type} and  details = #{businessId}
+  </select>
+  
+  <!-- 修改订单价格 ,订单状态为待支付-->
+  <update id="updateOrderPrice" parameterType="com.linle.entity.sys.SysOrder">
+  	update sys_order
+  	set total_money = #{totalMoney},
+  		order_status = 1
+  	where id = #{id}
+  </update>
+  
+  <!-- 关闭订单 -->
+  <update id="closeOrder" parameterType="com.linle.entity.sys.SysOrder">
+  	update sys_order
+  	set order_status = 2,update_date=now()
+  	where id = #{id}
+  </update>
+  
+  
+    <select id="getOrderListAndDetail" parameterType="map" resultMap="OrderListDetailForAPI">
+  	select id,order_no,total_money,create_date,order_status,type,business_name,business_id,refund_time
+  	from sys_order
+  	left join (select id as sid,refund_time from shop) as shop
+  	on sys_order.business_id = shop.sid
+  	where user_id = #{uid} and del_flag !=1
+  	<if test="status!=null">
+  		and order_status = #{status}
+  	</if>
+  	<if test="status==null">
+  		and (order_status !=7 and order_status != 8 and order_status !=9)
+  	</if>
+  	<if test='type=="space"'>
+  		and (type ='space' or type='spaceRenew') 
+  	</if>
+  	<if test='type!="space" and type!=null'>
+  		and type = #{type}
+  	</if>
+  	order by create_date DESC
+  	limit ${begin},${end}
+  </select>
+  
+  <!-- 判断订单是否是做活动的，判断订单包含商品是否有活动商品，若有一个商品，则该订单就是活动订单，目前活动商家录入的商品都是活动商品 -->
+   <select id="checkOrderIsJoinActivity" resultType="int" parameterType="long"> 
+	  SELECT IFNULL(commodity.activity_flag,0) activityFlag FROM order_detail  detail
+	LEFT JOIN commodity commodity ON commodity.id=detail.product_id
+	WHERE detail.order_id=#{id}
+	ORDER BY commodity.activity_flag DESC
+	limit 0,1
+  </select>
+  
+  <!-- 判断用户已购买活动商品总数-->
+  <select id="getBuyActivityProductNumByUserId" resultType="int" parameterType="map"> 
+	SELECT CASE WHEN 3-IFNULL(SUM(detail.product_quantity),0)>0 then 3-IFNULL(SUM(detail.product_quantity),0)
+			ELSE
+			0
+			end
+		 	activityEnableNums FROM order_detail detail
+		LEFT JOIN sys_order orders  ON detail.order_id=orders.id
+		LEFT JOIN commodity commodity on commodity.id=detail.product_id
+		WHERE orders.user_id=#{userId} and orders.business_id=#{shopId} and detail.product_id=#{productId} and commodity.activity_flag=1
+		and orders.order_status!=5
+  </select>
+  
+  <!-- 受理订单 -->
+  <update id="accepted" parameterType="com.linle.entity.sys.SysOrder">
+  	update sys_order
+  	set order_status = 6,update_date=now()
+  	where id = #{id}
+  </update>
+  <!-- 将订单状态改为待收货 -->
+  <update id="waitieforEeceiving" parameterType="com.linle.entity.sys.SysOrder">
+  	update sys_order
+  	set order_status = 2,update_date=now()
+  	where id = #{id}
+  </update>
+  <!-- 订单完成 -->
+  <update id="orderSuccess" parameterType="com.linle.entity.sys.SysOrder">
+  	update sys_order
+  	set update_date=now(),pay_date =#{payDate}
+  	where order_no = #{orderNo} and user_id = #{userId}
+  </update>
+  
+  <!-- 订单详情 -->
+  <select id="getOrderDetail" parameterType="map" resultMap="OrderDetaiResultMap">
+  	  	select id,order_no,ifnull(total_money,0) as total_money,business_id,
+  	  	create_date,order_status,type,business_name,details,user_id,buyer_address,buyer_phone,ifnull(preferential_amount,0) as preferential_amount,ifnull(delivery_fee,0) as delivery_fee
+  	  	,1800000-((UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(create_date))*1000) as payEndDate,buyer_message
+  	from sys_order
+  	where order_no = #{orderNo} and user_id = #{uid}
+  </select>
+  
+  <select id="getStatusCount" parameterType="map" resultType="int">
+	select count(id)
+	from sys_order
+	where user_id = #{uid} and del_flag = 0
+	<if test="status ==0">
+		and order_status = 0
+	</if>
+	<if test="status==1">
+		and order_status=1
+	</if>
+	<if test="status==2">
+		and (order_status=2 or order_status=6)
+	</if>
+	<if test="status==3">
+		and order_status=3
+	</if>
+	<if test="status==7">
+		and order_status=7
+	</if>
+  </select>
+  <!-- 修改送达时间 -->
+  <update id="updateSendDate" parameterType="com.linle.entity.sys.SysOrder">
+  	update sys_order
+  	set send_date = #{sendDate},order_status = #{orderStatus}
+  	where order_no = #{orderNo}
+  </update>
+  <!-- 关闭商家没有接单的订单（10分钟没接单） -->
+  <update id="cancelNoOperatOrder">
+  	update sys_order
+  	set order_status=5,update_date=now()
+  	where type='commodity' and order_status = 0 and (UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(create_date))/60>10
+  </update>
+  <!-- 关闭超时未支付订单 （30分钟内没有支付的）-->
+  <update id="cancelPayTimeOutOrder">
+  	update sys_order 
+  	set order_status=5
+  	where type='commodity' and order_status = 1 and (UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(create_date))/60>30
+  </update>
+  <!-- 获得charge对象后 更新订单的charge_id -->
+  <update id="updateChargeId" parameterType="map">
+  	update sys_order
+  	set charge_id=#{chargeId},channel=#{channel}
+  	where order_no = #{orderNo} and user_id = #{uid}
+  </update>
+  
+  <!-- 获得退款列表 -->
+  <select id="getRefundList" resultMap="BaseResultMap"> 
+  		 select
+    <include refid="Base_Column_List" />
+    from sys_order
+  		where type='commodity' and order_status = 0 and (UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(create_date))/60>10
+  </select>
+  <!-- 客户端删除订单 -->
+  <update id="delOrder" parameterType="com.linle.entity.sys.SysOrder">
+  	 update sys_order
+  	 set del_flag = #{delFlag}
+  	 where id = #{id}
+  </update>
+  <!-- 修改订单状态 -->
+  <update id="updateOrderStatus" parameterType="com.linle.entity.sys.SysOrder">
+  	 update sys_order
+  	 set order_status = #{orderStatus},pay_date =#{payDate}
+  	 where id = #{id}
+  </update>
+  
+  
+  <select id="getCommodityOrderList" parameterType="page" resultMap="shopOrderListResult">
+  	select sys_order.id,sys_order.id as order_id,order_no,create_date,total_money,name,order_status from sys_order
+	inner join (select id,name from users
+	<if test="params.buyer!=null and params.buyer!=''">
+		where (name=#{params.buyer} or mobile_Phone = #{params.buyer})
+	</if>
+	) as users
+	on sys_order.user_id=users.id
+	where business_id=#{params.shopId} and type='commodity'
+	<if test="params.orderNo !=null and params.orderNo!=''">
+		and order_no = #{params.orderNo}
+	</if>
+	<if test="params.status !=null and params.status !=-1">
+		and order_status = #{params.status}
+	</if>
+	<if test="params.beginDate != null and params.beginDate != ''  and (params.endDate == null or params.endDate=='')">
+  		 <![CDATA[ and TO_DAYS(create_date) >= TO_DAYS(#{params.beginDate}) ]]> 
+  	</if>
+  	<if test="(params.beginDate == null or params.beginDate =='') and params.endDate != null and params.endDate != ''">
+  		 <![CDATA[ and TO_DAYS(create_date) <= TO_DAYS(#{params.beginDate}) ]]> 
+  	</if>
+  	<if test="params.beginDate != null and params.beginDate != '' and  params.endDate != null and  params.endDate != ''">
+  		<![CDATA[	and TO_DAYS(create_date) <= TO_DAYS(#{params.beginDate}) and TO_DAYS(create_date) <= TO_DAYS(#{params.endDate}) ]]>
+  	</if> 
+  	order by order_status,create_date desc
+  </select>
+  
+  <select id="getCommodityOrderDetail" parameterType="map" resultMap="shopOrderListResult">
+  	select id,id as order_id,delivery_fee,preferential_amount,total_money,order_status,order_no,create_date
+  	from sys_order
+  	where business_id = #{shopId} and order_no = #{orderNo}
+  </select>
+  
+  <select id="getSendInfo" parameterType="String" resultMap="sendInfoResult">
+  	select users.`name`,buyer_phone,buyer_address,buyer_message,shop.delivery_name from sys_order
+	left join shop on sys_order.business_id=shop.id
+	left join users on sys_order.user_id = users.id
+	where order_no = #{orderNo}
+  </select>
+  
+  <!-- 商家接单/拒绝 -->
+  <update id="shoperOperateOrder" parameterType="map">
+  	update sys_order
+  	set order_status = #{status}
+  	where order_no = #{orderNo} and business_id = #{shopId}
+  </update>
+  
+  <update id="updateOrderStatusByOrderNo" parameterType="map">
+  	update sys_order
+  	 set order_status = #{status}
+  	 where order_no = #{orderNo}
+  </update>
+  
+   <update id="updateOrderStatusByHouseNumber" parameterType="map">
+  	update sys_order
+  	 set order_status = #{status}
+  	 where order_no in (SELECT order_no FROM utilities WHERE community_id=#{communityId} and type=#{type} and `status`=1 and house_number= #{houseNumber})
+  </update>
+  
+  <update id="updateTotalMoneyByOrderNo" parameterType="map">
+  	update sys_order
+  	 set total_money = #{total_money},update_date=now()
+  	 where order_no = #{orderNo}
+  </update>
+  
+  <!-- 获得今日商家有效订单数量 -->
+  <select id="selectDayValidOrderCount" parameterType="Long" resultType="int">
+  	SELECT count(id) from sys_order
+	 where type='commodity' and business_id=#{id} and (order_status=3 or order_status=4) 
+	 and to_days(create_date) = to_days(now())
+  </select>
+  <!-- 获得店铺今日销售额 -->
+  <select id="selectDayTurnover" parameterType="Long" resultType="BigDecimal">
+  	SELECT ifnull(sum(total_money),0) from sys_order
+	 where type='commodity' and business_id=#{id} and (order_status=3 or order_status=4) 
+	 and to_days(create_date) = to_days(now())
+  </select>
+  <!-- 获得店铺的总营业额 -->
+  <select id="getAllTurnover" parameterType="Long" resultType="BigDecimal">
+  	SELECT ifnull(sum(total_money),0) from sys_order
+	 where type='commodity' and business_id=#{id} and (order_status=3 or order_status=4) 
+  </select>
+  <!-- 获得本月营业额 -->
+  <select id="getMonthTurnover" parameterType="Long" resultType="BigDecimal">
+  	SELECT ifnull(sum(total_money),0) from sys_order
+	 where type='commodity' and business_id=#{id} and (order_status=3 or order_status=4) 
+  	 and DATE_FORMAT(create_date,'%Y%m') = DATE_FORMAT(CURDATE( ),'%Y%m') 
+  </select>
+  <!-- 获得本周营业额 -->
+  <select id="getWeekTurnover" parameterType="Long" resultType="BigDecimal">
+  	SELECT ifnull(sum(total_money),0) from sys_order
+	 where type='commodity' and business_id=#{id} and (order_status=3 or order_status=4) 
+  	  and YEARWEEK(create_date) = YEARWEEK(now())
+  </select>
+  
+  <!-- 用户下单后 大于等于1天的订单 -->
+  <select id="selectUserNoOperateOrder" resultMap="BaseResultMap">
+  		 select
+    <include refid="Base_Column_List" />
+    from sys_order
+    where order_status = 2 and (DATEDIFF(now(),create_date)>=1)
+  </select>
+  
+  <select id="PaySpaceTimeOutOrder" resultMap="BaseResultMap">
+  	 select 
+    <include refid="Base_Column_List" />
+    from sys_order
+    where type in ('spaceRenew','space') and order_status = 1 and (UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(create_date))/60>30
+  </select>
+  
+  <select id="getShopSales" parameterType="map" resultMap="shopSalesResult">
+  	select 
+	  	group_concat(dday)as dday,
+		group_concat(IFNULL(turnover, 0)) AS turnover,
+		group_concat(IFNULL(sales, 0)) AS sales from 
+		( <![CDATA[ SELECT datelist as dday FROM calendar where  DATE_SUB(CURDATE(), INTERVAL #{day} DAY) <= date(datelist)&&date(datelist)<=CURDATE() ]]>) as tb1
+		left join
+		(SELECT ifnull(sum(total_money),0) as turnover,DATE_FORMAT(pay_date,'%Y-%m-%d') as cdate,COUNT(id) as sales from sys_order
+		where type='commodity' and business_id=#{shopId} and (order_status=3 or order_status=4)
+		group by cdate) as tb2
+		on tb1.dday=tb2.cdate
+  </select>
+  
+  <!-- 获得商家收益明细 -->
+  <select id="getShopIncomedetailList" parameterType="page" resultMap="shopIncomedetailResult">
+  	select order_no,create_date,type,total_money,order_status,community_id,pay_date from sys_order 
+  		where type = 'commodity' and business_id = #{params.shopId} and (order_status = 3 or order_status = 4) 
+  		and <![CDATA[ last_refund_date < NOW() ]]>
+  		<if test="params.orderNo!=null and  params.orderNo!=''">
+  			and <![CDATA[ order_no = #{params.orderNo} ]]>
+  		</if>
+  		<if test="params.beginDate!=null and params.endDate==null">
+  			and <![CDATA[  pay_date>=#{params.beginDate} ]]>
+  		</if>
+  		<if test="params.beginDate==null and params.endDate!=null">
+  			and <![CDATA[ pay_date<=#{params.endDate} ]]>
+  		</if>
+  		<if test="params.beginDate!=null and params.endDate!=null">
+  			and <![CDATA[ (pay_date >=#{params.beginDate} and pay_date<=#{params.endDate}) ]]>
+  		</if>
+		order by pay_date desc
+  </select>
+  
+  <!-- 根据小区ID 获得小区各种缴费的成交金额 -->
+  <select id="getPaymetIncome" parameterType="map" resultType="BigDecimal">
+  	select IFNULL(SUM(total_money+IFNULL(preferential_amount,0)),0) from sys_order 
+	where type = #{type} and community_id = #{communityId} and order_status = 4 and charge_id is not null and pay_date is not null
+  </select>
+  
+  <!-- 根据小区ID 获得该小区的商家利润分成 -->
+  <select id="getCommunityShopShare" parameterType="Long" resultType="BigDecimal">
+  	select ifnull(sum(total_money*cut/100*0.15),0) from sys_order 
+	left join shop on shop.id = sys_order.business_id
+	where type = 'commodity' and <![CDATA[ last_refund_date<=NOW() ]]> and (order_status = 3 or order_status = 4) and community_id=#{communityId}
+  </select>
+  
+  <!-- 根据小区ID 获得车位相关收入 -->
+  <select id="getCommunitySpaceIncome" parameterType="Long" resultType="BigDecimal">
+  	select ifnull(SUM(total_money),0) from sys_order
+	where community_id  = #{communityId} and (type ='space' or type ='spaceRenew') and order_status =4 
+  </select>
+  
+  <select id="getCommunitydetailList" parameterType="page" resultMap="shopIncomedetailResult">
+  	select order_no,create_date,type,total_money+IFNULL(preferential_amount,0) as total_money,order_status,community_id,remark,pay_date from sys_order 
+  		where  community_id = #{params.communityId} and order_status = 4 and pay_date is not null and charge_id is not null
+  		<if test="params.orderType!=null and params.orderType!=''">
+  			and type = #{params.orderType}
+  		</if>
+  		<if test="params.orderType==null or params.orderType==''">
+  			and type in ("water","electricity","propertyFee","broadband","cableTelevision","gas")
+  		</if>
+  		<if test="params.beginDate!=null and params.endDate==null">
+  			and <![CDATA[  create_date>=#{params.beginDate} ]]>
+  		</if>
+  		<if test="params.beginDate==null and params.endDate!=null">
+  			and <![CDATA[ create_date<=#{params.endDate} ]]>
+  		</if>
+  		<if test="params.beginDate!=null and params.endDate!=null">
+  			and <![CDATA[ (create_date >=#{params.beginDate} and create_date<=#{params.endDate}) ]]>
+  		</if>
+		order by pay_date desc
+  </select>
+  <!--  -->
+  <select id="getShopOrderListForAPI" parameterType="map" resultMap="shopListResult">
+  		select 
+	  		id,order_no,create_date,order_status,user_id,uname,buyer_address,buyer_phone,IFNULL(buyer_message,'') as buyer_message,IFNULL(preferential_amount,0) as preferential_amount
+			,IFNULL(delivery_fee,0) as delivery_fee,total_money,IFNULL(refund_type,'') as refund_type,IFNULL(description,'') as description,IFNULL(fail_reason,'') as fail_reason,IFNULL(refundStatus,-1) as refundStatus
+			,single,begin_date,end_date
+		  from sys_order
+		left join (select id as uid,`name` as uname from users) as users
+		on sys_order.user_id=users.uid
+		left join (select order_no as orderno, description,refund_type,fail_reason,`status` as refundStatus from order_refund) as order_refund
+		on sys_order.order_no = order_refund.orderno
+		where type='commodity' and business_id=#{shopId}
+		<if test="status==4">
+			and order_status in(3,4,5)
+		</if>
+		<if test="status!=10 and status!=4">
+			and order_status = #{status}
+		</if>
+		<if test="status==10">
+			and order_status in (7,8,9)
+		</if>
+		order by create_date desc
+		LIMIT #{begin},#{end}
+  </select>
+  
+  <select id="selectWaitAcceptOrder" parameterType="map" resultMap="BaseResultMap">
+  	select id,order_no,user_id,order_status,type from sys_order
+  	where order_status = 0 and type='commodity' and business_id = #{id}
+  	<if test="orderNo !=null and orderNo !=''">
+  		and order_no = #{orderNo}
+  	</if>
+  </select>
+  
+  <select id="getShopTodayOrderCount" parameterType="Long" resultType="int">
+  	select count(id) from sys_order
+  	where type='commodity' and business_id = #{id} and to_days(create_date) = to_days(now())
+  </select>
+  
+  <!-- 根据订单号 查询用户 -->
+  <select id="alonesendMessageUser" parameterType="String" resultType="String">
+  	select user_id from sys_order where order_no = #{orderNo}
+  </select>
+  
+   <select id="getOneOrderByOrderNo" parameterType="string" resultMap="BaseResultMap">
+   SELECT id,order_status FROM sys_order 
+   WHERE order_no= #{orderNo}  LIMIT 0,1
+  </select>
+ 
+
+   <!-- 获得所有店铺销售额 -->
+  <select id="selectAllShopTurnover" parameterType="map" resultType="BigDecimal">
+  	SELECT ifnull(sum(total_money),0) from sys_order
+	 where   (order_status=3 or order_status=4) and charge_id is not null and pay_date is not null
+ 	<if test="dateType !=null and dateType=='today' ">
+		 and to_days(pay_date) = to_days(now())
+	</if>
+ 	<if test="beginDate!=null and endDate==null">
+  		and <![CDATA[  pay_date>=#{beginDate} ]]>
+	</if>
+	<if test="beginDate==null and endDate!=null">
+		and <![CDATA[ pay_date<=#{endDate} ]]>
+	</if>
+	<if test="beginDate!=null and endDate!=null">
+		and <![CDATA[ (pay_date >=#{beginDate} and pay_date<=#{endDate}) ]]>
+	</if>
+  </select>
+  
+  <!-- 获得所有商家有效订单数量 -->
+  <select id="selectAllShopValidOrderCount" parameterType="map" resultType="int">
+  	SELECT count(id) from sys_order
+	 where (order_status=3 or order_status=4) and charge_id is not null and pay_date is not null
+	 <if test="dateType !=null and dateType=='today' ">
+		 and to_days(pay_date) = to_days(now())
+	</if>
+  </select>
+  
+  
+   <!-- 获得每个小区销售额 -->
+  <select id="getTurnoverByCommunity" parameterType="map" resultType="com.linle.entity.statistics.BaseStatistics">
+	SELECT community.id, community.`name` ,ifnull(sum(sys_order.total_money),0) amount from sys_order
+	LEFT JOIN community on community.id=sys_order.community_id
+	where   (sys_order.order_status=3 or sys_order.order_status=4) and sys_order.charge_id is not null and sys_order.pay_date is not null
+ 	<if test="dateType !=null and dateType=='today' ">
+		 and to_days(sys_order.pay_date) = to_days(now())
+	</if>
+	GROUP BY sys_order.community_id
+	ORDER BY amount DESC
+  </select>
+  
+   <!-- 获得每个小区有效订单数量 -->
+  <select id="getValidOrderByCommunity" parameterType="map" resultType="com.linle.entity.statistics.BaseStatistics">
+	SELECT community.id, community.`name` ,count(orders.id) count 
+	from sys_order orders
+	LEFT JOIN community on community.id=orders.community_id
+	where   (orders.order_status=3 or orders.order_status=4) and charge_id is not null and pay_date is not null
+ 	<if test="dateType !=null and dateType=='today' ">
+		 and to_days(orders.pay_date) = to_days(now())
+	</if>
+	GROUP BY orders.community_id
+	ORDER BY count DESC
+  </select>
+  
+  	<!-- 销售额统计 最近7天，30天    -->
+	<select id="getSalesStatisticss"  resultType="com.linle.entity.statistics.BaseStatistics" parameterType="map">
+		select
+		  	group_concat(dday)as categories,
+			group_concat(IFNULL(amount, 0)) AS data 
+		from 
+			(  
+				SELECT datelist as dday FROM calendar where  
+				<![CDATA[ DATE_SUB(CURDATE(), INTERVAL #{day} DAY) <= date(datelist)&&date(datelist)<=CURDATE() ]]>
+			 ) as tb1
+				
+		left join(
+				SELECT  
+						DATE_FORMAT(pay_date,'%Y-%m-%d') as cdate,
+						ifnull(sum(total_money),0) as amount
+				from sys_order
+				where (order_status=3 or order_status=4) and charge_id is not null and pay_date is not null
+				group by cdate
+		) as tb2 
+		on tb1.dday=tb2.cdate
+	</select>
+	
+  <!-- 销售额统计 今年    -->
+	<select id="getSalesStatisticssByYear"  resultType="com.linle.entity.statistics.BaseStatistics" parameterType="map">
+		select 
+		  	group_concat(dday)as categories,
+			group_concat(IFNULL(amount, 0)) AS data from 
+			(  
+					SELECT DISTINCT DATE_FORMAT(datelist,'%Y-%m') as dday FROM calendar
+					 where <![CDATA[ DATE_FORMAT(now(),'%Y')=DATE_FORMAT(datelist,'%Y')&&date(datelist)<=CURDATE()]]> ORDER BY datelist
+			 ) as tb1
+				
+			 left join(
+				SELECT  
+								DATE_FORMAT(pay_date,'%Y-%m') as cdate,
+								ifnull(sum(total_money),0) as amount
+				from sys_order
+				where (order_status=3 or order_status=4) and charge_id is not null and pay_date is not null
+				group by cdate
+			) as tb2 
+		on tb1.dday=tb2.cdate
+	</select>
+	
+	<!-- 订单数量统计 最近7天，30天    -->
+	<select id="getOrdersStatisticss"  resultType="com.linle.entity.statistics.BaseStatistics" parameterType="map">
+		select 
+	  	group_concat(dday)as categories,
+			group_concat(IFNULL(tb2.sumSalesCount, 0)) AS data,
+			group_concat(IFNULL(tb3.successSalesCount, 0)) AS data2 from 
+		(  
+				SELECT datelist as dday FROM calendar where 
+				<![CDATA[ DATE_SUB(CURDATE(), INTERVAL #{day} DAY) <= date(datelist)&&date(datelist)<=CURDATE()  ]]>
+		 ) as tb1
+			
+		 left join(
+			SELECT  
+					DATE_FORMAT(create_date,'%Y-%m-%d') as cdate,
+					COUNT(id) as sumSalesCount 
+			from sys_order
+			group by cdate
+		) as tb2 on tb1.dday=tb2.cdate
+	 	left join(
+			SELECT  
+							DATE_FORMAT(pay_date,'%Y-%m-%d') as cdate,
+							COUNT(id) as successSalesCount 
+			from sys_order
+			where  (order_status=3 or order_status=4) and charge_id is not null and pay_date is not null
+			group by cdate
+		) as tb3
+	on tb1.dday=tb3.cdate;
+	</select>
+	
+  <!-- 订单数量统计 今年    -->
+	<select id="getOrdersStatisticssByYear"  resultType="com.linle.entity.statistics.BaseStatistics" parameterType="map">
+		select 
+	  	group_concat(dday)as categories,
+			group_concat(IFNULL(tb2.sumSalesCount, 0)) AS data,
+			group_concat(IFNULL(tb3.successSalesCount, 0)) AS data2 from 
+		(  
+				SELECT DISTINCT DATE_FORMAT(datelist,'%Y-%m') as dday FROM calendar where  
+				<![CDATA[ DATE_FORMAT(now(),'%Y')=DATE_FORMAT(datelist,'%Y')&&date(datelist)<=CURDATE() ORDER BY datelist ]]>
+		 ) as tb1
+			
+		 left join(
+			SELECT  
+							DATE_FORMAT(create_date,'%Y-%m') as cdate,
+							COUNT(id) as sumSalesCount 
+			from sys_order
+			group by cdate
+		) as tb2 on tb1.dday=tb2.cdate
+	 	left join(
+			SELECT  
+							DATE_FORMAT(pay_date,'%Y-%m') as cdate,
+							COUNT(id) as successSalesCount 
+			from sys_order
+			where  (order_status=3 or order_status=4) and charge_id is not null and pay_date is not null
+			group by cdate
+		) as tb3
+	on tb1.dday=tb3.cdate;
+	</select>
+
+  <select id="getTransactionflow" parameterType="page" resultMap="TransactionflowVoResult">
+  	select sys_order.order_no,total_money,preferential_amount,pay_date,remark,user_name,channel,pay_flag FROM
+	(select order_no,total_money,IFNULL(preferential_amount,0) as preferential_amount,pay_date,remark,user_id,channel from sys_order where order_status=4 and charge_id is not null and pay_date is not null) as sys_order
+	left join (select id,user_name from users) as users
+	on sys_order.user_id = users.id
+	left join (select order_no,pay_flag from preferential_activity_record where pay_flag=1) as preferential_activity_record
+	on sys_order.order_no = preferential_activity_record.order_no
+	<where>
+		<if test="params.userName!=null and params.userName!=''">
+			user_name = #{params.userName}
+		</if>
+		<if test="params.orderNo!=null and params.orderNo!=''">
+			and sys_order.order_no = #{params.orderNo}
+		</if>
+		<if test="params.channel!=null and params.channel !=''">
+			and channel = #{params.channel}
+		</if>
+		<if test="(params.beginDate!=null and params.beginDate!='') and (params.endDate==null or params.endDate=='')">
+  			and <![CDATA[  to_days(pay_date)>=to_days(#{params.beginDate}) ]]>
+  		</if>
+  		<if test="(params.beginDate==null or params.beginDate=='') and (params.endDate!=null and params.endDate!='')">
+  			and <![CDATA[ to_days(pay_date)<=to_days(#{params.endDate}) ]]>
+  		</if>
+  		<if test="params.beginDate!=null and  params.beginDate!='' and params.endDate!=null and params.endDate!=''">
+  			and <![CDATA[ (to_days(pay_date) >=to_days(#{params.beginDate}) and to_days(pay_date)<=to_days(#{params.endDate})) ]]>
+  		</if>
+	</where>
+	order by pay_date desc
+  </select>
+  
+    <!-- -开始时间结束时间，筛选条件sql -->
+	<sql id="searchTimeRuleSql">
+			<if test="beginDate!=null and endDate==null">
+		  		and <![CDATA[  pay_date>=#{beginDate} ]]>
+			</if>
+			<if test="beginDate==null and endDate!=null">
+				and <![CDATA[ pay_date<=#{endDate} ]]>
+			</if>
+			<if test="beginDate!=null and endDate!=null">
+				and <![CDATA[ (pay_date >=#{beginDate} and pay_date<=#{endDate}) ]]>
+			</if>
+	</sql>
+	
+	<sql id="searchCreateDateTimeRuleSql">
+			<if test="beginDate!=null and endDate==null">
+		  		and <![CDATA[  create_date>=#{beginDate} ]]>
+			</if>
+			<if test="beginDate==null and endDate!=null">
+				and <![CDATA[ create_date<=#{endDate} ]]>
+			</if>
+			<if test="beginDate!=null and endDate!=null">
+				and <![CDATA[ (create_date >=#{beginDate} and create_date<=#{endDate}) ]]>
+			</if>
+	</sql>
+	
+   <!-- -订单总数，线上订单数，线下订单数 -->
+   <select id="getOrderCountStatistics"  resultType="com.linle.entity.statistics.OrderStatistics" parameterType="map">
+		select 
+		sum(case temp.status when 'status' then temp.count else 0 end) as 'sumQuantity',
+		sum(case temp.status when 'online' then temp.count else 0 end) as 'onlineQuantity',
+		sum(case temp.status when 'offline' then temp.count else 0 end) as 'offlineQuantity'
+		from (
+			select 'status',count(id) count from sys_order 
+			<where>
+				<include refid="searchCreateDateTimeRuleSql"/>
+			</where>
+		  	union all SELECT 'online',COUNT(id) FROM sys_order WHERE (order_status!=10 or order_status is NULL)
+		  	<include refid="searchCreateDateTimeRuleSql"/>
+		  	union all SELECT 'offline',COUNT(id) FROM sys_order  WHERE order_status=10
+		  	<include refid="searchCreateDateTimeRuleSql"/>
+		)temp
+	</select>
+	
+   <!-- -订单总金额，线上金额，线下金额 -->
+   <select id="getOrderAmountStatistics"  resultType="com.linle.entity.statistics.OrderStatistics" parameterType="map">
+		select 
+		sum(case temp.status when 'status' then temp.amount else 0 end) as 'sumAmount',
+		sum(case temp.status when 'online' then temp.amount else 0 end) as 'onlineAmount',
+		sum(case temp.status when 'offline' then temp.amount else 0 end) as 'offlineAmount'
+		from (
+			select 'status',SUM(total_money) amount from sys_order   
+			WHERE business_id=#{community_id} and TO_DAYS(pay_date)=TO_DAYS(NOW())
+		  	union all SELECT 'online',SUM(total_money) amount FROM sys_order 
+		  	WHERE (order_status!=10 or order_status is NULL) and business_id=#{community_id} and TO_DAYS(pay_date)=TO_DAYS(NOW())
+		  	union all SELECT 'offline',SUM(total_money) amount FROM sys_order  
+		  	WHERE order_status=10 and business_id=#{community_id} and TO_DAYS(pay_date)=TO_DAYS(NOW())
+		)temp
+	</select>
+	
+</mapper>

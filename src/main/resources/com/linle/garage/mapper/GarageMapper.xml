@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.linle.garage.mapper.GarageMapper" >
+  <resultMap id="BaseResultMap" type="com.linle.entity.sys.Garage" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="garage_length" property="garageLength" jdbcType="INTEGER" />
+    <result column="garage_width" property="garageWidth" jdbcType="INTEGER" />
+    <result column="sort" property="sort" jdbcType="INTEGER" />
+    <result column="community_id" property="communityId" jdbcType="BIGINT" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+    <result column="useCount" property="useCount"/>
+    <result column="delFlag" property="delFlag"/>
+  </resultMap>
+  
+  <resultMap type="com.linle.entity.sys.Garage" id="BaseResultMapForSYS" extends="BaseResultMap">
+  	<result column="space_count" property="spaceCount"/>
+  </resultMap>
+  
+  <resultMap id="SpaceOrderResultMap" type="com.linle.entity.vo.SpaceOrder" >
+  	<result column="orderId" property="orderId"/>
+  	<result column="orderNo" property="orderNo"/>
+  	<result column="parkingName" property="parkingName"/>
+  	<result column="grarageName" property="grarageName"/>
+  	<result column="orderType" property="orderType"/>
+  	<result column="dateType" property="dateType"/>
+  	<result column="endData" property="endData"/>
+  	<result column="orderCreateDate" property="orderCreateDate"/>
+  	<result column="userName" property="userName"/>
+  	<result column="addressDetail" property="addressDetail"/>
+  	<result column="orderStatus" property="orderStatus"/>
+  	<result column="userId" property="userId"/>
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    id, name, garage_length, garage_width, sort, community_id, create_date, update_date,delFlag
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from garage
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from garage
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.linle.entity.sys.Garage" >
+    insert into garage (id, name, garage_length, 
+      garage_width, sort, community_id, 
+      create_date, update_date,delFlag)
+    values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{garageLength,jdbcType=INTEGER}, 
+      #{garageWidth,jdbcType=INTEGER}, #{sort,jdbcType=INTEGER}, #{communityId,jdbcType=BIGINT}, 
+      #{createDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP},#{delFlag})
+  </insert>
+  <insert id="insertSelective" parameterType="com.linle.entity.sys.Garage" useGeneratedKeys="true" keyProperty="id">
+    insert into garage
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="garageLength != null" >
+        garage_length,
+      </if>
+      <if test="garageWidth != null" >
+        garage_width,
+      </if>
+      <if test="sort != null" >
+        sort,
+      </if>
+      <if test="communityId != null" >
+        community_id,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="updateDate != null" >
+        update_date,
+      </if>
+      <if test="delFlag !=null">
+      	delFlag,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="garageLength != null" >
+        #{garageLength,jdbcType=INTEGER},
+      </if>
+      <if test="garageWidth != null" >
+        #{garageWidth,jdbcType=INTEGER},
+      </if>
+      <if test="sort != null" >
+        #{sort,jdbcType=INTEGER},
+      </if>
+      <if test="communityId != null" >
+        #{communityId,jdbcType=BIGINT},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="delFlag !=null">
+      	#{delFlag},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.linle.entity.sys.Garage" >
+    update garage
+    <set >
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="garageLength != null" >
+        garage_length = #{garageLength,jdbcType=INTEGER},
+      </if>
+      <if test="garageWidth != null" >
+        garage_width = #{garageWidth,jdbcType=INTEGER},
+      </if>
+      <if test="sort != null" >
+        sort = #{sort,jdbcType=INTEGER},
+      </if>
+      <if test="communityId != null" >
+        community_id = #{communityId,jdbcType=BIGINT},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="delFlag !=null">
+      	delFlag = #{delFlag},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.linle.entity.sys.Garage" >
+    update garage
+    set name = #{name,jdbcType=VARCHAR},
+      garage_length = #{garageLength,jdbcType=INTEGER},
+      garage_width = #{garageWidth,jdbcType=INTEGER},
+      sort = #{sort,jdbcType=INTEGER},
+      community_id = #{communityId,jdbcType=BIGINT},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP},
+      delFlag = #{delFlag}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <!-- 后台车库列表 -->
+  <select id="getAllData" parameterType="page" resultMap="BaseResultMapForSYS">
+  	 select 
+    <include refid="Base_Column_List" />,IFNULL(useCount,0) useCount,space_count
+    from garage
+    left join (select grage_id,COUNT(id) as useCount from space_record where `status`=0 GROUP BY grage_id) as grage_count
+	on grage_count.grage_id=garage.id
+	left join (select garage_id,space_count from parking_space) as parking_space
+	on garage.id = parking_space.garage_id
+    where community_id = #{params.communityId} and delFlag = 0
+    <if test="params.garageName !=null and params.garageName!=''">
+    	and name like CONCAT('%','${params.garageName}','%')
+    </if>
+    order by sort desc
+  </select>
+  
+  <!-- API 车库列表 -->
+  <select id="getGarageList" resultMap="BaseResultMap" parameterType="java.lang.Long">
+  		 select 
+    <include refid="Base_Column_List" />
+    from garage
+    where community_id = #{id} and delFlag = 0
+    order by sort desc
+  </select>
+  
+  <!-- 车位订单信息 -->
+  <select id="getAllGarageOrder" parameterType="page" resultMap="SpaceOrderResultMap">
+  	select orders.id as orderId,orders.order_no as orderNo,space_name as parkingName,garage.name as grarageName,orders.type as orderType,orders.details as dateType,end_date as endData,orders.create_date as orderCreateDate,users.name as userName,room_no.overall as addressDetail,orders.order_status as orderStatus,users.id as userId from 
+		(select order_no,id,details ,type,user_id,order_status,create_date from sys_order where business_id=#{params.communityId} and (type='space' or type='spaceRenew' or type='spaceLease')) as orders
+		left join (select order_id,product_id,other, group_concat(product_name order by product_name desc) as space_name from order_detail  group by order_id) as tb1
+		on orders.id = tb1.order_id
+		left join (select id,name from garage) garage
+		on tb1.product_id = garage.id
+		left join (select id,name,address_details from users) as users
+		on orders.user_id=users.id
+		Left join (select id,overall from room_no) as room_no
+		on users.address_details=room_no.id
+		left join (select * from space_record GROUP BY order_no) space_record
+		on tb1.product_id = space_record.grage_id and tb1.other = space_record.space_no and space_record.order_no = orders.order_no
+		<where>
+			<if test="params.orderNo !=null and params.orderNo !=''">
+				and  orders.order_no = #{params.orderNo}
+			</if>
+			<if test="params.orderStatus!=null">
+				and orders.order_status = #{params.orderStatus}
+			</if>
+			<if test="params.userNmae !=null and params.userNmae !=''">
+				and  users.`name`= #{params.userNmae}
+			</if>
+			<if test="params.orderType==null or params.orderType=='' ">
+				and (orders.type='space' or  orders.type='spaceRenew' or  orders.type='spaceLease')
+			</if>
+			<if test="params.orderType!=null and params.orderType!='' ">
+				and orders.type = #{params.orderType}
+			</if>
+			<if test="params.garageId!=null and params.garageId!=''">
+				and garage.id= #{params.garageId}
+			</if>
+		</where>
+		order by orders.create_date desc
+  </select>
+  
+  <!-- 车库删除。伪删除 -->
+  <update id="del" parameterType="com.linle.entity.sys.Garage">
+  	 update garage
+  	 set delFlag = 1 
+  	 where id = #{id}
+  </update>
+</mapper>

@@ -1,0 +1,25 @@
+*{padding:0px;margin:0px}
+body{font-family: "微软雅黑"}
+header{width: 100%;position: absolute;top: 0;background: #fff;height: 80px}
+.head{height: 80px;width: 1200px;margin: 0px auto;line-height: 80px;}
+.head .head-left{float: left;padding-top: 10px}
+.head .head-right{float: right}
+.head .head-right a{display: inline-block;height: 37px;border: 1px solid #d34b4a;color: #444;font-size: 16px;line-height: 37px;border-radius: 18px;padding: 0px 25px;text-decoration: none}
+.section {background-repeat:no-repeat;position: relative;}
+.section1{background:url(../welcome/page1.png) no-repeat scroll center top;height: 980px!important;}
+.section2{background:url(../welcome/page2.png) no-repeat scroll center top;height: 1080px!important;}
+.section3{background:url(../welcome/page3.jpg) no-repeat scroll center top;height: 1080px!important;}
+.section4{background:url(../welcome/page4.jpg) no-repeat scroll center top;height: 1080px!important;}
+.section5{background:url(../welcome/page5.jpg) no-repeat scroll center top;height: 1080px!important;}
+.section6{background:url(../welcome/page6.jpg) no-repeat scroll center top;height: 1080px!important;}
+.section2 .mobi{position: absolute;top: 280px;left: 230px;width: 370px;height: 610px}
+.section2 .mobilogo{position: absolute;top: 320px;left: 950px}
+.section2 .wei{position: absolute;top: 600px;left: 670px;width: 200px;height: 200px}
+.section2 h1{position: absolute;font-size: 16px;color: #fb5236;top: 485px;left: 950px;font-weight: bold;}
+.section2 p{position: absolute;font-size: 16px;color: #555555;top: 525px;left: 838px;}
+.section2 h2{color:#fb5236;font-size: 18px;font-weight: bold;position: absolute;top: 805px;left: 705px;}
+.section2 button{height: 70px;line-height: 70px;padding: 0px 46px;color: #fff;font-size: 20px;font-weight: bold;border: none;font-family: "微软雅黑"}
+.section2 button.iphone{position: absolute;top: 620px;left: 950px;background: #29b263}
+.section2 button.android{position: absolute;top: 710px;left: 950px;background: #fb5236;padding: 0px 40px}
+.section6 .foot{height: 55px;line-height: 55px;text-align: center;color: #aaaaaa;font-size: 16px;width: 100%;background: #393939;position: absolute;bottom: 0px}
+.hide{margin-left: 20000px}

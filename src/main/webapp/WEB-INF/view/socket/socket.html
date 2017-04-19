@@ -1,0 +1,50 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+<#include '/common/base.html'>
+<script src="${base}/resources/js/sockjs-0.3.min.js"></script>
+</head>
+<body>
+
+	<div id="msgcount"></div>
+	<script>
+		var websocket;
+		function create_websocket(){
+			if ('WebSocket' in window) {
+				websocket = new WebSocket(
+						"ws://localhost/webSocketServer");
+			} else if ('MozWebSocket' in window) {
+				websocket = new MozWebSocket(
+						"ws://localhost/webSocketServer");
+			} else {
+				websocket = new SockJS(
+						"http://localhost/sockjs/webSocketServer");
+			}
+			websocket.onopen = function(evnt) {
+			};
+			websocket.onmessage = function(evnt) {
+				//收到消息
+				//1 标题栏闪动
+				//2菜单上加数字
+			};
+			websocket.onerror = function(evnt) {
+				console.log("链接错误")
+			};
+			websocket.onclose = disConnect;
+		}
+		//重新连接
+		function reconnect (){
+			create_websocket();
+		}
+		
+		var disConnect = function(){
+			console.log("连接断开，即将重新连接...");
+		    setTimeout(function(){
+		         reconnect();
+		    },60000);
+		}
+	</script>
+</body>
+</html>

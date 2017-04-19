@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title></title>
+<#include '/common/resources.html'>
+<link rel="stylesheet" media="screen and (min-width: 1580px)" href="${base}/resources/css/sys/jquery.tableui.css">
+<link rel="stylesheet" media="screen and (max-width: 1580px)" href="${base}/resources/css/sys/tableui-resolving.css">
+<link rel="stylesheet" href="${base}/resources/css/sys/jquery-ui.min.css" />
+<script src="${base}/resources/js/respond.js" type="text/javascript" async="async"></script>
+</head>
+<body>
+	<div class="whole">
+		<ol class="breadcrumb">
+			<li><a href="javascript:void(0)">退款订单</a></li>
+		</ol>
+		<form action="${base}/refundOrder/list" id="pagerForm">
+		<div class="o-order">
+			<div class="o-second">
+				<span class="o-span">订单号：</span>
+				<div class="o-input">
+					<input class="my-price" type="text" name="orderNo" value="${orderNo!!}"/>
+				</div>
+				<span class="o-span">交易状态：</span>
+				<div class="o-div">
+					<select class="o-select" name="status" id ="status">
+						<option value="">全部</option>
+						<option value="pending">待退款</option>
+						<option value="succeeded">退款成功</option>
+						<option value="failed">退款失败</option>
+					</select>
+				</div>
+			</div>
+			<div class="o-thrid">
+				<a class="o-btn search1">搜索</a>
+			</div>
+		</div>
+		<div class="clearfix"></div>
+		<div class="tab-order">
+			<div class="box tab2">
+				<div class="tab_box">
+					<div class="">
+						<table class="table_solid" border="0" cellspacing="0">
+							<tbody>
+								<tr class="evenRow">
+									<th>订单号</th>
+									<th>时间</th>
+									<th>流水金额(元)</th>
+									<th>支付方式</th>
+									<th>交易状态</th>
+									<th>操作</th>
+								</tr>
+					<#if (pagelist.results)?exists && pagelist.results?size gt 0>
+					<#list pagelist.results as refundRecord>
+								<tr class="oddRow">
+									<td>${refundRecord.orderNo!!}</td>
+									<td>${refundRecord.createDate?string('yyyy/MM/dd HH:mm:ss')}</td>
+									<td>${(refundRecord.amount/100)!!}</td>
+									<td>${refundRecord.channel!!}</td>
+									<td>
+										<#if refundRecord.refundStatus=="pending">
+											待处理
+											<#elseif refundRecord.refundStatus=="succeeded">
+											处理成功
+											<#elseif refundRecord.refundStatus=="failed">
+											处理失败
+										</#if>
+									</td>
+									<td>
+										<a class="td-b common-btn-cz" title="查看订单详情" href="${base}/sysorder/commodityOrderDetail/${refundRecord.orderNo}" target="_blank">查看详情</a>
+										<#if refundRecord.refundStatus??>
+											<#if refundRecord.refundStatus=='pending'>	
+												<a class="td-b common-btn-cz url" title="去支付宝完成退款" href="${refundRecord.url}" target="_blank">退款</a>
+												<a class="td-c common-btn-cz confirm" val="${refundRecord.orderNo}" title="退款完成后点击确认退款">确认退款</a>
+												<a class="td-b common-btn-cz resetRefund" title="支付宝退款链接当日有效。如链接过期请点击重新退款" val="${refundRecord.orderNo}">重新退款</a>
+											</#if>
+										</#if>
+									</td>
+								</tr>
+							</tbody>
+						</#list>
+						</table>
+						<#include '/common/pagination.html'>
+						</form>
+								<#else>
+								</table>
+								</div>
+								<div class="no-data">暂无数据~</div>
+								</#if>
+								</tbody>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script src="${base}/resources/js/jquery.tabs.js"></script>
+	<script type="text/javascript">
+		$(function() {
+			$('.tab2').Tabs({
+				event : 'click'
+			});
+		});
+		$(".resetRefund").click(function(){
+			var no = $(this).attr("val");
+			var refundurl = $(this).parent().find(".url");
+			$.ajax({
+    			type : "post", //表单提交类型 
+    			url : "${base}/refundOrder/resetRefund/"+no+"", //表单提交目标 
+    			success : function(data) {
+    				 layer.msg(data.msg,{
+    				     	shift: 0
+    				     }, function(){
+    				    	 if(data.code==0){
+    				    		 refundurl.attr("href",data.result.url)
+    				    	 }
+    				     });
+    			}
+    		});
+		});
+		
+		$(".confirm").click(function(){
+			var no = $(this).attr("val");
+			layer.confirm('确定订单:'+no+'退款成功?', function(index){
+				$.post("${base}/refundOrder/confirmRefund/" + no, function(result) {
+					if (result.code == 0) {
+						layer.msg(result.msg);
+					}
+					window.location.reload();
+				}, 'json');
+				  layer.close(index);
+				}); 
+		})
+		
+		$(".search1").click(function(){
+			$("#pagerForm").submit();
+		})
+		
+		<#if status??>
+			$("#status").val('${status}');
+		</#if>
+	</script>
+<script>
+$(function(){
+        document.onkeydown = function(e){ 
+        var ev = document.all ? window.event : e;
+        if(ev.keyCode==13) {
+            $("#pagerForm").submit();
+            }
+        }
+    });  
+         
+</script>       
+	<script type="text/javascript" src="${base}/resources/js/placeholder.js"></script>
+</body>
+
+</html>

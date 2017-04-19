@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.linle.shopChildType.mapper.ShopChildTypeMapper" >
+  <resultMap id="BaseResultMap" type="com.linle.entity.sys.ShopChildType" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+<!--     <result column="parent_id" property="parentId" jdbcType="BIGINT" /> -->
+    <result column="type_name" property="typeName" jdbcType="VARCHAR" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+    <association column="parent_id" property="parent"  select="com.linle.shopMainType.mapper.ShopMainTypeMapper.selectByPrimaryKey"/>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, parent_id, type_name, create_date, update_date
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from shop_child_type
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from shop_child_type
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.linle.entity.sys.ShopChildType" >
+    insert into shop_child_type (id, parent_id, type_name, 
+      create_date, update_date)
+    values (#{id,jdbcType=BIGINT}, #{parent.id,jdbcType=BIGINT}, #{typeName,jdbcType=VARCHAR}, 
+      #{createDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.linle.entity.sys.ShopChildType" >
+    insert into shop_child_type
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="parent != null" >
+        parent_id,
+      </if>
+      <if test="typeName != null" >
+        type_name,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="updateDate != null" >
+        update_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="parent != null" >
+        #{parent.id,jdbcType=BIGINT},
+      </if>
+      <if test="typeName != null" >
+        #{typeName,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.linle.entity.sys.ShopChildType" >
+    update shop_child_type
+    <set >
+      <if test="parent != null" >
+        parent_id = #{parent.id,jdbcType=BIGINT},
+      </if>
+      <if test="typeName != null" >
+        type_name = #{typeName,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.linle.entity.sys.ShopChildType" >
+    update shop_child_type
+    set parent_id = #{parent.id,jdbcType=BIGINT},
+      type_name = #{typeName,jdbcType=VARCHAR},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  <select id="getAllData" parameterType="page" resultMap="BaseResultMap">
+  	select 
+    <include refid="Base_Column_List" />
+    from shop_child_type
+  </select>
+  
+  <select id="selectByMain" parameterType="Long" resultMap="BaseResultMap">
+  		select 
+    <include refid="Base_Column_List" />
+    from shop_child_type
+    where parent_id = #{mid}
+  </select>
+  
+  <select id="selectByTypeName" parameterType="string" resultMap="BaseResultMap">
+  		select 
+    <include refid="Base_Column_List" />
+    from shop_child_type
+    where type_name = #{typeName}
+  </select>
+</mapper>

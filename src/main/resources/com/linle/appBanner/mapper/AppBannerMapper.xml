@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.linle.appBanner.mapper.AppBannerMapper" >
+  <resultMap id="BaseResultMap" type="com.linle.entity.sys.AppBanner" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="img_url" property="imgUrl" jdbcType="VARCHAR" />
+    <result column="is_top" property="isTop" jdbcType="INTEGER" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+    <result column="user_id" property="userId" jdbcType="BIGINT" />
+    <result column="del_flag" property="delFlag" jdbcType="INTEGER" />
+    <result column="description" property="description"/>
+    <result column="type" property="type"/>
+    <result column="community_list" property="communityList"/>
+    <result column="order_no" property="orderNo" jdbcType="INTEGER" />
+    <result column="hasH5" property="hasH5"/>
+    <result column="banner_url" property="bannerUrl" />
+  </resultMap>
+  
+  <resultMap type="com.linle.mobileapi.v1.model.BannerVO" id="BannerForAPIResult">
+  	<id column="id" property="id"/>
+  	<result column="img_url" property="img"/>
+  	<result column="description" property="title"/>
+  	<result column="hasH5" property="hasH5"/>
+  </resultMap>
+  
+  <resultMap id="ResultMapWithBLOBs" type="com.linle.entity.sys.AppBanner" extends="BaseResultMap" >
+    <result column="content" property="content" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  
+  <resultMap  id="AppBannerStatisticaResult" type="com.linle.appBanner.model.AppBannerStatisticalVo">
+  	<result column="id" property="id"/>
+  	<result column="description" property="description"/>
+  	<result column="del_flag" property="status"/>
+  	<result column="create_date" property="createDate"/>
+  	<result column="registereCount" property="registereCount"/>
+  	<result column="unRegistereCount" property="unRegistereCount"/>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, img_url, is_top, create_date, update_date, user_id, del_flag,description,type,community_list, order_no,hasH5,banner_url
+  </sql>
+  <sql id="Blob_Column_List" >
+    content
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from app_banner
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from app_banner
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.linle.entity.sys.AppBanner" >
+    insert into app_banner (id, img_url, is_top, 
+      create_date, update_date, user_id, 
+      del_flag, content,description,type,community_list, order_no,hasH5,banner_url)
+    values (#{id,jdbcType=BIGINT}, #{imgUrl,jdbcType=VARCHAR}, #{isTop,jdbcType=INTEGER}, 
+      #{createDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP}, #{userId,jdbcType=BIGINT}, 
+      #{delFlag,jdbcType=INTEGER}, #{content,jdbcType=LONGVARCHAR},#{description},#{type},#{communityList},
+       #{orderNo,jdbcType=INTEGER},#{hasH5},#{bannerUrl})
+  </insert>
+  <insert id="insertSelective" parameterType="com.linle.entity.sys.AppBanner" >
+    insert into app_banner
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="imgUrl != null" >
+        img_url,
+      </if>
+      <if test="isTop != null" >
+        is_top,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="updateDate != null" >
+        update_date,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="delFlag != null" >
+        del_flag,
+      </if>
+      <if test="content != null" >
+        content,
+      </if>
+      <if test="description !=null">
+      	description,
+      </if>
+      <if test="type !=null">
+      	type,
+      </if>
+      <if test="communityList !=null">
+      	community_list,
+      </if>
+        <if test="orderNo != null" >
+        order_no,
+      </if>
+      <if test="hasH5 !=null">
+      	hasH5,
+      </if>
+      <if test="bannerUrl !=null">
+      	banner_url,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="imgUrl != null" >
+        #{imgUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="isTop != null" >
+        #{isTop,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="delFlag != null" >
+        #{delFlag,jdbcType=INTEGER},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="description !=null">
+      	#{description},
+      </if>
+       <if test="type !=null">
+      	#{type},
+      </if>
+      <if test="communityList !=null">
+      	#{communityList},
+      </if>
+      <if test="orderNo != null" >
+        #{orderNo,jdbcType=INTEGER},
+      </if>
+      <if test="hasH5 !=null">
+      	#{hasH5},
+      </if>
+      <if test="bannerUrl !=null">
+      	#{bannerUrl},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.linle.entity.sys.AppBanner" >
+    update app_banner
+    <set >
+      <if test="imgUrl != null" >
+        img_url = #{imgUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="isTop != null" >
+        is_top = #{isTop,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="delFlag != null" >
+        del_flag = #{delFlag,jdbcType=INTEGER},
+      </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="description !=null">
+      	description = #{description},
+      </if>
+      <if test="type !=null">
+      	type = #{type},
+      </if>
+      <if test="communityList !=null">
+      	community_list = #{communityList},
+      </if>
+      <if test="orderNo != null" >
+        order_no = #{orderNo,jdbcType=INTEGER},
+      </if>
+      <if test="hasH5 !=null">
+      	hasH5 = #{hasH5},
+      </if>	
+      <if test="bannerUrl !=null">
+      	banner_url = #{bannerUrl},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.linle.entity.sys.AppBanner" >
+    update app_banner
+    set img_url = #{imgUrl,jdbcType=VARCHAR},
+      is_top = #{isTop,jdbcType=INTEGER},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP},
+      user_id = #{userId,jdbcType=BIGINT},
+      del_flag = #{delFlag,jdbcType=INTEGER},
+      content = #{content,jdbcType=LONGVARCHAR},
+      description = #{description},
+      type = #{type},
+      community_list = #{communityList},
+      order_no = #{orderNo,jdbcType=INTEGER},
+      hasH5 = #{hasH5},
+      banner_url = #{bannerUrl}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.linle.entity.sys.AppBanner" >
+    update app_banner
+    set img_url = #{imgUrl,jdbcType=VARCHAR},
+      is_top = #{isTop,jdbcType=INTEGER},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP},
+      user_id = #{userId,jdbcType=BIGINT},
+      del_flag = #{delFlag,jdbcType=INTEGER},
+      description = #{description},
+      type = #{type},
+      community_list = #{communityList},
+      order_no = #{orderNo,jdbcType=INTEGER},
+      hasH5 = #{hasH5},
+      banner_url = #{bannerUrl}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  <select id="getAllData" parameterType="page" resultMap="BaseResultMap">
+  		   select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from app_banner
+    order by is_top,order_no
+  </select>
+  
+  <select id="getBannerForAPI" resultMap="BannerForAPIResult" parameterType="map">
+  	select id,img_url,description,hasH5
+  	from app_banner
+  	where del_flag = 0 
+  	<if test="communityId ==null">
+  		and type = 0
+  	</if>
+  	<if test="communityId !=null">
+  		and (type = 0 or (type = 1 and find_in_set(#{communityId},community_list)))
+  	</if>
+  	order by is_top,order_no
+  </select>
+  
+  <select id="statistical" parameterType="page" resultMap="AppBannerStatisticaResult">
+  	select id,description,del_flag,COUNT(registereid) as registereCount,COUNT(unregistereid) as unRegistereCount,create_date from
+		(select id,description,del_flag,create_date from app_banner where hasH5!=1
+			<if test="params.description!='' and params.description!=null">
+				and description like CONCAT('%','${params.description}','%')
+			</if>
+			<if test="params.status!=null and params.status!=-1">
+				and del_flag = #{params.status}
+			</if>
+			) as banner
+		left join (select id as registereid,banner_id,create_date as rclicl_date from appbanner_access_record where uid is not null
+			<if test="(params.beginDate ==null or params.beginDate=='') and (params.endDate ==null or params.endDate=='')">
+			</if>
+			<if test="params.beginDate !=null and params.beginDate!='' and (params.endDate ==null or params.endDate=='')">
+				<![CDATA[ and create_date>=#{params.beginDate} ]]>
+			</if>
+			<if test="(params.beginDate ==null or params.beginDate=='') and params.endDate !=null and params.endDate!=''">
+				<![CDATA[ and create_date<=#{params.endDate} ]]>
+			</if>
+			<if test="params.beginDate !=null and params.beginDate!='' and params.endDate !=null and params.endDate !=''">
+				 and(create_date BETWEEN #{params.beginDate} AND #{params.endDate})
+			</if>
+		) as registere
+		on banner.id = registere.banner_id
+		left join (select id as unregistereid,banner_id,create_date as uclicl_date from appbanner_access_record where uid is null
+			<if test="(params.beginDate ==null or params.beginDate=='') and (params.endDate ==null or params.endDate=='')">
+			</if>
+			<if test="params.beginDate !=null and params.beginDate!='' and (params.endDate ==null or params.endDate=='')">
+				<![CDATA[ and create_date>=#{params.beginDate} ]]>
+			</if>
+			<if test="(params.beginDate ==null or params.beginDate=='') and params.endDate !=null and params.endDate!=''">
+				<![CDATA[ and create_date<=#{params.endDate} ]]>
+			</if>
+			<if test="params.beginDate !=null and params.beginDate!='' and params.endDate !=null and params.endDate !=''">
+				 and(create_date BETWEEN #{params.beginDate} AND #{params.endDate})
+			</if>
+		) as unregistere
+		on banner.id = unregistere.banner_id
+		GROUP BY banner.id
+		order by banner.create_date desc
+  </select>
+</mapper>

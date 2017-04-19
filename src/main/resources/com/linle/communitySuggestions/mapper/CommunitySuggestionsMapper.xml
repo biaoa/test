@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.linle.communitySuggestions.mapper.CommunitySuggestionsMapper" >
+  <resultMap id="BaseResultMap" type="com.linle.entity.sys.CommunitySuggestions" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="user_id" property="userId" jdbcType="BIGINT" />
+    <result column="community_id" property="communityId" jdbcType="BIGINT" />
+    <result column="advice" property="advice" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+    <result column="folder_id" property="folderId"/>
+    <result column="community_del_falg" property="communityDelFalg"/>
+    <association column="folder_id" property="folder" select="com.linle.system.mapper.SysFolderMapper.getByFolderId"/>
+<!--     <association column="user_id" property="user" select="com.linle.user.mapper.UserMapper.selectByPrimaryKey"/> -->
+  </resultMap>
+  
+  <resultMap id="pageResultMap" type="com.linle.entity.sys.CommunitySuggestions" extends="BaseResultMap">
+    <result column="userName" property="userName" jdbcType="VARCHAR" />
+     <result column="overall" property="overall" jdbcType="VARCHAR" />
+     <result column="mobile_Phone" property="mobilePhone" jdbcType="VARCHAR" />
+  	<collection property="commentList" column="id" select="com.linle.communitySuggestionsComment.mapper.CommunitySuggestionsCommentMapper.selectNewCommentListById" />
+  </resultMap>
+  
+  <resultMap id="AdviceForAPIResult" type="com.linle.mobileapi.v1.model.AdviceVO" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="user_id" property="userId" jdbcType="BIGINT" />
+  	<result property="createDate" column="create_date"/>
+  	<result property="advice" column="advice"/>
+  	<collection property="imgs" column="folder_id" select="com.linle.system.mapper.SysFileMapper.findFilesUrlByFolderId" />
+  	<collection property="thumImages" column="folder_id" select="com.linle.system.mapper.SysFileMapper.findThumFilesUrlByFolderId" />
+  </resultMap>
+  
+  <resultMap id="AdviceListForAPIResult" type="com.linle.mobileapi.v1.model.AdviceListVO" >
+   	<id column="id" property="id"  />
+  	<result property="createDate" column="create_date"/>
+  	<result property="advice" column="advice"/>
+<!--   	<collection column="folder_id" property="image"  select="com.linle.system.mapper.SysFileMapper.findOneThumFilesUrlByFolderId" /> -->
+  	<collection property="newsAdvice" column="id" select="com.linle.communitySuggestionsComment.mapper.CommunitySuggestionsCommentMapper.findNewsAdviceById" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    id, user_id, community_id, advice,status, create_date, update_date,folder_id,community_del_falg
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from community_suggestions
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from community_suggestions
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.linle.entity.sys.CommunitySuggestions" >
+    insert into community_suggestions (id, user_id, community_id, 
+      advice,status, create_date, update_date,folder_id,community_del_falg
+      )
+    values (#{id,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{communityId,jdbcType=BIGINT}, 
+      #{advice,jdbcType=VARCHAR},#{status,jdbcType=INTEGER}, #{createDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP}
+      ,#{folderId},#{communityDelFalg})
+  </insert>
+  <insert id="insertSelective" parameterType="com.linle.entity.sys.CommunitySuggestions" >
+    insert into community_suggestions
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="communityId != null" >
+        community_id,
+      </if>
+      <if test="advice != null" >
+        advice,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="updateDate != null" >
+        update_date,
+      </if>
+      <if test="folderId !=null">
+      	folder_id,
+      </if>
+      <if test="communityDelFalg !=null">
+      	community_del_falg,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="communityId != null" >
+        #{communityId,jdbcType=BIGINT},
+      </if>
+      <if test="advice != null" >
+        #{advice,jdbcType=VARCHAR},
+      </if>
+        <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="folderId !=null">
+      	#{folderId},
+      </if>
+      <if test="communityDelFalg !=null">
+      	#{communityDelFalg},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.linle.entity.sys.CommunitySuggestions" >
+    update community_suggestions
+    <set >
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="communityId != null" >
+        community_id = #{communityId,jdbcType=BIGINT},
+      </if>
+      <if test="advice != null" >
+        advice = #{advice,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="folderId !=null">
+      	folder_id = #{folderId},
+      </if>
+      <if test="communityDelFalg !=null">
+      	community_del_falg = #{communityDelFalg},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.linle.entity.sys.CommunitySuggestions" >
+    update community_suggestions
+    set user_id = #{userId,jdbcType=BIGINT},
+      community_id = #{communityId,jdbcType=BIGINT},
+      advice = #{advice,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP},
+      folder_id = #{folderId},
+      community_del_falg = #{communityDelFalg}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  <select id="getAllData" parameterType="page" resultMap="pageResultMap">
+	SELECT a.*,u.`name` userName,u.mobile_Phone,r.overall 
+	FROM community_suggestions a
+		LEFT JOIN users u on u.id=a.user_id
+		LEFT JOIN room_no r on r.id=u.address_details
+	    where a.community_id = #{params.communityId} and community_del_falg = 0
+	   	<if test="params !=null and params.owner!= null and params.owner!=''">
+	   		and u.`name` =  #{params.owner}
+	   	</if>
+	   	<if test="params.roomno !=null and params.roomno !=''">
+	   		and r.overall = #{params.roomno}
+	   	</if>
+	   	<if test="params.beginDate!=null and params.endDate==null">
+		  	and <![CDATA[  a.create_date>=#{params.beginDate} ]]>
+		</if>
+		<if test="params.beginDate==null and params.endDate!=null">
+			and <![CDATA[ a.create_date<=#{params.endDate} ]]>
+		</if>
+		<if test="params.beginDate!=null and params.endDate!=null">
+			and <![CDATA[ (a.create_date >=#{params.beginDate} and a.create_date<=#{params.endDate}) ]]>
+		</if>
+	    order by a.create_date desc
+  </select>
+  
+  <select id="getAdviceForAPI" parameterType="map" resultMap="AdviceListForAPIResult">
+  	select advice,create_date,folder_id,id
+  	 from community_suggestions
+  	 where community_id = #{communityId} and user_id = #{uid}
+  	 order by create_date desc
+  	 limit #{begin},#{end}
+  </select>
+  
+  <select id="selectById" resultMap="AdviceForAPIResult" parameterType="long" >
+    select 
+    <include refid="Base_Column_List" />
+    from community_suggestions
+    where id = #{id}
+  </select>
+  
+    <!-- 获得待处理投诉建议总数 -->
+  <select id="getCountUnAdvice" parameterType="long" resultType="long">
+  		SELECT COUNT(id) FROM community_suggestions 
+  		WHERE community_id=#{communityId} and (`status`=0 or `status`=1 or `status` is null)
+  		and community_del_falg = 0
+  </select>
+  
+  <!-- 获得最新一条待处理投诉建议记录-->
+  <select id="getOneNewAdvice" parameterType="map" resultMap="pageResultMap">
+		SELECT a.*,u.`name` userName,u.mobile_Phone,r.overall 
+		FROM community_suggestions a
+		LEFT JOIN users u on u.id=a.user_id
+		LEFT JOIN room_no r on r.id=u.address_details
+	    where a.community_id =#{communityId}  and (a.`status`=0 or a.`status`=1 or a.`status` is null) 
+	    and community_del_falg = 0
+	    order by a.create_date desc
+	  	limit #{begin},1
+  </select>
+  <update id="updateStatus" parameterType="map">
+ 	 update community_suggestions set status=#{status} where id=#{id}
+  </update>
+  <!-- 物业删除意见反馈 -->
+  <update id="communityDel" parameterType="com.linle.entity.sys.CommunitySuggestions">
+  	 update community_suggestions
+  	 set community_del_falg = 1
+  	 where id = #{id}
+  </update>
+</mapper>

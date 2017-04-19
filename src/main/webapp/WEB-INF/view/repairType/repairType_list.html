@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>报修类型管理</title>
+<meta name="content-type" content="text/html; charset=UTF-8">
+<#include '/common/resources.html'>
+<link rel="stylesheet" media="screen and (min-width: 1580px)" href="${base}/resources/css/sys/jquery.tableui.css" />
+<link rel="stylesheet" media="screen and (max-width: 1580px)" href="${base}/resources/css/sys/tableui-resolving.css" />
+<script src="${base}/resources/js/respond.js" type="text/javascript" async="async"></script>
+</head>
+<body>
+<div class="whole">
+	<ol class="breadcrumb">
+		<li><a href="javascript:void(0)">报修类型管理</a></li>
+		<li class="active">类型列表</li>
+		<span style="float: right"><button type="button"
+			class="btn-default" style="float: right;">新增类型</button></span>
+	</ol>
+			<div class="tab_box">
+	<table class="table_solid" border="0" cellspacing="0">
+		<tbody>
+			<tr class="evenRow">
+				<th>序号</th>
+				<th>类型名称</th>
+				<th>状态</th>
+				<th>创建时间</th>
+				<th>修改时间</th>
+				<th>操作</th>
+			</tr>
+			<#if (pagelist.results)?exists && pagelist.results?size gt 0> <#list
+			pagelist.results as RepairType>
+			<tr>
+				<td>${(RepairType_index+1)+(pagelist.pageNo-1)*pagelist.pageSize}</td>
+				<td>${RepairType.typeName}</td>
+				<td>
+					<#if RepairType.delFlag==0>
+						正常
+						<#else>
+						禁用
+					</#if>
+				</td>
+				<td>${RepairType.createDate?string('yyyy/MM/dd HH:mm:ss')}</td>
+				<td>${RepairType.updateDate?string('yyyy/MM/dd HH:mm:ss')}</td>
+				<td>
+					<a class="cz-a btn-default common-btn-cz" href="${base}/repairType/addRepairType?id=${RepairType.id}">编辑</a>
+					<a class="cz-a btn-default del common-btn-cz" href="javascript:void(0)" val="${RepairType.id}">删除</a>
+				</td>
+			</tr>
+			</#list>
+		</tbody>
+	</table>
+	<form action="${base}/repairType/list" id="pagerForm"><#include
+		'/common/pagination.html'></form>
+	<#else>
+	<div class="no-data">暂无数据~</div>
+	</#if>
+	</div>
+	</div>
+</body>
+<script type="text/javascript">
+	$(function() {
+		$("button").click(function() {
+			window.location.href = "${base}/repairType/addRepairType";
+		});
+
+		$(".del").click(function() {
+			var id = $(this).attr("val");
+			$.post("${base}/repairType/delRepairType/" + id, function(data) {
+				layer.msg(data.msg,{
+			     	shift: 0
+			     }, function(){
+			    	 location.reload();
+			     });
+				;
+			}, 'json');
+		});
+	});
+	
+</script>
+
+</html>

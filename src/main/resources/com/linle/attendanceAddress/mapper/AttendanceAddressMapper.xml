@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.linle.attendanceAddress.mapper.AttendanceAddressMapper" >
+  <resultMap id="BaseResultMap" type="com.linle.attendanceAddress.model.AttendanceAddress" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="template_id" property="templateId" jdbcType="BIGINT" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="lat" property="lat" jdbcType="VARCHAR" />
+    <result column="lng" property="lng" jdbcType="VARCHAR" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  
+  <resultMap type="AttendanceAddressVO" id="AttendanceAddressAPIResult">
+  	<result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="lat" property="lat" jdbcType="VARCHAR" />
+    <result column="lng" property="lng" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, template_id, address, lat, lng, create_date, update_date
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from attendance_address
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from attendance_address
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.linle.attendanceAddress.model.AttendanceAddress" >
+    insert into attendance_address (id, template_id, address, 
+      lat, lng, create_date, 
+      update_date)
+    values (#{id,jdbcType=BIGINT}, #{templateId,jdbcType=BIGINT}, #{address,jdbcType=VARCHAR}, 
+      #{lat,jdbcType=VARCHAR}, #{lng,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, 
+      #{updateDate,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.linle.attendanceAddress.model.AttendanceAddress" >
+    insert into attendance_address
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="templateId != null" >
+        template_id,
+      </if>
+      <if test="address != null" >
+        address,
+      </if>
+      <if test="lat != null" >
+        lat,
+      </if>
+      <if test="lng != null" >
+        lng,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="updateDate != null" >
+        update_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="templateId != null" >
+        #{templateId,jdbcType=BIGINT},
+      </if>
+      <if test="address != null" >
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="lat != null" >
+        #{lat,jdbcType=VARCHAR},
+      </if>
+      <if test="lng != null" >
+        #{lng,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.linle.attendanceAddress.model.AttendanceAddress" >
+    update attendance_address
+    <set >
+      <if test="templateId != null" >
+        template_id = #{templateId,jdbcType=BIGINT},
+      </if>
+      <if test="address != null" >
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="lat != null" >
+        lat = #{lat,jdbcType=VARCHAR},
+      </if>
+      <if test="lng != null" >
+        lng = #{lng,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.linle.attendanceAddress.model.AttendanceAddress" >
+    update attendance_address
+    set template_id = #{templateId,jdbcType=BIGINT},
+      address = #{address,jdbcType=VARCHAR},
+      lat = #{lat,jdbcType=VARCHAR},
+      lng = #{lng,jdbcType=VARCHAR},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  <!-- 根据考勤模板ID 删除对应的考勤地址表 -->
+  <delete id="deleteByTemplateId" parameterType="Long">
+  	 delete from attendance_address
+  	 where template_id = #{templateId}
+  </delete>
+  
+  <!-- 根据考勤模板Id 获得对应的考勤地址集合 -->
+  <select id="selectByTemplateId" parameterType="Long" resultMap="BaseResultMap">
+  	 select 
+    <include refid="Base_Column_List" />
+    from attendance_address
+    where template_id = #{templateId}
+  </select>
+  
+  <select id="getAttendanceDateAddressByTemplateId" parameterType="Long" resultMap="AttendanceAddressAPIResult">
+  	select address,lat,lng
+  	from attendance_address
+  	where template_id = #{templateId}
+  </select>
+</mapper>

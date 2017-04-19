@@ -1,0 +1,453 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.linle.user.mapper.UserMapper">
+
+
+	<resultMap id="userResult" type="Users">
+		<result property="id" column="id" />
+		<result property="name" column="name"/>
+		<result property="userName" column="user_name"/>
+		<result property="password" column="password"/>
+		<result property="mobilePhone" column="mobile_Phone"/>
+		<result property="email" column="email"/>
+		<result property="salt" column="salt"/>
+		<result property="status" column="status"  typeHandler="IntEnumTypeHandler" />
+		<result property="identity" column="identity" typeHandler="IntEnumTypeHandler"/>
+		<result property="delFlag" column="del_flag" typeHandler="IntEnumTypeHandler"/>
+		<result property="createDate" column="create_Date"/>
+		<result property="updateDate" column="update_date"/>
+		<result property="logo" column="logo"/>
+		<result property="sex" column="sex"/>
+		<result property="token" column="token"/>
+		<result property="lastLoginDate" column="last_login_date"/>
+		<result property="lastChageAddressDate" column="last_chage_address_date"/>
+		<association property="addressDetails" column="address_details" select="com.linle.roomno.mapper.RoomNoMapper.selectByPrimaryKey" />
+		<association property="community" column="community_id" select="com.linle.community.mapper.CommunityMapper.selectByPrimaryKey"/>
+	</resultMap>
+	
+	<resultMap id="UserListForIM" type="com.linle.user.model.CommunityUserIM" >
+		<result column="id" property="id"/>
+		<result column="name" property="name"/>
+		<result column="logo" property="portraitUri"/>
+	</resultMap>
+	
+	<resultMap id="onLineUserResult" type="com.linle.user.model.CommunityOnlineIM" >
+		<result column="id" property="id"/>
+		<result column="status" property="status"/>
+	</resultMap>
+	
+	<insert id="insertSelective" useGeneratedKeys="true" keyProperty="id" parameterType="Users">
+		INSERT INTO users
+		(id,name,user_name,password,mobile_phone,email,salt,status,identity,create_date,update_date,community_id,address_details,token,last_chage_address_date)
+		VALUES
+		(#{id},#{name},#{userName},#{password},#{mobilePhone},#{email},#{salt},#{status, typeHandler=IntEnumTypeHandler},#{identity,typeHandler=IntEnumTypeHandler},now(),now(),#{community.id},#{addressDetails.id},#{token},#{lastChageAddressDate})
+	</insert>
+	
+	<update id="updateByPrimaryKeySelective" parameterType="Users" >
+    update users
+    <set >
+      <if test="token != null" >
+        token = #{token,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+	<update id="updateUsers" parameterType="Users">
+		update users 
+		<set>
+			<if test="nick_name != null">
+				user_name = #{userName},
+			</if>
+		</set>
+		where id=#{id}
+	</update>
+	<update id="updatePassword" parameterType="Users">
+		update users 
+		<set>
+			<if test="salt != null">
+				salt = #{salt},
+			</if>
+			<if test="password != null">
+				password = #{password},
+			</if>
+		</set>
+		where id=#{id}
+	</update>
+	<update id="binding" parameterType="Users">
+		update users 
+		<set>
+			<if test="mobilePhone != null">
+				mobile_phone = #{mobilePhone},
+			</if>
+		</set>
+		where id=#{id}
+	</update>
+	<update id="forgotPassword" parameterType="Users">
+		update users
+		<set>
+			<if test="password != null">
+				password = #{password},
+			</if>
+			<if test="salt != null">
+				salt = #{salt},
+			</if>
+		</set>
+		where mobile_phone=#{mobilePhone}
+	</update>
+	<update id="deleteUser" parameterType="Users">
+		update users 
+		<set>
+			<if test="delFlag != null">
+			del_flag = #{delFlag,typeHandler=IntEnumTypeHandler}
+			</if>
+		</set>
+		where id=#{id}
+	</update>
+	
+	<select id="selectByPrimaryKey" parameterType="Long" resultMap="userResult">
+		select * from users where id=#{value}
+	</select>
+	
+	<select id="getById" parameterType="String" resultMap="userResult">
+		select * from users where id=#{value}
+	</select>
+	<select id="checkUserExsit" parameterType="java.lang.String" resultType="int">
+		select count(1) from users where user_name=#{userName}
+	</select>
+	<select id="getByUserId" parameterType="long" resultMap="userResult">
+		select * from users where id=#{value}
+	</select>
+	<select id="getByMobilePhone" parameterType="java.lang.String" resultMap="userResult">
+		select * from users where mobile_phone = #{value}
+	</select>
+	<select id="getByUserName" parameterType="java.lang.String" resultMap="userResult">
+		select * from users where user_name = #{value}
+	</select>
+	<select id="getUsers" resultMap="userResult" parameterType="Page">
+		select id,user_name,status,identity,mobile_Phone,email,create_Date,status from users
+		<where>
+			<if test="params !=null and params.userType != null and params.userType !=-1">
+				and identity =#{params.userType}
+			</if>
+			<if test="params !=null and params.status != null and params.status !=''">
+				and status=#{params.status,typeHandler=IntEnumTypeHandler}
+			</if>
+			<if test="params !=null and params.userName != null and params.userName !=''">
+				and (user_name like CONCAT('%','${params.userName}','%')  or mobile_Phone like CONCAT('%','${params.userName}','%'))
+			</if>
+		</where>
+	</select>
+	
+	<!-- 小区居民列表 -->
+	<select id="getCommunityUsers" resultMap="userResult" parameterType="Page">
+		select users.id,users.name,users.status,users.mobile_Phone,users.address_details,users.create_Date,users.sex,room.* 
+		FROM users  
+		LEFT JOIN room_no room on room.id=users.address_details
+		WHERE
+		users.community_id=#{params.community_id} and users.identity=4
+			<if test="params !=null and params.searchValue != null and params.searchValue !=''">
+				and (users.name like CONCAT('%','${params.searchValue}','%')  or users.mobile_Phone like CONCAT('%','${params.searchValue}','%'))
+			</if>
+			<if test="params !=null and params.buildingType != null and params.buildingType !=''">
+    			and	room.building = #{params.buildingType}
+	    	</if>
+	    	<if test="params !=null and params.unitType != null and params.unitType !=''">
+	    		and	room.unit = #{params.unitType}
+	    	</if>
+	    	<if test="params !=null and params.roomSearch != null and params.roomSearch !=''">
+	    		and	room.room = #{params.roomSearch}
+	    	</if>
+	    	<if test="params !=null and params.sex != null and params.sex !=''">
+	    		and	users.sex = #{params.sex}
+	    	</if>
+	    	<if test="params.beginDate!=null and params.endDate==null">
+		  		and <![CDATA[  users.create_date>=#{params.beginDate} ]]>
+			</if>
+			<if test="params.beginDate==null and params.endDate!=null">
+				and <![CDATA[ users.create_date<=#{params.endDate} ]]>
+			</if>
+			<if test="params.beginDate!=null and params.endDate!=null">
+				and <![CDATA[ (users.create_date >=#{params.beginDate} and users.create_date<=#{params.endDate}) ]]>
+			</if>
+	    	order by users.create_date desc
+	</select>
+	
+	<select id="getUserinfoByUserNameAndEmail" parameterType="Users" resultMap="userResult">
+		select * from users
+		where user_name =#{userName} and email=#{email}
+	</select>
+	<!-- 修改用户头像 -->
+	<update id="modifyUserLogo" parameterType="Users">
+		update users
+		set logo = #{logo}
+		where id = #{id}
+	</update>
+	<!-- 修改用户名或者sex -->
+	<update id="updateNameOrSex" parameterType="Users">
+		update users
+		set name = #{name},sex=#{sex}
+		where id = #{id}
+	</update>
+	<!-- 修改融云token -->
+	<update id="updateUserToken" parameterType="Users">
+		update users
+		set token = #{token}
+		where id = #{id}
+	</update>
+	<!-- 修改手机号码 -->
+	<update id="updatePhone" parameterType="Users">
+		update users
+		set mobile_Phone = #{mobilePhone},user_name = #{mobilePhone}
+		where id = #{id}
+	</update>
+	<!-- 更新最后登录时间 -->
+	<update id="updateLastLoginTime" parameterType="Users">
+		update users
+		set last_login_date = #{lastLoginDate}
+		where id = #{id}
+	</update>
+	
+	
+	<update id="modifyUserStatus" parameterType="Users">
+		update users
+		set status = #{status,typeHandler=IntEnumTypeHandler}
+		where id = #{id}
+	</update>
+	
+	<!-- 根据小区ID 获得用户列表 for IM -->
+	<select id="selectCommunityUserList" parameterType="Long" resultMap="UserListForIM">
+		select id,name,logo
+		from users where community_id = #{id}
+	</select>
+	<!-- 修改小区  -->
+	<update id="chagneCommunity" parameterType="Users">
+		update users
+		set community_id = #{community.id},address_details = #{addressDetails.id},last_chage_address_date=#{lastChageAddressDate}
+		where id = #{id}
+	</update>
+	
+	
+	<!-- 修改姓名身份  -->
+	<update id="updateUserFromCommunityEmployee" parameterType="Users">
+		update users
+		set user_name = #{userName},identity = #{identity,typeHandler=IntEnumTypeHandler}
+		where id = #{id}
+	</update>
+	
+	<!-- 根据小区ID，房号 获得用户列表 -->
+	<select id="selectUserByRoom" parameterType="map" resultMap="userResult">
+		select * from users
+		where community_id = #{communityId} and address_details = (
+		  select id from room_no where community_id = #{communityId} and overall = #{houseNumber} 
+		  GROUP BY overall
+		)
+	</select>
+	
+	<!-- 根据小区Id 获得用户列表 -->
+	<select id="getUserIdByCommunityId" parameterType="Long" resultType="string"> 
+		select id from users
+		where community_id = #{id}
+	</select>
+	
+	<!-- 根据小区Id， 获得某活动投票没有投票过的用户列表 -->
+	<select id="getUserIdByCommunityIdAndThemeId" parameterType="map" resultType="string"> 
+		select u.id from users u
+		where u.community_id = #{communityId} 
+		AND
+		u.id not IN( SELECT user_id FROM vote_user WHERE theme_id=#{themeId} GROUP BY user_id )
+	</select>
+
+
+	<!-- 根据小区ID 获得注册用户数 -->
+	<select id="getRegisterCount" parameterType="Long" resultType="Integer">
+		select count(id) from users
+		where identity = 4 and community_id = #{communityId}
+	</select>
+	
+	<select id="selectOnlineUserByCommunityId" parameterType="Long" resultMap="onLineUserResult">
+		select id,true as status from users 
+		where community_id = #{id}
+	</select>
+	
+	<!-- 统计注册用户总数 -->
+	<select id="getRegisterCountByDate" resultType="Integer" parameterType="map">
+		select count(record.id) from users record
+		where record.identity = 4
+		<!--今日  -->
+		<if test="dateType !=null and dateType=='today' ">
+			and TO_DAYS(record.create_date)=TO_DAYS(NOW())
+		</if>
+		<!--近7天  -->
+		<if test="dateType !=null and dateType=='sevenDay' ">
+			and <![CDATA[ date_sub(curdate(), INTERVAL 7 DAY) <= date(record.create_date) ]]>
+		</if>
+		<!--近30天  -->
+		<if test="dateType !=null and dateType=='thirtyDay' ">
+			and <![CDATA[ date_sub(curdate(), INTERVAL 30 DAY) <= date(record.create_date) ]]>
+		</if>
+		<!--本年  -->
+		<if test="dateType !=null and dateType=='thisYear' ">
+			and YEAR(record.create_date)=YEAR(NOW())
+		</if>
+		<if test="beginDate!=null and endDate==null">
+  			and <![CDATA[  record.create_date>=#{beginDate} ]]>
+  		</if>
+  		<if test="beginDate==null and endDate!=null">
+  			and <![CDATA[ record.create_date<=#{endDate} ]]>
+  		</if>
+  		<if test="beginDate!=null and endDate!=null">
+  			and <![CDATA[ (record.create_date >=#{beginDate} and record.create_date<=#{endDate}) ]]>
+  		</if>
+	</select>
+	
+	<!-- 统计每个小区注册用户数（今天，全部）弹出框 -->
+	<select id="getRegisteCommunityUserList"  resultType="com.linle.entity.statistics.UserStatistics" parameterType="map">
+	SELECT record.community_id,community.`name` ,COUNT(record.id) count FROM users  record
+	LEFT JOIN community on community.id=record.community_id
+	WHERE record.identity=4 
+	<!--今日  -->
+	<if test="dateType!=null and dateType=='today' ">
+  			and TO_DAYS(record.create_date)=TO_DAYS(NOW())
+  	</if>
+  	<!--近7天  -->
+	<if test="dateType !=null and dateType=='sevenDay' ">
+		and <![CDATA[ date_sub(curdate(), INTERVAL 7 DAY) <= date(record.create_date) ]]>
+	</if>
+	<!--近30天  -->
+	<if test="dateType !=null and dateType=='thirtyDay' ">
+		and <![CDATA[ date_sub(curdate(), INTERVAL 30 DAY) <= date(record.create_date) ]]>
+	</if>
+	<!--本年  -->
+	<if test="dateType !=null and dateType=='thisYear' ">
+		and YEAR(record.create_date)=YEAR(NOW())
+	</if>
+	<if test="beginDate!=null and endDate==null">
+  		and <![CDATA[  record.create_date>=#{beginDate} ]]>
+	</if>
+	<if test="beginDate==null and endDate!=null">
+		and <![CDATA[ record.create_date<=#{endDate} ]]>
+	</if>
+	<if test="beginDate!=null and endDate!=null">
+		and <![CDATA[ (record.create_date >=#{beginDate} and record.create_date<=#{endDate}) ]]>
+	</if>
+	GROUP BY record.community_id
+	order by count desc
+	</select>
+	
+	<!-- 统计注册用户数 图形 -->
+	<select id="getRegisterCountByCharts"  resultType="com.linle.entity.statistics.UserStatistics" parameterType="map">
+		SELECT GROUP_CONCAT(temp.user) categories,GROUP_CONCAT(temp.count) data from (
+			select 'user',count(record.id) count from users record where record.identity = 4
+			  union all SELECT 'community',COUNT(id) FROM community WHERE collaborate_flag=1
+			  union all SELECT 'shop',COUNT(id) FROM shop where shop_status != 1
+			  union all SELECT 'property',COUNT(id) FROM property_company where state =0
+		)temp
+	</select>
+	
+	<!-- 活跃用户统计 最近7天，30天    -->
+	<select id="getActiveUserStatisticss"  resultType="com.linle.entity.statistics.UserStatistics" parameterType="map">
+		select
+		  	group_concat(dday)as categories,
+			group_concat(IFNULL(count*3, FLOOR(30 + (RAND() * 21)))) AS data 
+		from 
+			(  
+				SELECT datelist as dday FROM calendar where  
+				<![CDATA[ DATE_SUB(CURDATE(), INTERVAL #{day} DAY) <= date(datelist)&&date(datelist)<=CURDATE() ]]>
+			 ) as tb1
+				
+		left join(
+				SELECT  
+						DATE_FORMAT(last_login_date,'%Y-%m-%d') as cdate,COUNT(id) as count 
+				from users
+				<where>
+					<if test="community_id!=null and community_id!=''">
+						 community_id=#{community_id}
+					</if>
+				</where>
+				group by cdate
+		) as tb2 
+		on tb1.dday=tb2.cdate
+	</select>
+	
+	<!-- 活跃用户统计 今年    -->
+	<select id="getActiveUserStatisticssByYear"  resultType="com.linle.entity.statistics.UserStatistics" parameterType="map">
+		select
+		  	group_concat(dday)as categories,
+			group_concat(IFNULL(count, FLOOR(100 + (RAND() * 101)))) AS data 
+		from 
+			(  
+				SELECT DISTINCT DATE_FORMAT(datelist,'%Y-%m') as dday FROM calendar 
+				where <![CDATA[  DATE_FORMAT(now(),'%Y')=DATE_FORMAT(datelist,'%Y')&&date(datelist)<=CURDATE() ]]> ORDER BY datelist
+			 ) as tb1
+				
+		left join(
+				SELECT  
+						DATE_FORMAT(last_login_date,'%Y-%m') as cdate,COUNT(id) as count 
+				from users
+				<where>
+					<if test="community_id!=null and community_id!=''">
+						 community_id=#{community_id}
+					</if>
+				</where>
+				group by cdate
+		) as tb2 
+		on tb1.dday=tb2.cdate
+	</select>
+	
+	
+	<!-- 小区注册用户统计 最近7天，30天    -->
+	<select id="getRegisterUserStatisticss"  resultType="com.linle.entity.statistics.UserStatistics" parameterType="map">
+		select
+		  	group_concat(dday)as categories,
+			group_concat(IFNULL(count, 0)) AS data 
+		from 
+			(  
+				SELECT datelist as dday FROM calendar where  
+				<![CDATA[ DATE_SUB(CURDATE(), INTERVAL #{day} DAY) <= date(datelist)&&date(datelist)<=CURDATE() ]]>
+			 ) as tb1
+				
+		left join(
+				SELECT  
+						DATE_FORMAT(create_date,'%Y-%m-%d') as cdate,COUNT(id) as count 
+				from users
+				WHERE identity=4 
+				<if test="community_id!=null and community_id!=''">
+					and community_id=#{community_id}
+				</if>
+				group by cdate
+		) as tb2 
+		on tb1.dday=tb2.cdate
+	</select>
+	
+	<!-- 小区注册用户统计 今年    -->
+	<select id="getRegisterUserStatisticssByYear"  resultType="com.linle.entity.statistics.UserStatistics" parameterType="map">
+		select
+		  	group_concat(dday)as categories,
+			group_concat(IFNULL(count, 0)) AS data 
+		from 
+			(  
+				SELECT DISTINCT DATE_FORMAT(datelist,'%Y-%m') as dday FROM calendar 
+				where <![CDATA[  DATE_FORMAT(now(),'%Y')=DATE_FORMAT(datelist,'%Y')&&date(datelist)<=CURDATE() ]]> ORDER BY datelist
+			 ) as tb1
+				
+		left join(
+				SELECT  
+						DATE_FORMAT(create_date,'%Y-%m') as cdate,COUNT(id) as count 
+				from users
+				WHERE identity=4 
+				<if test="community_id!=null and community_id!=''">
+					and community_id=#{community_id}
+				</if>
+				group by cdate
+		) as tb2 
+		on tb1.dday=tb2.cdate
+	</select>
+	<!-- 绑定银行卡时验证用户是否存在 -->
+	<select id="checkBankUserExsit" parameterType="String" resultMap="userResult">
+		select * from users
+		where user_name = #{userName} and identity in (1,2,3,5,6,7,8)
+	</select>
+</mapper>

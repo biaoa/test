@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<#include '/common/resources.html'>
+		<link rel="stylesheet" media="screen and (min-width: 1580px)" href="${base}/resources/css/sys/shop-order.css" />
+		<link rel="stylesheet" media="screen and (max-width: 1580px)" href="${base}/resources/css/sys/shop-order-resolving.css" />
+		<link type="text/css" rel="stylesheet" href="${base}/resources/css/sys/application.css">
+		<link rel="stylesheet" href="${base}/resources/css/sys/viewer.min.css">
+		<script src="${base}/resources/js/respond.js" type="text/javascript" async="async"></script>
+		<title>杭州邻乐科技有限公司--让生活过的更好</title>
+		<meta content="杭州邻乐科技有限公司、杭州邻乐科技公司、杭州邻乐科技 、杭州邻乐、杭州邻乐公司、邻乐科技公司">
+		<meta name="keywords" content="物业管理软件、物业智能管理软件、物业服务软件、物业智能服务管理软件、物业管理、
+物业管理软件系统、物业智能管理软件系统、物业服务软件系统、物业智能服务管理软件系统、物业管理系统、物业系统
+">
+		<style>
+			.pj--border{border-bottom: 1px dashed gainsboro;}
+			.tk-img{width:100px;height: 80px;margin-right: 1%;float: left;}
+		</style>
+	</head>
+
+	<body>
+		<div class="whole" style="background: ghostwhite;">
+			<ol class="breadcrumb" style="height: auto;overflow: hidden;">
+				<li><a href="javascript:void(0)">投诉建议</a></li>
+			</ol>
+			<#if (pagelist.results)?exists && pagelist.results?size gt 0>
+			<#list pagelist.results as communitySuggestions>
+				<div class="order-list">
+				<div class="new-order">
+					<div class="new-order-title">
+						<div class="se-num"><i>投诉建议</i></div>
+						<div class="ord-num"><span>投诉编号：${communitySuggestions.id}</span></div>
+						<div class="ord-num"><span>投诉时间：${communitySuggestions.createDate?string('yyyy/MM/dd HH:mm')}</span></div>
+						
+					</div>
+				</div>			
+				<div class="my-order">					
+														
+					<div class="send-message" style="width: 50%;">
+						<div style="width: 100%;float: left;">
+																
+							<div class="send-message-left">
+								<div class="send-message-right">
+									<p commentList=''>业主姓名：</p>
+								</div>
+								<div class="send-message-p">
+									<p>
+										${communitySuggestions.userName!!}
+									</p>
+								</div>
+							</div>
+							<div class="send-message-left">
+								<div class="send-message-right">
+									<p>房号：</p>
+								</div>
+								<div class="send-message-p">
+									<p>
+										${communitySuggestions.overall!!}
+									</p>
+								</div>
+							</div>
+							<div class="send-message-left">
+								<div class="send-message-right">
+									<p>联系方式：</p>
+								</div>
+								<div class="send-message-p">
+								
+									<p>
+									${communitySuggestions.mobilePhone!!}
+									</p>
+								</div>
+							</div>
+							
+							<br />
+							<div class="send-message-left">
+								<div class="send-message-right">
+									<p>投诉建议：</p>
+								</div>
+								<div class="send-message-p">
+									<p>${communitySuggestions.advice!!}</p>
+								</div>
+							</div>
+							<div class="send-message-left">
+								<div class="send-message-right">
+									<p>图片：</p>
+								</div>
+								<#if communitySuggestions.folder??>
+									<div id="jq22" class="send-message-p">
+									<#list communitySuggestions.folder.files as file>
+										<img class="tk-img" src="${base}/${file.path!!}" />
+									</#list>
+									</div>
+									<#else>
+									无图片
+								</#if>
+							</div>	
+						</div>
+
+					</div>
+				</div>
+			</div>
+			</#list>
+				<div class="tab_box">
+				<form action="${base}/communitySuggestions/list" id="pagerForm"><#include
+		'/common/pagination.html'></form>
+		</div>
+				<#else>
+				<div class="no-data">暂无数据~</div>
+			</#if>
+			
+		</div>	
+	
+<script src="${base}/resources/js/viewer-jquery.min.js"></script>
+<script>
+$(function() {
+	$('#jq22,#jq33').viewer({
+		url: 'data-original'
+	});
+});
+</script>
+<script>
+//demo 回掉函数
+// $('#jq22').viewer({
+// 	url: 'data-original',
+
+// 	build: function() {
+// 		$("#jq22").html('<img class="tk-img" src="${base}/resources/images/beijin.jpg" /><img class="tk-img" src="${base}/resources/images/pic.png" />');
+
+// 		alert('build');
+// 	},
+
+// 	built: function() {
+// 		alert('built');
+// 	},
+
+// 	show: function() {
+// 		alert('show');
+// 	},
+
+// 	shown: function() {
+// 		alert('shown');
+// 	},
+
+// 	hide: function() {
+// 		alert('hide');
+// 	},
+
+// 	hidden: function() {
+// 		alert('hidden');
+// 	},
+
+// 	view: function() {
+// 		alert('view');
+// 	},
+
+// 	viewed: function() {
+// 		alert('viewed');
+// 	}
+// });
+
+</script>
+	</body>
+
+</html>

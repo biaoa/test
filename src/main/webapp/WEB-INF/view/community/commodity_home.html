@@ -1,0 +1,363 @@
+<!doctype>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <#include '/common/base.html'>
+  <metahttp-equiv="X-UA-Compatible"content="IE=9; IE=8; IE=7; IE=EDGE">
+  <meta name="renderer" content="webkit">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>物业首页</title>
+  <link href="${base}/resources/bootstrap-3.3.5-dist/css/bootstrap.min.css" rel='stylesheet' type='text/css' />  
+  <link type='text/css' rel='stylesheet' href="${base}/resources/css/sys/state.css"/> 
+  <link rel="stylesheet" href="${base}/resources/css/sys/viewer.min.css">
+  <script src="${base}/resources/bootstrap-3.3.5-dist/js/bootstrap.min.js" ></script>
+  <script type="text/javascript" src="${base}/resources/js/dateFormat.js"></script>
+  <script src="${base}/resources/js/viewer-jquery.min.js"></script>
+</head>
+ <body>
+ <div class="O_situation">
+   <div class="Home_repair">
+          <div class="h_eader">
+				<p class="w_elcome">欢迎进入邻乐科技</br>总注册用户:<span>${registerCount!!}</span></p>
+		  </div>
+				   
+           <div class="l_eft"  style="float:left;width:40%;">
+			         <div class="l_a">
+						           <p class="text-center" style="font-size:25px;">待处理报修（条）</br><span>${unRepairCount!!}</span></p>
+					</div>
+					<#if repairRecord??>
+				  	<div class='a_l'>
+						 <p class="in_dent" style='margin-top:20px;'><lable>业主名:</lable><span>${repairRecord.userName!!}</span></p>
+                         <p class="in_dent"><lable for="">房号: </lable><span>${repairRecord.overall!!}</span></p>
+                         <p class="in_dent"><lable for="">联系电话:</lable> <span>${repairRecord.mobilePhone!!}</span></p> 
+                         <p class="in_dent"><lable for="">服务号:</lable> <span>${repairRecord.single!!}</span></p> 
+                         <span class='li_mit'>报修内容:</span><div class='text_auto'>${repairRecord.content!!}  </div>
+                         <p class="in_dent"><lable for="">报修类型: </lable><span>${repairRecord.repairType.typeName!!}</span></p>
+                         <p class="in_dent"><lable for="">申请时间:</lable> <span>${repairRecord.createDate?string('yyyy-MM-dd HH:mm')}</span></p> 
+                         <p class="in_dent"><lable for="">预约时间:</lable> <span><#if (repairRecord.endDate)??>
+												${repairRecord.beginDate?string('yyyy-MM-dd
+												HH:mm:ss')}至${(repairRecord.endDate?string('yyyy-MM-dd HH:mm:ss'))?substring(11,19)} <#else> 尽快 </#if></span></p> 
+                  <#if (repairRecord.folder.id)??>
+	                 <div class="Pic_1 " style="margin-top:30px;width:430px;height:auto;margin-left:20px;">
+	                    <ul class="pup" id="jq22">
+	                    <#list (repairRecord.folder.files) as file>
+							<li class='li_mlr'><img src='${base}/${file.path}' width='105px' height='80px'/></li>
+						</#list>
+	                    </ul>
+	                </div>
+	                </#if>
+                    <div class="btn-group">
+                         <a href="#" class=" btn-lg mar_gin_a  operateRepair"  rid="${repairRecord.id}" val="1" role="button">立即处理</a>
+                         <a href="#" class=" btn-lg mar_gin operateRepair"  rid="${repairRecord.id}" val="3" role="button">不处理</a>
+                          
+                    </div>  
+				   </div>
+				   </#if>
+      		</div>
+    
+ 
+		       <div class="r_ight" style="float:left;width:40%;">
+		         		 
+		                <div class="x_a">
+		                <p class="text-center"  style="font-size:25px;">待处理投诉建议（条）</br><span id="unAdviceCount">${unAdviceCount!!}</span></p>
+		                </div>
+		                <#if communitySuggestions??>
+                    	<p class='T_bench'>
+                    	
+                    	<span style="margin-right:3px;float:right;" class='N_article' id="nextAdvice" begin="1">下一条</span>
+                    	<span style="margin-right:5px;float:right;" rid="${communitySuggestions.id}" class='N_article updateStatus'>标记已完成</span>
+                    	<span style="margin-right:7px;float:right;" class='N_article' id="del" sid="${communitySuggestions.id}">删除</span>
+                    	</p> 
+		                <div class="z_a">
+		                  <p class="in_dent"><lable>业主名:</lable><span id="advice_userName">${communitySuggestions.userName!!}</span></p>
+                          <p class="in_dent"><lable>房号: </lable><span id="advice_overall">${communitySuggestions.overall!!}</span></p>
+                          <p class="in_dent"><lable>联系电话:</lable> <span id="advice_mobilePhone">${communitySuggestions.mobilePhone!!}</span></p> 
+                          <p class="in_dent"><lable>申请时间:</lable> <span id="advice_createDate">${communitySuggestions.createDate?string('yyyy-MM-dd HH:mm')}</span>
+                          <p class="in_dent"><lable>处理状态:</lable> <span style="color:red;" id="advice_status">
+							<#if communitySuggestions.status??>
+								处理中
+							<#else>
+								待处理
+							</#if>
+                          </span></p> 
+                          </p><span class="li_mit">投诉建议:</span><div class='text_auto' id="advice">${communitySuggestions.advice!!}</div>
+                <div class="Pic_upload ">
+                    <ul class="pup" id="jq33">
+                                <#if communitySuggestions.folder??>
+									<#list communitySuggestions.folder.files as file>
+										 <li class='li_mlr tk-img '><img src='${base}/${file.path!!}' width='105px' height='80px' /></li>
+									</#list>
+									<#else>
+								</#if>
+                    </ul>
+                    <div id="open_top">
+                      <#if communitySuggestions.folder??>
+                          <span class='O_pen'>展开</span>
+                          <span class="S_top">收起</span>
+                      </#if>    
+                     </div>
+                </div>
+		              </div> 
+		          <div class="Property"> 
+		          <div id="commentDiv">
+		            	<#if communitySuggestions.commentList?exists&& communitySuggestions.commentList?size gt 0>
+                          <div class="See_a" suggestionsId="${communitySuggestions.id!!}">更多聊天记录</div>
+                          <div class="text_s">
+                               <#list communitySuggestions.commentList as comment>
+                                  	<#if comment.userId==communitySuggestions.userId>
+                                  		 <p class='Receive'>${comment.content!!}</p>
+                                  		 <#else>
+                                  		 <p class='Receive_r'>${comment.content!!}</p>
+                                 	</#if>
+                                  </#list>
+                          </div>
+                           <#else>
+                             <p class="noRecord" id="noRecord">暂无聊天记录</p>
+                             <div class="text_s">
+                             </div>
+                        </#if>
+                        </div>
+	                  <div class='form_group'>
+	                          <input type="text" id="text" class='text_l'> 
+	                          <lable  for='text' suggestionsId="${communitySuggestions.id!!}"  class='send_out'>发送</lable>
+	                 </div>
+             	 </div>
+                 </#if>
+		     </div>
+
+	 </div>
+</div> 
+ 
+<script>
+$('#jq22,#jq33').viewer({
+	url: 'data-original'
+});
+
+//立即处理/不处理
+$(".operateRepair").click(function(){
+	var rid = $(this).attr("rid");
+	var val = $(this).attr("val");
+	$.ajax({
+		type : "post",
+		data :{
+			 "rid": rid,
+             "val": val
+		},
+		url : "${base}/repairRecord/operate",
+		success : function(data) {
+			 layer.msg(data.msg, {icon: 1},{
+	            	shift: 0
+	            }, function(){
+	            	 window.location.reload();
+	            }); 
+		}
+	});
+})
+//标记已完成
+$(".updateStatus").click(function(){
+	var rid = $(this).attr("rid");
+	$.ajax({
+		type : "post",
+		data :{
+			 "rid": rid,
+             "status": 2
+		},
+		url : "${base}/communitySuggestions/updateStatus",
+		success : function(data) {
+			 layer.msg(data.msg,{
+	            	shift: 0
+	            }, function(){
+	            	 var unAdviceCount=$("#unAdviceCount").text();
+	            	 $("#unAdviceCount").text(Number(unAdviceCount)-1);
+	            	 $("#nextAdvice").click();//下一页
+// 	            	 window.location.reload();
+	            }); 
+		}
+	});
+})
+//下一条
+$("#nextAdvice").click(function(){
+	var begin = $(this).attr("begin");
+	var unAdviceCount=0;
+	$.ajax({
+		type : "post",
+		data :{
+			 "begin": begin
+		},
+		url : "${base}/sys/getUnCommunitySuggestions",
+		async:false,
+		success : function(data) {
+			var obj=data.paramsMap.communitySuggestions;
+			unAdviceCount=data.paramsMap.unAdviceCount;
+			var advice_userName=obj.userName;
+			var advice_overall=obj.overall;
+			var advice_mobilePhone=obj.mobilePhone;
+			var advice_createDate=obj.createDate;
+			var advice=obj.advice;
+			var status=obj.status;
+			$("#advice_userName").text(advice_userName);
+			$("#advice_overall").text(advice_overall);
+			$("#advice_mobilePhone").text(advice_mobilePhone);
+			$("#advice_createDate").text(formatDate(advice_createDate, "yyyy-MM-dd HH:mm"));
+			var statusName="";
+			if(status==1){
+				statusName="处理中";
+			}else if(status==2){
+				statusName="已完成";
+			}else{
+				statusName="待处理";
+			}
+			$("#advice_status").text(statusName);
+			$("#advice").text(advice);
+			$("#open_top").html('');
+			$("#commentDiv").html('');
+			$(".send_out").attr("suggestionsId",obj.id);
+			//图片填充
+			var folder=obj.folder;
+			var imgStr="";
+			if(folder!=null){
+				var files=folder.files;
+				$.each(files,function(i,file){
+					imgStr+="<li class='li_mlr tk-img '><img src='${base}/"+file.path+"' width='105px' height='80px' class='img-responsive'/></li>"
+				})
+				$("#open_top").html(" <span class='O_pen'>展开</span><span class='S_top'>收起</span>");
+			}else{
+				$("#open_top").html('');
+			}
+			$("#jq33").html(imgStr);
+			//留言内容填充
+			var commentList=obj.commentList;
+			var str="";
+			if(commentList.length>0){
+				str+='<div class="See_a" suggestionsId='+obj.id+'>更多聊天记录</div>'
+				str+='<div class="text_s">'
+					$.each(commentList,function(i,comment){
+						if(comment.userId==obj.userId){
+							str+='<p class="Receive">'+comment.content+'</p>'
+						}else{
+							str+='<p class="Receive_r">'+comment.content+'</p>'
+						}
+					})
+				str+=' </div>'
+			}else{
+				str+='<p class="noRecord" id="noRecord">暂无聊天记录</p>'
+				str+='<div class="text_s">'
+				str+='</div>'
+			}
+			$("#commentDiv").html(str);
+			if(Number(begin)==(Number(unAdviceCount)-1)){//57 58
+				layer.msg("已经是最后一条");
+			}
+		}
+	});
+	begin=Number(begin)+1;
+	$(this).attr("begin",begin);
+})
+
+//删除
+$("#del").click(function(){
+	var id = $(this).attr("sid");
+	layer.confirm('确定删除?', function(index){
+		$.post('${base}/communitySuggestions/del',{id:id},
+			function (data, status) {
+			 layer.msg(data.msg,{
+			     	shift: 0
+			     }, function(){
+			    	 window.location.reload();
+			     });
+		 });
+		  layer.close(index);
+	});
+})
+</script>
+<script> 
+	//查看更多聊天记录
+$(document).ready(function(){
+	$('.See_a').click(function(){
+	  var id=$(this).attr('suggestionsId');
+	  var content="";
+	  $.ajax({
+			type : "post", //表单提交类型 
+			url : "${base}/communitySuggestions/selectCommentListById", //表单提交目标 
+			data : {suggestionsId:id}, //表单数据
+			async:false,
+			success : function(data) {
+				 var commentlist=data.paramsMap.commentlist;
+		    	 var str='';
+		    	 $.each(commentlist,function(i,obj){
+		    		  str+='<p class="Bomb_box1">'
+				      str+='<lable style="color:#71b8ff;">'+obj.userName+'</lable>:'
+				      str+='<span>'+obj.content+'</span></br></br>'
+				      str+='<span style="position:relative;left:420px;">'
+				      str+='<lable>回复时间</lable>:<span>'+formatDate(obj.createTime, "yyyy-MM-dd HH:mm")+'</span>'
+				      str+='</span>'
+				      str+='</p>'
+		    	 })
+		    	 content=str; 
+			}
+		});
+		
+	  layer.open({
+	  type: 1, //page层
+	  area: ['650px', '375px'],
+	  title: '回复详情',
+	  shade: 0.6, //遮罩透明度
+	  moveType: 1, //拖拽风格，0是默认，1是传统拖动
+	  shift: -1, //0-6的动画形式，-1不开启
+	  content:content 
+	});        
+	
+	}); 
+	});
+	//发送
+	$('.send_out').click(function(){
+	   var thisobj=$(this);
+	   var val=$(this).parent().find('.text_l').val();
+	   var id=$(this).attr('suggestionsId');
+		  if(val==""){
+			 layer.msg("输入发送内容", {icon: 5});
+			 return ;
+		  }
+	   $.ajax({
+				type : "post", //表单提交类型 
+				url : "${base}/communitySuggestions/commentSuggestions", //表单提交目标 
+				data : {suggestionsId:id,content:val}, //表单数据
+				success : function(data) {
+					layer.msg('留言成功');
+					$("#advice_status").text("处理中");//物业留言用户，则该条记录改为处理中
+				}
+			});
+	   var noRecord=$("#noRecord").text();
+	   thisobj.parent().find('.text_l').val('');
+	   if(noRecord.length>0){
+		   $("#noRecord").text('');
+	 	  $("#commentDiv").find(".text_s").html('<p class="Receive_r">'+val+'</p>');
+	   }else{
+		   $("#commentDiv").find(".text_s").find('>p:last')
+	 	      .after('<p class="Receive_r">'+val+'</p>');
+	   }
+	  
+	})
+</script>
+
+<script>
+$(document).ready(function(){
+  $('.O_pen').click(function(){
+	  $(".z_a").css('height','540px');
+	  $(".Pic_upload").css('height','420px');
+	  $(this).css('visibility','hidden');
+	  $(".S_top").css('visibility','visible');
+  }) 
+})  
+
+$(document).ready(function(){
+  $('.S_top').click(function(){
+	  $(".z_a").css('height','330px');
+	  $(".Pic_upload").css('height','80px');
+	  $(this).css('visibility','hidden');
+	  $('.O_pen').css('visibility','visible');
+  }) 
+})  
+</script>      
+ </body>
+</html>

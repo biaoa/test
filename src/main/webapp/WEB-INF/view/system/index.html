@@ -1,0 +1,95 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<#include '/common/resources.html'>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>管理中心</title>
+</head>
+<body>
+	<div id="main_right_top">
+		<h2>
+			<span class="bj iconfont">&#xe621;</span>&nbsp;账户管理
+		</h2>
+		<img src="${base}/resources/images/hr.jpg" class="xian" />
+		<div id="main_right_center">
+			<div id="main_center">
+				<a href="${base}/sys/resourcesEpList"><img src="${base}/resources/images/ad1.jpg" /></a>
+			</div>
+			<div id="main_center">
+				<div class="center_left">
+					<p>
+<!-- 						孵化器数量:<small style="color: #ff4648">${incubatorNum}</small> -->
+					</p>
+					<p>
+						入孵企业数量:<small style="color: #1fbba6">${epNum}</small>
+					</p>
+				</div>
+
+				<a href="${base}/sys/addHatchOrResourcePage?type=FHQ"><img src="${base}/resources/images/addfh.jpg"
+					id="center_right" /></a>
+
+
+			</div>
+			<div id="main_center">
+				<div class="center_left">
+					<p>
+						中介数量:<small style="color: #ff4648">${resourceNum}</small>
+					</p>
+					<p>
+						达成服务次数:<small style="color: #1fbba6">${serveNum}</small>
+					</p>
+					<p>
+						服务数目:<small style="color: #666666">${serveSubject}</small>
+					</p>
+				</div>
+				<a href="${base}/sys/addHatchOrResourcePage?type=ZJZY"><img src="${base}/resources/images/addzj.jpg"
+					id="center_right" /></a>
+
+			</div>
+			<div id="main_center">
+<!-- 				<a href="${base}/sys/incubatorList"> -->
+				<img src="${base}/resources/images/ad2.jpg" />
+				</a>
+			</div>
+		</div>
+		<div style="clear: both"></div>
+		<div class="right_footer_top">
+			<h3>
+				<span class="bj iconfont">&#xe626;</span>&nbsp;任务管理
+			</h3>
+			<img src="${base}/resources/images/hr.jpg" class="xian" />
+		</div>
+
+		<div class="right_foot">
+			<dl>
+				<dt style="background: red;">
+
+					<p>
+						<span class="bt iconfont">&#xe600;</span><br />固定任务
+					</p>
+				</dt>
+				<dd>目的为实现APP使用教程，让用户熟悉app功能，采集企业基本信息</dd>
+			</dl>
+
+			<dl>
+				<dt style="background: #1fbba6;">
+
+					<p>
+						<span class="bt iconfont">&#xe600;</span><br />时效任务
+					</p>
+				</dt>
+				<dd>面向推送的任务类型，主要目的是推送项目申报通知，会议，培训，活动通知等，内含手机报名方式。</dd>
+			</dl>
+			<dl>
+				<dt style="background: #7d6291;">
+					<p>
+						<span class="bt iconfont">&#xe600;</span><br />可重复任务
+					</p>
+				</dt>
+				<dd>面向经营采集的任务类型，主要目的是引导企业完成日常经营，增加APP粘性，增加企业经营信息</dd>
+			</dl>
+
+		</div>
+	</div>
+</body>
+</html>

@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="renderer" content="webkit|ie-comp|ie-stand">
+<meta name="renderer" content="webkit">
+<meta charset="UTF-8">
+<title>物业费管理</title> <#include '/common/resources.html'>
+<link rel="stylesheet"  href="${base}/resources/css/sys/bottime.css" />
+<link rel="stylesheet"  href="${base}/resources/css/sys/datetimepicker.css" />
+<link rel="stylesheet"  href="${base}/resources/css/sys/bootstrap-responsive.min.css" />
+<link rel="stylesheet" media="screen and (min-width: 1580px)" href="${base}/resources/css/sys/jquery.tableui.css" />
+<link rel="stylesheet" media="screen and (max-width: 1580px)" href="${base}/resources/css/sys/tableui-resolving.css" />
+<link rel="stylesheet" href="${base}/resources/css/sys/jquery-ui.min.css" />
+<script type="text/javascript" src="${base}/resources/js/jquery-ui.min.js"></script>
+<link rel="stylesheet" type="text/css" href="${base }/resources/uploadify/uploadify.css">
+<script src="${base}/resources/js/respond.js" type="text/javascript" async="async"></script>
+<script src="${base }/resources/uploadify/jquery.uploadify.min.js" type="text/javascript"></script>
+<script type="text/javascript" src="${base}/resources/datepicker/bootstrap.min.js"></script>
+<script type="text/javascript" src="${base}/resources/datepicker/bootstrap-datetimepicker.min.js"></script>
+<script type="text/javascript" src="${base}/resources/datepicker/bootstrap-datetimepicker.zh-CN.js"></script>
+
+<style>
+#propertyFeeinfo-button{font-size:13px;}
+.ui-datepicker-calendar {display: none;}
+</style>
+</head>
+<body>
+	<div class="whole">
+		<ol class="breadcrumb">
+			<li><a href="javascript:void(0)">缴费中心</a></li>
+			<li class="active">
+				物业费
+			</li>
+		</ol>
+		<div class="o-order">
+			<form action="${base}/propertyFee/list" method="post" id="pagerForm">
+				<div class="o-first">
+					<span class="o-span">订单号：</span>
+					<div class="o-input">
+						<input type="text" name="orderNo" value="${orderNo!!}" />
+					</div>
+
+					<span class="o-span">业主：</span>
+					<div class="o-input">
+						<input type="text" name="owner" value="${owner!!}" />
+					</div>
+					<span class="o-span">应缴年份：</span>
+					<div class="o-input">
+						<input class="my-time" type="text" id="datepicker2"
+							readonly="readonly" name="yearDate" value="${yearDate!!}" />
+					</div>
+					
+					<span class="o-span">应缴月份：</span>
+					<div class="o-input">
+						<input class="my-time" type="text" id="datepicker"
+							readonly="readonly" name="date" value="${date!!}" />
+					</div>
+					<input type="hidden" id="status" name="status" value="${status!!}" />
+				</div>
+				
+				<div class="o-second">
+				<span class="o-span" style="margin-left: 60px;">幢：</span>
+				<div class="o-div">
+					<select class="o-select" id="buildingType" name="buildingType">
+						<option value="">全部</option>
+						<#list buildingList as baseEntity>
+							<option value="${baseEntity.name}">${baseEntity.name}</option>
+						</#list>
+					</select>
+				</div>
+				<span class="o-span">单元：</span>
+				<div class="o-div">
+					<select class="o-select" name="unitType" id="unitType">
+						<option value="" selected="selected">全部</option>
+					</select>
+				</div>
+				
+				<span class="o-span" style="margin-left: 63px;">房号：</span>
+					<div class="o-input">
+						<input type="text" name="roomno" value="${roomno!!}" />
+				</div>
+			</div>
+				<div class="o-thrid">
+					 <div style="float:left;width: 8%;">
+					   <input id="propertyFeeinfo" type="file" name="file" >
+					</div>
+					<div style="float:left;width: 92%;margin-top:6px;">	
+					<a class="o-btn" style="padding:10px 15px 10px 15px" href="${base}/download/exportTemplate/property">下载模板</a>
+					<a class="o-btn send" style="padding:10px 15px 10px 15px">发送通知</a>
+					<a class="o-btn serach" style="padding:10px 15px 10px 15px">搜索</a>
+					</div>
+				</div>
+<!-- 				<div class="o-thrid"> -->
+<!-- 						<input id="propertyFeeinfo" type="file" name="file"> -->
+<!-- 					</div> -->
+		</div>
+		<div class="tab-order">
+			<div class="box tab2">
+				<ul class="tab_menu">
+				<li class="${status1}" val="0" style="width:10%">全部(<span id="sumQuantity">${sumQuantity!0}</span>)</li>
+					<li class="${status2}" val="1" style="width:10%">待付款(<span id="waitQuantity">${waitQuantity!0}</span>)</li>
+					<li class="${status3}" val="2" style="width:10%">交易成功(<span id="completeQuantity">${completeQuantity!0}</span>)</li>
+				</ul>
+				<div class="tab_box">
+					<div>
+						<table class="table_solid" border="0" cellspacing="0">
+							<tbody>
+								<tr class="evenRow">
+<!-- 									<th>订单号</th> -->
+									<th>业主</th>
+									<th>房号</th>
+									<th>应缴月份</th>
+									<th>单价(元/米²)</th>
+									<th>应缴(元)</th>
+									<th>交易状态</th>
+									<th>缴费时间</th>
+									<th>操作</th>
+								</tr>
+								<#if (pagelist.results)?exists && pagelist.results?size gt 0>
+								<#list pagelist.results as PropertyFee>
+								<tr class="oddRow">
+<!-- 									<td>${PropertyFee.orderNo!!}</td> -->
+									<td>${PropertyFee.houseOwner!!}</td>
+									<td>${PropertyFee.houseNumber!!}</td>
+									<td>${PropertyFee.year}-${PropertyFee.month}</td>
+									<td>${PropertyFee.price}</td>
+									<td>${PropertyFee.payable}</td>
+									<td>
+										<#if PropertyFee.status==1>
+											未缴
+											<#elseif PropertyFee.status==2>
+											已缴
+											<#elseif PropertyFee.status==3>
+											已缴(线下)
+										</#if>
+									</td>
+									<td>
+										<#if PropertyFee.payDate??>
+											${PropertyFee.payDate?string('yyyy/MM/dd HH:mm')}
+										</#if>
+									</td>
+									<td>
+										<#if PropertyFee.status==1>
+											<a class="td-a common-btn-cz alonesend" date="${PropertyFee.year}-${PropertyFee.month}" order="${PropertyFee.orderNo}">发送通知</a>
+											<a class="td-a common-btn-cz update" href="${base}/propertyFee/toUpdate/${PropertyFee.id}">修改</a>
+											<a class="td-a common-btn-cz offline" val="${PropertyFee.orderNo}" houseno="${PropertyFee.houseNumber}">已线下缴费</a>
+										</#if>
+<!-- 										<a class="td-a common-btn-cz">发送通知</a> -->
+<!-- 										<a class="td-b common-btn-cz">查看</a> -->
+<!-- 										<a class="td-c common-btn-cz">删除</a> -->
+									</td>
+								</tr>
+								</#list>
+							</tbody>
+						</table>
+						<#include
+		'/common/pagination.html'>
+		</form>
+						<#else>
+						</table>
+						<div class="no-data">暂无数据~</div>
+						</#if>
+					</div>
+
+				</div>
+
+			</div>
+
+		</div>
+	</div>
+	</div>
+	<script src="${base}/resources/js/jquery.tabs.js"></script>
+	<script type="text/javascript">
+		$(function() {
+			$('.tab2').Tabs({
+				event : 'click'
+			});
+			//部分区域图片延迟加载	
+		});
+	</script>
+	<script>
+		
+		$("#datepicker").datetimepicker({
+			format: 'yyyy-mm',
+			weekStart: 1,
+			todayBtn: true,
+			autoclose: true,
+			startView: 3,
+			minView: 3,
+			forceParse: false,
+			language: 'zh-CN'
+		}).on('changeDate',function(ev){
+			$("#datepicker2").val('');
+		});
+		
+		$("#datepicker2").datetimepicker({
+		    format: 'yyyy',  
+	         weekStart: 1,  
+	         autoclose: true,  
+	         startView: 4,  
+	         minView: 4,  
+	         forceParse: false,  
+	         language: 'zh-CN'  
+		}).on('changeDate',function(ev){
+			$("#datepicker").val('');
+		});
+		
+		
+		$(".tab_menu li").click(function(){
+			$("#status").val($(this).attr("val"));
+			$("#pagerForm").submit();
+		});
+	
+		<#if date??>
+			<#else>
+			var date_time = new Date();
+			var year = date_time.getFullYear();
+			var month = date_time.getMonth()+1;
+			$("#datepicker").val(year+"-"+month);
+		</#if>
+		
+		
+		$("#propertyFeeinfo").uploadify({
+	        height: 33,
+	        swf: '${base}/resources/js/uploadify/uploadify.swf?var=' + (new Date()).getTime(),
+	        uploader: '${base}/propertyFee/doexcel',
+	        width: 90,
+			buttonText:'上传数据',
+			fileTypeExts : '*.xls; *.xlsx;', //允许上传的文件后缀
+			auto:true,
+			fileObjName:'file',
+			onUploadSuccess : function(file, data,
+					response) {
+				//这是是上传完成之后的操作
+				data =eval("(" + data + ")")
+				//刷新页面
+				alert(data.msg);
+				if(data.code==0){
+					window.location.reload();
+				}
+			},
+			onUploadError : function(file, data, response) {//当上传返回错误时触发
+				//这是是上传错误的操作
+			}	
+
+	    });
+		
+		$(".send").click(function(){
+			var date = $("#datepicker").val();
+			//发送通知
+			$.ajax({
+				type : "post",
+				data :{
+					 "date": date
+				},
+				url : "${base}/propertyFee/send",
+				success : function(data) {
+					 layer.msg(data.msg,{
+			            	shift: 0
+			            }, function(){
+			            }); 
+				}
+			});
+		})
+		
+		$(".serach").click(function(){
+			$("#pagerForm").submit();
+		});
+		
+		$('.offline').click(function(){
+			var orderNo = $(this).attr("val");
+			var houseno = $(this).attr("houseno");
+			layer.confirm('确定:'+houseno+'物业费已线下缴费?', function(index){
+				$.post("${base}/propertyFee/offline?orderNo=" + orderNo, function(result) {
+					 layer.msg(result.msg,{
+					     	shift: 0
+					     }, function(){
+					    	 window.location.reload();
+					     }); 
+				}, 'json');
+				  layer.close(index);
+			});
+		})
+		
+			//单独发送通知
+		$(".alonesend").click(function(){
+			var date = $(this).attr("date");
+			var order = $(this).attr("order");
+			$.ajax({
+				type : "post",
+				data :{
+					 "date": date,
+		             "orderNo" : order
+				},
+				url : "${base}/propertyFee/alonesend",
+				success : function(data) {
+					 layer.msg(data.msg,{
+ 				     	shift: 0
+ 				     }, function(){
+ 				    	
+ 				     });
+				}
+			});
+		});
+		
+		var buildingType ="";
+		var unitType ="";
+		<#if buildingType??>
+			 buildingType ='${buildingType}';
+			$("#buildingType").val(buildingType);
+		</#if>
+		
+		<#if unitType??>
+			 unitType ='${unitType}';
+			$("#unitType").val(unitType);
+		</#if>
+		
+		//改变幢加载单元
+		$("#buildingType").change(function(){
+			var building=$(this).val();
+			$.ajax({
+				type : "post", //表单提交类型 
+				url :"${base}/community/loadUnitName", //表单提交目标 
+				data : {building:building}, //表单数据
+				success : function(data) {
+						var lists=data.list;
+						var tbody='<option value="" selected="selected">全部</option>';
+						$.each(data.list,function(n,obj) {   
+			            	var str="";
+			            	str+='<option value="'+obj.name+'">'+obj.name+'</option>'
+			            	tbody+=str;	
+						 }); 
+						$("#unitType").html(tbody);
+		            	
+				}
+				
+			})
+		});
+		
+		if(buildingType!=''){
+			$.ajax({
+				type : "post", //表单提交类型 
+				url :"${base}/community/loadUnitName", //表单提交目标 
+				data : {building:buildingType}, //表单数据
+				success : function(data) {
+						var lists=data.list;
+						var tbody='<option value="" selected="selected">全部</option>';
+						$.each(data.list,function(n,obj) {   
+							var selected = "";
+			            	var str="";
+			            	if(obj.name==unitType){
+			            		selected="selected='selected'";
+			            	}
+			            	str+='<option value="'+obj.name+'" '+selected+'>'+obj.name+'</option>'
+			            	tbody+=str;	
+						 }); 
+						$("#unitType").html(tbody);
+		            	
+				}
+				
+			})
+		}
+	</script>
+	<script>
+		$(function(){
+		      document.onkeydown = function(e){ 
+		       var ev = document.all ? window.event : e;
+		        if(ev.keyCode==13) {
+		            $("#pagerForm").submit();
+		            }
+		        }
+    	});  
+	</script>    
+</body>
+</html>

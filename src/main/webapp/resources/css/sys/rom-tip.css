@@ -1,0 +1,165 @@
+*{
+			font-family: "微软雅黑";
+		}
+			#bg {
+				background-color: #666;
+				position: absolute;
+				z-index: 99;
+				left: 0;
+				top: 0;
+				display: none;
+				width: 100%;
+				height: 100%;
+				opacity: 0.5;
+				filter: alpha(opacity=50);
+				-moz-opacity: 0.5;
+			}
+			
+			.box-1{
+				width: 600px;
+				position: absolute;
+				z-index: 100;
+				background: white;
+				padding: 10px;
+				border-radius: 5px;min-height: 200px;
+			}
+			.box-2 {
+				width: 750px;
+				position: absolute;
+				z-index: 200;
+				background: white;
+				padding: 10px;
+				border-radius: 5px;
+				min-height:550px;
+				height: auto;
+				max-height: 650px;
+				overflow: hidden;
+				
+			}
+			.box-2 table{
+				width: 100%;
+				position: relative;
+				margin: auto;
+				border: 1px solid gainsboro;
+				border-collapse: collapse;				
+			}
+			table {
+				width: 100%;
+				margin: auto;
+				border: 1px solid gainsboro;
+				border-collapse: collapse;
+			}
+			
+			td {
+				border: 1px solid gainsboro;
+				padding: 3px;
+				height: auto;
+				overflow: hidden;
+			}
+			table tr:first-child{
+				background: lightgrey;
+				color: white;
+			}
+			h2 {
+				margin: auto;
+				text-align: center;
+				font-size: 2em;
+				font-weight: bold;
+				margin-bottom: 10px;
+			}
+			td input,td{text-align: center;}
+			td input{
+				border: 0;
+				padding: 3px;
+				outline:none;
+				max-width: 100px;
+				font-size:16px;
+			}
+			.room-select{
+				margin-top:20px;
+				width: 200px;
+				height: 35px;
+				line-height: 35px;
+				margin-bottom: 30px;
+				float: left;
+				font-size: 15px;
+			}
+			.select-span{
+				float: left;margin-right: 10px;margin-top:30px;
+			}
+			.div-select{
+				border-top:1px solid gainsboro; 
+				width: 100%;
+				height: auto;
+				overflow: hidden;
+			}
+			.commint,.commint-2{
+				padding: 5px 15px;
+				background: #FA7F44;
+				float: left;
+				margin-right: 10px;
+				color: white;
+				cursor: pointer;
+			}
+			.close-qx,.close-fh{
+				padding: 5px 15px;
+				background: black;
+				float: left;
+				color: white;
+				cursor: pointer;
+			}
+			.button-area{
+				text-align: right;
+				margin-top: 20px;	
+				float: right;		
+			}
+			.button-area2{
+				text-align: right;
+				margin-top: 20px;
+				float:right;
+			}
+			.divbox{
+				width: 100%;
+				height: 100%;
+				text-align: center;
+				background: #EEF0F1;
+				position: absolute;
+				top: 0;			
+				left: 0;
+				z-index: 10;
+			}
+			.rom-delet{
+				cursor: pointer;
+				padding: 3px 5px;
+				color: white;
+				background: red;
+				font-size: 14px;
+				line-height: 30px;
+				border-radius: 5px;
+			}
+			.zUIpanelScrollBox,.zUIpanelScrollBar{
+			width:10px;
+			top:4px;
+			right:2px;
+			border-radius:5px;
+			
+		}
+		.zUIpanelScrollBox{
+			background:black;opacity:0.1;
+			filter:alpha(opacity=10);
+		}
+		.zUIpanelScrollBar{
+			background:#fff;opacity:0.8;
+			filter:alpha(opacity=80);
+		}
+		.box-2 tr:hover{
+			background: gainsboro;
+		}
+		.out-box{
+			height: auto;
+			overflow: hidden;
+			position: relative;
+		}
+		#themeDiv td{
+		font-size:16px;
+		}

@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>欢迎页</title>
+		<#include '/common/base.html'>
+		<link href="${base}/resources/bootstrap-3.3.5-dist/css/bootstrap.min.css" rel='stylesheet' type='text/css' /> 
+		<link href="${base}/resources/bootstrap-3.3.5-dist/css/select2.min.css" rel='stylesheet' type='text/css' />
+		<link href="${base}/resources/css/sys/style_statistics.css" rel='stylesheet' type='text/css' />
+		<link rel="stylesheet" type="text/css" href="${base}/resources/datetimepicker/jquery.datetimepicker.css"/>
+		<script src="${base}/resources/js/select2.js" ></script>
+		<script src="${base}/resources/datetimepicker/jquery.datetimepicker.js" ></script>
+		<script src="${base}/resources/bootstrap-3.3.5-dist/js/bootstrap.min.js" ></script>
+		<script src="${base}/resources/heighchart/highcharts.js" ></script>
+		<script src="${base}/resources/js/admin_home_statistics.js" ></script>
+	</head>
+	<style>
+	    .btn-warning{padding:6px 20px 7px 20px;}
+	    .main_a3_l{width:50%;float:left;height:50px;padding-left:14%;}
+		.main_a3_r{width:50%;float:left;}
+		.select2-container{z-index:0;}
+	</style>
+	<body>
+		<input type="hidden" id="basepath" value="${base}"/>
+		<div class="top">
+			<div class="top_a">
+				<div class="top_a_a"><img src="${base}/resources/images/statistics/icon1.png" width="80px" height="80px"/></div>
+				<div class="top_a_b">
+					<p class="p_a todaySpan"  style="cursor: pointer"   data-toggle="modal" data-zdy="registerTodayCount">${registerTodayCount!0}</p>
+					<p class="p_b">今日注册用户</p>
+				</div>
+			</div>
+			<div class="top_a">
+				<div class="top_a_a"><img src="${base}/resources/images/statistics/icon2.png" width="80px" height="80px"/></div>
+				<div class="top_a_b">
+					<p class="p_a1 todaySpan" style="cursor: pointer"  data-toggle="modal" data-zdy="sumDayturnover">${sumDayturnover!0}</p>
+					<p class="p_b">今日总营业额</p>
+				</div>
+			</div><div class="top_b">
+				<div class="top_a_a"><img src="${base}/resources/images/statistics/icon3.png" width="80px" height="80px"/></div>
+				<div class="top_a_b">
+					<p class="p_a2 todaySpan" style="cursor: pointer"   data-toggle="modal" data-zdy="sumvalidOrderCount">${sumvalidOrderCount!0}</p>
+					<p class="p_b">今日成交订单</p>
+				</div>
+			</div>
+		</div>
+		
+		<div class="main">
+			<div class="main_a">
+				<div class="main_a1">总注册用户</div>
+				<div class="main_a2">
+				    <div style="background: #fff;height:30px;"></div>
+					<div id="container" style="width:100%;height: 282px;"></div> 
+				</div>
+			</div>
+			<div class="main_a">
+				<div class="main_a1">总营业额</div>
+				<div class="main_a3_l">
+				</div>
+				<div class="main_a3_r">
+				<div class="main_a3 main_all_click1">
+					<div class="main_a3_1 main_click1 main_a3_active" tag="sevenDay">7天</div>
+					<div class="main_a3_1 main_click1" tag="thirtyDay">30天</div>
+					<div class="main_a3_1 main_click1" tag="thisYear">今年</div>
+				</div>
+				</div>
+				<div class="main_a4">
+					<div id="container_amount" style="width:100%;height: 262px;"></div>  
+				</div>
+			</div>
+			<div class="main_a">
+				<div class="main_a1">总订单数量</div>
+				<div class="main_a3_l">
+				</div>
+				<div class="main_a3_r">
+				<div class="main_a3 main_all_click2">
+					<div class="main_a3_1 main_click2 main_a3_active" tag="sevenDay">7天</div>
+					<div class="main_a3_1 main_click2" tag="thirtyDay">30天</div>
+					<div class="main_a3_1 main_click2" tag="thisYear">今年</div>
+				</div>
+				</div>
+				<div class="main_a4">
+					<div id="container_orders" style="width:100%;height: 262px;"></div>  
+				</div>
+			</div>			
+		</div>
+		
+		<div class="main2">
+			<div class="main2_a">
+				<div class="main2_a1">
+					<div class="main_a1">小区用户注册统计</div>
+					<div style="width:100%;height:30px;padding-top:10px;background: #fff;">
+						<div class="main_a3_l">
+						   <select class="registerUser_selected">
+							  <option value="" selected="selected">选择小区筛选</option>
+							</select>					
+						</div>
+	                    <div class="main_a3_r">
+							<div class="main_a3 main_all_click4">
+								<div class="main_a3_1 main_click4 main_a3_active" tag="sevenDay">7天</div>
+								<div class="main_a3_1 main_click4" tag="thirtyDay">30天</div>
+								<div class="main_a3_1 main_click4" tag="thisYear">今年</div>
+							</div>
+						</div>
+					</div>
+				    <div class="main_a4">
+				    <div id="container_registerUser" style="width:100%;height: 252px;"></div> 
+				    </div>
+				</div>
+				
+				<div class="main2_a1" style="margin-top:20px">
+					<div class="main_a1">活跃用户数量</div>
+					<div style="width:100%;height:30px;padding-top:10px;background: #fff;">
+						<div class="main_a3_l">
+						   <select class="activeUser_selected">
+							  <option value="" selected="selected">选择小区筛选</option>
+							</select>					
+						</div>
+						<div class="main_a3_r">
+							<div class="main_a3 main_all_click3">
+								<div class="main_a3_1 main_click3 main_a3_active" tag="sevenDay">7天</div>
+								<div class="main_a3_1 main_click3" tag="thirtyDay">30天</div>
+								<div class="main_a3_1 main_click3" tag="thisYear">今年</div>
+							</div>
+						</div>
+					</div>
+				    <div class="main_a4">
+				    <div id="container_activeUser" style="width:100%;height: 252px;"></div> 
+				    </div>
+				</div>
+				<div class="main2_a2">
+					<div class="one">用户注册统计</div>
+					<div class="two">
+					    <div class="two_a">注册时间：</div>
+					    <div class="two_b">					   
+							<input class="my-times2 text_a" type="text" id="datepicker2" id=""  readonly="readonly"/>
+						</div>	
+						<div style="float:left;">&nbsp;--&nbsp;</div>										
+						<div class="two_b">
+							<input class="my-times2 text_a" type="text" id="datepicker3" id=""  readonly="readonly"/>
+						</div>
+						<div class="two_c">
+<!-- 							<input type="button" id="userSearchBtn" value="查询" /> -->
+							<button type="button" class="btn btn-warning" id="userSearchBtn">查询</button>
+						</div>
+					</div>
+					<div class="three">
+						<div class="three_a">全部用户数</div>
+						<div class="three_b">
+							<a href="javascript:void(0)" id="registerSumCount" class="allUserCountSpan"  style="cursor: pointer"   data-toggle="modal"   data-zdy="allUser" count="${registerSumCount!0}">${registerSumCount!0}个</a>
+						</div>
+					</div>
+					<div class="four">
+						<div class="three_a">全部合作小区数量</div>
+						<div class="three_b">
+							<a href="javascript:void(0)" id="communityCount" data-toggle="modal"  data-zdy="community" class="userCountSpan" count="${communityCount!0}">${communityCount!0}个</a>
+						</div>
+					</div>
+					<div class="three">
+						<div class="three_a">全部商家数量</div>
+						<div class="three_b">
+							<a href="javascript:void(0)" id="shopCount" data-toggle="modal"  data-zdy="shop" class="userCountSpan" count="${shopCount!0}">${shopCount!0}个</a>
+						</div>
+					</div>
+					<div class="four">
+						<div class="three_a">全部物业数量</div>
+						<div class="three_b">
+							<a href="javascript:void(0)" id="propertyCount" data-toggle="modal"  data-zdy="property" class="userCountSpan" count="${propertyCount!0}">${propertyCount!0}个</a>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="main2_b">				
+				<div class="two" style="background: #fafafa;border-bottom:1px solid #e4e4e4;">
+					<div class="two_a">下单时间：</div>
+					<div class="two_b">
+						 <input class="my-times text_a" type="text" id="datepicker4" id=""  readonly="readonly"/>
+					</div>		
+					<div style="float:left;">&nbsp;--&nbsp;</div>				
+					<div class="two_b">
+						<input class="my-times text_a" type="text" id="datepicker5" id=""  readonly="readonly"/>
+					</div>
+								
+					<div class="two_c">
+<!-- 						<input type="button" value="查询" id="sumTurnoverSearch"/> -->
+						<button type="button" class="btn btn-warning" id="sumTurnoverSearch">查询</button>
+					</div>
+				</div>
+				<div class="five" id="amoiuntContentDiv">
+					<div class="five_a">营业额</div>
+					<div class="five_a" style="color:#66b7ef;" id="sumTurnover">￥${sumTurnover!0}</div>
+				</div>
+			</div>
+			
+			<div class="main3">
+				<div class="main3_a">				
+					<div class="two" style="background: #fafafa;border-bottom:1px solid #e4e4e4;">
+						<div class="two_a">订单日期：</div>
+						<div class="two_b">
+							<input class="my-times3 text_a" type="text" id="datepicker6" id=""  readonly="readonly"/>
+						</div>		
+						<div style="float:left;">&nbsp;--&nbsp;</div>				
+						<div class="two_b">
+							<input class="my-times3 text_a" type="text" id="datepicker7" id=""  readonly="readonly"/>
+						</div>
+						<div class="two_c">
+<!-- 							<input type="button" value="查询" id="sumOrderSearch"/> -->
+							<button type="button" class="btn btn-warning" id="sumOrderSearch">查询</button>
+						</div>
+					</div>
+					<div class="six ">
+						<div class="six_a">总订单数量</div>
+						<div class="six_a">线上订单数量</div>
+						<div class="six_a">线下订单数量</div>
+					</div>
+					<div class="seven " id="orderContentDiv">
+						<div class="seven_a" id="sumQuantity">${orderStatistics.sumQuantity!0}</div>
+						<div class="seven_a" id="onlineQuantity">${orderStatistics.onlineQuantity!0}</div>
+						<div class="seven_a" id="offlineQuantity">${orderStatistics.offlineQuantity!0}</div>
+					</div>			
+				</div>
+				<div class="main3_b">
+					<div class="main_a1">订单分类</div>
+				    <div class="main_a2">
+				       <div style="background: #fff;height:15px;"></div>
+				       <div id="container_ordersPie" style="width:100%;height: 297px;"></div> 
+				    </div>
+				</div>
+			</div>
+				
+		</div>
+	
+		<!-- 总数模态框（Modal） -->
+		<div  class="modal fade" id="userStatisticsModal" tabindex="-1" role="dialog" aria-labelledby="userStatisticsModalLabel" aria-hidden="true">
+			
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+							&times;
+						</button>
+						<h4 style="font-size:15px;" class="modal-title" id="userStatisticsModalLabel">
+							今日注册小区用户
+						</h4>
+					</div>
+					<!-- <div class="modal-body">
+						<table class="table table-hover">
+							<thead>
+								<tr>
+									<th>小区名称</th>
+									<th id="todayNumSpan">数量</th>
+								</tr>
+							</thead>
+							<tbody id="tbodyContent" style="">
+								
+							</tbody>
+						</table>
+					</div> -->
+					<div style="height:350px;overflow-y:auto;">
+						<div class="t_two" style="font-weight:600;">
+							<div class="t_two_l">小区名称</div>
+							<div class="t_two_l" id="todayNumSpan">注册数量</div>
+						</div>
+						
+						<div id="tbodyContent">					
+							
+						</div>	
+					</div>
+					<div class="modal-footer">
+						<button class="c_btn" type="button" class="btn default" data-dismiss="modal">关闭
+						</button>
+					</div>
+				</div><!-- /.modal-content -->
+			</div><!-- /.modal -->
+		</div>
+		
+		<!-- 用户统计模态框（Modal） -->
+		<div class="modal fade" id="userStatisticsModal2" tabindex="-1" role="dialog" aria-labelledby="userStatisticsModal2Label" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+							&times;
+						</button>
+						<h5 style="font-size:15px;" class="modal-title" id="userStatisticsModal2Label">
+							小区用户数详情
+						</h5>					
+					</div>
+					<!-- <div class="modal-body">
+						<table class="table table-hover">
+							<thead>
+								<tr>
+									<th id="title_name">名称</th>
+								</tr>
+							</thead>
+							<tbody id="tbodyContent2" style="">
+								
+							</tbody>
+						</table>
+					</div> -->
+										
+					<div class="h_two">
+						<div class="h_p1" id="countspan">0</div>
+						<div class="h_p2" id="title_name">小区名称</div>
+					</div>
+					<div style="height: 350px;overflow-y: auto;" id="tbodyContent2">
+					
+					</div>
+					
+					<div class="modal-footer">
+						<button class="c_btn" type="button" class="btn default" data-dismiss="modal">关闭
+						</button>
+					</div>
+				</div><!-- /.modal-content -->
+			</div><!-- /.modal -->
+		</div>
+		
+	<script>
+		 $(document).ready(function(e) {
+				$('.my-times,.my-times2,.my-times3').datetimepicker({
+					lang: 'ch',
+					timepicker: false,
+					format: 'Y-m-d',
+					formatDate: 'Y-m-d'
+				
+				});
+				//总共有两个弹出层：三个今日tab和全部用户数共用一个
+				
+				//三个tab点击弹出层：今日注册用户，今日总营业额，今日成交订单
+				$(".todaySpan").click(function() {
+					var flag=$(this).attr("data-zdy");
+					var url="${base}/sys/getUsersCountByCommunity";
+					var data={};
+					if(flag=='registerTodayCount'){//今日注册用户
+						$("#userStatisticsModalLabel").text("每个小区今日注册用户数");
+						$("#todayNumSpan").text("用户数量");
+						url="${base}/sys/getUsersCountByCommunity";
+						data={"tagName":'user',"dateType":'today'};
+					}else if(flag=='sumDayturnover'){//今日总营业额
+						$("#userStatisticsModalLabel").text("每个小区今日营业额");
+						$("#todayNumSpan").text("营业额");
+						url="${base}/sys/getTurnoverByCommunity";
+						data={"dateType":'today'};//今日
+					}else if(flag=='sumvalidOrderCount'){//今日成交订单
+						$("#userStatisticsModalLabel").text("每个小区今日成交订单");
+						$("#todayNumSpan").text("订单数量");
+						url="${base}/sys/getValidOrderByCommunity";
+						data={"dateType":'today'};//今日
+					};
+					$.ajax({
+						type : "post",
+						url :url,
+						data : data,
+						async:false,
+						success : function(data) {
+							 var list=data.paramsMap.list;
+						 	 var tbody = ""; 
+						 	 if(list!=undefined){
+						 		 $.each(list,function(n,obj) {  
+							 			var trs = "";  
+							 			var style_line="t_three";
+							 			if(n%2==0){
+							 				style_line="t_three";
+							 			}else{
+							 				style_line="t_two";
+							 			}
+						 				trs+='<div class='+style_line+'>'
+						 				trs+='<div class="t_two_l">'+obj.name+'</div>'
+					 					if(flag=='sumDayturnover'){
+					 						trs+='<div class="t_two_l">'+obj.amount+'</div>'
+							 			}else{
+							 				trs+='<div class="t_two_l">'+obj.count+'</div>'
+							 			}
+						 				trs+='</div>'
+									
+									    tbody += trs; 
+								 })
+						 		 $("#tbodyContent").html(tbody);
+						 		 $("#userStatisticsModal").modal();
+						 	 }else{
+						 		$("#tbodyContent").html('');
+						 		$("#userStatisticsModal").modal();
+						 	 }
+						 }
+					}); 
+			  });
+		  
+				//全部用户数  弹出层
+				$(".allUserCountSpan").click(function() {
+					var flag=$(this).attr("data-zdy");
+					var beginDate=$("#datepicker2").val();
+					var endDate=$("#datepicker3").val();
+					$("#userStatisticsModalLabel").text("每个小区用户数");
+					$("#todayNumSpan").text("用户数量");
+					$.ajax({
+						type : "post",
+						url :"${base}/sys/getUsersCountByCommunity",
+						data : {"tagName":flag,beginDate:beginDate,endDate:endDate},
+						async:false,
+						success : function(data) {
+							 var list=data.paramsMap.list;
+						 	 var tbody = ""; 
+							 if(list!=undefined){
+								 $.each(list,function(n,obj) {  
+							 			var trs = "";  
+										var style_line="t_three";
+							 			if(n%2==0){
+							 				style_line="t_three";
+							 			}else{
+							 				style_line="t_two";
+							 			}
+						 				trs+='<div class='+style_line+'>'
+						 				trs+='<div class="t_two_l">'+obj.name+'</div>'
+							 			trs+='<div class="t_two_l">'+obj.count+'</div>'
+						 				trs+='</div>'
+								 				
+									    tbody += trs; 
+									 })
+						 		 $("#tbodyContent").html(tbody);
+						 		 $("#userStatisticsModal").modal();
+						 	 }else{
+						 		$("#tbodyContent").html('');
+						 		$("#userStatisticsModal").modal();
+						 	 }
+					 		
+						 }
+					}); 
+				  });
+				
+				//合作小区，商家，物业
+				$(".userCountSpan").click(function() {
+					var flag=$(this).attr("data-zdy");
+					var beginDate=$("#datepicker2").val();
+					var endDate=$("#datepicker3").val();
+					if(flag=='community'){
+						$("#userStatisticsModal2Label").text("全部合作小区");
+					}else if(flag=='shop'){
+						$("#userStatisticsModal2Label").text("全部商家");
+					}else if(flag=='property'){
+						$("#userStatisticsModal2Label").text("全部物业");
+					}
+					var countSum=$(this).attr("count");
+					$("#countspan").html(countSum);
+					$.ajax({
+						type : "post",
+						url :"getUsersCountByCommunity",
+						data : {"tagName":flag,beginDate:beginDate,endDate:endDate},
+						async:false,
+						success : function(data) {
+							 var list=data.paramsMap.list;
+						 	 var tbody = ""; 
+							 if(list!=undefined){
+								 $.each(list,function(n,obj) {  
+							 			var trs = "";  
+							 			var style_line="h_three";
+							 			if(n%2==0){
+							 				style_line="h_three";
+							 			}else{
+							 				style_line="h_four";
+							 			}
+						 				trs+='<div class='+style_line+'>'
+						 				trs+='<div class="h_three_l">'+(n+1)+'</div>'
+						 				trs+='<div class="h_three_r">'+obj.name+'</div>'
+						 				trs+='</div>'
+								 				
+									    tbody += trs; 
+									 })
+						 		 $("#tbodyContent2").html(tbody);
+						 		 $("#userStatisticsModal2").modal();
+						 	 }else{
+						 		$("#tbodyContent").html('');
+						 		$("#userStatisticsModal2").modal();
+						 	 }
+					 		
+						 }
+					}); 
+				  });
+				
+				
+				//用户注册统计总数--搜索
+				$("#userSearchBtn").click(function(){
+					var beginDate=$("#datepicker2").val();
+					var endDate=$("#datepicker3").val();
+					$.ajax({
+						type : "post",
+						url :"${base}/sys/getRegisterCountByDate",
+						data : {beginDate:beginDate,endDate:endDate},
+						success : function(data) {
+							 var registerSumCount=data.paramsMap.registerSumCount;
+							 var communityCount=data.paramsMap.communityCount;
+							 var shopCount=data.paramsMap.shopCount;
+							 var propertyCount=data.paramsMap.propertyCount;
+							 $("#registerSumCount").text(registerSumCount+"个");
+							 $("#communityCount").text(communityCount+"个");
+							 $("#shopCount").text(shopCount+"个");
+							 $("#propertyCount").text(propertyCount+"个");
+						 }
+					}); 
+				})
+				
+				//总营业额统计--搜索
+				$("#sumTurnoverSearch").click(function(){
+// 				    $("#sumTurnover").button('loading').delay(6000).queue(function() {
+// 		                $(this).button('complete');
+// 		            }); 
+// 					$("#amoiuntContentDiv").slideUp();
+					var beginDate=$("#datepicker4").val();
+					var endDate=$("#datepicker5").val();
+					$.ajax({
+						type : "post",
+						url :"${base}/sys/selectAllShopTurnover",
+						data : {beginDate:beginDate,endDate:endDate},
+						success : function(data) {
+							 var sumTurnover=data.paramsMap.sumTurnover;
+							 $("#sumTurnover").text("￥"+sumTurnover);
+// 							 $("#amoiuntContentDiv").slideDown();
+						 }
+					}); 
+				})
+
+				//总订单数统计--搜索
+				$("#sumOrderSearch").click(function(){
+					var beginDate=$("#datepicker6").val();
+					var endDate=$("#datepicker7").val();
+// 					$("#orderContentDiv").slideUp();
+					$.ajax({
+						type : "post",
+						url :"${base}/sys/getOrderCountStatistics",
+						data : {beginDate:beginDate,endDate:endDate},
+						async:false,
+						success : function(data) {
+							 var orderStatistics=data.paramsMap.orderStatistics;
+							 $("#sumQuantity").html(orderStatistics.sumQuantity);
+							 $("#onlineQuantity").html(orderStatistics.onlineQuantity);
+							 $("#offlineQuantity").html(orderStatistics.offlineQuantity);
+// 							 $("#orderContentDiv").slideDown();
+						 }
+					}); 
+				})
+				
+		});
+	</script>
+	</body>
+</html>

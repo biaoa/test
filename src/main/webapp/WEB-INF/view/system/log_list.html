@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>用戶管理</title>
+    <meta name="content-type" content="text/html; charset=UTF-8">
+    <#include '/common/resources.html'>
+  </head>
+  <body>
+        <div class="fh_right_box">
+           <h3><span class="iconfont" style="font-size:20px;color:#d65b5a">&#xe621;</span>&nbsp;日志管理</h3>
+           <img src="${base}/resources/images/hr.jpg" class="xian"/>
+        </div>
+	    <table class="table table-striped" style="text-align:center">
+	       <tr>
+	         <td>序号</td>
+	         <td>账号</td>
+	         <td>类型</td>
+	         <td>操作ip</td>
+	         <td>操作时间</td>
+	      </tr>
+	      <#if (pagelist.results)?exists && pagelist.results?size gt 0>
+	      <#list pagelist.results as log>
+		      <tr>
+		         <td>${(log_index+1)+(pagelist.pageNo-1)*pagelist.pageSize}</td>
+		         <td>${(log.user.userName)!''}</td>
+		         <td>${log.action.getName()}</td>
+		         <td>${(log.loginIp)!"未知"}</td>
+		         <td>${log.createDate?string('yyyy/MM/dd HH:mm:ss')}</td>
+		      </tr>
+		   </#list> 
+	      </#if>
+		</table>
+		<form action="" id="pagerForm">
+		 <#include '/common/pagination.html'>
+		</form>  
+</body>
+</html>

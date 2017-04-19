@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.linle.versionManager.mapper.VersionManagerMapper" >
+  <resultMap id="BaseResultMap" type="com.linle.versionManager.model.VersionManager" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="software_flag" property="softwareFlag" jdbcType="VARCHAR" />
+    <result column="software_name" property="softwareName" jdbcType="VARCHAR" />
+    <result column="device_type" property="deviceType" jdbcType="VARCHAR" />
+    <result column="min_version" property="minVersion" jdbcType="VARCHAR" />
+    <result column="new_version" property="newVersion" jdbcType="VARCHAR" />
+    <result column="url" property="url" jdbcType="VARCHAR" />
+    <result column="content" property="content" jdbcType="LONGVARCHAR" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+    <result column="is_del" property="isDel" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, software_flag, software_name, device_type, min_version, new_version,url,content, create_date, 
+    update_date, is_del
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from version_manager
+    where id = #{id,jdbcType=BIGINT} and is_del!=1
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from version_manager
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.linle.versionManager.model.VersionManager" >
+    insert into version_manager (id, software_flag, software_name, 
+      device_type, min_version, new_version, url,content,
+      create_date, update_date, is_del
+      )
+    values (#{id,jdbcType=BIGINT}, #{softwareFlag,jdbcType=VARCHAR}, #{softwareName,jdbcType=VARCHAR}, 
+      #{deviceType,jdbcType=VARCHAR}, #{minVersion,jdbcType=VARCHAR}, #{newVersion,jdbcType=VARCHAR}, #{url,jdbcType=VARCHAR}, 
+     #{content,jdbcType=LONGVARCHAR},  #{createDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP}, #{isDel,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.linle.versionManager.model.VersionManager" >
+    insert into version_manager
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="softwareFlag != null" >
+        software_flag,
+      </if>
+      <if test="softwareName != null" >
+        software_name,
+      </if>
+      <if test="deviceType != null" >
+        device_type,
+      </if>
+      <if test="minVersion != null" >
+        min_version,
+      </if>
+      <if test="newVersion != null" >
+        new_version,
+      </if>
+      <if test="url != null" >
+        url,
+      </if>
+      <if test="content != null" >
+        content,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="updateDate != null" >
+        update_date,
+      </if>
+      <if test="isDel != null" >
+        is_del,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="softwareFlag != null" >
+        #{softwareFlag,jdbcType=VARCHAR},
+      </if>
+      <if test="softwareName != null" >
+        #{softwareName,jdbcType=VARCHAR},
+      </if>
+      <if test="deviceType != null" >
+        #{deviceType,jdbcType=VARCHAR},
+      </if>
+      <if test="minVersion != null" >
+        #{minVersion,jdbcType=VARCHAR},
+      </if>
+      <if test="newVersion != null" >
+        #{newVersion,jdbcType=VARCHAR},
+      </if>
+       <if test="url != null" >
+        #{url,jdbcType=VARCHAR},
+      </if>
+        <if test="content != null" >
+        #{content,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        #{isDel,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.linle.versionManager.model.VersionManager" >
+    update version_manager
+    <set >
+      <if test="softwareFlag != null" >
+        software_flag = #{softwareFlag,jdbcType=VARCHAR},
+      </if>
+      <if test="softwareName != null" >
+        software_name = #{softwareName,jdbcType=VARCHAR},
+      </if>
+      <if test="deviceType != null" >
+        device_type = #{deviceType,jdbcType=VARCHAR},
+      </if>
+      <if test="minVersion != null" >
+        min_version = #{minVersion,jdbcType=VARCHAR},
+      </if>
+      <if test="newVersion != null" >
+        new_version = #{newVersion,jdbcType=VARCHAR},
+      </if>
+       <if test="url != null" >
+        url = #{url,jdbcType=VARCHAR},
+      </if>
+           <if test="content != null" >
+        content = #{content,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        is_del = #{isDel,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.linle.versionManager.model.VersionManager" >
+    update version_manager
+    set software_flag = #{softwareFlag,jdbcType=VARCHAR},
+      software_name = #{softwareName,jdbcType=VARCHAR},
+      device_type = #{deviceType,jdbcType=VARCHAR},
+      min_version = #{minVersion,jdbcType=VARCHAR},
+      new_version = #{newVersion,jdbcType=VARCHAR},
+      url = #{url,jdbcType=VARCHAR},
+      content = #{content,jdbcType=LONGVARCHAR},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP},
+      is_del = #{isDel,jdbcType=INTEGER}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+ <select id="getAllData" resultMap="BaseResultMap" parameterType="page" >
+    select 
+    <include refid="Base_Column_List" />
+    from version_manager where is_del!=1
+    order by device_type 
+  </select>
+  
+  <select id="selectBySoftwareFlag" resultMap="BaseResultMap" parameterType="map" >
+    select 
+    <include refid="Base_Column_List" />
+    from version_manager
+    where software_flag = #{softwareFlag} and device_type=#{deviceType} and is_del!=1
+  </select>
+</mapper>

@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.linle.serviceAgreement.mapper.ServiceAgreementMapper" >
+  <resultMap id="BaseResultMap" type="com.linle.serviceAgreement.model.ServiceAgreement" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="type_id" property="typeId" jdbcType="BIGINT" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.linle.serviceAgreement.model.ServiceAgreement" extends="BaseResultMap" >
+    <result column="content" property="content" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, type_id,title
+  </sql>
+  <sql id="Blob_Column_List" >
+    content
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from service_agreement
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from service_agreement
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.linle.serviceAgreement.model.ServiceAgreement" >
+    insert into service_agreement (id, type_id,title, content
+      )
+    values (#{id,jdbcType=BIGINT}, #{typeId,jdbcType=BIGINT}, #{title,jdbcType=VARCHAR}, #{content,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.linle.serviceAgreement.model.ServiceAgreement" >
+    insert into service_agreement
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="typeId != null" >
+        type_id,
+      </if>
+       <if test="title != null" >
+        title,
+      </if>
+      <if test="content != null" >
+        content,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="typeId != null" >
+        #{typeId,jdbcType=BIGINT},
+      </if>
+       <if test="title != null" >
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.linle.serviceAgreement.model.ServiceAgreement" >
+    update service_agreement
+    <set >
+      <if test="typeId != null" >
+        type_id = #{typeId,jdbcType=BIGINT},
+      </if>
+      <if test="title != null" >
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.linle.serviceAgreement.model.ServiceAgreement" >
+    update service_agreement
+    set type_id = #{typeId,jdbcType=BIGINT},
+     title = #{title,jdbcType=VARCHAR},
+     content = #{content,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.linle.serviceAgreement.model.ServiceAgreement" >
+    update service_agreement
+    set type_id = #{typeId,jdbcType=BIGINT},
+    title = #{title,jdbcType=VARCHAR},
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  <select id="getAllData" resultMap="ResultMapWithBLOBs" parameterType="Page">
+		select *
+		from service_agreement 
+  </select>
+  
+  <select id="selectByTypeId" resultMap="ResultMapWithBLOBs" parameterType="map" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from service_agreement
+    where type_id = #{typeId}
+  </select>
+</mapper>

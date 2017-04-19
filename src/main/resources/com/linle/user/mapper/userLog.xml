@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.linle.user.mapper.UserLogMapper">
+	<resultMap id="userLogResult" type="UserLog">
+		<result property="id" column="id" />
+		<result property="action" column="action"  typeHandler="IntEnumTypeHandler" />
+		<result property="loginIp" column="login_ip"/>
+		<result property="createDate" column="create_Date"/>
+		<result property="updateDate" column="update_date"/>
+		<association property="user" column="user_id" javaType="Users" select="com.linle.user.mapper.UserMapper.getById"/>
+	</resultMap>
+	
+	<insert id="insertSelective" useGeneratedKeys="true" keyProperty="id" parameterType="Users">
+		INSERT INTO user_log
+		(id,action,user_id,login_ip,create_date,update_date)
+		VALUES
+		(#{id},#{action, typeHandler=IntEnumTypeHandler},#{user.id},#{loginIp},now(),now())
+	</insert>
+	<select id="getAllData" resultMap="userLogResult" parameterType="Page">
+		select * from user_log
+		<where>
+			<if test="params !=null and params.id != null and params.id !=''">
+				and id =#{params.id}
+			</if>
+			and user_id != 1
+		</where>
+	</select>
+</mapper>

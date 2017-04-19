@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>圈子用户管理</title>
+<meta name="content-type" content="text/html; charset=UTF-8">
+<#include '/common/resources.html'>
+<link rel="stylesheet" media="screen and (min-width: 1580px)" href="${base}/resources/css/sys/jquery.tableui.css" />
+<link rel="stylesheet" media="screen and (max-width: 1580px)" href="${base}/resources/css/sys/tableui-resolving.css" />
+<script src="${base}/resources/js/respond.js" type="text/javascript" async="async"></script>
+
+</head>
+<body>
+<div class="whole">
+	<ol class="breadcrumb">
+		<li><a href="javascript:void(0)">圈子用户管理</a></li>
+		<li class="active">圈子用户列表</li>
+	</ol>
+	<div class="o-order">
+		<form action="${base}/topicUserManager/list" id="pagerForm">
+		<div class="o-first">
+			<span class="o-span">&nbsp;用户昵称：</span>
+			<div class="o-input">
+				<input type="text" name="userName" value="${userName!!}" />
+			</div>
+			
+			<span class="o-span">话题类型：</span>
+			<div class="o-div">
+				<select class="o-select" name="topicTypeId" id="topicTypeId">
+					<option value="">全部</option>
+						<#if tipicTypeList?exists && tipicTypeList?size gt 0>
+							<#list tipicTypeList as type>
+								<option value="${type.id!!}">${type.name!!}</option>
+							</#list>
+						</#if>
+				</select>
+			</div>
+		</div>		
+		<div class="o-thrid role-search-btn role-search1">
+			<a class="o-btn search1">搜索</a>
+		</div>
+	</div>
+	<div class="tab_box">
+	<table class="table_solid" border="0" cellspacing="0">
+		<tbody>
+			<tr class="evenRow">
+				<th>序号</th>
+				<th>用户</th>
+				<th>发布话题类型</th>
+				<th>评论话题类型</th>
+				<th>创建时间</th>
+				<th>发布话题</th>
+				<th>评论/回复</th>
+				<th>操作</th>
+			</tr>
+			<#if (pagelist.results)?exists && pagelist.results?size gt 0> <#list
+			pagelist.results as topicUser>
+			<tr>
+				<td>${(topicUser_index+1)+(pagelist.pageNo-1)*pagelist.pageSize}</td>
+				<td>${topicUser.nickName!!}</td>
+				<td>${topicUser.topicTypeName!!}</td>
+				<td>${topicUser.commTopicTypeName!!}</td>
+				<td>${topicUser.createTime?string('yyyy/MM/dd HH:mm')}</td>
+				<td>
+					<#if topicUser.isPublish??>
+						<#if topicUser.isPublish==1>
+							<a class="cz-a btn-default  common-btn-cz" href="javascript:void(0)" onclick="setPblish(${topicUser.id},0)">取消禁用</a>
+							<#else>
+							<a class="cz-a btn-default  common-btn-cz" href="javascript:void(0)" onclick="setReply(${topicUser.id},1)">禁用</a>
+						</#if>
+					<#else>
+					<a class="cz-a btn-default  common-btn-cz" href="javascript:void(0)" onclick="setPblish(${topicUser.id},1)">禁用</a>
+					</#if>
+				</td>
+				<td>
+					<#if topicUser.isReply??>
+						<#if topicUser.isReply==1>
+							<a class="cz-a btn-default  common-btn-cz" href="javascript:void(0)" onclick="setReply(${topicUser.id},0)">取消禁用</a>
+							<#else>
+							<a class="cz-a btn-default  common-btn-cz" href="javascript:void(0)" onclick="setReply(${topicUser.id},1)">禁用</a>
+						</#if>
+						<#else>
+						<a class="cz-a btn-default  common-btn-cz" href="javascript:void(0)" onclick="setReply(${topicUser.id},1)">禁用</a>
+					</#if>
+				</td>
+			
+				<td>
+					<a class="cz-a btn-default del common-btn-cz" href="javascript:void(0)" val="${topicUser.id}">删除</a>
+				</td>
+			</tr>
+			</#list>
+		</tbody>
+	</table>
+	<form action="${base}/topicUserManager/list" id="pagerForm">
+	<#include '/common/pagination.html'>
+	</form>
+	<#else>
+	<div class="no-data">暂无数据~</div>
+	</#if>
+	</div>
+	</div>
+</body>
+<script type="text/javascript">
+	$(".search1").click(function(){
+		$("#pagerForm").submit();
+	})
+	<#if topicTypeId??>
+		$("#topicTypeId").val(${topicTypeId});
+	</#if>
+	
+	$(function() {
+		$(".del").click(function() {
+			if(!confirm("确认要删除吗？")){
+				return false;
+			}
+			var id = $(this).attr("val");
+			$.post("${base}/topicUserManager/del/" + id, function(data) {
+				layer.msg(data.msg,{
+			     	shift: 0
+			     }, function(){
+			    	 location.reload();
+			     });
+				;
+			}, 'json');
+		});
+	});
+	
+	function setPblish(id,value){
+		$.ajax({
+			type : "post", //表单提交类型 
+			url : "${base}/topicUserManager/update", //表单提交目标 
+			data : {id:id,isPublish:value}, //表单数据
+			success : function(data) {
+				 layer.msg(data.msg,{
+				     	shift: 0
+				     }, function(){
+				    	 location.reload();
+				     }); 
+			}
+		});
+	}
+	
+	function setReply(id,value){
+		$.ajax({
+			type : "post", //表单提交类型 
+			url : "${base}/topicUserManager/update", //表单提交目标 
+			data : {id:id,isReply:value}, //表单数据
+			success : function(data) {
+				 layer.msg(data.msg,{
+				     	shift: 0
+				     }, function(){
+				    	 location.reload();
+				     }); 
+			}
+		});
+	}
+</script>
+<script>
+$(function(){
+        document.onkeydown = function(e){ 
+        var ev = document.all ? window.event : e;
+        if(ev.keyCode==13) {
+            $("#pagerForm").submit();
+            }
+        }
+    });  
+         
+</script>       
+
+</html>

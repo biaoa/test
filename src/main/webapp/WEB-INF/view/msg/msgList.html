@@ -1,0 +1,248 @@
+<!doctype>
+<html>
+<head>
+<meta charset="utf-8">
+<title>消息列表</title>
+<#include '/common/base.html'>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<!--以IE8模式渲染-->
+<script src="http://apps.bdimg.com/libs/jquery/1.10.2/jquery.min.js"></script>
+<link href="${base}/resources/bootstrap-3.3.5-dist/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+<script type="${base}/resources/bootstrap-3.3.5-dist/css/bootstrap.min.js"></script>
+</script>
+<style>
+* {
+	padding: 0;
+	margin: 0;
+}
+
+.cc_aa .tabs {
+	width: 100%;
+	height: 50px;
+	cursor: pointer;
+	background: #f2f2f2;
+}
+
+.cc_aa .wrap {
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+	background: #fff;
+}
+
+.cc_aa .table {
+	margin-bottom: 30%;
+	width: 100%;
+	height: auto;
+}
+
+.cc_aa .table th {
+	height: 35px;
+}
+
+.cc_aa .table td {
+	height: 35px;
+}
+
+.cc_aa .btn-a {
+	display: inline-block;
+	background: #f6f6f6;
+	border-radius: 3px;
+	text-decoration: none;
+}
+
+.cc_aa .btn-a:hover {
+	background: #5cb614;
+	color: #fff;
+	text-decoration: none;
+}
+
+.cc_aa .btn_group {
+	width: 100%;
+	position: relative;
+	top: -18%;
+	right: -80%;
+}
+
+.cc_aa .blue {
+	background: #dfdfdf;
+}
+
+.cc_aa .y_s {
+	float: left;
+	width: 15%;
+	height: 98%;
+	line-height: 55px;
+	list-style: none;
+	text-align: center;
+	display: inline-block;
+	color: #333;
+	text-decoration: none;
+}
+
+.cc_aa .tabs>li {
+	list-style: none;
+}
+
+.cc_aa .tabs>li>a {
+	line-height: 36px;
+	padding-bottom: 15px;
+}
+
+.cc_aa {
+	overflow-x: hidden;
+	overflow-y: hidden;
+	width: 100%;
+	height: 100%;
+}
+</style>
+</head>
+<body>
+	<div class="cc_aa">
+		<div class="tabs">
+			<ul style="list-style: none;">
+				<li><a href="javascript:void(0);" class="y_s blue" status="">全部</a></li>
+				<li><a href="javascript:void(0);" class="y_s" status="1">已读</a></li>
+				<li><a href="javascript:void(0);" class="y_s" status="0">未读</a></li>
+			</ul>
+		</div>
+		<div class="wrap">
+			<div class="a">
+				<table class="table" border="1" cellspacing="0"
+					style="border-color: dfdfdf;">
+					<tr>
+						<th>类型</th>
+						<th>内容</th>
+						<th>状态</th>
+						<th>发生时间</th>
+						<th>处理</th>
+					</tr>
+					<tbody>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<div class="btn_group">
+			<button id="last" onclick="turnOverPage(-1)" class="btn"  >上一页</button>&nbsp;&nbsp;&nbsp;
+<!-- 			<button id="" onclick="turnOverPage(1)"  class="bth"  disabled="disabled">下一页</button> -->
+			<button id="next" onclick="turnOverPage(1)" class="btn" >下一页</button>&nbsp;&nbsp;&nbsp;
+		</div>
+	</div>
+</body>
+<script>
+var read_status;
+var msg_count = 0;
+var page_no = 0;
+var total_page=0;
+var b = '${base}';
+	$(function() {
+		//加载数据
+		//消息管理
+		//状态切换方法
+		$("li a").click(function() {
+			$(this).addClass("blue");
+			$(this).parent().siblings().children().removeClass("blue");
+			read_status = $(this).attr("status");
+			page_no = 0;
+			msg_count = 0;
+			//重新加载数据
+			load_msg_data(read_status,page_no);
+		})
+		
+		//加载数据方法
+		load_msg_data(read_status,page_no);
+	});
+	
+	function readMsg(id,url,readStatus){
+		//关闭弹窗
+		if(readStatus==0){
+			$.ajax({
+				type : "post",
+				url : "${base}/webScoketMsg/readMsg",
+				data : {
+					id : id
+				},
+				success : function(data) {
+					console.log(data.code+"-"+data.msg);
+				}
+			});	
+		}
+		//跳转
+		parent.msgUrl(url); 
+	}
+	
+	function getLocalTime(nS) {
+		 return new Date(parseInt(nS)).toLocaleString().replace(/:\d{1,2}$/,' ');
+		}
+	
+	//上一页 下一页点击事件
+	function turnOverPage(type){
+		page_no=page_no+type;
+		if(page_no+1>total_page){
+			return false;
+		}
+		if(page_no<0){
+			page_no = 0;
+			return false;
+		}
+		loadDate(read_status,page_no);
+	}
+	
+	function load_msg_data(read_status,page_no){
+		//先加载总条数
+		$.ajax({
+			type : "post",
+			url : "${base}/webScoketMsg/getMsgListCount",
+			data : {
+				status : read_status
+			},
+			success : function(data) {
+				if(data.code==0){
+					msg_count = data.result.msgCount;
+					total_page = msg_count % 10 == 0 ? msg_count / 10 : Math.ceil(msg_count / 10) ;
+					//加载数据
+					loadDate(read_status,page_no);
+				}
+			}
+		});
+	}
+	
+	//加载数据
+	function loadDate(read_status,page_no){
+		$.ajax({
+			type : "post",
+			url : "${base}/webScoketMsg/getMsgList",
+			data : {
+				status : read_status,
+				pageNo : page_no
+			},
+			success : function(data) {
+				if(data.code==0){
+					if(page_no==0){
+						$("#last").addClass("disabled");
+						$('#last').attr("disabled","disabled");
+					}else{
+						$("#last").removeClass("disabled");
+						$('#last').removeAttr("disabled");
+					}
+					if(page_no+1<total_page){
+						$("#next").removeClass("disabled");
+						$('#next').removeAttr("disabled");
+					}else{
+						$("#next").addClass("disabled");
+						$('#next').attr("disabled","disabled");
+					}
+					
+					$("table").find("tr:not(:first)").remove();
+					var str ="";
+					data.result.msgList.forEach(function(e){
+						var readStatus = e.readStatus==0?'未读':'已读';
+						str+="<tr><td>"+e.tilte+"</td><td>"+e.body+"</td><td>"+readStatus+"</td><td>"+getLocalTime(e.createDate)+"</td><td><a class='_readmsg' onclick=\"readMsg('"+e.msgId+"','"+e.url+"','"+e.readStatus+"')\"  href='#'>查看</a></td></tr>";
+					})
+					$("table").append(str);
+				}
+			}
+		});
+	}
+</script>
+</html>

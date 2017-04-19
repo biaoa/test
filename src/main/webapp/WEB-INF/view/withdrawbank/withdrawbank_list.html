@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>提现银行卡管理</title>
+<meta name="content-type" content="text/html; charset=UTF-8">
+<#include '/common/resources.html'>
+<link rel="stylesheet" media="screen and (min-width: 1580px)" href="${base}/resources/css/sys/jquery.tableui.css" />
+<link rel="stylesheet" media="screen and (max-width: 1580px)" href="${base}/resources/css/sys/tableui-resolving.css" />
+<script src="${base}/resources/js/respond.js" type="text/javascript" async="async"></script>
+</head>
+<body>
+	<div class="whole">
+		<ol class="breadcrumb">
+			<li><a href="javascript:void(0)">提现管理</a></li>
+			<li class="active">银行卡列表</li>
+			<span style="float: right"><button type="button"
+					class="btn-default add" style="float: right;">新增银行卡</button></span>
+		</ol>
+			<div class="o-order">
+				<form action="${base}/sys/withdrawBank/list" id="pagerForm">
+				<div class="o-first">
+					<span class="o-span">用户名：</span>
+					<div class="o-input" style="width: 250px;"><input class="my-price" type="text"  name="userName" value="${userName!!}" placeholder="请输入用户名"/></div>
+					
+					<span class="o-span">用户类型：</span>
+					<div class="o-div">
+						<select class="o-select" name="userType" id="userType">
+							<option value="">全部</option>
+							<option value="1">一级代理</option>
+							<option value="2">物业</option>
+							<option value="3">小区</option>
+							<option value="5">社长</option>
+							<option value="6">商家</option>
+							<option value="7">二级代理</option>
+							<option value="8">加盟商</option>
+						</select> 
+					</div>
+				</div>
+				<div class="o-thrid role-search1">
+					<a class="o-btn search1">搜索</a>
+				</div>
+			</div>
+		<div class=tab_box>
+			<table class="table_solid" border="0" cellspacing="0">
+				<tbody>
+					<tr class="evenRow">
+						<th>序号</th>
+						<th>用户名</th>
+						<th>户名</th>
+						<th>开户银行</th>
+						<th>卡号</th>
+						<th>备注</th>
+						<th>创建时间</th>
+						<th>操作</th>
+					</tr>
+					<#if (pagelist.results)?exists && pagelist.results?size gt 0>
+					<#list pagelist.results as WithdrawBank>
+					<tr>
+						<td>${(WithdrawBank_index+1)+(pagelist.pageNo-1)*pagelist.pageSize}</td>
+						<td>${WithdrawBank.user.userName}</td>
+						<td>${WithdrawBank.accountName!!}</td>
+						<td>${WithdrawBank.accountBank!!}</td>
+						<td>${WithdrawBank.accountNumber!!}</td>
+						<td>${WithdrawBank.remark!!}</td>
+						<td>${WithdrawBank.createDate?string('yyyy/MM/dd HH:mm:ss')}</td>
+						<td>
+							<a class="btn-default common-btn-cz" href="${base}/sys/withdrawBank/toAdd?id=${WithdrawBank.id}">编辑</a>
+							<a class="btn-default common-btn-cz del" href="javascript:void(0);" number="${WithdrawBank.accountNumber}" bid="${WithdrawBank.id}">删除</a>
+						</td>
+					</tr>
+					</#list>
+					</#if>
+				</tbody>
+			</table>
+			<#include
+				'/common/pagination.html'></form>
+			
+			
+		</div>
+	</div>
+</body>
+<script type="text/javascript">
+	$(function() {
+		$(".add").click(function() {
+			window.location.href = "${base}/sys/withdrawBank/toAdd";
+		});
+		
+		$(".del").click(function(){
+			var number = $(this).attr("number");
+			var bid = $(this).attr("bid");
+			layer.confirm('确定删除'+number+'?', function(index){
+				$.post('${base}/sys/withdrawBank/del',{id:bid},
+					function (data, status) {
+					 layer.msg(data.msg,{
+					     	shift: 0
+					     }, function(){
+					    	 window.location.reload();
+					     }); 
+				 });
+				  layer.close(index);
+			});
+		});
+		
+		$(".search1").click(function(){
+			$("#pagerForm").submit();
+		});
+		
+		
+		<#if userType??>
+			$("#userType").val('${userType}');
+		</#if>
+	});
+</script>
+<script>
+$(function(){
+        document.onkeydown = function(e){ 
+        var ev = document.all ? window.event : e;
+        if(ev.keyCode==13) {
+            $("#pagerForm").submit();
+            }
+        }
+    });  
+         
+</script>       
+
+</html>

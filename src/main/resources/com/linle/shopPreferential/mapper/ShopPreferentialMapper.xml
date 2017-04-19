@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.linle.shopPreferential.mapper.ShopPreferentialMapper" >
+  <resultMap id="BaseResultMap" type="com.linle.entity.sys.ShopPreferential" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="shop_id" property="shopId" jdbcType="BIGINT" />
+    <result column="meet_price" property="meetPrice" jdbcType="DECIMAL" />
+    <result column="preferential_price" property="preferentialPrice" jdbcType="DECIMAL" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+<!--     <result column="type_id" property="typeId" jdbcType="BIGINT" /> -->
+	<association column="type_id" property="type" select="com.linle.preferentialType.mapper.PreferentialTypeMapper.selectByPrimaryKey"/>
+  </resultMap>
+  
+  <resultMap  id="selectPreferentialForAPIResult" type="com.linle.mobileapi.v1.model.ShopPrivilege">
+  	<result column="privilegesType" property="privilegesType"/>
+  	<result column="id" property="id"/>
+  	<result column="meet_price" property="bestPrice"/>
+  	<result column="preferential_price" property="cutPrice"/>
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    id, shop_id, type_id, meet_price, preferential_price, status, create_date, update_date
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from shop_preferential
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from shop_preferential
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.linle.entity.sys.ShopPreferential" >
+    insert into shop_preferential (id, shop_id, type_id, 
+      meet_price, preferential_price, status, 
+      create_date, update_date)
+    values (#{id,jdbcType=BIGINT}, #{shopId,jdbcType=BIGINT}, #{type.id,jdbcType=BIGINT}, 
+      #{meetPrice,jdbcType=DECIMAL}, #{preferentialPrice,jdbcType=DECIMAL}, #{status,jdbcType=INTEGER}, 
+      #{createDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.linle.entity.sys.ShopPreferential" >
+    insert into shop_preferential
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="shopId != null" >
+        shop_id,
+      </if>
+      <if test="type != null" >
+        type_id,
+      </if>
+      <if test="meetPrice != null" >
+        meet_price,
+      </if>
+      <if test="preferentialPrice != null" >
+        preferential_price,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="updateDate != null" >
+        update_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="shopId != null" >
+        #{shopId,jdbcType=BIGINT},
+      </if>
+      <if test="type != null" >
+        #{type.id,jdbcType=BIGINT},
+      </if>
+      <if test="meetPrice != null" >
+        #{meetPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="preferentialPrice != null" >
+        #{preferentialPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.linle.entity.sys.ShopPreferential" >
+    update shop_preferential
+    <set >
+      <if test="shopId != null" >
+        shop_id = #{shopId,jdbcType=BIGINT},
+      </if>
+      <if test="type != null" >
+        type_id = #{type.id,jdbcType=BIGINT},
+      </if>
+      <if test="meetPrice != null" >
+        meet_price = #{meetPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="preferentialPrice != null" >
+        preferential_price = #{preferentialPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.linle.entity.sys.ShopPreferential" >
+    update shop_preferential
+    set shop_id = #{shopId,jdbcType=BIGINT},
+      type_id = #{type.id,jdbcType=BIGINT},
+      meet_price = #{meetPrice,jdbcType=DECIMAL},
+      preferential_price = #{preferentialPrice,jdbcType=DECIMAL},
+      status = #{status,jdbcType=INTEGER},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  <select id="getAllData" parameterType="page" resultMap="BaseResultMap">
+  	 select 
+    <include refid="Base_Column_List" />
+    from shop_preferential
+    where shop_id = #{params.shopId}
+  </select>
+  
+  <select id="selectPreferentialForAPI" parameterType="Long" resultMap="selectPreferentialForAPIResult">
+  	select shop_preferential.id,preferential_type.id as privilegesType,shop_preferential.meet_price,shop_preferential.preferential_price from shop_preferential
+		inner join preferential_type
+	on shop_preferential.type_id=preferential_type.id and shop_preferential.`status`=0 and shop_preferential.shop_id=#{id}
+	order by meet_price desc
+  </select>
+  
+  <select id="selectPreferentials" resultMap="BaseResultMap">
+  	   select <include refid="Base_Column_List" />
+          from shop_preferential where id in
+       <foreach item="item" index="index" collection="array" 
+                         open="(" separator="," close=")">
+                        #{item}
+        </foreach>
+        and status = 0
+  </select>
+  
+</mapper>

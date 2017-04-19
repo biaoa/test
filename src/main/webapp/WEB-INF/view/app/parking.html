@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport"
+	content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<#include '/common/base.html'>
+<title></title>
+<meta name="keywords" content="j" />
+<meta name="description" content="" />
+<link rel="stylesheet" href="${base}/resources/css/app/youcar.css" />
+</head>
+<body>
+	<div class="car-type">
+		<ul>
+			<li><div class="car-sy">
+					<div class="type blank"></div>
+					<div class="car-sp">
+						<span class="type-name">空位</span>
+					</div>
+				</div></li>
+			<li><div class="car-sy">
+					<div class="type off"></div>
+					<div class="car-sp">
+						<span class="type-name">已选</span>
+					</div>
+				</div></li>
+			<li><div class="car-sy">
+					<div class="type ing"></div>
+					<div class="car-sp">
+						<span class="type-name">已售</span>
+					</div>
+				</div></li>
+		</ul>
+	</div>
+	
+		<div class="top-nav">
+			<div class="nice-select" name="nice-select">
+				<input type="text" id="garageName" value="${garage.name}" readonly>
+				<input type="hidden" id="gid" value="${garage.id}"/>
+				<input type="hidden" id="sid" />
+				<ul>
+					<#list garageList as garage >
+						<li data-value="${garage.id}">${garage.name!!}</li>
+					</#list>
+				</ul>
+				
+			</div>
+		</div>
+	
+	<div class="container">
+		<div id="legend"></div>
+		<div class="demo clearfix">
+			<!---左边座位列表----->
+			<div id="seat_area"></div>
+			<!---右边选座信息----->
+		</div>
+	</div>
+	<div class="car-footer">
+		<div class="time-qx">
+			<span>时间期限</span>
+		</div>
+		<div class="time-choice">
+			<ul>
+				<li class="cl click" t="0" v="一月"><span>一个月</span></li>
+				<li class="cl" t="1" v="一季度"><span>一季度</span></li>
+				<li class="cl" t="2" v="一年"><span>一年</span></li>
+			</ul>
+		</div>
+		<div class="car-price">
+			<span id="price_total">费用：</span><a class="car-btn">确定车位</a>
+			<input type="hidden" id="total" />
+		</div>
+	</div>
+	<script type="text/javascript"
+		src="${base}/resources/js/jquery.seat-charts.min.js">
+	</script>
+	<script type="text/javascript">
+	var select_space;
+	var coordinate;
+	var data_type=0;
+	var data_type_val="一月";
+	var total = 0;
+		$(document).ready(function() {
+		});
+		
+		$(".cl").each(function(index) {
+			$(this).click(function() {
+				$("#price_total").html("费用：");
+				data_type = $(this).attr("t");
+				data_type_val = $(this).attr("v");
+				sum_total();
+				$(".cl").removeClass("click");
+				$(".cl").eq(index).addClass("click");
+			});
+		});
+		
+		
+		function sum_total(){
+			$("#price_total").html("费用：");
+			total = 0;
+			
+			select_space = sc.find('selected').seatIds;
+			for(var i = 0;i<select_space.length;i++){
+				var temp = select_space[i].split("_");
+				var price_array = garage_price[temp[0]-1][temp[1]-1];
+				total = accAdd(total,price_array[data_type]);
+			}
+// 			try{
+// 				window.space.total("456");
+// 			}catch(e){
+// 				total_("123");
+// 			}
+			$("#total").val(total);
+			$("#price_total").append(total);
+		}
+		
+		
+		function accAdd(arg1, arg2) {
+		    var r1, r2, m, c;
+		    try {
+		        r1 = arg1.toString().split(".")[1].length;
+		    }
+		    catch (e) {
+		        r1 = 0;
+		    }
+		    try {
+		        r2 = arg2.toString().split(".")[1].length;
+		    }
+		    catch (e) {
+		        r2 = 0;
+		    }
+		    c = Math.abs(r1 - r2);
+		    m = Math.pow(10, Math.max(r1, r2));
+		    if (c > 0) {
+		        var cm = Math.pow(10, c);
+		        if (r1 > r2) {
+		            arg1 = Number(arg1.toString().replace(".", ""));
+		            arg2 = Number(arg2.toString().replace(".", "")) * cm;
+		        } else {
+		            arg1 = Number(arg1.toString().replace(".", "")) * cm;
+		            arg2 = Number(arg2.toString().replace(".", ""));
+		        }
+		    } else {
+		        arg1 = Number(arg1.toString().replace(".", ""));
+		        arg2 = Number(arg2.toString().replace(".", ""));
+		    }
+		    return (arg1 + arg2) / m;
+		}
+		
+		 function toDecimal(x) { 
+		      var f = parseFloat(x);
+		      if (isNaN(f)) { 
+		        return; 
+		      } 
+		      f = Math.round(x*100)/100; 
+		      return f; 
+		    }
+		
+	</script>
+	<script type="text/javascript">
+	 $(document).ready(function() {  
+		 loadspace('${garage.id}');
+	    });  
+		var sc;
+		var map_space;
+		var garage_price;
+		function createMap(map,price_arr,solded){
+			var $cart = $('#seats_chose'), //座位区
+			$tickects_num = $('#tickects_num'), //票数
+			$total_price = $('#total_price'); //票价总额
+			sc= $('#seat_area')
+						.seatCharts(
+								{
+									map : map,
+									price : price_arr,
+									naming : {//设置行列等信息
+										top : false, //不显示顶部横坐标（行） 
+										left : false,
+										getLabel : function(character, row,column){ //返回座位信息 
+											return;
+										}
+									},
+									legend : {//定义图例
+										node : $('#legend'),
+										items : [
+												[ 'c', 'selected','已选' ],
+												[ 'c', 'available','可选' ],
+												['c','unavailable','已售' ]]
+									},
+									click : function() {
+										
+										var obj = this;
+										var rowx = this.settings.row;
+										var labelx = this.settings.label;
+										map = sc.map();
+										garage_price = sc.price();
+										var $box = $('.car-edit');
+								       		$box.css({     
+								            display: "block"});
+										if (this.status() == 'available') { //若为可选座状态，添加座位
+											$('<li>'+ (this.settings.row + 1)+ '排'+ this.settings.label+ '座</li>')
+													.attr('id','cart-item-'+ this.settings.id)
+													.data('seatId',this.settings.id)
+													.appendTo($cart);
+											setTimeout(function(){
+												sum_total();
+												},200)
+											updateMap(map,rowx,labelx,obj.status());
+											return 'selected';
+										} else if (this.status() == 'selected') { //若为选中状态
+											setTimeout(function(){
+												sum_total();
+												},200)
+											updateMap(map,rowx,labelx,obj.status());
+											return 'available';
+										} else if (this.status() == 'unavailable') { //若为已售出状态
+											return 'unavailable';
+										} else {
+											return this.style();
+										}
+									}
+								});
+							//设置已售出的座位
+							if(solded){
+								sc.get(solded).status('unavailable');
+							}
+
+			}
+		//加载座位
+		function loadspace(id) {
+		$("#seat_area").html("");
+		$("#legend").html("");
+			$.ajax({
+				type : "post",
+				data :{"id" : id},
+				url : "${base}/parkingSpace/getParkingSpace",
+				success : function(data) {
+					if(data.code==0){
+					 	$(".car-first").hide();
+					 	$("#sid").val(data.result.parkingSpace.id);
+					 	var solded;
+					 	if(data.result.parkingSpace.solded!=null){
+					 		solded = data.result.parkingSpace.solded.split(",")
+					 	}
+		            	createMap(data.result.parkingSpace.space.split(","),JSON.parse(data.result.parkingSpace.price),solded);
+		            	$("#dialog").fadeIn(); 
+						$(".car-second").show();
+					}else{
+						layer.msg(data.msg);
+						return;
+					}
+				}
+			});				
+		}
+		
+		function updateMap(map,rowx,labelx,status){
+			labelx--;
+			var temp=map[rowx].split("");
+			if(status=="available"){
+				temp[labelx]="s"; //选中
+			}else if(status=="selected"){
+				temp[labelx]="x";//没选中
+			}else if(status=="unavailable"){
+				temp[labelx]="_";//售出
+			}
+			temp=temp.join("");
+			map[rowx]=temp;
+			map_space = map;
+			return map;
+		}
+		
+	
+	function getString(obj){
+		return JSON.stringify(obj);
+		}
+	//点击确定
+	$(".car-btn").click(function(){
+		//获得选中车位,获得总价格
+		var total =  $("#total").val();//总价
+		var sid =  $("#sid").val(); //车库
+		var price_list = new Array();
+		if(select_space==""){
+			layer.msg("请选择车位");
+			return;
+		}
+		if(total==""){
+			layer.msg("请选择车位,或时间期限");
+			return;
+		}
+		//后台保存车位记录
+		//得到单价
+		for(var i = 0; i <select_space.length;i++){
+			var temp = select_space[i].split("_");
+			price_list.push(garage_price[temp[0]-1][temp[1]-1][data_type]);
+		}
+		saveorder(sid,getString(select_space),getString(price_list),total);
+		
+	});
+	
+	/**
+		spaceid:车位ID
+		select_space ： 选中的车位
+		price_list ： 选中车位单价
+		total ： 总价
+	*/
+	function saveorder(spaceid,select_space,price_list,total){
+		try{
+			window.space.status("create");
+		}catch(e){
+			orderStatus("create");
+		}
+		$.ajax({
+			type : "post",
+			data :{
+					"orderType" : "space",
+					"dateType":data_type,
+					"type" : data_type_val,
+					"gid" : $("#gid").val(),
+					"spaceid" : spaceid,
+					"select_space" :select_space,
+					"price_list" : price_list,
+					"total" : total
+				  },
+			url : "${base}/api/1/saveSpaceOrder",
+			success : function(data) {
+				if(data.code==0){
+					try{
+						window.space.payOrder(data.result.orderNo);
+					}catch(e){
+						payOrder(data.result.orderNo);
+					}
+				
+				}else{
+					try{
+						window.space.status("fail");
+					}catch(e){
+						orderStatus("fail");
+					}
+				}
+			},
+			error: function(XMLHttpRequest, textStatus, errorThrown) {
+				try{
+					window.space.status("connectError");
+				}catch(e){
+					orderStatus("connectError");
+				}
+				}
+		});
+	}
+	</script>
+	<script>
+			$('[name="nice-select"]').click(function(e) {
+
+				$('[name="nice-select"]').find('ul').hide();
+
+				$(this).find('ul').show();
+
+				e.stopPropagation();
+
+			});
+
+			$('[name="nice-select"] li').hover(function(e) {
+				
+				$(this).toggleClass('on');
+				
+				e.stopPropagation();
+
+			});
+
+			$('[name="nice-select"] li').click(function(e) {
+
+				var val = $(this).text();
+				
+				$(this).parents('[name="nice-select"]').find('input').val(val);
+
+				$('[name="nice-select"] ul').hide();
+				
+				$("#gid").val($(this).attr("data-value"));
+				loadspace($(this).attr("data-value"));
+				
+				e.stopPropagation();
+
+			});
+
+			$(document).click(function() {
+
+				$('[name="nice-select"] ul').hide();
+
+			});
+		</script>
+</body>
+</html>
+
+

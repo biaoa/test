@@ -1,0 +1,95 @@
+.evenRow {
+	background-color: #E5E6E2;
+}
+
+.oddRow {
+	background-color: #FFFFFF;
+}
+
+.activeRow {
+	background-color: #F58963;
+}
+/*.clickRow{background-color: #CCCCFF;}*/
+.table_solid {
+	border-bottom: 1px solid #CCCCCC;
+	border-right: 1px solid #CCCCCC;
+	position: relative;
+	width: 96%;
+	margin: 10px auto;
+	text-align: center;
+	min-width:1100px;
+}
+
+.table_solid th, .table_solid td {
+	border-left: 1px solid #CCCCCC;
+	border-top: 1px solid #CCCCCC;
+	color: #333333;
+	padding: 0.3em;
+	font-size: 12px;
+}
+
+.table_solid th {
+	background-color: #EAEAEA;
+	font-size: 12px;
+	min-width: 100px;
+}
+
+#pager {
+	float: right;
+	margin-right: 2px
+}
+
+/*td 的tips*/
+.tooltips {
+	border-width: 1px;
+	border-style: solid;
+	position: absolute;
+	display: none;
+	border-radius: 3px;
+	opacity: 0;
+	filter: alpha(opacity = 0);
+	z-index: 999;
+	max-width: 500px;
+}
+
+.tooltips p.content {
+	padding: 5px;
+}
+
+.tooltips .triangle-front, .tooltips .triangle-back {
+	width: 0;
+	height: 0;
+	overflow: hidden;
+	border-width: 8px;
+	border-style: solid;
+	position: absolute;
+	border-color: transparent;
+	top: 100%;
+	left: 50%;
+	margin-left: -8px;
+}
+
+.tooltips .triangle-back {
+	margin-top: -1px;
+}
+
+.yellow {
+	border-color: #c7c08d;
+	background-color: ghostwhite;
+}
+
+.yellow .triangle-front {
+	border-top-color: #c7c08d;
+}
+
+.yellow .triangle-back {
+	border-top-color: ghostwhite;
+}
+
+.ahover {
+	text-overflow: ellipsis;
+	max-width: 300px;
+	white-space: nowrap;
+	overflow: hidden;
+	cursor: pointer;
+}

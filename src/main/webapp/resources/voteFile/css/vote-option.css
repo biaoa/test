@@ -1,0 +1,66 @@
+* {
+	margin: 0 auto;
+	padding: 0;
+	font-size: 14px;
+	font-family: "微软雅黑";
+}
+
+.vote-option {
+	padding: 10px;
+	height: auto;
+	overflow: hidden;
+	background: #EAE9E9;
+	margin: 0 auto;
+}
+
+.vote-option span {
+	color: #434261;
+	font-size: 15px;
+}
+
+.vote-option p {
+	padding-top: 20px;
+	color: #C7C2C2;
+}
+
+.people-option {
+	width: 100%;
+	height: auto;
+	overflow: hidden;
+	padding-bottom: 5px;
+	border-bottom: 1px solid gainsboro;
+}
+
+.people-option-img {
+	padding: 5px;
+	float: left;
+	width: 20%;
+}
+
+.people-option-img img {
+	width: 50px;
+	height: 50px;
+	border-radius: 50px;
+	float: left;
+}
+
+.people-option-name {
+	width: 75%;
+	float: left;
+	border-bottom: 1px solid gainsboro;
+	padding: 15px 0 25px 0;
+	font-size: 15px;
+	color: midnightblue;
+	font-weight: bold;
+}
+
+.people-option-name span:last-child {
+	float: right;
+	color: gainsboro;
+	font-weight: normal;
+	font-size: 14px;
+}
+
+.people-option-name:last-child {
+	border: 0;
+}

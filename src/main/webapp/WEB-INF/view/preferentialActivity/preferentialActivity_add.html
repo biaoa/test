@@ -1,0 +1,310 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta name="renderer" content="webkit|ie-comp|ie-stand">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<title>优惠活动管理</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<#include '/common/resources.html'>
+	<link rel="stylesheet" href="${base}/resources/css/sys/add-new.css"/>
+    <script src="${base}/resources/js/respond.js" type="text/javascript" async="async"></script>
+    <link rel="stylesheet" type="text/css" href="${base}/resources/datetimepicker/jquery.datetimepicker.css"/>
+	<script src="${base}/resources/datetimepicker/jquery.datetimepicker.js" ></script>	
+    <style>
+.ads-choice input {
+	float: left;
+	margin-top: 10px;
+}
+
+.ads-choice span {
+	float: left;
+	margin-top: 8px;
+	margin-left: 5px;
+}
+
+.ads-choice label {
+	float: left;
+	margin-left: 10px;
+}
+.allxq{
+	float: left;width: auto;max-width:800px;		
+}
+.onexq{
+	width:100%;float: left;max-width: 600px;border-bottom: 1px solid gainsboro;padding-bottom: 10px;padding-top: 5px;
+}
+.onexq-name{min-width: 70px;float: left;}
+.nextxq-name{
+	float: left;max-width: 500px;width: auto;
+}
+.single-name,.single-name input,.single-name span{
+	float: left;
+}
+.single-name input,.single-name span{
+	float: left;margin-bottom: 5px;
+}
+.allxq .float{
+	float: left;
+}
+.allxq .margin{
+width:100%;
+	margin-top: 5px;
+	padding-bottom: 10px;
+}
+</style>
+</head>
+<body>
+	<div class="whole">
+		<div class="a-plus">
+			<div class="head">
+				<span>优惠活动编辑</span>
+			</div>
+				<form action="${base}/preferentialActivity/doOperate" method="post" id="form1"> 
+				<div class="Sheet">
+				<div class="s-address">
+					<span class="choice">活动名称：</span>
+
+					<div class="ads" style="width: 300px;">
+						<input type="text" placeholder="请输入活动名称" name="activityName" id="activityName" value="${preferentialActivity.activityName!!}"/>
+					</div>
+				</div>
+				<div class="s-address">
+					<span class="choice">活动金额：</span>
+					<div class="ads" style="width: 300px;">
+						<input type="text" placeholder="请输入活动金额" name="activityAmount" value="${preferentialActivity.activityAmount!!}" id="activityAmount"/>
+					</div>
+				</div>
+				<div class="s-address">
+					<div>
+						<span class="choice">活动类型 ：</span>
+					</div>
+					<div class="ads-choice">
+						<label for="open"><input id="" type="radio"name="type" value="0" checked="checked"/><span>全部小区</span></label>
+						<label for="close"><input id="" type="radio" name="type"value="1"/><span>部分小区</span></label>
+					</div>
+				</div>
+				
+				<div class="s-address" id="activityCommunityDiv" style="display:none;">
+					<div style="float: left; width: 83px;">
+						<span class="choice">活动小区：</span>
+					</div>
+					<#if communityList?exists && communityList ? size gt 0>
+							<div class="allxq">
+								<div class="float margin">
+									<label>
+										<span class="float" style="font-weight: bold;">全选</span>
+										<input class="float" name="allCommunityCheckBox" type="checkbox"/>
+									</label>
+								</div>
+								<div class="onexq" >
+										<div class="nextxq-name">
+										
+										   <#list communityList as community>
+											<div class="single-name">
+													<label><input  type="checkbox" value="${community.id}" name="activityCommunity" 	
+													<span>${community.name}</span></label>
+											</div>
+											</#list>
+										</div>	
+								</div>
+							</div>
+					</#if>		
+				</div>
+			
+				
+				<div class="s-address">
+					<div>
+						<span class="choice">活动状态 ：</span>
+					</div>
+					<div class="ads-choice">
+						<label for="open"><input id="" type="radio"name="status" value="0" checked="checked"/><span>未开始</span></label>
+						<label for="close"><input id="" type="radio" name="status" value="1"/><span>进行中</span></label>
+						<label for="close"><input id="" type="radio" name="status" value="2"/><span>已结束 </span></label>
+					</div>
+				</div>
+				
+				<div class="s-address">
+					<div style="float: left; width: 83px;">
+						<span class="choice">活动范围：</span>
+					</div>
+							<div class="allxq">
+								<div class="float margin">
+									<label>
+										<span class="float" style="font-weight: bold;">全选</span>
+										<input class="float" name="allScopeCheckBox" type="checkbox"/>
+									</label>
+								</div>
+								<div class="onexq" >
+										<div class="nextxq-name">
+											<div class="single-name">
+													<label><input id="" type="checkbox" value="water" name="scope" />	
+													<span>水费</span></label>
+											</div>
+											<div class="single-name">
+													<label><input id="" type="checkbox" value="electricity" name="scope" />		
+													<span>电费</span></label>
+											</div>
+											<div class="single-name">
+													<label><input id="" type="checkbox" value="gas" name="scope"/>	 	
+													<span>燃气费</span></label>
+											</div>
+											<div class="single-name">
+													<label><input id="" type="checkbox" value="propertyFee" name="scope" />		
+													<span>物业费</span></label>
+											</div>
+											<div class="single-name">
+													<label><input id="" type="checkbox" value="cableTelevision" name="scope" />		
+													<span>有限电视</span></label>
+											</div>
+											<div class="single-name">
+													<label><input id="" type="checkbox" value="broadband" name="scope" />		
+													<span>宽带费</span></label>
+											</div>
+										</div>	
+								</div>
+							</div>
+							
+				</div>
+				<div class="s-address">
+					<div>
+						<span class="choice">允许重复 ：</span>
+					</div>
+					<div class="ads-choice">
+						<label for="open"><input id="" type="radio"name="repeatFlag" value="1" checked="checked"/><span>否</span></label>
+						<label for="close"><input id="" type="radio" name="repeatFlag"value="0"/><span>是</span></label>
+					</div>
+				</div>
+				<div class="s-address">
+					<span class="choice">开始时间：</span>
+					<div class="ads" style="width: 300px;">
+						<input type="text" readonly="readonly" name="beginDateStr" value="" id="beginDate"/>
+					</div>
+				</div>
+					<div class="s-address">
+					<span class="choice">结束时间：</span>
+					<div class="ads" style="width: 300px;">
+						<input type="text" readonly="readonly"  name="endDateStr" value="" id="endDate"/>
+					</div>
+				</div>
+				
+			</div>
+			
+			<div class="a-address">
+				<button class="s-btn" style="cursor: pointer;">确认</button>
+				<button  onclick="closeBg()" data-animation="fade" class="s-btn">取消</button>
+			</div>
+			<input type="hidden" name="id" value="${preferentialActivity.id!!}" />
+			</form>
+			</div>
+		</div>
+	</div>
+
+	<script>
+		 $('#beginDate,#endDate').datetimepicker({
+			 lang:  'ch',
+			 minDate:'-1970/01/01'
+		}); 
+		function closeBg() { 
+			 window.location.href="${base}/preferentialActivity/list";
+		} 
+		  //全选
+	    $("[name=allCommunityCheckBox]").click(function(){
+	   	   if(this.checked){
+	   		   $("input[name='activityCommunity']").prop("checked",true); 
+	   		
+	   	   }else{
+	   		   $("input[name='activityCommunity']").prop("checked",false); 
+	   	   }
+	     })
+	     
+	     $("[name=allScopeCheckBox]").click(function(){
+	   	   if(this.checked){
+	   		   $("input[name='scope']").prop("checked",true); 
+	   		
+	   	   }else{
+	   		   $("input[name='scope']").prop("checked",false); 
+	   	   }
+	     })
+		 //活动类型
+	     $("input[name=type]").click(function(){
+	   	   var val=$(this).val();
+	   	   if(val==0){
+	   		 $("#activityCommunityDiv").hide();
+	   	   }else{
+	   		 $("#activityCommunityDiv").show();
+	   	   }
+	     })
+    	$("#form1").submit(function() {
+			var ajax_url = $(this).attr("action"); //表单目标 
+			var ajax_type = $(this).attr('method'); //提交方法 
+			var ajax_data = $(this).serialize(); //表单数据 
+			var activityName=$("#activityName").val();
+			var activityAmount=$("#activityAmount").val();
+			var beginDate=$("#beginDate").val();
+			var endDate=$("#endDate").val();
+			if(activityName==''){
+				layer.msg("活动名称不能为空");
+				return false;
+			}
+			if(activityAmount==''){
+				layer.msg("活动金额不能为空");
+				return false;
+			}else{
+				if(isNaN(activityAmount)){
+					layer.msg("活动金额只能为数字");
+					return false;
+				}
+			}
+			if(beginDate==''){
+				layer.msg("开始时间不能为空");
+				return false;
+			}
+			if(endDate==''){
+				layer.msg("结束时间不能为空");
+				return false;
+			}
+			$.ajax({
+				type : ajax_type, //表单提交类型 
+				url : ajax_url, //表单提交目标 
+				data : ajax_data, //表单数据
+				success : function(data) {
+					 layer.msg(data.msg,{
+					     	shift: 0
+					     }, function(){
+					    	 if(data.code==0){
+						    	 window.location.href="${base}/preferentialActivity/list";
+					    	 }
+					     }); 
+				}
+			});
+			return false; //阻止表单的默认提交事件 
+		});
+    
+	</script>
+	<script>
+		<#if preferentialActivity.id??>
+			$("input[name='status'][value=${preferentialActivity.status}]").attr("checked",true);
+			$("input[name='repeatFlag'][value=${preferentialActivity.repeatFlag}]").attr("checked",true);
+			$("input[name='type'][value=${preferentialActivity.type}]").attr("checked",true);
+			
+			<#if preferentialActivity.activityCommunity??>
+			$('${preferentialActivity.activityCommunity}'.split(",")).each(function(index,val){
+				$("input[name='activityCommunity'][value="+val+"]").attr('checked','true');
+			})
+			</#if>
+				$('${preferentialActivity.scope}'.split(",")).each(function(index,val){
+				$("input[name='scope'][value="+val+"]").attr('checked','true');
+			})
+			
+			var val='${preferentialActivity.status}';
+			if(val==0){
+	   		 $("#activityCommunityDiv").hide();
+	   	   	}else{
+	   		 $("#activityCommunityDiv").show();
+	   	   	}
+			 $("#beginDate").val('${preferentialActivity.beginDate?string("yyyy/MM/dd HH:mm")}');
+			 $("#endDate").val('${preferentialActivity.endDate?string("yyyy/MM/dd HH:mm")}');
+		</#if>
+	</script>
+</body>
+</html>

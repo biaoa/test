@@ -1,0 +1,411 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.linle.community.mapper.CommunityMapper">
+	<resultMap id="BaseResultMap" type="com.linle.community.model.Community">
+		<id column="id" property="id" jdbcType="BIGINT" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="address" property="address" />
+		<result column="create_date" property="createDate" />
+		<result column="update_date" property="updateDate" />
+		<result column="logo" property="logo"/>
+		<result column="status" property="status" typeHandler="IntEnumTypeHandler"/>
+		<result column="principal_name" property="principalName"/>
+		<result column="principal_phone" property="principalPhone"/>
+		<result column="principal_address" property="principalAddress"/>
+		<result column="level2_proxy" property="level2Proxy"/>
+		<result column="level1_proxy" property="level1Proxy"/>
+		<result column="sys_id" property="sysId"/>
+		<result column="franchisees_id" property="franchiseesId"/>
+		<result column="owner_notice" property="ownerNotice"/>
+		<result column="phone" property="phone"/>
+		<result column="collaborate_flag" property="collaborateFlag"/>
+		<result column="withdrawal_fee" property="withdrawalFee"/>
+		<association property="propertyCompany" column="property_id" select="com.linle.propertyCompany.mapper.PropertyCompanyMapper.selectByPrimaryKey" />
+		<association property="sysRegion" column="city" select="com.linle.system.mapper.RegionMapper.getById"/>
+		<association property="user" column="u_id" select="com.linle.user.mapper.UserMapper.getById" />
+		<association property="president" column="president_id" select="com.linle.communityPresident.mapper.CommunityPresidentMapper.selectByPrimaryKey"/>
+	</resultMap>
+	
+	<resultMap id="CommunityListByCityNameResult" type="com.linle.mobileapi.v1.model.CommunityListVO" >
+		<id column="id" property="id" jdbcType="BIGINT" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<resultMap id="CommunityListByRegionAddressResult" type="com.linle.community.model.CommunityVo" >
+		<result column="city" property="city"  />
+		<result column="regionAddress" property="regionAddress" jdbcType="VARCHAR" />
+		<collection property="communityList" column="{city=city,presidentId=president_id}" select="getCommunityListByCity" ></collection>
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		id, name, property_id,address,create_date,update_date,logo,city,u_id,status,president_id,principal_name,principal_phone,principal_address,
+		level2_proxy,level1_proxy,sys_id,franchisees_id,owner_notice,phone,collaborate_flag,withdrawal_fee
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from community
+		where id = #{id,jdbcType=BIGINT}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		delete from community
+		where id = #{id,jdbcType=BIGINT}
+	</delete>
+	<insert id="insert" parameterType="com.linle.community.model.Community">
+		insert into community (id, name, property_id,address,create_date,logo,city,u_id,status,president_id
+		,principal_name,principal_phone,principal_address,level2_proxy,level1_proxy,sys_id,franchisees_id,owner_notice,phone,collaborate_flag,withdrawal_fee)
+		values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR},
+		#{propertyCompany.id,jdbcType=BIGINT}
+		,#{address},now(),#{logo},#{sysRegion.id},#{user.id},#{status, typeHandler=IntEnumTypeHandler},#{president.id},
+		#{principalName},#{principalPhone},#{principalAddress},#{level2Proxy},#{level1Proxy},#{sysId},#{franchiseesId},#{ownerNotice},#{phone},#{collaborateFlag}
+		,#{withdrawalFee})
+	</insert>
+	<insert id="insertSelective" parameterType="com.linle.community.model.Community" useGeneratedKeys="true" keyProperty="id">
+		insert into community
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="name != null">
+				name,
+			</if>
+			<if test="propertyCompany != null">
+				property_id,
+			</if>
+			<if test="address!=null">
+				address,
+			</if>
+			<if test="logo !=null">
+				logo,
+			</if>
+			<if test="sysRegion !=null">
+				city,
+			</if>
+			<if test="user !=null">
+				u_id,
+			</if>
+			<if test="status !=null">
+				status,
+			</if>
+			<if test="president !=null">
+				president_id,
+			</if>
+			<if test="principalName !=null">
+				principal_name,
+			</if>
+			<if test="principalPhone !=null">
+				principal_phone,
+			</if>
+			<if test="principalAddress !=null">
+				principal_address,
+			</if>
+			<if test="level2Proxy !=null">
+				level2_proxy,
+			</if>
+			<if test="level1Proxy !=null">
+				level1_proxy,
+			</if>
+			<if test="sysId !=null">
+				sys_id,
+			</if>
+			<if test="franchiseesId !=null">
+				franchisees_id,
+			</if>
+			<if test="ownerNotice !=null">
+				owner_notice,
+			</if>
+			<if test="phone !=null">
+				phone,
+			</if>
+			<if test="collaborateFlag !=null">
+				collaborate_flag,
+			</if>
+			<if test="withdrawalFee !=null">
+				withdrawal_fee,
+			</if>
+			create_date
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=BIGINT},
+			</if>
+			<if test="name != null">
+				#{name,jdbcType=VARCHAR},
+			</if>
+			<if test="propertyCompany != null">
+				#{propertyCompany.id,jdbcType=BIGINT},
+			</if>
+			<if test="address !=null">
+				#{address},
+			</if>
+			<if test="logo !=null">
+				#{logo},
+			</if>
+			<if test="sysRegion!=null">
+				#{sysRegion.id},
+			</if>
+			<if test="user !=null">
+				#{user.id},
+			</if>
+			<if test="status !=null">
+				#{status, typeHandler=IntEnumTypeHandler},
+			</if> 
+			<if test="president !=null">
+				#{president.id},
+			</if>
+			<if test="principalName !=null">
+				#{principalName},
+			</if>
+			<if test="principalPhone !=null">
+				#{principalPhone},
+			</if>
+			<if test="principalAddress !=null">
+				#{principalAddress},
+			</if>
+			<if test="level2Proxy !=null">
+				#{level2Proxy},
+			</if>
+			<if test="level1Proxy !=null">
+				#{level1Proxy},
+			</if>
+			<if test="sysId !=null">
+				#{sysId},
+			</if>
+			<if test="franchiseesId !=null">
+				#{franchiseesId},
+			</if>
+			<if test="ownerNotice !=null">
+				#{ownerNotice},
+			</if>
+			<if test="phone !=null">
+				#{phone},
+			</if>
+			<if test="collaborateFlag !=null">
+				#{collaborateFlag},
+			</if>
+			<if test="withdrawalFee !=null">
+				#{withdrawalFee},
+			</if>
+			now()
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.linle.community.model.Community">
+		update community
+		<set>
+			<if test="name != null">
+				name = #{name,jdbcType=VARCHAR},
+			</if>
+			<if test="propertyCompany != null">
+				property_id = #{propertyCompany.id,jdbcType=BIGINT},
+			</if>
+			<if test="address !=null">
+				address = #{address},
+			</if>
+			<if test="logo !=null">
+				logo = #{logo},
+			</if>
+			<if test="sysRegion !=null">
+				city = #{sysRegion.id},
+			</if>
+			<if test="user !=null">
+				u_id = #{user.id},
+			</if>
+			<if test="status !=null">
+				status  = #{status, typeHandler=IntEnumTypeHandler},
+			</if>
+			<if test="president !=null">
+				president_id = #{president.id},
+			</if>
+			<if test="principalName !=null">
+				principal_name = #{principalName},
+			</if>
+			<if test="principalPhone !=null">
+				principal_phone = #{principalPhone},
+			</if>
+			<if test="principalAddress !=null">
+				principal_address = #{principalAddress},
+			</if>
+			<if test="level2Proxy !=null">
+				level2_proxy = #{level2Proxy},
+			</if>
+			<if test="level1Proxy !=null">
+				level1_proxy = #{level1Proxy},
+			</if>
+			<if test="sysId !=null">
+				sys_id = #{sysId},
+			</if>
+			<if test="franchiseesId !=null">
+				franchisees_id = #{franchiseesId},
+			</if>
+			<if test="ownerNotice !=null">
+				owner_notice = #{ownerNotice},
+			</if>
+			<if test="phone !=null">
+				phone = #{phone},
+			</if>
+			<if test="collaborateFlag !=null">
+				collaborate_flag = #{collaborateFlag},
+			</if>
+			<if test="withdrawalFee !=null">
+				withdrawal_fee = #{withdrawalFee},
+			</if>
+			update_date = now()
+		</set>
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.linle.community.model.Community">
+		update community
+		set name = #{name,jdbcType=VARCHAR},
+		property_id = #{propertyCompany.id,jdbcType=BIGINT},address = #{address},update_date =
+		now(),logo = #{logo},city=#{sysRegion.id},u_id = #{user.id},status  = #{status, typeHandler=IntEnumTypeHandler},
+		president_id = #{president.id},
+		principal_name = #{principalName},
+		principal_phone = #{principalPhone},
+		principal_address = #{principalAddress},
+		level2_proxy = #{level2Proxy},
+		level1_proxy = #{level1Proxy},
+		sys_id = #{sysId},
+		franchisees_id = #{franchiseesId},
+		owner_notice = #{ownerNotice},
+		phone = #{phone},
+		collaborate_flag = #{collaborateFlag},
+		withdrawal_fee = #{withdrawalFee}
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+
+	<select id="getAllData" resultMap="BaseResultMap" parameterType="Page">
+		select
+		<include refid="Base_Column_List" />
+		from community
+		<where>
+			<if test="params.communityId !=null">
+			    id = #{params.communityId}
+			</if>
+			<if test="params.propertyId !=null">
+			 	property_id = #{params.propertyId}
+			</if>
+			<if test="params.presidentId !=null">
+				president_id = #{params.presidentId}
+			</if>
+			<if test="params.communityName !=null and params.communityName !=''">
+			 	and	(name like CONCAT('%','${params.communityName}','%') or principal_phone = #{params.communityName})
+			</if>
+		</where>
+		order by collaborate_flag desc
+	</select>
+	
+	<select id="getCommunityByuserID" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from community
+		where u_id = #{id}
+	</select>
+	<!-- 切换小区时  加载的小区列表 -->
+	<select id="getCommunityListByCityName" parameterType="String" resultMap="CommunityListByCityNameResult">
+		select community.id,community.`name` from 
+		(select id from sys_region where `name`=#{cityName}) as tb1
+		left join sys_region on sys_region.parent_id=tb1.id
+		inner join community on community.city=sys_region.ID
+		order by collaborate_flag desc
+	</select>
+	<!-- 通过物业ID获得小区列表 -->
+	<select id="getCommunityByAgency" parameterType="Long" resultMap="CommunityListByCityNameResult">
+		select id,name from community
+		where property_id = #{id}
+	</select>
+	
+	<!-- 通过社长ID 获得小区列表 -->
+	<select id="getCommunityByPresident" parameterType="Long" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from community
+		where president_id = #{presidentId}
+		order by collaborate_flag desc
+	</select>
+	
+	<select id="selectAllCommunity" resultMap="BaseResultMap">
+		select
+		id,name
+		from community
+		order by collaborate_flag desc
+	</select>
+	
+	<select id="selectAllCommunityText" resultType="com.linle.entity.statistics.Select2Statistics">
+		select
+		id,name as text
+		from community
+		ORDER BY collaborate_flag desc
+	</select>
+	
+	<!-- 获得没有默认考勤模板的小区 -->
+	<select id="getNoTemplateCommunity" resultMap="BaseResultMap">
+		SELECT  community.* FROM community 
+		LEFT JOIN attendance_template
+   		ON community.id = attendance_template.community_id
+		WHERE attendance_template.community_id IS NULL
+	</select>
+	
+	<!-- 1.获得该小区社长所有配送小区的所在区域-->
+	<select id="getRegionAndCommunityListByPresident" resultMap="CommunityListByRegionAddressResult" parameterType="Long">
+		SELECT community.president_id,community.city,CONCAT(sys_region2.name,sys_region.`name`) regionAddress
+		FROM community
+		LEFT JOIN sys_region on sys_region.ID=community.city
+		LEFT JOIN sys_region sys_region2 on sys_region2.ID=sys_region.parent_id
+		WHERE community.president_id=#{presidentId}
+		GROUP BY community.city
+		ORDER BY sys_region.parent_id
+	</select>
+	
+	<!-- 2.获得该区域下所有配送小区-->
+	<select id="getCommunityListByCity" resultMap="BaseResultMap" parameterType="map">
+		SELECT community.id ,community.name
+		FROM community
+		WHERE community.president_id=#{presidentId} and community.city=#{city}
+		order by collaborate_flag desc
+	</select>
+	
+	<!-- 统计合作小区总数 -->
+	<select id="getCommunityCountByDate" resultType="Integer" parameterType="map">
+		select count(id) from community record
+		where record.collaborate_flag = 1
+		<if test="dateType !=null and dateType=='today' ">
+			and TO_DAYS(record.create_date)=TO_DAYS(NOW())
+		</if>
+		<if test="beginDate!=null and endDate==null">
+  			and <![CDATA[  record.create_date>=#{beginDate} ]]>
+  		</if>
+  		<if test="beginDate==null and endDate!=null">
+  			and <![CDATA[ record.create_date<=#{endDate} ]]>
+  		</if>
+  		<if test="beginDate!=null and endDate!=null">
+  			and <![CDATA[ (record.create_date >=#{beginDate} and record.create_date<=#{endDate}) ]]>
+  		</if>
+	</select>
+	
+	<!-- 统计小区列表 -->
+	<select id="getCommunityListByDate" resultType="com.linle.entity.statistics.UserStatistics" parameterType="map">
+		select record.name,COUNT(*) count from community record
+		where record.collaborate_flag = 1
+		<if test="dateType !=null and dateType=='today' ">
+			and TO_DAYS(record.create_date)=TO_DAYS(NOW())
+		</if>
+		<if test="beginDate!=null and endDate==null">
+  			and <![CDATA[  record.create_date>=#{beginDate} ]]>
+  		</if>
+  		<if test="beginDate==null and endDate!=null">
+  			and <![CDATA[ record.create_date<=#{endDate} ]]>
+  		</if>
+  		<if test="beginDate!=null and endDate!=null">
+  			and <![CDATA[ (record.create_date >=#{beginDate} and record.create_date<=#{endDate}) ]]>
+  		</if>
+  		GROUP BY record.id
+	</select>
+	<!-- 修改提现手续费 -->
+	<update id="updateWithdrawalFee" parameterType="com.linle.community.model.Community">
+		update community
+		set withdrawal_fee = #{withdrawalFee}
+		where id = #{id}
+	</update>
+	
+</mapper>

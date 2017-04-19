@@ -1,0 +1,111 @@
+		.box2 {
+			width: 450px;
+			height: auto;
+			position: absolute;
+			background: white;
+			z-index: 100;
+			border-radius: 5px;
+			overflow: hidden;
+			padding-bottom: 20px;
+		}
+		.box3 {
+			min-width: 400px;
+			height: auto;
+			position: absolute;
+			background: white;
+			z-index: 100;
+			border-radius: 5px;
+			overflow: hidden;
+			padding-bottom: 20px;
+		}
+		.box4 {
+			min-width: 400px;
+			height: auto;
+			position: absolute;
+			background: white;
+			z-index: 100;
+			border-radius: 5px;
+			overflow: hidden;
+			padding-bottom: 20px;
+		}
+		#bg,#options_bg,#support_bg,#upd_support_bg {
+			background-color: #666;
+			position: absolute;
+			z-index: 99;
+			left: 0;
+			top: 0;
+			display: none;
+			width: 100%;
+			height: 100%;
+			opacity: 0.5;
+			filter: alpha(opacity=50);
+			-moz-opacity: 0.5;
+		}
+		#bg3,#options_bg,#support_bg,#upd_support_bg {
+			background-color: #666;
+			position: absolute;
+			z-index: 99;
+			left: 0;
+			top: 0;
+			display: none;
+			width: 100%;
+			height: 100%;
+			opacity: 0.5;
+			filter: alpha(opacity=50);
+			-moz-opacity: 0.5;
+		}
+		#bg4,#options_bg,#support_bg,#upd_support_bg {
+			background-color: #666;
+			position: absolute;
+			z-index: 99;
+			left: 0;
+			top: 0;
+			display: none;
+			width: 100%;
+			height: 100%;
+			opacity: 0.5;
+			filter: alpha(opacity=50);
+			-moz-opacity: 0.5;
+		}
+		
+		
+		.tip-tk {
+			text-align: left;
+			padding-left: 20px;
+			padding: 15px 0 15px 15px;
+			font-size: 17px;
+			border-bottom: 1px solid gainsboro;
+		}
+		
+		.tk-btn {
+			padding: 5px 15px;
+			border: 0;
+			color: white;
+			margin-right: 10px;
+			cursor: pointer;
+			background: #ff4401;
+			float: right;
+			margin-top: 15px;
+		}
+		
+		.close {
+			padding: 5px 15px;
+			border: 0;
+			margin-right: 10px;
+			cursor: pointer;
+			background:red;
+			float: right;
+			margin-top: 15px;
+		}
+		
+		.input-yourtext {
+			width: 200px;
+			float: left;
+			line-height: 25px;
+			margin: 5px;
+		}
+		
+		.tip-nr {
+			margin: 10px;
+			float: left;
+		}

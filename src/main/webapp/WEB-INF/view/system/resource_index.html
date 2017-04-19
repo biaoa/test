@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>资源首页</title>
+  <meta name="content-type" content="text/html; charset=UTF-8">
+  <#include '/common/resources.html'>
+</head>
+<body>
+ <div class="fh_right_box">
+     <h3><span class="iconfont" style="font-size:20px;color:#d65b5a">&#xe626;</span>&nbsp;最新订单</h3>
+       <img src="${base}/resources/images/hr.jpg" class="xian"/>
+   </div>
+   <table class="table table-striped">
+   <thead>
+      <tr>
+		<th>序号</th>
+		<th width="140px">订单编号</th>
+		<th width="150px">服务内容</th>
+		<th>公司名称</th>
+		<th>提交时间</th>
+		<th>代币</th>
+		<th>处理状态</th>
+		<th>操作</th>
+      </tr>
+   </thead>
+   <tbody>
+		 <#if (orderList)?exists && orderList?size gt 0>
+				<#list orderList as order>
+									<tr>
+						<td align="center">${(order_index+1)}</td>
+						<td>${order.orderCode}</td>
+						<td title="${order.service.content}">
+						<#if order.service??>
+							<#if (order.service.content)?length gt 7>
+								${order.service.content?substring(0,7)}...
+								<#else>
+								${order.service.content}
+							</#if>
+						<#else>
+						</#if>
+						</td>
+						<td class="space">${order.epInfo.name}</td>
+						<td class="space">${order.createDate?string('yyyy-MM-dd HH:mm:ss')}</td>
+						<td align="center">${order.cost!"0"}</td>
+						<td align="center">${order.status.getName()}</td>
+						 <td align="center"><a class="btn btn-default" href="${base}/serviceOrder/getServiceOrderByid?id=${order.id}">查看</a></td>
+					</tr>
+				</#list>
+		</#if>
+      
+   </tbody>
+</table>
+<div class="fh_right_box">
+    <h3><span class="iconfont" style="font-size:20px;color:#d65b5a">&#xe625;</span>&nbsp;淘企业</h3>
+        <img src="${base}/resources/images/hr.jpg" class="xian"/>
+    </div>
+ <table class="table table-striped">
+ <thead>
+   	<tr>
+		<th>序号</th>
+		<th>标题</th>
+		<th>需求单位</th>
+		<th>咨询时间</th>
+		<th>联系电话</th>
+		<th>操作</th>
+	</tr>
+ </thead>
+ <tbody>
+   	<#if (xuqiuList)?exists && xuqiuList?size gt 0> <#list
+				xuqiuList as so>
+				<tr>
+					<td align="center">${(so_index+1)}</td>
+					<td>${so.title}</td>
+					<td>${so.epInfo.name}</td>
+					<td>${so.createDate?string('yyyy-MM-dd HH:mm:ss')}</td>
+					<td>${so.epInfo.officePhone!"无"}
+					<td align="center"><a class="btn btn-default" href="${base}/chooseBusiness/details?id=${so.id}">查看</a>
+					</td>
+				</tr>
+				</#list> </#if>
+ </tbody>
+</table>
+</body>
+<script type="text/javascript">
+$(function(){
+});
+</script>
+</html>

@@ -1,0 +1,114 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>管理中心</title>
+<#include '/common/resources.html'>
+<link href="${base}/resources/bootstrap-3.3.5-dist/css/bootstrapValidator.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="${base}/resources/bootstrap-3.3.5-dist/js/bootstrapValidator.min.js"></script>
+<style>
+.submit-btn {
+    padding: 5px 13px;
+    background: #f15822;
+    border-radius: 3px;
+    color: white;
+    cursor: pointer;
+    margin-right: 10px;
+    border:0;
+}
+</style>
+</head>
+<body> 
+<div class="whole">
+      	<ol class="breadcrumb">
+		<li><a href="javascript:void(0)">系统管理</a></li>
+		<li class="active">角色管理</li>
+	</ol>
+       <form class="form-horizontal col-xs-pull-3" style="margin-top: 40px;" id="addroleForm" name="addroleForm" method="post" action="${base}/sys/addRole">
+        	<div class="col-sm-12 form-group" style="width:200px;">
+            <label class="col-sm-3 control-label" style="float:left;margin-top: 5px;">描述&nbsp;</label>
+            <div class="col-lg-5" style="float:left;margin-left: 21px;margin-bottom: 20px;">
+                <input type="text" class="col-xs-10 col-sm-5 input-icon input-icon-right form-control" name="cname" />
+            </div>
+            </div>
+            <div class="clearfix"></div>
+            <div class="col-sm-12 form-group" style="width:200px;">
+                 <label style="float:left;margin-top:5px;" class="col-sm-3 control-label">英文名</label>
+                 <div class="col-lg-5" style="float:left;margin-left:21px;margin-bottom: 20px;">
+                     <input type="text" class="col-xs-10 col-sm-5 input-icon input-icon-right form-control" name="cname" id="ename" />
+                 </div>
+             </div>
+           <!--  <div class="form-group">
+                <div class="col-lg-9 col-lg-offset-3">
+                    <button type="submit" class="btn btn-primary">保存</button>
+                </div>
+            </div> -->
+            <div class="clearfix"></div>
+            <div class="col-sm-12  col-sm-offset-5 " style="margin-left:52px;">
+                 <button type="submit" class="submit-btn btn-default">确认
+                 </button>
+            </div>
+       </form>
+       </div>
+</body>
+<script type="text/javascript">
+$(document).ready(function() {
+    $('#addroleForm')
+        .bootstrapValidator({
+            message: 'This value is not valid',
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+            	cname: {
+                    message: '描述不能为空',
+                    validators: {
+                        notEmpty: {
+                            message: '描述不能为空'
+                        }
+                    }
+                },
+                ename: {
+                    validators: {
+                        notEmpty: {
+                            message: '权限名不能为空'
+                        },
+                        remote: {
+                            url: '${base}/sys/checkRoleExsit'+$("#ename").val(),
+                            message: '权限名称已被占用'
+                        }
+                    }
+                }
+            }
+        })
+        .on('success.form.bv', function(e) {
+            // Prevent form submission
+            e.preventDefault();
+            // Get the form instance
+            var $form = $(e.target);
+            // Get the BootstrapValidator instance
+            var bv = $form.data('bootstrapValidator');
+            // Use Ajax to submit form data
+            $.post($form.attr('action'), $form.serialize(), function(result) {
+            	 layer.msg(result.msg,{
+		             	shift: 0,
+		             	time: 1500
+		             }, function(){
+		            	 window.location.href="${base}/sys/rolelist";
+		             }); 
+            	/* 	$.gritter.add({  
+        	    title: '',  
+        	    text: result.msg,  
+         	    image: ctx+'admin/clear/notif_icon.png',  
+        	    sticky: false,  
+        	    time: 2000,  
+        	    speed:500,  
+        	    class_name: 'gritter-success'//gritter-center   
+        	});   */
+            }, 'json');
+        });
+});
+</script>
+</html>

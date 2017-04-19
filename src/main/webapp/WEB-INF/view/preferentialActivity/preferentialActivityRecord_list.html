@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>优惠活动管理</title>
+<meta name="content-type" content="text/html; charset=UTF-8">
+<#include '/common/resources.html'>
+<link rel="stylesheet" media="screen and (min-width: 1580px)" href="${base}/resources/css/sys/jquery.tableui.css" />
+<link rel="stylesheet" media="screen and (max-width: 1580px)" href="${base}/resources/css/sys/tableui-resolving.css" />
+<script src="${base}/resources/js/respond.js" type="text/javascript" async="async"></script>
+<!-- <script type="text/javascript" src="${base}/resources/js/tooltips.js"></script> -->
+</head>
+<body>
+<div class="whole">
+	<ol class="breadcrumb">
+		<li><a href="javascript:void(0)">优惠活动管理</a></li>
+		<li class="active">优惠活动记录</li>
+	</ol>
+			<div class="tab_box">
+	<table class="table_solid" border="0" cellspacing="0">
+		<tbody>
+			<tr class="evenRow">
+				<th>序号</th>
+				<th>活动名称</th>
+				<th>订单号</th>
+				<th>用户名称</th>
+				<th>优惠金额</th>
+				<th>是否支付</th>
+				<th>创建时间</th>
+			</tr>
+			<#if (pagelist.results)?exists && pagelist.results?size gt 0> <#list
+			pagelist.results as record>
+			<tr>
+				<td>${(record_index+1)+(pagelist.pageNo-1)*pagelist.pageSize}</td>
+				<td>${record.preferentialActivity.activityName!!}</td>
+				<td>${record.orderNo!!}</td>
+				<td><#if record.user??>${record.user.name!!}</#if></td>
+				<td>${record.preferentialAmount!!}
+				</td>
+				<td>
+				<#if record.payFlag==1>
+				已支付
+				<#else>
+				未支付
+				</#if>
+				</td>
+				<td>${record.createDate?string('yyyy/MM/dd HH:mm')}</td>
+			</tr>
+			</#list>
+		</tbody>
+	</table>
+	<form action="${base}/preferentialActivity/list" id="pagerForm">
+	<#include '/common/pagination.html'>
+	</form>
+	<#else>
+	<div class="no-data">暂无数据~</div>
+	</#if>
+	</div>
+	</div>
+</body>
+<script type="text/javascript">
+</script>
+
+</html>

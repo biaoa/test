@@ -1,0 +1,56 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>入驻小区信息展示</title>
+<#include '/common/base.html'>
+<link rel="stylesheet" href="${base}/resources/css/app/investors.css" />
+<link rel="stylesheet" href="${base}/resources/touchTouch/touchTouch.css" />
+<!--[if lt IE 9]>
+	<script src="js/html5.js"></script>
+<![endif]-->
+<style type="text/css">
+html{background:url('${base}/resources/images/investors/bg.png');}
+.into{background:url('${base}/resources/images/investors/bg1.png');font:14px/1.3 'Segoe UI',Arial, sans-serif;margin:auto;}
+</style>
+</head>
+<body>
+	<div class="into">
+		<div id="thumbs">
+			<a href="${base}/resources/images/investors/bolixuan.png"style="background-image: url(${base}/resources/images/investors/bolixuan.png)" title="柏丽轩"></a>
+			<a href="${base}/resources/images/investors/binshuimingting.png" style="background-image: url(${base}/resources/images/investors/binshuimingting.png)" title="滨水名庭"></a>
+			<a href="${base}/resources/images/investors/zhaohuixincheng.png" style="background-image: url(${base}/resources/images/investors/zhaohuixincheng.png)" title="朝晖新城"></a>
+			<a href="${base}/resources/images/investors/dongfanghongjie.png" style="background-image: url(${base}/resources/images/investors/dongfanghongjie.png)" title="东方红街"></a>
+			<a href="${base}/resources/images/investors/nanchengjingyuan.png" style="background-image: url(${base}/resources/images/investors/nanchengjingyuan.png);"title="南城景园"></a>
+			<a href="${base}/resources/images/investors/guangzexiaoqu.png" style="background-image: url(${base}/resources/images/investors/guangzexiaoqu.png);"title="广泽小区"></a>
+			<a href="${base}/resources/images/investors/guojihuayuan.png" style="background-image: url(${base}/resources/images/investors/guojihuayuan.png);"title="国际花园"></a>
+			<a href="${base}/resources/images/investors/huadulanting.png" style="background-image: url(${base}/resources/images/investors/huadulanting.png);"title="华都兰庭"></a>
+			<a href="${base}/resources/images/investors/jiajingyuan.png" style="background-image: url(${base}/resources/images/investors/jiajingyuan.png);"title="家景园"></a>
+			<a href="${base}/resources/images/investors/huilvfuyuan.png" style="background-image: url(${base}/resources/images/investors/huilvfuyuan.png);"title="嘉绿福苑"></a>
+			<a href="${base}/resources/images/investors/huilvjingyuan.png" style="background-image: url(${base}/resources/images/investors/huilvjingyuan.png);"title="嘉绿景苑"></a>
+			<a href="${base}/resources/images/investors/jinlvwan.png" style="background-image: url(${base}/resources/images/investors/jinlvwan.png);"title="金榈湾"></a>
+			<a href="${base}/resources/images/investors/mingchengdasha.png" style="background-image: url(${base}/resources/images/investors/mingchengdasha.png);"title="名城大厦"></a>
+			<a href="${base}/resources/images/investors/shuiyinkangting.png" style="background-image: url(${base}/resources/images/investors/shuiyinkangting.png);"title="水印康庭"></a>
+			<a href="${base}/resources/images/investors/sijihuayuan.png" style="background-image: url(${base}/resources/images/investors/sijihuayuan.png);"title="四季花园"></a>
+			<a href="${base}/resources/images/investors/tiandishuyuan.png" style="background-image: url(${base}/resources/images/investors/tiandishuyuan.png);"title="天地墅园"></a>
+			<a href="${base}/resources/images/investors/tianhonggongyu.png" style="background-image: url(${base}/resources/images/investors/tianhonggongyu.png);"title="天虹公寓"></a>
+			<a href="${base}/resources/images/investors/wantaihuating.png" style="background-image: url(${base}/resources/images/investors/wantaihuating.png);"title="万泰华庭"></a>
+			<a href="${base}/resources/images/investors/xixibeiyuan.png" style="background-image: url(${base}/resources/images/investors/xixibeiyuan.png);"title="西溪北苑"></a>
+			<a href="${base}/resources/images/investors/xinjingyuan.png" style="background-image: url(${base}/resources/images/investors/xinjingyuan.png);"title="欣景苑"></a> 
+			<a href="${base}/resources/images/investors/xinbuxianting.png" style="background-image: url(${base}/resources/images/investors/xinbuxianting.png);"title="信步闲庭"></a>
+			<a href="${base}/resources/images/investors/yangjiachunxiao.png" style="background-image: url(${base}/resources/images/investors/yangjiachunxiao.png);"title="杨家春晓"></a>
+			<a href="${base}/resources/images/investors/yihehuayuan.png" style="background-image: url(${base}/resources/images/investors/yihehuayuan.png);"title="颐和花园"></a>
+			<a href="${base}/resources/images/investors/yonghudasha.png" style="background-image: url(${base}/resources/images/investors/yonghudasha.png);"title="永富大厦"></a>
+			<a href="${base}/resources/images/investors/yuanmaodasha.png" style="background-image: url(${base}/resources/images/investors/yuanmaodasha.png);"title="元茂大厦"></a>
+			<a href="${base}/resources/images/investors/zhedirenjia.png" style="background-image: url(${base}/resources/images/investors/zhedirenjia.png);"title="浙地人家"></a>
+		</div>
+	</div>
+	<script src="${base}/resources/touchTouch/touchTouch.jquery.js"></script>
+	<script>
+		$(function() {
+			$('#thumbs a').touchTouch();
+		});
+	</script>
+</body>
+</html>

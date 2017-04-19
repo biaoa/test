@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:cache="http://www.springframework.org/schema/cache"
+       xsi:schemaLocation="http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.2.xsd
+                           http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
+                           http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd"> 
+  
+  <bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager">
+    <property name="cacheManager">
+      <bean class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
+        <property name="configLocation" value="classpath:ehcache.xml" />
+      </bean>
+    </property>
+    <property name="transactionAware" value="true" />
+  </bean>
+  <aop:config>
+    <aop:advisor advice-ref="userAdvisor" pointcut="target(com.linle.problemType.service.ProblemTypeService) and 
+       (execution(* select*(..)) || execution(* update*(..)) || execution(* delete*(..)))"/>
+  </aop:config>
+  
+  <cache:advice id="userAdvisor" cache-manager="cacheManager">
+    <cache:caching cache="users">
+      <!-- cache-put是每次都会执行该方法，并将执行结果以键值对的形式存入指定的缓存中 -->
+      <!-- 判断unless,如果返回false,则放入缓存;(即跟condition相反) -->
+      <cache:cacheable method="selectByPrimaryKey" key="#p0" />
+      <cache:cache-evict method="updateByPrimaryKeySelective"  all-entries="true" />
+      <cache:cache-evict method="deleteByPrimaryKey" all-entries="true" />
+    </cache:caching>
+  </cache:advice>
+  
+</beans>

@@ -1,0 +1,26 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html ng-app="demo">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>聊天</title> 
+<#assign base="${rc.contextPath}"> 
+<script type="text/javascript" src="${base}/resources/IM/js/jquery-1.9.1.js"></script>
+<script>
+	if (navigator.userAgent.indexOf("MSIE 9") != -1) {
+		window.WEB_XHR_POLLING = true;
+	}
+	var WEB_XHR_POLLING = true;
+	var b = '${base}';
+	var token = '${cUser.token!!}';
+</script>
+</head>
+<body ng-controller="main">
+	<div>
+		<rong-widget></rong-widget>
+	</div>
+</body>
+<link rel="stylesheet" type="text/css" href="${base}/resources/IM/css/conversation.min.css" />
+<script type="text/javascript" src="${base}/resources/IM/js/angular.js"></script>
+<script src="${base}/resources/IM/js/main.min.js"></script>
+<script type="text/javascript" src="${base}/resources/IM/js/index.js"></script>
+</html>

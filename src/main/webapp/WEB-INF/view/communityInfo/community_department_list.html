@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="UTF-8">
+<meta name="renderer" content="webkit|ie-comp|ie-stand">
+<meta name="renderer" content="webkit">
+<title></title> <#include '/common/resources.html'>
+<link rel="stylesheet" media="screen and (min-width: 1580px)" href="${base}/resources/css/sys/kd.css" />
+<link rel="stylesheet" media="screen and (max-width: 1580px)" href="${base}/resources/css/sys/kd-resolving.css" />
+<link rel="stylesheet" media="screen and (min-width: 1580px)" href="${base}/resources/css/sys/timepicki.css" />
+<link rel="stylesheet" media="screen and (max-width: 1580px)" href="${base}/resources/css/sys/timepicki-resolving.css" />
+<link rel="stylesheet" type="text/css" href="${base }/resources/uploadify/uploadify.css">
+<script src="${base}/resources/js/respond.js" type="text/javascript" async="async"></script>
+<script src="${base }/resources/uploadify/jquery.uploadify.min.js" type="text/javascript"></script>
+</head>
+
+<body>
+	<div class="kdwhole">
+		<ol class="breadcrumb">
+			<li><a href="javascript:void(0)">物业中心</a></li>
+			<li class="active">相关部门</li>
+		</ol>
+
+		<div class="kdleft">
+			<div class="head">
+				<span class="mes-wh">相关部门</span><span class="rec"
+					onclick="showManage()">添加</span><img
+					src="${base}/resources/images/add_03.png">
+			</div>
+			<#if (pagelist.results)?exists && pagelist.results?size gt 0>
+			<#list pagelist.results as department> 
+			<div class="nr click">
+				<div class="avatar-kd">
+					<img src="${base}/${department.logo!!}">
+				</div>
+				<div class="off-title" onclick="showBg()">
+					<h3>${department.name!!}</h3>
+					<br>
+					<p>${department.count!0}人</p>
+					<p>${department.phone!!}</p>
+				</div>
+				<div class="time-bt">
+					<span>${department.createDate?string('yyyy/MM/dd HH:mm:ss')}</span>
+					<img src="${base}/resources/images/xiugai.png" class="edit_"  data='${department}'>
+					<img src="${base}/resources/images/dele.png">
+				</div>
+			</div>
+			</#list>
+			<#else>
+			<div class="no-data">暂无数据~</div>
+			</#if>
+		</div>
+
+		<div class="kdrignt3">
+			<div class="head">
+				<span>部门信息编辑</span>
+			</div>
+			<form action="${base}/communityDepartment/add" method="post" id="form1">
+			<div class="Sheet">
+				<div class="s-title">
+					<span class="choice">部门名称：</span>
+					<div class="inp">
+						<input maxlength="20" type="text" id="name" name="name"
+							onkeyup="javascript:setShowLength(this, 20, 'cost_tpl_title_length');" />
+						<span class="cue" id="cost_tpl_title_length">0/20</span>
+					</div>
+				</div>
+
+				<div class="s-address">
+					<span class="choice">联系方式：</span>
+
+					<div class="phone">
+						<div class="phone-inps">
+							<input type="text" placeholder="请输入联系电话" id="phone" name="phone"/>
+						</div>
+					</div>
+
+				</div>
+				
+				<div class="s-name">
+					<span class="choice">部门图标：</span>
+					<div id="url" style="text-align:left;float: left;margin-left: 17px;">
+                        <input type="file" name="file" id="file_upload">
+                        <input type="hidden" name="logo" id="logo"/>
+                   </div>
+				</div>
+				
+				<div class="s-address2">
+					<span class="choice">工作时间：</span>
+
+					<div class="phone">
+						<div class="o-input">
+							<input id="star" type="text" name="workBegin"
+								class="time_element" />
+						</div>
+						<span class="o-span">--</span>
+						<div class="o-input">
+							<input id="end" type="text" name="workEnd"
+								class="time_element" />
+						</div>
+					</div>
+
+				</div>
+
+
+				<div class="s-address">
+					<span class="choice">部门介绍：</span>
+
+					<div class="wyjj">
+						<textarea type="text" id="introduce" name="introduce"/></textarea>
+					</div>
+					<button class="s-btn" style="cursor: pointer;">确认</button>
+					<input type="hidden" id="id" name="id"/>
+				</div>
+				
+			</div>
+			</form>
+		</div>
+	</div>
+	</div>
+	<script type="text/javascript" src="${base}/resources/js/timepicki.js"></script>
+	<script type="text/javascript">
+		$("#star").timepicki();
+		$("#end").timepicki();
+		function showBg() {
+			$(".kdrignt").fadeIn();
+		}
+		function showManage() {
+			$(".kdrignt3").fadeIn();
+		}
+		
+		$("#form1").submit(function() {
+			var name = $("#name").val();
+			var phone = $("#phone").val();
+			var star = $("#star").val();
+			var end = $("#end").val();
+			var introduce = $("#introduce").val();
+			var id = $("#id").val();
+			if(name==""){
+				layer.msg("部门名称不能为空");
+				return false;
+			}
+			if(phone==""){
+				layer.msg("联系方式不能为空");
+				return false;
+			}
+			if(star=="" || end ==""){
+				layer.msg("工作时间不能为空");
+				return false;
+			}
+			var ajax_url = $(this).attr("action"); //表单目标 
+			var ajax_type = $(this).attr('method'); //提交方法 
+			var ajax_data = $(this).serialize(); //表单数据 
+			$.ajax({
+				type : ajax_type, //表单提交类型 
+				url : ajax_url, //表单提交目标 
+				data : ajax_data, //表单数据
+				success : function(data) {
+					 layer.msg(data.msg,{
+					     	shift: 0
+					     }, function(){
+					    	 $(".kdrignt3").fadeOut();
+					    	 window.location.reload();
+					     }); 
+				}
+			});
+			return false; //阻止表单的默认提交事件 
+		});
+		
+	</script>
+	<script>
+		function setShowLength(obj, maxlength, id) {
+			var rem = maxlength - obj.value.length;
+			var wid = id;
+			if (rem < 0) {
+				rem = 0;
+			}
+			document.getElementById(wid).innerHTML = rem + "/" + "20";
+		}
+		  $(function () {
+	            $('#file_upload').uploadify({
+	                'swf': '${base }/resources/uploadify/uploadify.swf', //指定上传控件的主体文件，默认‘uploader.swf’
+	                'uploader': '${base}/sys/file/uploadFile', //指定服务器端上传处理文件
+	                'auto': true, //手动上传
+	                'buttonImage': '${base }/resources/uploadify/uploadify-browse.png', //浏览按钮背景图片
+	                'multi': false, //单文件上传
+	                'fileTypeExts': '*.gif; *.jpg; *.png;', //允许上传的文件后缀
+	                'fileSizeLimit': '300MB', //上传文件的大小限制，单位为B, KB, MB, 或 GB
+	                'successTimeout': 30, //成功等待时间
+	                'queueSizeLimit': 1,
+	                'fileObjName': 'file',
+	                'onUploadStart': function (file) {  
+	                    $("#file_upload").uploadify("settings", "formData", {'type': 'community_department'});  
+	                },
+	                'onUploadSuccess': function (file, data) {//每成功完成一次文件上传时触发一次
+	                    data = eval("(" + data + ")");
+	                    $(".uploadimg").remove();
+	                    $('#url').append("<div id=" + data.value + " class='uploadimg'> <img width=50 height=50 src='${base}/" + data.value + "' /> " +
+	                            "<a href=javascript:delimg('" + data.value + "','logo')>删除</a> </div>");
+	                    $("#logo").val(data.value);
+	                },
+	                'onUploadError': function (file, data) {//当上传返回错误时触发
+	                    $('#url').append("<li>" + data + "</li>");
+
+	                }
+	            });
+
+	        });
+	        <!--删除图片-->
+	        function delimg(obj, tval) {
+	            var url = "${base}/sys/file/delimg";
+	            $.post(url, {'imgpath': obj}, function (data) {
+	                if (data.code == 0) {
+	                    document.getElementById(obj).remove();
+	                    document.getElementById(tval).value = "";
+	                }
+	            });
+	        }
+	        
+	    	$(".edit_").click(function(){
+				var data = eval("("+$(this).attr("data")+")");
+				$("#name").val(data.name);
+				$("#phone").val(data.phone);
+				$("#star").val(data.workBegin);
+				$("#end").val(data.workEnd);
+				$("#introduce").val(data.introduce);
+				$("#id").val(data.id);
+				$("#logo").val(data.logo);
+				$("#url").append("<div id=" + data.logo + " class='uploadimg'> <img width=50 height=50 src='${base}/" + data.logo + "' /> " +
+                        "<a href=javascript:delimg('" + data.logo + "','logo')>删除</a> </div>");
+				$(".kdrignt3").fadeIn();
+			})
+	</script>
+</body>
+
+</html>

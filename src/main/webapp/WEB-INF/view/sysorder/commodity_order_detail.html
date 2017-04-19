@@ -1,0 +1,381 @@
+
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<#include '/common/resources.html'>
+		<link rel="stylesheet" media="screen and (min-width: 1580px)" href="${base}/resources/css/sys/shop-order.css" />
+		<link rel="stylesheet" media="screen and (max-width: 1580px)" href="${base}/resources/css/sys/shop-order-resolving.css" />
+		<link type="text/css" rel="stylesheet" href="${base}/resources/css/sys/application.css">
+		<link type="text/css" rel="stylesheet" href="${base}/resources/css/sys/viewer.min.css">
+		<link rel="stylesheet" href="${base}/resources/css/sys/sys-tip.css" />
+		<script src="${base}/resources/js/respond.js" type="text/javascript" async="async"></script>
+		<script type="text/javascript" src="${base}/resources/js/jquery.raty.min.js"></script>
+		<script type="text/javascript" src="${base}/resources/js/viewer-jquery.min.js"></script>
+		<style type="text/css">
+			.pj--border{border-bottom: 1px dashed gainsboro;}
+			.tk-img{width:100px;height: 80px;margin-right: 1%;float: left;}
+		</style>
+	</head>
+
+	<body>
+		<div class="whole" style="background: ghostwhite;">
+			<ol class="breadcrumb" style="height: auto;overflow: hidden;">
+				<li><a href="javascript:void(0)">订单中心</a></li>
+				<li class="active">订单详情</li>
+			</ol>
+			<div class="order-list">
+				<div class="new-order">
+					<div class="new-order-title">
+						<div class="se-num"><i>
+						<#if orderDetail.orderStatus==0>
+							待接单
+							<#elseif orderDetail.orderStatus==1>
+							待付款
+							<#elseif orderDetail.orderStatus==2>
+							待收货
+							<#elseif orderDetail.orderStatus==3>
+							待评价
+							<#elseif orderDetail.orderStatus==4>
+							已完成
+							<#elseif orderDetail.orderStatus==5>
+							已关闭
+							<#elseif orderDetail.orderStatus==7>
+							退款中
+						</#if>
+						</i></div>
+						<div class="ord-num"><span>订单号：${orderDetail.orderNo}</span></div>
+						<div class="ord-num"><span>下单时间：${orderDetail.createDate?string('yyyy/MM/dd HH:mm')}</span></div>
+						<#if refund??>
+							<#if refund.status==0>
+								<a class="take-orders refund" style="color: white;background: #ff5505;" val="1">同意退款</a>
+								<a class="take-orders reject" style="color: white;background: #3f4750;margin-right: 20px;" val="2">拒绝退款</a>
+							</#if>
+						</#if>
+					</div>
+				</div>
+				<div class="pro-list">
+					<div class="pro-list-title">
+						<div class="pro-title"><span>商品</span></div>
+						<div class="pro-price"><span>单价（元）</span></div>
+						<div class="pro-unm"><span>数量</span></div>
+						<div class="pro-add"><span>小计</span></div>
+					</div>
+
+					<div class="pro-message">
+						<div style="width: 50%;float: left;"><span>配送信息</span></div>
+						<#if evaluate?? && refund??>
+							<div style="width: 46%;float: right;"><span>售后信息</span></div>
+							<#elseif evaluate?? && !refund??>
+							<div style="width: 46%;float: right;"><span>评价信息</span></div>
+							<#elseif !evaluate?? && refund??>
+							<div style="width: 46%;float: right;"><span>退款信息</span></div>
+						</#if>
+					</div>
+				</div>
+				<div class="my-order">
+					<div class="my-order-goods">
+						<#list orderDetail.detailList as detail>
+						<div class="new-list">
+							<div class="list-name"><span>${detail.productName}</span></div>
+						</div>
+						<div class="list-price">
+							<div class="list-mon"><span>${detail.productPrice}</span></div>
+						</div>
+						<div class="list-unm">
+							<div class="list-mon"><span>${detail.productQuantity}</span></div>
+						</div>
+						<div class="list-add">
+							<div class="list-mon"><span>${detail.productPrice*detail.productQuantity}</span></div>
+						</div>
+						</#list>
+						<div class="order-pay">
+							<div class="pay-name">
+								<p>优惠金额</p>
+								<p>配送费</p>
+							</div>
+							<div class="pay-mon">
+								<p>${orderDetail.preferentialAmount}</p>
+								<p>${orderDetail.deliveryFee}</p>
+							</div>
+						</div>
+						<div class="sj-pay">
+							<span>实际支付：</span><span>${orderDetail.totalMoney}</span>
+						</div>
+					</div>
+					<div class="send-message">
+						<div class="send-message-left">
+							<div class="send-message-right">
+								<p>配送方式：</p>
+							</div>
+							<div class="send-message-p">
+								<p>${sendInfo.sendType!!}</p>
+							</div>
+						</div>
+						<div class="send-message-left">
+							<div class="send-message-right">
+								<p>送达时间：</p>
+							</div>
+							<div class="send-message-p">
+								<p>尽快送出</p>
+							</div>
+						</div>
+						<br />
+						<div class="send-message-left">
+							<div class="send-message-right">
+								<p>联&nbsp;系&nbsp;人：</p>
+							</div>
+							<div class="send-message-p">
+								<p>${sendInfo.buyer}</p>
+							</div>
+						</div>
+						<div class="send-message-left">
+							<div class="send-message-right">
+								<p>联系电话：</p>
+							</div>
+							<div class="send-message-p">
+								<p>${sendInfo.buyerPhone}</p>
+							</div>
+						</div>
+						<div class="send-message-left">
+							<div class="send-message-right">
+								<p>收获地址：</p>
+							</div>
+							<div class="send-message-p">
+								<p>${sendInfo.buyerAddress}</p>
+							</div>
+						</div>
+						<br />
+						<div class="send-message-left">
+							<div class="send-message-right">
+								<p>备&nbsp;&nbsp;注&nbsp;：</p>
+							</div>
+							<div class="send-message-p">
+								<p>${sendInfo.message}</p>
+							</div>
+						</div>
+
+					</div>
+					
+					<#if evaluate??>
+					<div class="border-send"></div>
+					<div class="send-message">
+						<div class="send-message-left">
+							<div class="send-message-right">
+								<p>商品评分：</p>
+							</div>
+							<div class="send-message-p star-margin">
+								<div id="readOnly-demo"></div>
+							</div>
+						</div>
+						<div class="send-message-left">
+							<div class="send-message-right">
+								<p>服务态度：</p>
+							</div>
+							<div class="send-message-p star-margin">
+								<div id="readOnly-demo2"></div>
+							</div>
+						</div>						
+						<div class="send-message-left">
+							<div class="send-message-right">
+								<p>配送准点：</p>
+							</div>
+							<div class="send-message-p star-margin">
+								 <div id="readOnly-demo3"></div>
+							</div>
+						</div>					
+						
+						<br />
+						<div class="send-message-left pj--border">
+							<div class="send-message-right">
+								<p>补充评论：</p>
+							</div>
+							<div class="send-message-p">
+								<p>${evaluate.content!!}</p>
+							</div>
+						</div>
+					</div>
+					</#if>
+					<#if refund??>
+					<div class="border-send"></div>
+					<div class="send-message">
+						<div style="width: 100%;float: left;">
+												
+						<div style="float: left;font-size: 20px;"><span>退款信息</span></div>
+				
+							<div class="send-message-left">
+								<div class="send-message-right">
+									<p>售后编号：</p>
+								</div>
+								<div class="send-message-p">
+									<p>${refund.orderNo}</p>
+								</div>
+							</div>
+							<br />
+							<div class="send-message-left">
+								<div class="send-message-right">
+									<p>申请退款时间：</p>
+								</div>
+								<div class="send-message-p">
+									<p>${(refund.createDate?string('yyyy-MM-dd HH:ss'))!!}</p>
+								</div>
+							</div>
+							<div class="send-message-left">
+								<div class="send-message-right">
+									<p>退款状态：</p>
+								</div>
+								<div class="send-message-p">
+									<p>
+									<#if refund.status==0>
+										待商家处理
+									</#if>
+									</p>
+								</div>
+							</div>
+							<div class="send-message-left">
+								<div class="send-message-right">
+									<p>退款类型：</p>
+								</div>
+								<div class="send-message-p">
+									<p>退款</p>
+								</div>
+							</div>
+							<div class="send-message-left">
+								<div class="send-message-right">
+									<p>退款金额：</p>
+								</div>
+								<div class="send-message-p">
+									<p>${orderDetail.totalMoney}</p>
+								</div>
+							</div>
+							<div class="send-message-left">
+								<div class="send-message-right">
+									<p>退款原因：</p>
+								</div>
+								<div class="send-message-p">
+									<p>${refund.refundType}</p>
+								</div>
+							</div>
+							<br />
+							<div class="send-message-left">
+								<div class="send-message-right">
+									<p>退款说明：</p>
+								</div>
+								<div class="send-message-p">
+									<p>${refund.description!!}</p>
+								</div>
+							</div>
+							<!-- 退款图片 -->
+							<div class="send-message-left">
+								<div class="send-message-right">
+									<p>图片：</p>
+								</div>
+								<#if refund.folder??>
+									<div class="send-message-p" id="refund_img">
+									<#list refund.folder.files as file>
+										<img class="tk-img" src="${base}/${file.path}" />
+									</#list>
+								</div>
+									<#else>
+									<div class="send-message-p">
+									<p>用户未上传图片</p>
+									</div>
+								</#if>
+								
+							</div>
+						</div>
+					
+					</div>
+					</#if>
+				</div>
+
+			</div>
+			
+			
+		</div>
+		 	<div id="bg"></div>
+		<div class="box2" style="display: none;">
+			<p class="tip-tk">拒绝原因</p>
+			<br />
+			<span class="tip-nr">拒绝原因:</span><input class="input-yourtext" type="text" id="failReason" placeholder="请输入拒绝原因"/>
+			<div class="clearfix" style=""></div>
+			<div class="message-tip" style="text-align: center;"><p><span style="color: red;">*</span>请说明拒绝退款原因</p></div>	
+			<div class="clearfix" style=""></div>
+			<a class="close">取消</a><a href="javascript:void(0)" class="tk-btn">确定</a>
+		</div>
+		  <script type="text/javascript">
+		  <#if evaluate??>
+		    $(function() {
+		      $.fn.raty.defaults.path = '${base}/resources/images/star';
+		      $('#readOnly-demo').raty({ readOnly: true, score:${evaluate.commodityStar}});
+		      $('#readOnly-demo2').raty({ readOnly: true, score:${evaluate.serviceStar}});
+		      $('#readOnly-demo3').raty({ readOnly: true, score:${evaluate.sendStar}});
+		    });
+		   </#if>
+		   
+		   $(function() {
+				$('#refund_img').viewer({
+					url: 'data-original',
+				});
+				
+				$(".reject").click(function () {
+					$("#bg").css({
+			        	display: "block", height: $(document).height()
+			    	});
+				
+				var $box = $('.box2');
+					$box.css({
+				    //设置弹出层距离左边的位置
+				    left: ($("body").width() - $box.width()) / 2 - 10 + "px",
+				    //设置弹出层距离上面的位置
+				    top: ($(window).height() - $box.height()) / 3 + $(window).scrollTop() + "px",
+				    display: "block"
+					});
+			});
+			
+			});
+		   //点击关闭按钮的时候，遮罩层关闭
+	        $(".close").click(function () {
+	            $("#bg,.box2").css("display", "none");
+	        });
+		   
+		   <#if refund??>
+		   
+		   //点击确定按钮
+	    	$(".tk-btn").click(function(){
+	    		 var orderNo = '${refund.orderNo}';
+	    		 var failReason = $("#failReason").val();
+	    		 if(failReason==''){
+	    			 layer.msg("请填写拒绝退款原因");
+	    			 return false;
+	    		 }
+	    		  var url = '${base}'+"/sysorder/operateRefundOrder"
+				   $.post(url, {'orderNo': orderNo,"status":2,'failReason':failReason}, function (data) {
+					   layer.msg(data.msg,{
+					     	shift: 0
+					     }, function(){
+					    	 window.location.reload();
+					     });
+			        });
+	    	});
+		   
+		   $(".refund").click(function(){
+			   var orderNo = '${refund.orderNo}';
+			   var status = $(this).attr("val");
+			   var url = '${base}'+"/sysorder/operateRefundOrder"
+			   $.post(url, {'orderNo': orderNo,"status":status,'failReason':''}, function (data) {
+				   layer.msg(data.msg,{
+				     	shift: 0
+				     }, function(){
+				    	 window.location.reload();
+				     });
+		        });
+		   })
+		   </#if>
+		  
+  </script>
+	</body>
+
+</html>

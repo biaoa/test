@@ -1,0 +1,15 @@
+<meta charset="UTF-8">
+<div id="top">
+<div id="top_box">
+    <div id="box_left">
+      <img src="${base}/resources/images/logo.png"/ >
+    </div>
+    <div id="box_right">
+    <div id="right_left">
+        <h1>欢迎您:<span>&nbsp;${name!!}</span><span>&nbsp;<a href="${base}/logout">退出</a></span></h1>
+        <p style="text-align:right;">您的注册时间：<#if time??>${time?string('yyyy/MM/dd HH:mm')}</#if></p>
+       </div>
+       <a href="${base}/set/settingPage" id="sz" target="myiframe"><img src="${base}/resources/images/sz.jpg" ></a>
+    </div>
+</div>
+</div>

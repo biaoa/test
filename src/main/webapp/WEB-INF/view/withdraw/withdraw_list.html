@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="UTF-8">
+<title></title>
+<#include '/common/resources.html'>
+<link rel="stylesheet" media="screen and (min-width: 1580px)" href="${base}/resources/css/sys/jquery.tableui.css" />
+<link rel="stylesheet" media="screen and (max-width: 1580px)" href="${base}/resources/css/sys/tableui-resolving.css" />
+<link rel="stylesheet" href="${base}/resources/css/sys/jquery-ui.min.css" />
+<script type="text/javascript" src="${base}/resources/js/jquery-ui.min.js"></script>
+<link rel="stylesheet" type="text/css" href="${base}/resources/datetimepicker/jquery.datetimepicker.css"/>
+<script src="${base}/resources/datetimepicker/jquery.datetimepicker.js" ></script>
+<style>
+.table_solid td{
+height:50px;
+}
+</style>
+</head>
+
+<body>
+	<form action="${base}/sys/withdraw/list" id="pagerForm">
+	<div class="whole">
+		<ol class="breadcrumb">
+			<li><a href="javascript:void(0)">提现管理</a></li>
+		</ol>
+		<div class="o-order">
+			<div class="o-first">
+				<#if cUser.identity=="CWB">
+					<span class="o-span">用&nbsp;户&nbsp;名&nbsp;：</span>
+					<div class="o-input">
+						<input class="my-price" type="text" name="userName" value="${userName!!}"/>
+					</div>
+				</#if>
+				<span class="o-span" style="text-indent:32px;">状态：</span>
+				<div class="o-div">
+					<select class="o-select" name="status" id="status">
+						<option value="-1">全部</option>
+						<option value="0">待处理</option>
+						<option value="1">提现成功</option>
+					</select>
+				</div>
+			</div>
+			<span class="o-span">申请时间：</span>
+			<div class="o-input">
+				<input class="my-times" type="text" id="datepicker2" name="beginDate" value="${beginDate!!}"/>
+			</div>
+			<span class="o-span">--</span>
+			<div class="o-input">
+				<input class="my-times" type="text" id="datepicker3" name="endDate" value="${endDate!!}"/>
+			</div>
+		</div>
+		<div class="o-thrid">
+			<a class="o-btn searche1">搜索</a>
+		</div>
+	</div>
+	<div class="clearfix"></div>
+	<div class="tab-order">
+		<div class="box tab2">
+			<div class="tab_box">
+				<div class="">
+					<table class="table_solid" border="0" cellspacing="0">
+						<tbody>
+							<tr class="evenRow">
+								<th>申请用户</th>
+								<th>申请金额</th>
+								<th>手续费</th>
+								<th>到账金额</th>
+								<th>申请时间</th>
+								<th>状态</th>
+								<#if cUser.identity=="CWB">
+									<th>类型</th>
+									<th>户名</th>
+									<th>提现银行</th>
+									<th>提现卡号</th>
+									<th>操作</th>
+								</#if>
+								
+							</tr>
+							<#if (pagelist.results)?exists && pagelist.results?size gt 0>
+								<#list pagelist.results as withdraw>
+									<tr class="oddRow">
+										<td>${withdraw.user.userName}</td>
+										<td>${withdraw.applyAmount!0}</td>
+										<td>${withdraw.poundageAmount!0}</td>
+										<td>${withdraw.amount!0}</td>
+										<td>${withdraw.createDate?string('yyyy/MM/dd HH:mm:ss')}</td>
+										<td>
+											<#if withdraw.statuss==0>
+												待处理
+												<#elseif withdraw.statuss==1>
+												提现成功
+											</#if>
+										</td>
+										<#if cUser.identity=="CWB">
+										<td>
+											<#if withdraw.withdrawType=="water">
+												水费
+												<#elseif withdraw.withdrawType=="electricity">
+												电费
+												<#elseif withdraw.withdrawType=="propertyFee">
+												物业费
+												<#elseif withdraw.withdrawType=="broadband">
+												宽带费
+												<#elseif withdraw.withdrawType=="cableTelevision">
+												有线电视
+												<#elseif withdraw.withdrawType=="gas">
+												燃气费
+												<#elseif withdraw.withdrawType=="space">
+												车位相关
+												<#elseif withdraw.withdrawType=="shop_prorata">
+												商家利润分成
+												<#elseif withdraw.withdrawType=="shop">
+												商家提现
+											</#if>
+										</td>
+										
+										<td>
+											<#if withdraw.withdrawbank??>
+												${withdraw.withdrawbank.accountName!"未知"}
+												<#else>
+												未知
+											</#if>
+										</td>
+										<td>
+											<#if withdraw.withdrawbank??>
+												${withdraw.withdrawbank.accountBank!"未知"}
+												<#else>
+												未知
+											</#if>
+										</td>
+										<td>
+											<#if withdraw.withdrawbank??>
+												${withdraw.withdrawbank.accountNumber!"未知"}
+												<#else>
+												未知
+											</#if>
+										</td>
+										<td>
+											<#if withdraw.statuss==0>
+												<a class="td-b common-btn-cz confirm" val="${withdraw.id}" uid='${withdraw.user}' amount="${withdraw.amount}">确认处理</a>
+											</#if>
+										</td>
+										</#if>
+									</tr>
+								</#list>
+						</tbody>
+					</table>
+					<#include '/common/pagination.html'>
+						<#else>
+						</table>
+						<div class="no-data">暂无数据~</div>
+					</#if>
+				</div>
+			</div>
+		</div>
+	</div>
+	</form>
+	<script src="${base}/resources/js/jquery.tabs.js"></script>
+	<script type="text/javascript">
+		$(function() {
+			$('.tab2').Tabs({
+				event : 'click'
+			});
+		});
+	</script>
+	<script type="text/javascript" src="${base}/resources/js/placeholder.js"></script>
+	<script>
+		$(function() {
+			$('#datepicker2,#datepicker3').datetimepicker({
+				lang: 'ch',
+				timepicker: false,
+				format: 'Y-m-d',
+				formatDate: 'Y-m-d'
+			
+			});
+		});
+		
+		$(".searche1").click(function(){
+			$("#pagerForm").submit();
+		})
+		
+		<#if cUser.identity=="CWB">
+			$(".confirm").click(function(){
+				var id = $(this).attr("val");
+				var user = $(this).attr("uid");
+				var amount = $(this).attr("amount");
+				user = eval("("+user+")");
+				layer.confirm('确定用户:'+user.userName+'提现'+amount+'元成功?', function(index){
+					$.post("${base}/sys/withdraw/confirm/" + id, function(result) {
+						layer.msg(result.msg,{
+					     	shift: 0
+					     }, function(){
+					    	 window.location.reload();
+					     });
+					}, 'json');
+					  layer.close(index);
+					}); 
+			})
+		</#if>
+		<#if status??>
+			$("#status").val(${status});
+		</#if>
+	</script>
+	<script>
+		$(function(){
+        	document.onkeydown = function(e){ 
+        		var ev = document.all ? window.event : e;
+        			if(ev.keyCode==13) {
+            			$("#pagerForm").submit();
+            }
+        }
+    });  
+         
+    </script>      
+
+</body>
+
+</html>

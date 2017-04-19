@@ -1,0 +1,340 @@
+/*Common*/
+*{
+	margin: 0;padding: 0;font-family: "瀵邦喛钂嬮梿鍛寸拨";
+}
+html,body{
+	height: 100%;width: 100%;
+}
+a{text-decoration: none;}
+
+img{border: 0;}
+
+.clearfix {
+    zoom: 1;
+}
+.clearfix:before, .clearfix:after {
+    content: "\0020";
+    display: block;
+    height: 0;
+    overflow: hidden;
+}
+
+/*nav*/
+
+.breadcrumb {
+    padding: 8px 15px;
+    margin-bottom: 20px;
+    list-style: none;
+    background-color:white;
+    border-radius: 2px;
+    box-shadow:0 0 10px #B3B7B7;
+    width: 98%;
+    margin: 0 auto; 
+    overflow:hidden;
+}
+.breadcrumb>li {
+    display: inline-block;
+}
+.breadcrumb>.active {
+    color: #999;
+}
+.breadcrumb>li+li:before {
+    padding: 0 5px;
+    color: #ccc;
+    content: "/\00a0";
+}
+.breadcrumb a{
+	color:#333333;
+}
+.home{
+	color: #788492;width: 100%;height: 47px;
+}
+.home2{
+	color: white;width: 100%;height: 47px;
+}
+
+
+* {
+	margin: 0;
+	padding: 0;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+html,body {
+
+	font-family: "微软雅黑";
+	height: 100%;width: 100%;
+}
+
+ul {
+	list-style-type: none;
+}
+
+a {
+	color: #666;
+	text-decoration: none;
+}
+
+/** =======================
+ * Contenedor Principal
+ ===========================*/
+h1 {
+ 	color: #FFF;
+ 	font-size: 24px;
+ 	font-weight: 400;
+ 	text-align: center;
+ 	margin-top: 80px;
+ }
+
+h1 a {
+ 	color: #c12c42;
+ 	font-size: 16px;
+ }
+.check-edit{
+	width: 98%;
+	margin: 15px auto;
+	text-align: left;
+	height: auto;
+	overflow: hidden;
+}
+.check-edit span{
+	font-size: 16px;
+	font-weight: bold;
+}
+.check-edit hr{
+	width: 100%;
+	border-bottom: 0;
+	border-top: 1px solid gainsboro;
+	margin: 20px auto;
+}
+.check_rule{
+	width: 98%;
+	margin: 0 auto;
+	height: auto;
+	overflow: hidden;
+	margin-bottom: 20px;
+}
+.check_rule_title{
+	width: auto;
+	max-width: 120px;
+	min-width: 100px;
+	float: left;
+	margin-top: 5px;
+}
+.red_tit{
+	color: red;
+}
+.rule_name{
+	font-weight: bold;
+	font-size: 15px;
+}
+.check_rule_input{
+	float: left;
+	min-width: 300px;
+	max-width: 400px;
+	width: auto;
+	border: 1px solid gainsboro;
+	height: auto;
+	overflow: auto;
+	max-height: 200px;
+}
+.check_rule_input input{
+	border: 0;
+	height: 30px;
+	width: 100%;
+	padding: 5px;
+	font-size: 16px;
+}
+.check_rule_time{
+	float: left;
+	min-width: 400px;
+	max-width: 450px;
+	width: auto;
+	border: 1px solid gainsboro;
+	padding: 5px;
+}
+.check_rule_time span{
+	line-height: 25px;
+	font-size: 15px;
+	font-weight: bold;
+}
+.time_edit,.time_del{
+	float: right;
+	cursor: pointer;
+}
+.check_btn{
+	background: #00B7EE;
+	padding: 5px 10px;
+	border-radius: 5px;
+	cursor: pointer;
+	border: 0;
+	float: left;
+	color: white;
+	margin-left: 5px;
+	margin-top: 3px;
+}
+.check_btn2{
+	background: #00B7EE;
+	padding: 5px 10px;
+	border-radius: 5px;
+	cursor: pointer;
+	border: 0;
+	float: right;
+	color: white;
+	margin-left: 5px;
+	margin-top: 3px;
+	margin-right: 10px;
+}
+.check_btn3{
+	background:white;
+	padding: 5px 10px;
+	border-radius: 5px;
+	cursor: pointer;
+	border: 1px solid gainsboro;
+	float: right;
+	color: black;
+	margin-left: 5px;
+	margin-top: 3px;
+	margin-right: 10px;
+}
+.check_rule_rest{
+	float: left;
+	min-width: 400px;
+	max-width: 450px;
+	width: auto;
+	padding: 5px;
+}
+.check_rule_rest select{
+	font-size: 14px;
+	padding: 3px;
+}
+.check_rule_rest .daily_china{
+	float: left;margin-left: 5px;
+}	
+.check_rule_rest input{
+	float: left;
+	width: 16px;
+	height: 16px;
+	margin-top:1px;
+}		
+.check_rule_area{
+	min-width:500px;
+	float: left;
+	line-height: 27px;
+	padding: 3px;
+	border: 1px solid gainsboro;
+	max-height: 300px;
+	overflow: auto;
+}
+.rule_tips{
+	clear: both;
+	color: #739ae2;
+	font-size: 14px;
+	margin-left: 10px;
+	padding: 10px;
+	
+}
+.area_del{
+	float: right;
+	cursor: pointer;
+	color: red;
+}
+hr{
+	width: 98%;
+	border-bottom: 0;
+	border-top: 1px solid gainsboro;
+	margin: 20px auto;
+}
+.people_name{
+	line-height: 30px;
+	float: left;
+	margin-right: 3px;
+	font-size: 14px;
+}
+.white_names{
+	width: 100%;
+	height: auto;
+	overflow: hidden;
+}
+.white_name,.white_job{
+	width: 33%;
+	float: left;
+}
+.kq_time_site,.kq_time_site2{
+	position: absolute;
+	min-width: 500px;
+	max-width: 600px;
+	width: auto;
+	border: 1px solid gainsboro; 
+	height: auto;
+	overflow: hidden;
+	display: none;
+	z-index: 111;
+	background: white;
+	padding-bottom: 20px;
+}
+.kq_tit{
+	width: 100%;
+	padding: 5px;
+	background: #149BDF;
+	float: left;
+}
+.kq_tit span:first-child{
+	float: left;
+	color: white;
+	cursor: pointer;
+}
+.kq_tit span:last-child{
+	float: right;
+	color: white;
+	cursor: pointer;
+	font-size: 1.2em;
+}
+.work_day{
+	float: left;
+	width: 85px;
+}
+.weekends{
+	float: left;
+}
+.work_week{
+	width: 100%;
+	margin-top: 10px;
+	float: left;
+	padding-left: 10px;
+}
+.weekends select{
+	width: 100px;
+	padding: 3px;
+	font-size: 15px;
+}
+#bg {
+    background-color: #666;
+    position: absolute;
+    z-index: 99;
+    left: 0;
+    top: 0;
+    display: none;
+    width: 100%;
+    height: 100%;
+    opacity: 0.5;
+    filter: alpha(opacity=50);
+    -moz-opacity: 0.5;
+}
+.spec_time{
+	width: 200px;
+	line-height: 20px;
+	padding: 3px;
+	font-size: 15px;
+}
+.spec_thing{
+	width: 400px;
+	line-height: 20px;
+	padding: 3px;
+	font-size: 15px;
+}
+.spec_top{
+	margin-top: 5px;
+}

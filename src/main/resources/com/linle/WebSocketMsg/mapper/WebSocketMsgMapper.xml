@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.linle.socket.msg.mapper.WebSocketMsgMapper">
+	<resultMap id="BaseResultMap" type="com.linle.socket.msg.model.WebSocketMsg">
+		<id column="id" property="id" jdbcType="BIGINT" />
+		<result column="_from" property="from" jdbcType="BIGINT" />
+		<result column="_to" property="to" jdbcType="BIGINT" />
+		<result column="send_date" property="sendDate" jdbcType="TIMESTAMP" />
+		<result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+		<result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+		<result column="send_status" property="sendStatus" />
+		<result column="read_status" property="readStatus" />
+	</resultMap>
+	<resultMap id="ResultMapWithBLOBs" type="com.linle.socket.msg.model.WebSocketMsg"
+		extends="BaseResultMap">
+		<result column="obj" property="obj" jdbcType="LONGVARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, _from, _to, send_date, create_date,
+		update_date,send_status,read_status
+	</sql>
+	<sql id="Blob_Column_List">
+		obj
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs"
+		parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		,
+		<include refid="Blob_Column_List" />
+		from web_socket_msg
+		where id = #{id,jdbcType=BIGINT}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		delete from
+		web_socket_msg
+		where id = #{id,jdbcType=BIGINT}
+	</delete>
+	<insert id="insert" parameterType="com.linle.socket.msg.model.WebSocketMsg">
+		insert into web_socket_msg
+		(id, _from, _to, send_date,
+		create_date, update_date,
+		obj,send_status,read_status
+		)
+		values (#{id,jdbcType=BIGINT},
+		#{from,jdbcType=BIGINT},
+		#{to,jdbcType=BIGINT},
+		#{sendDate,jdbcType=TIMESTAMP},
+		#{createDate,jdbcType=TIMESTAMP},
+		#{updateDate,jdbcType=TIMESTAMP},
+		#{obj,jdbcType=LONGVARCHAR},#{sendStatus},#{readStatus}
+		)
+	</insert>
+	<insert id="insertSelective" parameterType="com.linle.socket.msg.model.WebSocketMsg"
+		useGeneratedKeys="true" keyProperty="id">
+		insert into web_socket_msg
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="from != null">
+				_from,
+			</if>
+			<if test="to != null">
+				_to,
+			</if>
+			<if test="sendDate != null">
+				send_date,
+			</if>
+			<if test="updateDate != null">
+				update_date,
+			</if>
+			<if test="obj != null">
+				obj,
+			</if>
+			<if test="sendStatus !=null">
+				send_status,
+			</if>
+			<if test="readStatus !=null">
+				read_status,
+			</if>
+			<if test="createDate !=null">
+				create_date,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=BIGINT},
+			</if>
+			<if test="from != null">
+				#{from,jdbcType=BIGINT},
+			</if>
+			<if test="to != null">
+				#{to,jdbcType=BIGINT},
+			</if>
+			<if test="sendDate != null">
+				#{sendDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateDate != null">
+				#{updateDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="obj != null">
+				#{obj,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="sendStatus !=null">
+				#{sendStatus},
+			</if>
+			<if test="readStatus !=null">
+				#{readStatus},
+			</if>
+			<if test="createDate !=null">
+				now(),
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.linle.socket.msg.model.WebSocketMsg">
+		update web_socket_msg
+		<set>
+			<if test="from != null">
+				_from = #{from,jdbcType=BIGINT},
+			</if>
+			<if test="to != null">
+				_to = #{to,jdbcType=BIGINT},
+			</if>
+			<if test="sendDate != null">
+				send_date = #{sendDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="obj != null">
+				obj = #{obj,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="sendStatus !=null">
+				send_status = #{sendStatus},
+			</if>
+			<if test="readStatus !=null">
+				read_status = #{readStatus},
+			</if>
+			<if test="updateDate !=null">
+				update_date = #{updateDate},
+			</if>
+		</set>
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+	<update id="updateByPrimaryKeyWithBLOBs" parameterType="com.linle.socket.msg.model.WebSocketMsg">
+		update
+		web_socket_msg
+		set _from = #{from,jdbcType=BIGINT},
+		_to =
+		#{to,jdbcType=BIGINT},
+		send_date = #{sendDate,jdbcType=TIMESTAMP},
+		create_date = #{createDate,jdbcType=TIMESTAMP},
+		update_date = now(),
+		obj = #{obj,jdbcType=LONGVARCHAR},
+		send_status = #{sendStatus},
+		read_status = #{readStatus}
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.linle.socket.msg.model.WebSocketMsg">
+		update
+		web_socket_msg
+		set _from = #{from,jdbcType=BIGINT},
+		_to =
+		#{to,jdbcType=BIGINT},
+		send_date = #{sendDate,jdbcType=TIMESTAMP},
+		create_date = #{createDate,jdbcType=TIMESTAMP},
+		update_date = now(),
+		send_status = #{sendStatus},
+		read_status = #{readStatus}
+		where id =
+		#{id,jdbcType=BIGINT}
+	</update>
+
+	<update id="modifySendStatus" parameterType="com.linle.socket.msg.model.WebSocketMsg">
+		update
+		web_socket_msg
+		set send_date = now(),send_status = 1,update_date =
+		now()
+		where id = #{id}
+	</update>
+
+	<update id="modifyReadStatus" parameterType="com.linle.socket.msg.model.WebSocketMsg">
+		update
+		web_socket_msg
+		set read_status =1,update_date = now()
+		where id = #{id}
+	</update>
+
+	<select id="getMsgList" parameterType="map" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		,
+		<include refid="Blob_Column_List" />
+		from web_socket_msg
+		where _to = #{to}
+		<if test="readStatus!=null">
+			and read_status = #{readStatus}
+		</if>
+		order by create_date desc
+		LIMIT #{begin},#{end}
+	</select>
+
+	<select id="getMsgListCount" parameterType="map" resultType="int">
+		select ifnull(count(id),0) from web_socket_msg
+		where _to = #{to}
+		<if test="readStatus!=null">
+			and read_status = #{readStatus}
+		</if>
+	</select>
+	
+	<!-- 查询最后一条未读消息 -->
+	<select id="selectLastReadMsg" parameterType="Long" resultMap="ResultMapWithBLOBs">
+		select
+		<include refid="Base_Column_List" />
+		,
+		<include refid="Blob_Column_List" />
+		from web_socket_msg
+		where read_status = 0 and _to = #{userId}
+		order by create_date
+		LIMIT 1;
+	</select>
+</mapper>

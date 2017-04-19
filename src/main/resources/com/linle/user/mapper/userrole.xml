@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.linle.user.mapper.UserRoleMapper">
+	<resultMap id="userRoleResult" type="UserRole">
+		<result property="id" column="id" />
+		<result property="cname" column="cname"/>
+		<result property="ename" column="ename"/>
+		<result property="available" column="available"/>
+		<result property="remark" column="remark"/>
+		<result property="category" column="category"/>
+		<result property="sourceId" column="source_id"/>
+		<result property="sourceType" column="source_type" typeHandler="IntEnumTypeHandler"/>
+		
+		<result property="createDate" column="create_date"/>
+		<result property="updateDate" column="update_date"/>
+	</resultMap>
+	
+	<resultMap id="userRoleRelationResult" type="UserRoleRelation">
+		<result property="user.id" column="user_id"/>
+		<result property="userRole.id" column="role_id"/>
+		<result property="createDate"  column="create_Date"/>
+	</resultMap>
+	
+	<insert id="insertSelective" useGeneratedKeys="true" keyProperty="id" parameterType="UserRole">
+		INSERT INTO user_role
+		(id,cname,ename,available,category,source_id,source_type,remark,create_date,update_date)
+		VALUES
+		(#{id},#{cname},#{ename},#{available},#{category},#{sourceId},#{sourceType,typeHandler=IntEnumTypeHandler},#{remark},now(),now())
+	</insert>
+	
+	
+	<update id="updateUserRole" parameterType="UserRole">
+		update user_role 
+		<set>
+			<if test="cname != null">
+				cname = #{cname},
+			</if>
+			<if test="ename != null">
+				ename = #{ename},
+			</if>
+			<if test="remark != null">
+				remark = #{remark},
+			</if>
+			lastModified = now()
+		</set>
+		where id=#{id}
+	</update>
+	<select id="getById" parameterType="java.lang.String" resultMap="userRoleResult">
+		select * from user_role where id=#{value}
+	</select>
+	<delete id="deleteById" parameterType="long">
+		delete from
+		user_role where id = #{value}
+	</delete>
+	<select id="getAllData" parameterType="Page" resultMap="userRoleResult">
+		select * from user_role
+		<where>
+			(del_flag is null or del_flag = 0)
+			<if test="params !=null and params.available != null and params.available !=''">
+				and available  =#{params.available}
+			</if>
+			<if test="params !=null and params.sourceType != null and params.sourceType !=''">
+				and source_type  =#{params.sourceType,typeHandler=IntEnumTypeHandler}
+			</if>
+			<if test="params !=null and params.sourceId != null and params.sourceId !=''">
+				and source_id  =#{params.sourceId}
+			</if>
+		</where>
+	</select>
+	<select id="getRoleByename" parameterType="java.lang.String" resultMap="userRoleResult">
+		select * from user_role where ename = #{value}
+	</select>
+	<select id="checkRoleExsit" parameterType="java.lang.String" resultType="int">
+		select count(1) from user_role where ename=#{value}
+	</select>
+	
+	<insert id="addUserRoleRelation" parameterType="UserRoleRelation">
+		INSERT INTO user_role_relation
+		(user_id,role_id,create_date)
+		VALUES
+		(#{user.id},#{userRole.id},now())
+	</insert>
+	
+	<select id="loadUserRoleRelationByUserId" parameterType="long" resultMap="userRoleResult">
+		select ur.* from user_role ur , user_role_relation urr where ur.id=urr.role_id and urr.user_id=#{value}
+	</select>
+	<select id="getAllRoleList"  resultMap="userRoleResult">
+		select * from user_role 
+		<where>
+			(del_flag is null or del_flag = 0)
+			<if test="available != null and available !=''">
+				and available  =#{available}
+			</if>
+			<if test="sourceType != null and sourceType !=''">
+				and source_type  =#{sourceType,typeHandler=IntEnumTypeHandler}
+			</if>
+			<if test="sourceId != null and sourceId !=''">
+				and source_id  =#{sourceId}
+			</if>
+		</where>
+	</select>
+</mapper>

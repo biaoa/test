@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>首页轮播图统计</title>
+<meta name="content-type" content="text/html; charset=UTF-8">
+<#include '/common/resources.html'>
+<link rel="stylesheet" media="screen and (min-width: 1580px)" href="${base}/resources/css/sys/jquery.tableui.css" />
+<link rel="stylesheet" media="screen and (max-width: 1580px)" href="${base}/resources/css/sys/tableui-resolving.css" />
+<script src="${base}/resources/js/respond.js" type="text/javascript" async="async"></script>
+<link rel="stylesheet" type="text/css" href="${base}/resources/datetimepicker/jquery.datetimepicker.css" />
+</head>
+<body>
+	<div class="whole">
+		<ol class="breadcrumb">
+			<li><a href="javascript:void(0)">轮播图管理</a></li>
+			<li class="active">统计</li>
+		</ol>
+
+		<form action="${base}/appBanner/statistical" id="pagerForm">
+			<div class="o-order">
+				<div class="o-second">
+					<span class="o-span">banner描述：</span>
+					<div class="o-input">
+						<input type="text" placeholder="请输入banner描述" name="description"
+							value="${description!!}" id="description">
+					</div>
+					<span class="o-span">时间段：</span>
+					<div class="o-input">
+						<input class="my-times spec_time_kq" type="text" name="beginDate"
+							value="${beginDate!!}" readonly="readonly" id="beginDate" />
+					</div>
+					<span class="o-span">--</span>
+					<div class="o-input">
+						<input class="my-times spec_time_kq" type="text" name="endDate"
+							value="${endDate!!}" readonly="readonly" id="endDate" />
+					</div>
+					<span class="o-span">状态：</span>
+					<div class="o-div">
+						<select class="o-select" name="status" id="status">
+							<option value="-1">全部</option>
+							<option value="0">显示</option>
+							<option value="1">隐藏</option>
+						</select>
+					</div>
+				</div>
+				<div class="o-thrid o-thrid-margin-left">
+					<a class="o-btn search1" href="javascript:void(0);">搜索</a> 
+				</div>
+			</div>
+
+			<div class="tab_box daily-kq">
+				<div>
+					<table class="table_solid" border="0" cellspacing="0">
+						<tbody>
+							<tr class="evenRow">
+								<th>描述</th>
+								<th>状态</th>
+								<th>创建时间</th>
+								<th>点击总数</th>
+								<th>注册用户点击</th>
+								<th>非注册用户点击</th>
+							</tr>
+							<#if (pagelist.results)?exists && pagelist.results?size gt 0>
+							<#list pagelist.results as statistics>
+
+							<tr class="oddRow">
+								<td>${statistics.description!!}</td>
+								<td>
+									<#if statistics.status==0>
+										显示
+										<#else>
+										隐藏
+									</#if>
+								</td>
+								<td>${statistics.createDate?string('yyyy/MM/dd HH:mm')}</td>
+								<td>${statistics.registereCount+statistics.unRegistereCount}</td>
+								<td>${statistics.registereCount}</td>
+								<td>${statistics.unRegistereCount}</td>
+							</tr>
+							</#list>
+						</tbody>
+					</table>
+					<#include '/common/pagination.html'> <#else>
+					</table>
+					<div class="no-data">暂无数据~</div>
+					</#if>
+				</div>
+			</div>
+		</form>
+	</div>
+
+	<script type="text/javascript" src="${base}/resources/datetimepicker/jquery.datetimepicker.js"></script>
+	<script>
+		$('.spec_time_kq').datetimepicker({
+			lang : 'ch',
+			timepicker : false,
+			format : 'Y-m-d',
+			formatDate : 'Y-m-d'
+		});
+		
+		$(".search1").click(function(){
+			$("#pagerForm").submit();
+		})
+		
+		<#if status??>
+			$("#status").val(${status});
+		</#if>
+	</script>
+	<script>
+$(function(){
+        document.onkeydown = function(e){ 
+        var ev = document.all ? window.event : e;
+        if(ev.keyCode==13) {
+            $("#pagerForm").submit();
+            }
+        }
+    });  
+         
+</script>       
+</body>
+</html>

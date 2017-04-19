@@ -1,0 +1,322 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>管理中心</title>
+<#include '/common/resources.html'>
+<script src="${base}/resources/js/uploadify/jquery.uploadify.min.js" type="text/javascript"></script>
+<link rel="stylesheet" type="text/css" href="${base}/resources/js/uploadify/uploadify.css">
+</head>
+<body>
+     <div class="fh_right_box">
+        <h3><span class="iconfont" style="font-size:20px;color:#d65b5a">&#xe621;</span>&nbsp;添加用户</h3>
+        <img src="${base}/resources/images/hr.jpg" class="xian"/>
+      </div>
+	<form id="addAccountForm" style="margin-top: 40px;" method="post" class="form-horizontal" action="${base}/sys/createHatchOrResource" enctype="multipart/form-data">
+			<div class="form-group">
+           	   <label class="col-sm-3 control-label">账号类型</label>
+               <div class="col-sm-offset-2 ">
+                   <div class="radio">
+                       <label>
+                           <input name="userType" value="FHQ" <#if type='FHQ'>CHECKED</#if> class="ace" type="radio">
+                           <span class="lbl">孵化器</span>
+                       </label>
+                       <label>
+                           <input name="userType" value="ZJZY" <#if type='ZJZY'>CHECKED</#if> class="ace" type="radio">
+                           <span class="lbl">中介资源企业</span>
+                       </label>
+                   </div>
+               </div>
+           </div>
+           <div class="form-group">
+               <label class="col-sm-3 control-label">企业名称</label>
+               <div class="col-lg-5">
+                   <input type="text" class="col-xs-10 col-sm-5 input-icon input-icon-right form-control" name="epName"/>
+               </div>
+           </div>
+           <div class="form-group">
+               <label class="col-sm-3 control-label">企业logo</label>
+               <div id="upFile"></div>
+               <div class="col-lg-5" style="margin-left:-300px">
+               		<input type="hidden" id="logo" name="logo" value="上传">
+               		<input type="file" class="upFile" size="3"  id="j_file" name="fileUpload">
+               </div>
+           </div>
+            <div class="form-group">
+               <label class="col-sm-3 control-label">地址</label>
+               <div class="col-lg-5">
+                   <input type="text" class="col-xs-10 col-sm-5 input-icon input-icon-right form-control" name="address"/>
+               </div>
+           </div>
+           <div class="form-group">
+               <label class="col-sm-3 control-label">联系人</label>
+               <div class="col-lg-5">
+                   <input type="text" class="col-xs-10 col-sm-5 input-icon input-icon-right form-control" name="contactMan"/>
+               </div>
+           </div>
+           <div class="form-group">
+               <label class="col-sm-3 control-label">联系电话</label>
+               <div class="col-lg-5">
+                   <input type="text" class="col-xs-10 col-sm-5 input-icon input-icon-right form-control" name="phone"/>
+               </div>
+           </div>
+           
+           <div class="form-group">
+               <label class="col-sm-3 control-label">E-mail</label>
+               <div class="col-lg-5">
+                   <input type="text" class="col-xs-10 col-sm-5 input-icon input-icon-right form-control" name="email"/>
+               </div>
+           </div>
+           
+           <div class="form-group">
+                 <label class="col-sm-3 control-label">内容介绍</label>
+                 <div class="col-lg-5">
+                 	<textarea style="width:405px" cols="5" rows="5"  class="col-xs-10 col-sm-5 input-icon input-icon-right form-control" name="intro"></textarea>
+                 </div>
+           </div>
+           <div class="form-group">
+                   <div class="group">
+                   	<label class="col-sm-3 control-label">地区</label>
+            	<div class="col-lg-2">
+              		   <#if provinceList?exists&&provinceList?size gt 0>
+                   <select id="wy_provice" class="col-xs-4 col-sm-2 xiala">
+                   <#list provinceList as province>
+                   	<option value="${province.id}" >${province.name}</option>
+                   </#list>
+                   </select>
+              		   </#if>
+              		 </div>
+                 </div>
+                 <div class="group">
+                	<div class="col-lg-2">
+                	<#if cityList?exists&&cityList?size gt 0>
+                    <select id="wy_citys" class="col-xs-4 col-sm-2 xiala" >
+                    <#list cityList as city>
+                   	<option value="${city.id}" >${city.name}</option>
+                    </#list>
+                    </select>
+                    </#if>
+                    </div>
+                 </div>
+                 <div class="group">
+                	<div class="col-lg-2">
+                	<#if countyList?exists&&countyList?size gt 0>      
+                  	<select id="wy_blocks" class="col-xs-4 col-sm-2 xiala" name="regionId">
+                    <#list countyList as county>
+                      <option value="${county.id}"  >${county.name}</option>
+                    </#list>
+                  	</select>
+             		</#if>
+                    </div>
+                </div>
+           </div>
+           <div class="form-group">
+               <label class="col-sm-3 control-label">用户名</label>
+               <div class="col-lg-5">
+                   <input type="text" class="col-xs-10 col-sm-5 input-icon input-icon-right form-control" name="userName" id="userName"/>
+               </div>
+           </div>
+           <div class="form-group">
+               <label class="col-sm-3 control-label">密码</label>
+               <div class="col-lg-5">
+                   <input type="password" class="col-xs-10 col-sm-5 input-icon input-icon-right form-control" name="password"
+                          />
+               </div>
+           </div>
+           <div class="form-group">
+               <label class="col-sm-3 control-label">确认密码</label>
+               <div class="col-lg-5">
+                   <input type="password" class="col-xs-10 col-sm-5 input-icon input-icon-right form-control" name="confirmPassword"
+                      />
+               </div>
+           </div>
+           
+              <div class="col-sm-12  col-sm-offset-5 ">
+               <button type="submit" class="btn btn-default">确认
+               </button>
+         	</div>
+      </form>     
+</body>
+
+<script type="text/javascript">
+$(document).ready(function() {
+	
+	$("#j_file").uploadify({
+		'uploader' : '${base}/sys/uploadLogoFile?val=' + (new Date()).getTime()
+		 +'&sid=7ff272a1-1521-4780-a75c-a9703598ae26',
+		'swf': '${base}/resources/js/uploadify/uploadify.swf?var=' + (new Date()).getTime(),
+		'fileTypeDesc' : '图片文件.',
+		'fileTypeExts'  : '*.jpg;*.gif;*.jpeg;*.png;*.bmp',
+		 debug: false,
+		'auto' : true,
+		'preventCaching':true,
+		'multi' : false,			
+		'buttonText' : '上传',
+		'fileObjName':'fileUpload',
+		'fileSizeLimit':'2048KB',
+		'width':100,
+		'height':25,	
+		//返回队列
+		'queueID'  : 'progressId',	
+		'onUploadSuccess' : function(file, data, response) {
+			var q=eval("("+data+")");
+			if(q.code==0){
+				var html='<img src="${base}/'+q.msg+'" width="100" height="100">';
+				$("#upFile").html(html);
+				$("#logo").val(q.msg);
+			}
+         }
+	});
+	
+	
+    $('#addAccountForm')
+        .bootstrapValidator({
+            message: 'This value is not valid',
+            //feedbackIcons: {
+               // valid: 'glyphicon glyphicon-ok',
+                //invalid: 'glyphicon glyphicon-remove',
+                //validating: 'glyphicon glyphicon-refresh'
+            //},
+            fields: {
+            	epName: {
+                    message: '企业名称不能为空',
+                    validators: {
+                        notEmpty: {
+                            message: '名称不能为空'
+                        },
+                    }
+                },
+                email: {
+                    message: 'E-mail不能为空',
+                    validators: {
+                        notEmpty: {
+                            message: 'E-mail不能为空'
+                        },
+                        regexp: {
+                            regexp: /^(\w)+(\.\w+)*@(\w)+((\.\w{2,3}){1,3})$/,
+                            message: 'E-mail格式不正确'
+                        }
+                    }
+                },
+            	userName: {
+                    message: '用户名不能为空',
+                    validators: {
+                        notEmpty: {
+                            message: '用户名不能为空'
+                        },
+                        remote: {
+                            url: '${base}/sys/checkUserExsit'+$("#userName").val(),
+                            message: '名称已被使用'
+                        },
+                        stringLength: {
+                            min: 6,
+                            max: 30,
+                            message: '用户名长度必须为6-30个字符'
+                        },
+                        regexp: {
+                            regexp: /^[a-zA-Z0-9_\.]+$/,
+                            message: '用户名必须为数字和字母组合'
+                        }
+                    }
+                },
+                password: {
+                    validators: {
+                        notEmpty: {
+                            message: '密码不能为空'
+                        },
+                    }
+                },
+                confirmPassword: {
+                    validators: {
+                        notEmpty: {
+                            message: '确认密码不能为空'
+                        },
+                        identical: {
+                            field: 'password',
+                            message: '两次密码不一致'
+                        }
+                    }
+                }
+            }
+        })
+        .on('success.form.bv', function(e) {
+            // Prevent form submission
+            e.preventDefault();
+            // Get the form instance
+            var $form = $(e.target);
+            // Get the BootstrapValidator instance
+            var bv = $form.data('bootstrapValidator');
+            // Use Ajax to submit form data
+            $.post($form.attr('action'), $form.serialize(), function(result) {
+            	layer.msg(result.msg);
+            	/* 	$.gritter.add({  
+        	    title: '',  
+        	    text: result.msg,  
+         	    image: ctx+'admin/clear/notif_icon.png',  
+        	    sticky: false,  
+        	    time: 2000,  
+        	    speed:500,  
+        	    class_name: 'gritter-success'//gritter-center   
+        	});   */
+            }, 'json');
+        });
+    
+    
+    //动态选择省级数据，刷新市级县级数据
+    $("#wy_provice").change(function(){
+		var parentId = $(this).val();
+		$.ajax({
+            async: false,
+            type : "POST",
+            url : '${base}/sys/getCityList/'+parentId,
+            dataType : 'json',
+            success : function(q) {
+	            $("#wy_citys").text("");
+	            $("#wy_blocks").text("");
+	            //刷新市级数据		
+            	$.each(q, function(entryIndex, entry) {
+					var html = "<option value='" + entry.id + "'>"
+							+ entry.name + "</option>";
+					$("#wy_citys").append(html);
+				});
+				var cityId = $("#wy_citys").val();
+				//刷新县级数据
+				$.ajax({
+			            async: false,
+			            type : "POST",
+			            url : '${base}/sys/getAreaList/'+cityId,
+			            dataType : 'json',
+			            success : function(q) {
+			            	$.each(q, function(entryIndex, entry) {
+								var html = "<option value='" + entry.id + "'>"
+										+ entry.name + "</option>";
+								$("#wy_blocks").append(html);
+							});
+			            }
+		         	});
+            }
+     	});
+	});
+	//动态选择市级数据，刷新县级数据
+	$("#wy_citys").change(function(){
+		var parentId = $(this).val();
+		$.ajax({
+            async: false,
+            type : "POST",
+            url : '${base}/sys/getAreaList/'+parentId,
+            dataType : 'json',
+            success : function(q) {
+	            $("#wy_blocks").text("");
+	            //刷新市级数据		
+            	$.each(q, function(entryIndex, entry) {
+					var html = "<option value='" + entry.id + "'>"
+							+ entry.name + "</option>";
+					$("#wy_blocks").append(html);
+				});
+            }
+     	});
+	});
+	
+});
+</script>
+</html>

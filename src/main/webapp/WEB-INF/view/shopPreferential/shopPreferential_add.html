@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="UTF-8">
+<title>优惠类型维护</title> <#include '/common/resources.html'>
+<link rel="stylesheet" media="screen and (min-width: 1580px)" href="${base}/resources/css/sys/kd.css" />
+<link rel="stylesheet" media="screen and (max-width: 1580px)" href="${base}/resources/css/sys/kd-resolving.css" />
+<script src="${base}/resources/js/respond.js" type="text/javascript" async="async"></script>
+<style>
+.ads-choice input {
+	float: left;
+	margin-top: 10px;
+}
+
+.ads-choice span {
+	float: left;
+	margin-top: 8px;
+	margin-left: 5px;
+}
+
+.ads-choice label {
+	float: left;
+	margin-left: 10px;
+}
+
+.adstime {
+	margin-left: 20px;
+	width: 80%;
+	height: 35px;
+	border-radius: 3px;
+	float: left;
+	position: relative;
+	margin-bottom: 20px;
+}
+
+.adstime span {
+	float: left;
+}
+
+.adstime input {
+	float: left;
+	width: 150px;
+}
+
+.miaosu {
+	width: 300px;
+	height: 150px;
+	padding: 10px;
+}
+
+.kdleft2 {
+	width: 98%;
+	float: left;
+	margin: 15px 1%;
+	min-height: 100%;
+	background-color: white;
+	overflow: auto;
+	height: auto;
+	position: absolute;
+}
+</style>
+</head>
+
+<body>
+	<div class="kdwhole">
+		<ol class="breadcrumb">
+			<li><a href="javascript:void(0)">优惠</a></li>
+			<li class="active">优惠分类信息维护</li>
+		</ol>
+
+		<div class="kdleft2">
+			<div class="head">
+				<span class="mes-wh">优惠分类信息维护</span>
+			</div>
+			<form action="${base}/shopPreferential/add" method="post" id="form1">
+			<div class="Sheet">
+				<div class="s-name">
+					<span class="choice" style="width: 80px;">分类：</span>
+					<div class="province">
+						<select  id="mainType" name="type.id">
+							<#list typeList as type>
+								<option value="${type.id}">${type.name}</option>
+							</#list>
+						</select>
+					</div>
+				</div>
+				
+				<div class="s-title">
+					<span class="choice">满：</span>
+					<div class="inp" style="width: 300px;">
+						<input maxlength="20" type="text" id="meetPrice" name="meetPrice" value="${preferential.meetPrice!!}"/>
+					</div>
+				</div>
+				
+				<div class="s-title">
+					<span class="choice">减：</span>
+					<div class="inp" style="width: 300px;">
+						<input maxlength="20" type="text" id="preferentialPrice" name="preferentialPrice" value="${preferential.preferentialPrice!!}"/>
+					</div>
+				</div>
+				
+				<div class="s-address">
+					<div>
+						<span class="choice">优惠状态：</span>
+					</div>
+
+					<div class="ads-choice">
+						<label for="normal"><input id="normal" type="radio" name="status" value="0" checked="checked"/><span>正常</span></label>
+						<label for="stata"><input id="stata" type="radio" name="status" value="1"/><span>禁用</span></label>
+					</div>
+				</div>
+				
+				<div class="s-address">
+					<button class="s-btn" style="cursor: pointer; float: left;">确认</button>
+				</div>
+				<input type="hidden" name="id" value="${preferential.id!!}">
+			</div>
+		</form>
+		</div>
+
+	</div>
+	<script type="text/javascript">
+	
+		<#if preferential.id??>
+			$('input[name="status"]').val([${preferential.status}]);
+		</#if>
+	
+		function setShowLength(obj, maxlength, id) {
+			var rem = maxlength - obj.value.length;
+			var wid = id;
+			if (rem < 0) {
+				rem = 0;
+			}
+			document.getElementById(wid).innerHTML = rem + "/" + "20";
+		}
+	    $("#form1").submit(function() {
+	    	var price_reg = /^\d{0,8}\.{0,1}(\d{1,2})?$/;
+	    	var meetPrice = $("#meetPrice").val();
+	    	var preferentialPrice = $("#preferentialPrice").val();
+	    	
+	    	if(meetPrice==''|| !price_reg.test(meetPrice)){
+	    		layer.msg("满足总价输入错误")
+	    		return false;
+	    	}
+	    	if(preferentialPrice=='' || !price_reg.test(preferentialPrice)){
+	    		layer.msg("减免金额输入错误");
+	    		return false;
+	    	}
+	    	if(parseFloat(preferentialPrice)>=parseFloat(meetPrice)){
+	    		layer.msg("优惠金额不能超过总价");
+	    		return false;
+	    	}
+	    	if(parseFloat(preferentialPrice)<=0){
+	    		layer.msg("优惠金额不能小于0");
+	    		return false;
+	    	}
+    		var ajax_url = $(this).attr("action"); //表单目标 
+    		var ajax_type = $(this).attr('method'); //提交方法 
+    		var ajax_data = $(this).serialize(); //表单数据 
+    		$.ajax({
+    			type : ajax_type, //表单提交类型 
+    			url : ajax_url, //表单提交目标 
+    			data : ajax_data, //表单数据
+    			success : function(data) {
+    				 layer.msg(data.msg,{
+    				     	shift: 0
+    				     }, function(){
+    				    	 window.location.href="${base}/shopPreferential/list";
+    				     });
+    			}
+    		});
+    		return false; //阻止表单的默认提交事件 
+    	});
+	</script>
+</body>
+
+</html>

@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.linle.sentInfo.mapper.SentInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.linle.entity.sys.SentInfo" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="user_id" property="userId" jdbcType="BIGINT" />
+    <result column="community_id" property="communityId" jdbcType="BIGINT" />
+    <result column="sender_name" property="senderName" jdbcType="VARCHAR" />
+    <result column="sender_phone" property="senderPhone" jdbcType="VARCHAR" />
+    <result column="sender_address" property="senderAddress" jdbcType="VARCHAR" />
+    <result column="addressee_name" property="addresseeName" jdbcType="VARCHAR" />
+    <result column="addressee_phone" property="addresseePhone" jdbcType="VARCHAR" />
+    <result column="addressee_address" property="addresseeAddress" jdbcType="VARCHAR" />
+    <result column="express_id" property="expressId" jdbcType="BIGINT" />
+    <result column="reservation_begin_date" property="reservationBeginDate" jdbcType="TIMESTAMP" />
+    <result column="reservation_end_date" property="reservationEndDate" jdbcType="TIMESTAMP" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  
+  <resultMap id="sentOrderResult" type="com.linle.entity.vo.RentOrderVO">
+  	<id column="id" property="id"/>
+  	<result column="order_no" property="orderNo"/>
+  	<result column="addressee_name" property="addresseeName"/>
+  	<result column="addressee_phone" property="addresseePhone"/>
+  	<result column="addressee_address" property="addresseeAddress"/>
+  	<result column="express_name" property="expressName"/>
+  	<result column="reservation_begin_date" property="beginDate"/>
+  	<result column="reservation_end_date" property="endDate"/>
+  	<result column="create_date" property="createDate"/>
+  	<result column="sender_name" property="senderName"/>
+  	<result column="overall" property="overall"/>
+  	<result column="remark" property="remark"/>
+  	<result column="order_status" property="orderStatus"/>
+  	<result column="status" property="sentStatus"/>
+  	<result column="user_id" property="userId"/>
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    id, user_id, community_id, sender_name, sender_phone, sender_address, addressee_name, 
+    addressee_phone, addressee_address, express_id, reservation_begin_date, reservation_end_date, 
+    remark, status, create_date, update_date
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from sent_info
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from sent_info
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.linle.entity.sys.SentInfo" >
+    insert into sent_info (id, user_id, community_id, 
+      sender_name, sender_phone, sender_address, 
+      addressee_name, addressee_phone, addressee_address, 
+      express_id, reservation_begin_date, reservation_end_date, 
+      remark, status, create_date, 
+      update_date)
+    values (#{id,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{communityId,jdbcType=BIGINT}, 
+      #{senderName,jdbcType=VARCHAR}, #{senderPhone,jdbcType=VARCHAR}, #{senderAddress,jdbcType=VARCHAR}, 
+      #{addresseeName,jdbcType=VARCHAR}, #{addresseePhone,jdbcType=VARCHAR}, #{addresseeAddress,jdbcType=VARCHAR}, 
+      #{expressId,jdbcType=BIGINT}, #{reservationBeginDate,jdbcType=TIMESTAMP}, #{reservationEndDate,jdbcType=TIMESTAMP}, 
+      #{remark,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, #{createDate,jdbcType=TIMESTAMP}, 
+      #{updateDate,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.linle.entity.sys.SentInfo" useGeneratedKeys="true" keyProperty="id">
+    insert into sent_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="communityId != null" >
+        community_id,
+      </if>
+      <if test="senderName != null" >
+        sender_name,
+      </if>
+      <if test="senderPhone != null" >
+        sender_phone,
+      </if>
+      <if test="senderAddress != null" >
+        sender_address,
+      </if>
+      <if test="addresseeName != null" >
+        addressee_name,
+      </if>
+      <if test="addresseePhone != null" >
+        addressee_phone,
+      </if>
+      <if test="addresseeAddress != null" >
+        addressee_address,
+      </if>
+      <if test="expressId != null" >
+        express_id,
+      </if>
+      <if test="reservationBeginDate != null" >
+        reservation_begin_date,
+      </if>
+      <if test="reservationEndDate != null" >
+        reservation_end_date,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="updateDate != null" >
+        update_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="communityId != null" >
+        #{communityId,jdbcType=BIGINT},
+      </if>
+      <if test="senderName != null" >
+        #{senderName,jdbcType=VARCHAR},
+      </if>
+      <if test="senderPhone != null" >
+        #{senderPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="senderAddress != null" >
+        #{senderAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="addresseeName != null" >
+        #{addresseeName,jdbcType=VARCHAR},
+      </if>
+      <if test="addresseePhone != null" >
+        #{addresseePhone,jdbcType=VARCHAR},
+      </if>
+      <if test="addresseeAddress != null" >
+        #{addresseeAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="expressId != null" >
+        #{expressId,jdbcType=BIGINT},
+      </if>
+      <if test="reservationBeginDate != null" >
+        #{reservationBeginDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="reservationEndDate != null" >
+        #{reservationEndDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.linle.entity.sys.SentInfo" >
+    update sent_info
+    <set >
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="communityId != null" >
+        community_id = #{communityId,jdbcType=BIGINT},
+      </if>
+      <if test="senderName != null" >
+        sender_name = #{senderName,jdbcType=VARCHAR},
+      </if>
+      <if test="senderPhone != null" >
+        sender_phone = #{senderPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="senderAddress != null" >
+        sender_address = #{senderAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="addresseeName != null" >
+        addressee_name = #{addresseeName,jdbcType=VARCHAR},
+      </if>
+      <if test="addresseePhone != null" >
+        addressee_phone = #{addresseePhone,jdbcType=VARCHAR},
+      </if>
+      <if test="addresseeAddress != null" >
+        addressee_address = #{addresseeAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="expressId != null" >
+        express_id = #{expressId,jdbcType=BIGINT},
+      </if>
+      <if test="reservationBeginDate != null" >
+        reservation_begin_date = #{reservationBeginDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="reservationEndDate != null" >
+        reservation_end_date = #{reservationEndDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.linle.entity.sys.SentInfo" >
+    update sent_info
+    set user_id = #{userId,jdbcType=BIGINT},
+      community_id = #{communityId,jdbcType=BIGINT},
+      sender_name = #{senderName,jdbcType=VARCHAR},
+      sender_phone = #{senderPhone,jdbcType=VARCHAR},
+      sender_address = #{senderAddress,jdbcType=VARCHAR},
+      addressee_name = #{addresseeName,jdbcType=VARCHAR},
+      addressee_phone = #{addresseePhone,jdbcType=VARCHAR},
+      addressee_address = #{addresseeAddress,jdbcType=VARCHAR},
+      express_id = #{expressId,jdbcType=BIGINT},
+      reservation_begin_date = #{reservationBeginDate,jdbcType=TIMESTAMP},
+      reservation_end_date = #{reservationEndDate,jdbcType=TIMESTAMP},
+      remark = #{remark,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  <select id="getAllData" parameterType="page" resultMap="sentOrderResult">
+  		select  id,sys_order.order_no ,addressee_name,addressee_phone,addressee_address,community_express.express_name,reservation_begin_date,reservation_end_date,create_date,sender_name,room_no.overall,remark,user_id,order_status,sent_info.status
+   		from sent_info 
+   		 as sent_info
+		inner join (select id uid,address_details from users
+		<where>
+			<if test="params.uname !=null and params.uname!=''">
+				 (name = #{params.uname} or mobile_Phone = #{params.uname})
+			</if>
+		</where>
+		) as users
+		on sent_info.user_id=users.uid
+		inner join (select order_no,order_status,details from sys_order where type='sent'
+		<if test="params.orderNo!=null and params.orderNo!=''">
+			and order_no = #{params.orderNo}
+		</if>
+		) as sys_order
+		on sent_info.id=sys_order.details
+		left join (select id as eid,express_name from community_express) as community_express
+		on sent_info.express_id = community_express.eid
+		left join (select id as rid,overall from room_no) as room_no
+		on  users.address_details=room_no.rid
+		where community_id=#{params.communityId}
+   		<if test="params.sentStatus!=null and params.sentStatus!=-1">
+   			and status = #{params.sentStatus}
+   		</if>
+   		<if test="params.createDate!=null and params.createDate!=''">
+   			and TO_DAYS(create_date)= TO_DAYS(#{params.createDate})
+   		</if>
+   		<if test="params.beginDate != null and params.beginDate != ''  and (params.endDate == null or params.endDate=='')">
+  		 <![CDATA[ and TO_DAYS(reservation_begin_date) >= TO_DAYS(#{params.beginDate}) ]]> 
+  		</if>
+  		<if test="(params.beginDate == null or params.beginDate =='') and params.endDate != null and params.endDate != ''">
+  		 <![CDATA[	and TO_DAYS(ifnull(reservation_end_date,reservation_begin_date)) <= TO_DAYS(#{params.endDate}) ]]> 
+  		</if>
+  		<if test="params.beginDate != null and params.beginDate != '' and  params.endDate != null and  params.endDate != ''">
+  		<![CDATA[	and TO_DAYS(reservation_begin_date) <= TO_DAYS(#{params.beginDate}) and TO_DAYS(ifnull(reservation_end_date,reservation_begin_date)) <= TO_DAYS(#{params.endDate}) ]]> 
+  		</if>
+  		order by sent_info.create_date desc
+  </select>
+  <!-- 修改包裹状态 -->
+  <update id="updateStatus" parameterType="com.linle.entity.sys.SentInfo">
+  	 update sent_info
+  	 set status = #{status}
+  	 where id = #{id}
+  </update>
+  
+  <update id="cancelSent" parameterType="String">
+  	update sent_info
+  	set status = 5
+  	where id = #{sentId}
+  </update>
+</mapper>

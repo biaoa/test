@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>考勤统计</title> <#include '/common/resources.html'>
+<link rel="stylesheet" media="screen and (min-width: 1580px)"
+	href="${base}/resources/css/sys/Check_work.css">
+<link rel="stylesheet" media="screen and (max-width: 1580px)"
+	href="${base}/resources/css/sys/Check_work-resolving.css">
+<link rel="stylesheet" media="screen and (max-width: 1580px)"
+	href="${base}/resources/css/sys/tableui-resolving.css">
+<link rel="stylesheet" media="screen and (min-width: 1580px)"
+	href="${base}/resources/css/sys/jquery.tableui.css">
+<link rel="stylesheet" href="${base}/resources/css/sys/bottime.css" />
+<link rel="stylesheet"
+	href="${base}/resources/css/sys/datetimepicker.css" />
+<link rel="stylesheet"
+	href="${base}/resources/css/sys/bootstrap-responsive.min.css" />
+<link rel="stylesheet"
+	href="${base}/resources/css/sys/jquery-ui.min.css">
+<link rel="stylesheet" type="text/css"
+	href="${base}/resources/css/sys/kqadd.css" />
+<script type="text/javascript"
+	src="${base}/resources/datepicker/bootstrap.min.js"></script>
+<script type="text/javascript"
+	src="${base}/resources/datepicker/bootstrap-datetimepicker.min.js"></script>
+<script type="text/javascript"
+	src="${base}/resources/datepicker/bootstrap-datetimepicker.zh-CN.js"></script>
+</head>
+
+<body>
+	<div class="whole">
+		<ol class="breadcrumb">
+			<li><a href="javascript:void(0)">物业中心</a></li>
+			<li class="active">考勤统计</li>
+		</ol>
+
+		<div class="kq-tab">
+			<div class="kq-daily nowday">
+				<a href="${base}/attendanceStatistics/dayStatistics"><span>按日统计</span></a>
+			</div>
+			<div class="kq-daily nowmouth kq-active">
+				<a href="${base}/attendanceStatistics/monthStatistics"><span>按月统计</span></a>
+			</div>
+		</div>
+		<form action="${base}/attendanceStatistics/monthStatistics" id="pagerForm">
+		<div class="o-order">
+			<div class="o-second">
+				<span class="o-span">员工名称：</span>
+				<div class="o-input">
+					<input type="text" placeholder="请输入姓名" name="name" value="${name!!}">
+				</div>
+				<span class="o-span">时间段：</span>
+				<div class="o-input">
+					<input class="my-time" type="text" id="beginDate" name="beginDate" value="${beginDate!!}" readonly="readonly"/>
+				</div>
+				<span class="o-span">--</span>
+				<div class="o-input">
+					<input class="my-time" type="text" id="endDate" name="endDate" value="${endDate!!}" readonly="readonly"/>
+				</div>
+				<span class="o-span">状态：</span>
+					<div class="o-div">
+						<select class="o-select" name="status" id="status">
+							<option value="-1">全部</option>
+							<option value="0">正常</option>
+							<option value="1">异常</option>
+						</select>
+					</div>
+			</div>
+			<div class="o-second">
+				<span class="o-span">部门选择：</span>
+				<div class="o-div">
+					<select class="o-select" name="departmentId" id="departmentId">
+						<option value="-1">全部</option> <#if departmentList?exists &&
+						departmentList?size gt 0> <#list departmentList as department>
+						<option value="${department.id}">${department.name}</option>
+						</#list> </#if>
+					</select>
+				</div>
+			</div>
+			<div class="o-thrid o-thrid-margin-left">
+				<button class="o-btn search1">搜索</button>
+				<a class="o-btn" href="${base}/attendanceStatistics/exportMonthStatistics?name=${name!!}&beginDate=${beginDate!!}&endDate=${endDate!!}&status=${status!!}&departmentId=${departmentId!!}">导出考勤报表</a>
+			</div>
+		</div>
+		
+		<div class="tab_box mouth-kq">
+			<div>
+				<table class="table_solid" border="0" cellspacing="0">
+					<tbody>
+						<tr class="evenRow">
+							<th>姓名</th>
+							<th>部门</th>
+							<th>所属规则</th>
+							<th>工作日</th>
+							<th>打卡异常次数</th>
+<!-- 							<th>操作</th> -->
+						</tr>
+						<#if (pagelist.results)?exists && pagelist.results?size gt 0>
+						<#list pagelist.results as monthStatistics>
+						<tr class="oddRow">
+							<td>${monthStatistics.name!!}</td>
+							<td>${monthStatistics.departmentName!!}</td>
+							<td>
+								<p>${monthStatistics.templateName!!}</p>
+							</td>
+							<td>${monthStatistics.workDays!!}</td>
+							<td>${monthStatistics.abnormalCount!!}</td>
+<!-- 							<td><a class="person common-btn-cz" val="2">查看</a></td> -->
+						</tr>
+						</#list>
+					</tbody>
+				</table>
+				<#include '/common/pagination.html'>
+				<#else>
+				</tbody>
+				</table>
+				<div class="no-data">暂无数据~</div>
+				</#if>
+			</div>
+		</div>
+		</form>
+	</div>
+</body>
+<script>
+var d1,d2;
+$('#beginDate').datetimepicker({
+	format : 'yyyy-mm',
+	weekStart : 1,
+	todayBtn : true,
+	autoclose : true,
+	startView : 3,
+	minView : 3,
+	language : 'zh-CN',
+	startDate:'2016-07-01'
+}).on("changeDate",function(ev){
+	d1 = ev.date;
+});
+$('#endDate').datetimepicker({
+	format : 'yyyy-mm',
+	weekStart : 1,
+	todayBtn : true,
+	autoclose : true,
+	startView : 3,
+	minView : 3,
+	language : 'zh-CN',
+	startDate:'2016-07-01'
+}).on("changeDate",function(ev){
+   d2 = ev.date;
+});
+    
+	$(".search1").click(function(){
+		if(d1!=undefined && d2 !=undefined){
+			if(d1>d2){
+				layer.msg("开始时间大于结束时间,请重新选择");
+				return false;
+			}
+		}
+		$("#pagerForm").submit();
+	});
+	
+	<#if departmentId??>
+		$("#departmentId").val(${departmentId});
+	</#if>
+	<#if status??>
+		$("#status").val(${status});
+	</#if>
+</script>
+<script>
+	$(function(){
+        document.onkeydown = function(e){ 
+        	var ev = document.all ? window.event : e;
+        		if(ev.keyCode==13) {
+            $("#pagerForm").submit();
+            }
+        }
+    });  
+         
+    </script>       
+</html>

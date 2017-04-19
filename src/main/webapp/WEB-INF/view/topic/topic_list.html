@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>圈子话题管理</title>
+<meta name="content-type" content="text/html; charset=UTF-8">
+<#include '/common/resources.html'>
+<link rel="stylesheet" href="${base}/resources/css/sys/component.css" />
+<link rel="stylesheet" href="${base}/resources/css/sys/default.css" />
+<link rel="stylesheet"  href="${base}/resources/css/sys/reply.css" />
+<link rel="stylesheet" type="text/css" href="${base}/resources/voteFile/css/look-vote.css"/>
+<link rel="stylesheet" href="${base}/resources/css/sys/sys-tip.css" />
+<link rel="stylesheet" media="screen and (min-width: 1580px)" href="${base}/resources/css/sys/jquery.tableui.css" />
+<link rel="stylesheet" media="screen and (max-width: 1580px)" href="${base}/resources/css/sys/tableui-resolving.css" />
+<link rel="stylesheet" type="text/css" href="${base}/resources/datetimepicker/jquery.datetimepicker.css"/>
+<link rel="stylesheet" href="${base}/resources/assets/css/font-awesome.min2.css" />
+<script src="${base}/resources/js/respond.js" type="text/javascript" async="async"></script>
+<script type="text/javascript" src="${base}/resources/js/divscroll2.js"></script>
+<!-- <script type="text/javascript" src="${base}/resources/js/tooltips.js"></script> -->
+<script type="text/javascript" src="${base}/resources/js/dateFormat.js"></script>
+<script type="text/javascript" src="${base}/resources/js/topic_list.js"></script>
+<script src="${base}/resources/datetimepicker/jquery.datetimepicker.js" ></script>
+
+<script type="text/javascript" src="${base}/resources/js/modernizr.custom.js"></script>
+<script src="${base}/resources/bootstrap-3.3.5-dist/js/bootstrap.min.js"></script>
+ <script src="${base}/resources/js/jquery.cbpFWSlider.min.js"></script>
+ <style>
+			.stop-btn-fb,
+			.stop-btn-hf {
+				cursor: pointer;
+				margin-right: 5px;
+			}
+			
+			.fa {
+				width: 32px;
+				font-size: 14px;
+				display: inline-block;
+				text-align: right;
+				margin-right: 10px;
+			}
+		</style>
+</head>
+<body>
+<div class="whole">
+
+	<input type="hidden" id="basePath" value="${base}"/>
+	<ol class="breadcrumb">
+		<li><a href="javascript:void(0)">圈子话题管理</a></li>
+		<li class="active">话题列表</li>
+		<span style="float: right">
+			<button id="addTopicBtn" type="button" class="btn-default" style="float: right;">新增话题</button>
+		</span>
+	</ol>
+	<div class="o-order">
+		<form action="${base}/topic/list" id="pagerForm">
+		<div class="o-first">
+			<span class="o-span">小区名称：</span>
+			<div class="o-div">
+				<select class="o-select" name="communityId" id="communityId">
+					<option value="">全部</option>
+					<#if communityList?exists && communityList?size gt 0>
+								<#list communityList as type>
+									<option value="${type.id}">${type.name}</option>
+								</#list>
+					</#if>
+				</select>
+			</div>
+			
+			<span class="o-span">用户类型：</span>
+			<div class="o-div">
+				<select  class="o-select"name="userTypeId" id="userTypeId">
+					<option value="">全部</option>
+					<option value="1">官方</option>
+					<option value="2">居民</option>
+				</select>
+			</div>
+			
+			<span class="o-span">话题类型：</span>
+			<div class="o-div">
+				<select class="o-select" name="topicTypeId" id="topicTypeId">
+					<option value="">全部</option>
+						<#if tipicTypeList?exists && tipicTypeList?size gt 0>
+							<#list tipicTypeList as type>
+								<option value="${type.id!!}">${type.name!!}</option>
+							</#list>
+						</#if>
+				</select>
+			</div>
+			
+			<span class="o-span">有无举报：</span>
+			<div class="o-div">
+				<select  class="o-select"name="isReport" id="isReport">
+					<option value="">全部</option>
+					<option value="1">有</option>
+					<option value="0">无</option>
+				</select>
+			</div>
+		</div>		
+	
+		<div class="o-second">
+			<span class="o-span">&nbsp;发布者：</span>
+			<div class="o-input">
+				<input type="text" name="userName" value="${userName!!}" />
+			</div>
+			
+			<span class="o-span">发布时间：</span>
+			<div class="o-input"><input class="my-times" type="text" id="datepicker2" name="beginDate" value="${beginDate!!}" readonly="readonly"/></div><span class="o-span">--</span>
+			<div class="o-input"><input class="my-times" type="text" id="datepicker3" name="endDate" value="${endDate!!}" readonly="readonly"/></div>
+		</div>
+			
+		<div class="o-thrid role-search-btn role-search1">
+			<a class="o-btn search1">搜索</a>
+		</div>
+	</div>
+			
+	<div class="tab_box">
+	<table class="table_solid" border="0" cellspacing="0">
+		<tbody>
+			<tr class="evenRow">
+				<th>序号</th>
+				<th>发布者</th>
+				<th>用户类型</th>
+				<th>小区名称</th>
+				<th>发布内容</th>
+				<th>发布图片</th>
+				<th>话题类型</th>
+				<th>评论数</th>
+				<th>点赞数</th>
+				<th>举报数</th>
+				<th>发布时间</th>
+				<th>操作</th>
+			</tr>
+			<#if (pagelist.results)?exists && pagelist.results?size gt 0> <#list
+			pagelist.results as topic>
+			<tr>
+				<td>${(topic_index+1)+(pagelist.pageNo-1)*pagelist.pageSize}</td>
+				<td>${topic.nickName!!}</td>
+				<td>
+					<#if topic.identity=='JM'>
+						居民
+						<#else>
+						官方
+					</#if>
+				</td>
+				<td>${topic.communityName!!}</td>
+				<td class="ahover" tooltips="${topic.topicContent!!}">${topic.topicContent!!}</td>
+				<td>
+					<#if (topic.topicImages)?exists &&topic.topicImages?size gt 0>
+						<a class="zxc " val="${topic_index+1}" style="color:#1725de;text-decoration:underline;">查看图片</a>
+						<div class="container${topic_index+1}" style="right:0;display: none;position: fixed;left: 0;top: 0;z-index: 333;height: 100%;">
+							<a class="close-btn">关闭</a>
+							<div class="cbp-fwslider">
+								<ul>
+								<#list topic.topicImages as images>
+									<li><a href="javascript:void(0)"><img src="${base}/${images}"/></a></li>
+								</#list>
+								</ul>
+							</div>
+						</div>
+					</#if>
+				
+				</td>
+				<td>${topic.topicTypeName!!}</td>
+				
+				<td><a topicId="${topic.topicId}" userId="${topic.userId}"  topicTypeId="${topic.topicTypeId}"  title="点击我查看评论详情" class="reply-showbtn" href="javascript:void(0)" style="color:#1725de;text-decoration:underline;">${topic.commentNum!0}</a></td>
+				
+<!-- 				<#if topic.commentNum??>  -->
+<!-- 					<td><a topicId="${topic.topicId}" userId="${topic.userId}" title="点击我查看评论详情" class="reply-showbtn" href="javascript:void(0)" style="color:#1725de;text-decoration:underline;">${topic.commentNum!0}</a></td> -->
+<!-- 				<#else> -->
+<!-- 					<td>${topic.commentNum!0}</td> -->
+<!-- 				</#if> -->
+				
+				<#if topic.supportNum??> 
+					<td><a topicId="${topic.topicId}" userId="${topic.userId}" class="support-showbtn" title="点击我查看点赞详情" href="javascript:void(0)" style="color:#1725de;text-decoration:underline;">${topic.supportNum!0}</a></td>
+				<#else>
+					<td>${topic.supportNum!0}</td>
+				</#if>
+				
+				<#if topic.reportCount gt 0> 
+					<td><a topicId="${topic.topicId}" class="report-showbtn" title="点击我查看举报详情" href="javascript:void(0)" style="color:#1725de;text-decoration:underline;">${topic.reportCount!0}</a></td>
+				<#else>
+					<td>${topic.reportCount!0}</td>
+				</#if>
+				
+				<td>${topic.createTime?string('yyyy/MM/dd HH:mm:ss')}</td>
+				<td>
+					<#if topic.isTop??&&topic.isTop==1>
+						<a class="cz-a btn-default common-btn-cz" href="javaScript:void(0);" onclick="setTop('${topic.topicId}',0)">取消置顶</a>
+						<#else>
+						<a class="cz-a btn-default common-btn-cz" href="javaScript:void(0);" onclick="setTop('${topic.topicId}',1)">置顶</a>
+					</#if>
+					<a class="cz-a btn-default upd_support common-btn-cz" topicId="${topic.topicId}" supportNum="${topic.supportNum!0}"  href="javascript:void(0)" >编辑点赞数</a>
+					<a class="cz-a btn-default update common-btn-cz" href="${base}/topic/toAddTopic?id=${topic.topicId}" val="${topic.topicId}">修改</a>
+					<a class="cz-a btn-default del common-btn-cz" href="javascript:void(0)" val="${topic.topicId}">删除</a>
+				</td>
+			</tr>
+			</#list>
+		</tbody>
+	</table>
+	<form action="${base}/topic/list" id="pagerForm">
+	<#include '/common/pagination.html'>
+	</form>
+	<#else>
+	<div class="no-data">暂无数据~</div>
+	</#if>
+	</div>
+	</div>
+	
+	<!--显示评论详情层 -- -->
+	<div id="bg"></div>
+	<div class="all-reply">
+		<div class="vote-reply">
+			<div class="reply-body">
+				<div class="reply-title">
+					<span id="title_id">评论详情</span><span class="close-x">关闭</span>
+				</div>
+				<div class="reply-list">
+					<ul class="reply-ul">
+					</ul>
+				</div>
+			</div>
+		</div>
+		<div class="reply-speak">
+			<a>我也说一句</a>
+		</div>
+		<div class="reply-input" style="display: none;">
+			<div class="editui">
+				<p><span class="choice-name">回复 <span id="replyName"></span>：</span>
+				<textarea class="my-reply" id="replyContent"></textarea>
+				</p>
+			</div>
+			<div class="fabiao">
+				<input type="hidden" id="replyUserId"/>
+				<input type="hidden" id="isMain"/>
+				<input type="hidden" id="topicId"/>
+				<input type="hidden" id="userId"/>
+				<input type="hidden" id="comm_topicTypeId"/>
+				<span id="replySureBtn">发表</span>
+			</div>
+		</div>
+	</div>
+		
+		
+	<!--查看点赞成员  -->
+	<div id="support_bg"></div>
+	<div class="box3" style="display: none;">
+		<p class="layui-layer-title" style="cursor: move;font-weight: bold;" move="ok" id="bg_supportUserCount">参与点赞4人</p>
+		<div class="voter-munber" id="bg_contentDiv"  style="max-height:400px;overflow-y: auto;">
+		</div>
+		<div class="clearfix" style=""></div>
+		<a class="close"  id="close">关闭</a>
+	</div>
+	
+	<!--查看举报成员  -->
+	<div id="options_bg"></div>
+	<div class="box2" style="display: none;">
+		<p class="layui-layer-title" style="cursor: move;font-weight: bold;" move="ok" id="bg_reportUserCount">参与举报0人</p>
+		<div class="voter-munber" id="report_contentDiv"  style="max-height:400px;overflow-y: auto;">
+		</div>
+		<div class="clearfix" style=""></div>
+		<a class="close" id="reportCloseBtn">关闭</a>
+	</div>
+	
+	<!--编辑点赞数 -->
+	<div id="upd_support_bg"></div>
+	<div class="box4" style="display: none;width:50px;">
+		<p class="layui-layer-title" style="font-weight: bold;cursor: move;" move="ok">编辑点赞数</p>
+		<div class="voter-munber"  style="max-height:400px;overflow-y: auto;">
+			<input type="text" id="v_supportNum" style="height:30px;"/>
+		</div>
+		<div class="clearfix" style=""></div>
+		<a class="close"  id="supportCloseBtn">关闭</a>
+		<input type="hidden" id="v_topicId" />
+		<a class="supportBtn close" style="background: #5863b1;">确定</a>
+	</div>
+	
+	<!--禁用用户回复话题框 -->
+	<div class="reply-layer layui-layer layui-layer-dialog layui-layer-prompt layer-anim" style="z-index: 198; display: none;">
+	<div class="layui-layer-title" style="cursor: move;">选择禁用用户回复话题类型</div>
+	<div id="" class="layui-layer-content">
+		<span class="o-span">话题类型：</span>
+		<select class="layui-layer-input"  style="width:200px;" name="v_topicTypeId" id="v_topicTypeId">
+			<option value="">全部</option>
+				<#if tipicTypeList?exists && tipicTypeList?size gt 0>
+					<#list tipicTypeList as type>
+						<option value="${type.id!!}">${type.name!!}</option>
+					</#list>
+				</#if>
+		</select>
+	</div><span class="layui-layer-setwin"><a class="layui-layer-ico layui-layer-close layui-layer-close1" href="javascript:;"></a></span>
+	<div class="layui-layer-btn">
+		<input type="hidden" id="v_toUserId" />
+		<a class="layui-layer-btn0" id="disb_replyBtn">确定</a>
+		<a class="layui-layer-btn1">取消</a>
+	</div>
+	</div>
+	
+	
+	<!--禁用用户评论话题框 -->
+	<div class="public-layer layui-layer layui-layer-dialog layui-layer-prompt layer-anim" style="z-index: 198; display: none;">
+	<div class="layui-layer-title" style="cursor: move;">选择禁用用户评论话题类型</div>
+	<div id="" class="layui-layer-content">
+		<span class="o-span">话题类型：</span>
+		<select class="layui-layer-input"  style="width:200px;" name="v_topicTypeId" id="v_topicTypeId2">
+			<option value="">全部</option>
+				<#if tipicTypeList?exists && tipicTypeList?size gt 0>
+					<#list tipicTypeList as type>
+						<option value="${type.id!!}">${type.name!!}</option>
+					</#list>
+				</#if>
+		</select>
+	</div><span class="layui-layer-setwin"><a class="layui-layer-ico layui-layer-close layui-layer-close1" href="javascript:;"></a></span>
+	<div class="layui-layer-btn">
+		<input type="hidden" id="v_toUserId2" />
+		<a class="layui-layer-btn0" id="disb_publishBtn">确定</a>
+		<a class="layui-layer-btn1">取消</a>
+	</div>
+	</div>	
+</body>
+<script type="text/javascript">
+	$('.my-times').datetimepicker({
+		lang: 'ch',
+		timepicker: false,
+		format: 'Y-m-d',
+		formatDate: 'Y-m-d'
+	
+	});
+	
+	$(".search1").click(function(){
+		$("#pagerForm").submit();
+	})
+	
+	<#if communityId??>
+		$("#communityId").val(${communityId});
+	</#if>
+	<#if userTypeId??>
+		$("#userTypeId").val(${userTypeId});
+	</#if>
+	<#if topicTypeId??>
+		$("#topicTypeId").val(${topicTypeId});
+	</#if>
+	<#if isReport??>
+	   $("#isReport").val(${isReport});
+	</#if>
+	
+	function userStatus(id,status){
+		//默认prompt
+		if(status=='1'){
+			layer.prompt({
+				  title: '输入禁用用户原因'
+				},function(reason){
+					$.ajax({
+						type : "post", //表单提交类型 
+						url : "${base}/topic/userStatus", //表单提交目标 
+						data : {uid:id,status:status,reason:reason}, //表单数据
+						success : function(result) {
+							if (result.code == 0) {
+								layer.msg(result.msg);
+								window.location.reload();
+							}
+						 }
+					}); 
+			});
+		}else if(status=='0'){
+	 		var msg = status==1?"禁用":"启用";
+	 		layer.confirm('确定要'+msg+'该发布者?', function(index){
+	 			$.ajax({
+					type : "post", //表单提交类型 
+					url : "${base}/topic/userStatus", //表单提交目标 
+					data : {uid:id,status:status,reason:''}, //表单数据
+					success : function(result) {
+						if (result.code == 0) {
+							layer.msg(result.msg);
+							window.location.reload();
+						}
+					 }
+				}); 
+	 		}); 
+		}
+		
+
+	}
+	
+// 	var basePath = '${base}';
+</script>
+<script>
+$(function () {
+	$(".rep-sp").tooltip({html : true });
+});
+
+$(function () {
+	var val;
+	$(".rep-sp").tooltip({html : true });
+	
+	$('.cbp-fwslider').cbpFWSlider();
+	$(".zxc").click(function() {
+		 val = $(this).attr("val");
+		$("#bg").css({
+			display: "block",
+			height: $(document).height()
+		});
+		$(".container"+val).css({
+			display: "block"						
+		});
+	});
+	//点击关闭按钮的时候，遮罩层关闭
+	$(".close-btn").click(function() {
+		$(".container"+val+",#bg").css("display", "none");
+	});
+});
+</script>
+<script>
+$(function(){
+        document.onkeydown = function(e){ 
+        var ev = document.all ? window.event : e;
+        if(ev.keyCode==13) {
+            $("#pagerForm").submit();
+            }
+        }
+    });  
+         
+</script>       
+</html>

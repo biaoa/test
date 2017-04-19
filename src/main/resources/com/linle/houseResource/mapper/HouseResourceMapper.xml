@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.linle.houseResource.mapper.HouseResourceMapper" >
+  <resultMap id="BaseResultMap" type="com.linle.entity.sys.HouseResource" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="single" property="single" jdbcType="VARCHAR" />
+    <result column="community_id" property="communityId" jdbcType="BIGINT" />
+    <result column="content" property="content" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+    <result column="price" property="price" jdbcType="DECIMAL" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+    <result column="del_flag" property="delFlag"/>
+    <association property="folder" column="folder_id" select="com.linle.system.mapper.SysFolderMapper.getByFolderId" />
+    <association property="user" column="user_id" select="com.linle.user.mapper.UserMapper.getById"/>
+  </resultMap>
+  
+  <resultMap id="HouseResouceListForAPI" type="HouseResouceVO" >
+  	<id column="id" property="id" jdbcType="BIGINT" />
+  	<result column="content" property="content" />
+    <result column="price" property="price" />
+    <result column="create_date" property="createDate" />
+ 	<collection column="folder_id" property="images"  select="com.linle.system.mapper.SysFileMapper.findFilesUrlByFolderId" />
+ 	<collection property="thumImages" column="folder_id" select="com.linle.system.mapper.SysFileMapper.findThumFilesUrlByFolderId" />
+  </resultMap>
+  
+  
+  <sql id="Base_Column_List" >
+    id, single, community_id, user_id, content, type, price, status, folder_id, create_date, 
+    update_date,del_flag
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from house_resource
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from house_resource
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.linle.entity.sys.HouseResource" >
+    insert into house_resource (id, single, community_id, 
+      user_id, content, type, 
+      price, status, folder_id, 
+      create_date, update_date,del_flag)
+    values (#{id,jdbcType=BIGINT}, #{single,jdbcType=VARCHAR}, #{communityId,jdbcType=BIGINT}, 
+      #{user.id,jdbcType=BIGINT}, #{content,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER}, 
+      #{price,jdbcType=DECIMAL}, #{status,jdbcType=INTEGER}, #{folder.id,jdbcType=BIGINT}, 
+      #{createDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP},#{delFlag})
+  </insert>
+  <insert id="insertSelective" parameterType="com.linle.entity.sys.HouseResource" >
+    insert into house_resource
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="single != null" >
+        single,
+      </if>
+      <if test="communityId != null" >
+        community_id,
+      </if>
+      <if test="user != null" >
+        user_id,
+      </if>
+      <if test="content != null" >
+        content,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="price != null" >
+        price,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="folder != null" >
+        folder_id,
+      </if>
+        create_date,
+      <if test="updateDate != null" >
+        update_date,
+      </if>
+     <if test="delFlag !=null">
+     	 del_flag,
+     </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="single != null" >
+        #{single,jdbcType=VARCHAR},
+      </if>
+      <if test="communityId != null" >
+        #{communityId,jdbcType=BIGINT},
+      </if>
+      <if test="user != null" >
+        #{user.id,jdbcType=BIGINT},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=INTEGER},
+      </if>
+      <if test="price != null" >
+        #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="folder != null" >
+        #{folder.id,jdbcType=BIGINT},
+      </if>
+        now(),
+      <if test="updateDate != null" >
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="delFlag !=null">
+      	#{delFlag},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.linle.entity.sys.HouseResource" >
+    update house_resource
+    <set >
+      <if test="single != null" >
+        single = #{single,jdbcType=VARCHAR},
+      </if>
+      <if test="communityId != null" >
+        community_id = #{communityId,jdbcType=BIGINT},
+      </if>
+      <if test="user != null" >
+        user_id = #{user.id,jdbcType=BIGINT},
+      </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="price != null" >
+        price = #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="folder != null" >
+        folder_id = #{folder.id,jdbcType=BIGINT},
+      </if>
+        update_date = now(),
+       <if test="delFlag !=null">
+       	del_flag = #{delFlag},
+       </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.linle.entity.sys.HouseResource" >
+    update house_resource
+    set single = #{single,jdbcType=VARCHAR},
+      community_id = #{communityId,jdbcType=BIGINT},
+      user_id = #{user.id,jdbcType=BIGINT},
+      content = #{content,jdbcType=VARCHAR},
+      type = #{type,jdbcType=INTEGER},
+      price = #{price,jdbcType=DECIMAL},
+      status = #{status,jdbcType=INTEGER},
+      folder_id = #{folder.id,jdbcType=BIGINT},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP},
+      del_flag = #{delFlag}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  <!-- 获得个人发布的房源列表 -->
+ 	<select id="getHouseResouceList" parameterType="map" resultMap="HouseResouceListForAPI">
+ 		select id,content,price,create_date,folder_id
+ 		from house_resource
+ 		where user_id = #{uid} and del_flag =0
+ 		order by create_date desc
+ 	</select>
+ 	
+ 	<select id="getAllData" parameterType="page" resultMap="BaseResultMap">
+ 		select 
+    <include refid="Base_Column_List" />
+    from house_resource
+    inner join (select id as uid, name,mobile_Phone from users) as tb1
+    on house_resource.user_id = tb1.uid
+  	where community_id  = #{params.communityId}
+  	<if test="params !=null">
+  		<if test="params.single != null and params.single !=''">
+  			and single = #{params.single}
+  		</if>
+  		<if test="params.type != null and params.type !='' and params.type !='-1'">
+  			and type = #{params.type}
+  		</if>
+  		<if test="params.phone != null and params.phone !=''">
+  			and (tb1.name=#{params.phone} or tb1.mobile_Phone=#{params.phone})
+  		</if>
+  		<if test="params.createDate != null">
+  			and TO_DAYS(create_date)= TO_DAYS(#{params.createDate})
+  		</if>
+  		<if test="params.price != null and params.price != null">
+  		<![CDATA[	and price >= #{params.price} ]]>
+  		</if>
+  	</if>
+ 	</select>
+ 	
+ 	<!-- 用户删除房源 -->
+ 	<update id="delHouseResource" parameterType="map">
+ 		update house_resource
+ 		set del_flag =1 
+ 		where id =#{id} and user_id = #{uid}
+ 	</update>
+</mapper>

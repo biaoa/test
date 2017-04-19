@@ -1,0 +1,600 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.linle.shop.mapper.ShopMapper" >
+  <resultMap id="BaseResultMap" type="com.linle.entity.sys.Shop" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="shop_name" property="shopName" jdbcType="VARCHAR" />
+    <result column="shop_address" property="shopAddress" jdbcType="VARCHAR" />
+    <result column="shop_phone" property="shopPhone" jdbcType="VARCHAR" />
+    <result column="shop_logo" property="shopLogo" jdbcType="VARCHAR" />
+    <result column="delivery_name" property="deliveryName" jdbcType="VARCHAR" />
+    <result column="operate_status" property="operateStatus" jdbcType="INTEGER" />
+    <result column="enter_community" property="enterCommunity" jdbcType="VARCHAR" />
+    <result column="operate_begin" property="operateBegin" jdbcType="VARCHAR" />
+    <result column="operate_end" property="operateEnd" jdbcType="VARCHAR" />
+    <result column="shop_status" property="shopStatus" jdbcType="INTEGER" />
+    <result column="activity_flag" property="activityFlag" jdbcType="INTEGER" />
+    <result column="shop_credentials" property="shopCredentials" jdbcType="INTEGER" />
+    <result column="delivery_fee" property="deliveryFee" jdbcType="DECIMAL" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+    <result column="introduction" property="introduction"/>
+    <result column="send_price" property="sendPrice"/>
+    <result column="notice" property="notice"/>
+    <result column="refund_time" property="refundTime"/>
+    <result column="cut" property="cut"/>
+    <result column="preferential_cut_amount" property="preferentialCutAmount"/>
+    <result column="withdrawal_fee" property="withdrawalFee"/>
+    <association column="create_id" property="createUser" select="com.linle.user.mapper.UserMapper.selectByPrimaryKey"/>
+    <association column="user_id" property="user" select="com.linle.user.mapper.UserMapper.selectByPrimaryKey"/>
+	<association column="main_type" property="mainType"  select="com.linle.shopMainType.mapper.ShopMainTypeMapper.selectByPrimaryKey"/>
+	<association column="child_type" property="childType" select="com.linle.shopChildType.mapper.ShopChildTypeMapper.selectByPrimaryKey"/>
+	<association column="shop_credentials" property="folder" select="com.linle.system.mapper.SysFolderMapper.selectByPrimaryKey"/>
+  </resultMap>
+  
+  <resultMap  id="BaseShopListForAPIResult" type="com.linle.mobileapi.v1.model.ShopItem">
+  	<result column="id" property="id"/>
+  	<result column="shop_name" property="shopname"/>
+  	<result column="monthSales" property="monthSales"/>
+  	<result column="grade" property="grade"/>
+  	<result column="minTime" property="minTime"/>
+  	<result column="send_price" property="minDisPatch"/>
+  	<result column="delivery_fee" property="disPatchPrice"/>
+  	<result column="operate_begin" property="beginDate"/>
+  	<result column="operate_end" property="endDate"/>
+  	<result column="operate_status" property="status"/>
+  	<collection column="id" property="privilegesList" select="com.linle.shopPreferential.mapper.ShopPreferentialMapper.selectPreferentialForAPI"/>
+  </resultMap>
+  
+  <resultMap  id="ShopListForAPIResult" type="com.linle.mobileapi.v1.model.ShopItem" extends="BaseShopListForAPIResult">
+  	 	<result column="shop_logo" property="imagUrl"/>
+  </resultMap>
+  
+  <resultMap  id="HotShopListForAPIResult" type="com.linle.mobileapi.v1.model.ShopItem" extends="BaseShopListForAPIResult">
+  	<result column="shop_logo" property="logo"/>
+  </resultMap>
+  
+  
+  
+    <resultMap  id="CommodityListResult" type="com.linle.mobileapi.v1.model.GetAllGoods">
+	  	<result column="id" property="id"/>
+	  	<result column="notice" property="notice"/>
+	  	<result column="send_price" property="minDisPatch"/>
+	  	<result column="delivery_fee" property="disPatchPrice"/>
+	  	<result column="shop_name" property="shopName"/>
+	  	<result column="operate_status" property="operateStatus"/>
+	  	<collection column="id" property="prvilegeList" select="com.linle.shopPreferential.mapper.ShopPreferentialMapper.selectPreferentialForAPI"/>
+	  	<collection column="{id=shopId,userId=userId}" property="sortList" select="com.linle.commodityType.mapper.CommodityTypeMapper.getAllTypeForAPI"/>
+    </resultMap>
+  <resultMap id="ShopInfoResult" type="com.linle.mobileapi.v1.model.ShopInfoVO" >
+  	<result column="id" property="id"/>
+  	<result column="dispatchTime" property="dispatchTime"/>
+  	<result column="shop_phone" property="shopPhone"/>
+  	<result column="shop_address" property="shopAddress"/>
+  	<result column="delivery_name" property="dispatchCompany"/>
+  	<result column="introduction" property="introduction"/>
+  	<collection property="certificates" column="shop_credentials" select="com.linle.system.mapper.SysFileMapper.findFilesUrlByFolderId" />
+  	<collection  property="privilegesList" column="id" select="com.linle.shopPreferential.mapper.ShopPreferentialMapper.selectPreferentialForAPI" />
+  </resultMap>
+  
+  <resultMap type="com.linle.mobileapi.v1.model.ShopVO" id="homeADResult">
+  	<result column="id" property="id"/>
+  	<result column="shop_name" property="shopName"/>
+  	<result column="shop_logo" property="logo"/>
+  	<result column="sales" property="monthSales"/>
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    id, shop_name, shop_address, shop_phone, shop_logo, delivery_name, operate_status, 
+    enter_community, operate_begin, operate_end, shop_status,activity_flag, main_type, child_type, shop_credentials, 
+    delivery_fee, create_id, user_id, create_date, update_date,introduction,send_price,notice,refund_time,cut,ifnull(preferential_cut_amount,0) as preferential_cut_amount
+    ,withdrawal_fee
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from shop
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from shop
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.linle.entity.sys.Shop" >
+    insert into shop (id, shop_name, shop_address, 
+      shop_phone, shop_logo, delivery_name, 
+      operate_status, enter_community, operate_begin, 
+      operate_end, shop_status,activity_flag, main_type, 
+      child_type, shop_credentials, delivery_fee, 
+      create_id, user_id, create_date, 
+      update_date,introduction,send_price,notice,refund_time,cut,preferential_cut_amount,withdrawal_fee)
+    values (#{id,jdbcType=BIGINT}, #{shopName,jdbcType=VARCHAR}, #{shopAddress,jdbcType=VARCHAR}, 
+      #{shopPhone,jdbcType=VARCHAR}, #{shopLogo,jdbcType=VARCHAR}, #{deliveryName,jdbcType=VARCHAR}, 
+      #{operateStatus,jdbcType=INTEGER}, #{enterCommunity,jdbcType=VARCHAR}, #{operateBegin,jdbcType=VARCHAR}, 
+      #{operateEnd,jdbcType=VARCHAR}, #{shopStatus,jdbcType=INTEGER}, #{activityFlag,jdbcType=INTEGER}, #{mainType.id,jdbcType=VARCHAR}, 
+      #{childType.id,jdbcType=INTEGER}, #{shopCredentials,jdbcType=INTEGER}, #{deliveryFee,jdbcType=DECIMAL}, 
+      #{createUser.id,jdbcType=BIGINT}, #{user.id,jdbcType=BIGINT}, #{createDate,jdbcType=TIMESTAMP}, 
+      #{updateDate,jdbcType=TIMESTAMP},#{introduction},#{sendPrice},#{notice},#{refundTime},#{cut},#{preferentialCutAmount}
+      ,#{withdrawalFee})
+  </insert>
+  <insert id="insertSelective" parameterType="com.linle.entity.sys.Shop" >
+    insert into shop
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="shopName != null" >
+        shop_name,
+      </if>
+      <if test="shopAddress != null" >
+        shop_address,
+      </if>
+      <if test="shopPhone != null" >
+        shop_phone,
+      </if>
+      <if test="shopLogo != null" >
+        shop_logo,
+      </if>
+      <if test="deliveryName != null" >
+        delivery_name,
+      </if>
+      <if test="operateStatus != null" >
+        operate_status,
+      </if>
+      <if test="enterCommunity != null" >
+        enter_community,
+      </if>
+      <if test="operateBegin != null" >
+        operate_begin,
+      </if>
+      <if test="operateEnd != null" >
+        operate_end,
+      </if>
+      <if test="shopStatus != null" >
+        shop_status,
+      </if>
+        <if test="activityFlag != null" >
+        activity_flag,
+      </if>
+      <if test="mainType != null" >
+        main_type,
+      </if>
+      <if test="childType != null" >
+        child_type,
+      </if>
+      <if test="shopCredentials != null" >
+        shop_credentials,
+      </if>
+      <if test="deliveryFee != null" >
+        delivery_fee,
+      </if>
+      <if test="createUser != null" >
+        create_id,
+      </if>
+      <if test="user != null" >
+        user_id,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="updateDate != null" >
+        update_date,
+      </if>
+      <if test="introduction!=null">
+      	introduction,
+      </if>
+      <if test="sendPrice !=null">
+      	send_price,
+      </if>
+      <if test="notice !=null">
+      	notice,
+      </if>
+      <if test="refundTime !=null">
+      	refund_time,
+      </if>
+      <if test="cut !=null">
+      	cut,
+      </if>
+      <if test="preferentialCutAmount !=null">
+      	preferential_cut_amount,
+      </if>
+      <if test="withdrawalFee !=null">
+      	withdrawal_fee,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="shopName != null" >
+        #{shopName,jdbcType=VARCHAR},
+      </if>
+      <if test="shopAddress != null" >
+        #{shopAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="shopPhone != null" >
+        #{shopPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="shopLogo != null" >
+        #{shopLogo,jdbcType=VARCHAR},
+      </if>
+      <if test="deliveryName != null" >
+        #{deliveryName,jdbcType=VARCHAR},
+      </if>
+      <if test="operateStatus != null" >
+        #{operateStatus,jdbcType=INTEGER},
+      </if>
+      <if test="enterCommunity != null" >
+        #{enterCommunity,jdbcType=VARCHAR},
+      </if>
+      <if test="operateBegin != null" >
+        #{operateBegin,jdbcType=VARCHAR},
+      </if>
+      <if test="operateEnd != null" >
+        #{operateEnd,jdbcType=VARCHAR},
+      </if>
+      <if test="shopStatus != null" >
+        #{shopStatus,jdbcType=INTEGER},
+      </if>
+      <if test="activityFlag != null" >
+        #{activityFlag,jdbcType=INTEGER},
+      </if>
+      <if test="mainType != null" >
+        #{mainType.id,jdbcType=VARCHAR},
+      </if>
+      <if test="childType != null" >
+        #{childType.id,jdbcType=INTEGER},
+      </if>
+      <if test="shopCredentials != null" >
+        #{shopCredentials,jdbcType=INTEGER},
+      </if>
+      <if test="deliveryFee != null" >
+        #{deliveryFee,jdbcType=DECIMAL},
+      </if>
+      <if test="createUser != null" >
+        #{createUser.id,jdbcType=BIGINT},
+      </if>
+      <if test="user != null" >
+        #{user.id,jdbcType=BIGINT},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="introduction!=null">
+      	#{introduction},
+      </if>
+      <if test="sendPrice!=null">
+      	#{sendPrice},
+      </if>
+      <if test="notice !=null">
+      	#{notice},
+      </if>
+      <if test="refundTime !=null">
+      	#{refundTime},
+      </if>
+      <if test="cut !=null">
+      	#{cut},
+      </if>
+      <if test="preferentialCutAmount !=null">
+      	#{preferentialCutAmount},
+      </if>
+      <if test="withdrawalFee !=null">
+      	#{withdrawalFee},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.linle.entity.sys.Shop" >
+    update shop
+    <set >
+      <if test="shopName != null" >
+        shop_name = #{shopName,jdbcType=VARCHAR},
+      </if>
+      <if test="shopAddress != null" >
+        shop_address = #{shopAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="shopPhone != null" >
+        shop_phone = #{shopPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="shopLogo != null" >
+        shop_logo = #{shopLogo,jdbcType=VARCHAR},
+      </if>
+      <if test="deliveryName != null" >
+        delivery_name = #{deliveryName,jdbcType=VARCHAR},
+      </if>
+      <if test="operateStatus != null" >
+        operate_status = #{operateStatus,jdbcType=INTEGER},
+      </if>
+      <if test="enterCommunity != null" >
+        enter_community = #{enterCommunity,jdbcType=VARCHAR},
+      </if>
+      <if test="operateBegin != null" >
+        operate_begin = #{operateBegin,jdbcType=VARCHAR},
+      </if>
+      <if test="operateEnd != null" >
+        operate_end = #{operateEnd,jdbcType=VARCHAR},
+      </if>
+      <if test="shopStatus != null" >
+        shop_status = #{shopStatus,jdbcType=INTEGER},
+      </if>
+        <if test="activityFlag != null" >
+        activity_flag = #{activityFlag,jdbcType=INTEGER},
+      </if>
+      <if test="mainType != null" >
+        main_type = #{mainType.id,jdbcType=VARCHAR},
+      </if>
+      <if test="childType != null" >
+        child_type = #{childType.id,jdbcType=INTEGER},
+      </if>
+      <if test="shopCredentials != null" >
+        shop_credentials = #{shopCredentials,jdbcType=INTEGER},
+      </if>
+      <if test="deliveryFee != null" >
+        delivery_fee = #{deliveryFee,jdbcType=DECIMAL},
+      </if>
+      <if test="createUser != null" >
+        create_id = #{createUser.id,jdbcType=BIGINT},
+      </if>
+      <if test="user != null" >
+        user_id = #{user.id,jdbcType=BIGINT},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="introduction!=null">
+      	introduction  = #{introduction},
+      </if>
+      <if test="sendPrice !=null">
+      	send_price = #{sendPrice},
+      </if>
+      <if test="notice !=null">
+      	notice = #{notice},
+      </if>
+      <if test="refundTime !=null">
+      	refund_time = #{refundTime},
+      </if>
+      <if test="cut !=null">
+      	cut = #{cut},
+      </if>
+      <if test="preferentialCutAmount !=null">
+      	preferential_cut_amount = #{preferentialCutAmount},
+      </if>
+      <if test="withdrawalFee !=null">
+      	withdrawal_fee = #{withdrawalFee},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.linle.entity.sys.Shop" >
+    update shop
+    set shop_name = #{shopName,jdbcType=VARCHAR},
+      shop_address = #{shopAddress,jdbcType=VARCHAR},
+      shop_phone = #{shopPhone,jdbcType=VARCHAR},
+      shop_logo = #{shopLogo,jdbcType=VARCHAR},
+      delivery_name = #{deliveryName,jdbcType=VARCHAR},
+      operate_status = #{operateStatus,jdbcType=INTEGER},
+      enter_community = #{enterCommunity,jdbcType=VARCHAR},
+      operate_begin = #{operateBegin,jdbcType=VARCHAR},
+      operate_end = #{operateEnd,jdbcType=VARCHAR},
+      shop_status = #{shopStatus,jdbcType=INTEGER},
+      activity_flag = #{activityFlag,jdbcType=INTEGER},
+      main_type = #{mainType.id,jdbcType=VARCHAR},
+      child_type = #{childType.id,jdbcType=INTEGER},
+      shop_credentials = #{shopCredentials,jdbcType=INTEGER},
+      delivery_fee = #{deliveryFee,jdbcType=DECIMAL},
+      create_id = #{createUser.id,jdbcType=BIGINT},
+      user_id = #{user.id,jdbcType=BIGINT},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP},
+      introduction = #{introduction},
+      send_price = #{sendPrice},
+      notice = #{notice},
+      refund_time = #{refundTime},
+      cut = #{cut},
+      preferential_cut_amount = #{preferentialCutAmount},
+      withdrawal_fee = #{withdrawalFee}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  
+  <select id="getAllData" parameterType="page" resultMap="BaseResultMap">
+  	select 
+    <include refid="Base_Column_List" />
+    from shop 
+    left join (select id as typeid, type_name from shop_main_type) as shop_main_type
+    on shop.main_type = shop_main_type.typeid
+    where 1 =1 
+    <if test="params !=null and params.createId != null and params.createId !=0">
+    	and create_id  = #{params.createId}
+    </if>
+    <if test="params !=null and params.userId != null and params.userId !=0">
+    	and user_id = #{params.userId}
+    </if>
+    <if test="params.searchValue !=null and params.searchValue !=''">
+		and	(shop_name like CONCAT('%','${params.searchValue}','%') or shop_phone = #{params.searchValue})
+	</if>
+	<if test="params.typeId !=null and params.typeId !=0 ">
+		and main_type = #{params.typeId}
+	</if>
+	<if test="params.shopStatus !=null">
+		and shop_status = #{params.shopStatus}
+	</if>
+  </select>
+  
+  <select id="selectByUserID" parameterType="Long" resultMap="BaseResultMap">
+  		select 
+    <include refid="Base_Column_List" />
+    from shop
+    where user_id = #{id}
+  </select>
+  
+  <!-- app 搜索店铺 -->
+  <select id="getShopListForAPI" parameterType="map" resultMap="ShopListForAPIResult">
+  	select tb1.id,tb1.shop_name,tb1.shop_logo,IFNULL(monthSales,0) as monthSales,grade,minTime,tb1.send_price,tb1.delivery_fee,tb1.main_type,tb1.child_type,tb1.operate_begin,tb1.operate_end,tb1.operate_status
+  	from 
+		(select id,shop_name,shop_logo,send_price,delivery_fee,main_type,child_type,operate_begin,operate_end,operate_status  from shop where find_in_set(#{communityId},enter_community)) as tb1
+		left join (select business_id,COUNT(id) as monthSales from sys_order where type='commodity' and (order_status=3 or order_status=4) and YEAR(create_date) =#{year} and MONTH(create_date) =#{month}  group by business_id) as monthSales
+		on monthSales.business_id = tb1.id
+		left join (select shop_id, IFNULL(TRUNCATE(SUM(complex_star)/COUNT(id),1),0) as grade  from order_evaluate GROUP BY shop_id) as order_evaluate
+		on tb1.id = order_evaluate.shop_id
+		left join (select business_id,IFNULL(TRUNCATE(SUM(send_date)/COUNT(id),1),0) as minTime from sys_order where type='commodity' and (order_status=3 or order_status=4) GROUP BY business_id) as tb2
+		on tb1.id = tb2.business_id
+		<if test="type !=0">
+			INNER JOIN shop_preferential ON tb1.id = shop_preferential.shop_id
+			INNER JOIN preferential_type on shop_preferential.type_id=preferential_type.id and preferential_type.id=#{type}
+		</if>
+		<if test="search !=null and search !=''">
+			inner JOIN  commodity
+			on tb1.id=commodity.shop_id and(tb1.shop_name like CONCAT('%','${search}','%' ) or commodity.`name` like  CONCAT('%','${search}','%'))
+		</if>
+	<where>
+		<if test="sortId !=null and sortId !=0">
+			and tb1.main_type= #{sortId}
+		</if>
+		<if test="childSortId !=null and childSortId !=0">
+			and tb1.child_type= #{childSortId}
+		</if>
+	</where>
+	GROUP BY tb1.id
+	<if test="sortRules == 1">
+		order by monthSales desc
+	</if>
+	<if test="sortRules ==2">
+		order by minTime 
+	</if>
+	<if test="sortRules ==3">
+		order by grade desc
+	</if>
+	LIMIT #{begin},#{end}
+  </select>
+  
+  <!-- 商品接口 -->
+    <select id="getAllCommodityForAPI" parameterType="map" resultMap="CommodityListResult">
+  	select  id,notice,send_price,delivery_fee,shop_name,operate_status,
+  			#{userId} as userId,#{shopId} as shopId
+  	from shop
+  	where id = #{shopId}
+  </select>
+  	
+  	
+  <select id="selectShopInfoAPI" parameterType="map" resultMap="ShopInfoResult">
+	select id,CONCAT(operate_begin,'-',operate_end) as dispatchTime,shop_phone,shop_address,delivery_name,introduction,shop_credentials
+	from shop
+	where id = #{shopId}
+  </select>
+  
+  <!-- 获得店铺销量 (订单总数)-->
+  <select id="selectShopSales" parameterType="map" resultType="int">
+  	select COUNT(id) from sys_order where type='commodity' and business_id =#{shopId} and (order_status=3 or order_status=4)
+  	<if test="year!=null and year !=0 and month!=null and month !=0">
+  		and YEAR(create_date) =#{year} and MONTH(create_date) =#{month}
+  	</if>
+  </select>
+  <!-- 获得店铺销量 (商品总数)-->
+  <select id="selectShopSaleCommunity" parameterType="map" resultType="int">
+  	select ifnull(SUM(order_detail.product_quantity),0) from 
+	(select id from shop where id = #{shopId}) as shop
+	left join sys_order
+	on sys_order.type='commodity' and (order_status = 3 or order_status =4)
+	left join order_detail
+	on sys_order.id=order_detail.id
+	<where>
+		<if test="year!=null and year !=0 and month!=null and month !=0">
+			and YEAR(sys_order.create_date) = #{year} and MONTH(sys_order.create_date) =#{month}
+		</if>
+	</where>
+  </select>
+  
+  <!-- 家园获得热销店铺 -->
+  <select id="getHomeAD" parameterType="map" resultMap="HotShopListForAPIResult">
+		select tb1.id,tb1.shop_name,tb1.shop_logo,IFNULL(monthSales,0) as monthSales,grade,minTime,tb1.send_price,tb1.delivery_fee,tb1.main_type,tb1.child_type,tb1.operate_begin,tb1.operate_end,tb1.operate_status
+  	from 
+		(select id,shop_name,shop_logo,send_price,delivery_fee,main_type,child_type,operate_begin,operate_end,operate_status  from shop
+		 where operate_status = 0
+			<if test="communityId!=null">
+				and	find_in_set(#{communityId},enter_community)
+			</if>
+		) as tb1
+		left join (select business_id,COUNT(id) as monthSales from sys_order where type='commodity' and (order_status=3 or order_status=4) and YEAR(create_date) =#{year} and MONTH(create_date) =#{month}  group by business_id) as monthSales
+		on monthSales.business_id = tb1.id
+		left join (select shop_id, IFNULL(TRUNCATE(SUM(complex_star)/COUNT(id),1),0) as grade  from order_evaluate GROUP BY shop_id) as order_evaluate
+		on tb1.id = order_evaluate.shop_id
+		left join (select business_id,IFNULL(TRUNCATE(SUM(send_date)/COUNT(id),1),0) as minTime from sys_order where type='commodity' and (order_status=3 or order_status=4) GROUP BY business_id) as tb2
+		on tb1.id = tb2.business_id
+	GROUP BY tb1.id
+  order by monthSales desc
+	LIMIT 0,4
+		
+  </select>
+  
+  <!-- 获得商家的总营业额 -->
+  <select id="getShopTotalIncome" parameterType="Long" resultType="BigDecimal">
+  	select ifNull(SUM(total_money),0) from sys_order 
+  		where type = 'commodity' and business_id = #{id} and (
+  		(order_status = 3 <![CDATA[ and last_refund_date < NOW() ]]>) or (order_status = 4)) 
+  		
+  </select>
+  
+  <select id="getShopWaitIncome" parameterType="Long" resultType="BigDecimal">
+  	select ifnull(SUM(total_money),0) from sys_order 
+  		where type = 'commodity' and business_id = #{id} and order_status = 3  
+  		<![CDATA[ and last_refund_date > NOW() ]]>
+  </select>
+  
+  	<!-- 统计商家总数 -->
+	<select id="getShopCountByDate" resultType="Integer" parameterType="map">
+		select count(id) from shop record
+		where record.shop_status != 1
+		<if test="dateType !=null and dateType=='today' ">
+			and TO_DAYS(record.create_date)=TO_DAYS(NOW())
+		</if>
+		<if test="beginDate!=null and endDate==null">
+  			and <![CDATA[  record.create_date>=#{beginDate} ]]>
+  		</if>
+  		<if test="beginDate==null and endDate!=null">
+  			and <![CDATA[ record.create_date<=#{endDate} ]]>
+  		</if>
+  		<if test="beginDate!=null and endDate!=null">
+  			and <![CDATA[ (record.create_date >=#{beginDate} and record.create_date<=#{endDate}) ]]>
+  		</if>
+	</select>
+	
+	 <!-- 统计商家列表 -->
+	<select id="getShopListByDate" resultType="com.linle.entity.statistics.UserStatistics" parameterType="map">
+		select record.shop_name name,COUNT(*) count from shop record
+		where record.shop_status != 1
+		<if test="dateType !=null and dateType=='today' ">
+			and TO_DAYS(record.create_date)=TO_DAYS(NOW())
+		</if>
+		<if test="beginDate!=null and endDate==null">
+  			and <![CDATA[  record.create_date>=#{beginDate} ]]>
+  		</if>
+  		<if test="beginDate==null and endDate!=null">
+  			and <![CDATA[ record.create_date<=#{endDate} ]]>
+  		</if>
+  		<if test="beginDate!=null and endDate!=null">
+  			and <![CDATA[ (record.create_date >=#{beginDate} and record.create_date<=#{endDate}) ]]>
+  		</if>
+  		GROUP BY record.id
+	</select>
+	<!-- 获得商家提现总金额 -->
+	<select id="getShopToatlFunds" parameterType="long" resultType="BigDecimal">
+		select IFNULL(SUM(apply_amount),0) from withdraw where u_id = #{id}
+	</select>
+	
+	<!-- 获得某小区所有活动商家 -->
+	  <select id="getAllActivityShop" parameterType="long" resultType="com.linle.entity.sys.Shop">
+	  	select  shop.id,shop.shop_name shopName,shop.shop_logo shopLogo,IFNULL(send_price,0) sendPrice ,
+	  	IFNULL(delivery_fee,0) deliveryFee,IFNULL(order_evaluate.grade,0) grade
+	  	from shop
+		left join (select shop_id, IFNULL(TRUNCATE(SUM(complex_star)/COUNT(id),1),0) as grade  from order_evaluate GROUP BY shop_id) as order_evaluate
+		on shop.id = order_evaluate.shop_id
+		where shop_status != 1 and find_in_set(#{communityId},enter_community) and activity_flag=1
+	  </select>
+  
+</mapper>

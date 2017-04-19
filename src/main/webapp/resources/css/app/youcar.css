@@ -1,0 +1,791 @@
+* {
+	outline: none;
+	font-family: "微软雅黑";
+	list-style: none;
+}
+
+.front {
+	width: 300px;
+	margin: 5px 32px 45px 32px;
+	background-color: #f0f0f0;
+	color: #666;
+	text-align: center;
+	padding: 3px;
+	border-radius: 5px;
+}
+
+.booking_area {
+	float: left;
+	position: relative;
+	width: 200px;
+	height: 450px;
+	margin-left: 20px;
+}
+
+.booking_area h3 {
+	margin: 5px 5px 0 0;
+	font-size: 16px;
+}
+
+.booking_area p {
+	line-height: 26px;
+	font-size: 16px;
+	color: #999
+}
+
+.booking_area p span {
+	color: #666
+}
+
+div.seatCharts-cell {
+	color: #182C4E;
+	height: 25px;
+	width: 25px;
+	line-height: 25px;
+	margin: 3px;
+	float: left;
+	text-align: center;
+	outline: none;
+	font-size: 13px;
+}
+
+div.seatCharts-seat {
+	color: transparent;
+	cursor: pointer;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+}
+
+div.seatCharts-row {
+	height: 35px;
+}
+
+div.seatCharts-seat.available {
+	background: url(../../images/park.png) no-repeat;
+	background-size: 100% 100%;
+}
+
+div.seatCharts-seat.focused {
+	background: url(../../images/park-action.png) no-repeat;
+	background-size: 100% 100%;
+	border: none;
+}
+
+div.seatCharts-seat.selected {
+	background: url(../../images/park-off.png) no-repeat;
+	background-size: 100% 100%;
+}
+
+div.seatCharts-seat.unavailable {
+	background: url(../../images/park-ing.png) no-repeat;
+	background-size: 100% 100%;
+	cursor: not-allowed;
+}
+
+div.seatCharts-container {
+	padding: 20px;
+	float: left;
+	padding-top: 120px;
+	padding-bottom: 300px;
+	width: auto;
+	min-width: 660px;
+}
+
+div.seatCharts-legend {
+	padding-left: 0px;
+	width: 100%;
+	bottom: 16px;
+	float: left;
+}
+
+ul.seatCharts-legendList {
+	padding-left: 0px;
+}
+
+.seatCharts-legendItem {
+	float: left;
+	width: 90px;
+	margin-top: 10px;
+	line-height: 2;
+}
+
+span.seatCharts-legendDescription {
+	margin-left: 5px;
+	line-height: 30px;
+}
+
+.checkout-button {
+	display: block;
+	width: 80px;
+	height: 24px;
+	line-height: 20px;
+	margin: 10px auto;
+	border: 1px solid #999;
+	font-size: 14px;
+	cursor: pointer
+}
+
+#seats_chose {
+	max-height: 150px;
+	overflow-y: auto;
+	overflow-x: none;
+	width: 200px;
+}
+
+.black {
+	background-color: black;
+}
+
+#seats_chose li {
+	float: left;
+	width: 72px;
+	height: 26px;
+	line-height: 26px;
+	border: 1px solid #d3d3d3;
+	background: #f7f7f7;
+	margin: 6px;
+	font-size: 14px;
+	font-weight: bold;
+	text-align: center
+}
+
+.date-car {
+	float: left;
+	margin-left: 2%;
+	font-size: 17px;
+}
+
+.sy-day {
+	float: right;
+	margin-right: 2%;
+	font-size: 17px;
+}
+
+@media screen and (max-width: 320px) {
+	.date-car {
+		float: left;
+		margin-left: 2%;
+		font-size: 14px;
+	}
+	.sy-day {
+		float: right;
+		margin-right: 2%;
+		font-size: 14px;
+	}
+}
+
+@media screen and (max-width: 320px) {
+	.cl span {
+		font-size: 14px;
+	}
+}
+
+.money-jy {
+	color: #ff5000;
+	float: right;
+}
+
+* {
+	margin: 0;
+	padding: 0;
+	font-family: "微软雅黑";
+}
+
+body {
+	background: gainsboro;
+}
+
+.car-sy {
+	min-width: 85px;
+	text-align: center;
+}
+
+.car-sp {
+	width: 40px;
+	float: left;
+	padding-top: 10px;
+}
+
+.type {
+	width: 35px;
+	height: 35px;
+	float: left;
+	margin-left: 10px;
+}
+
+.type-name {
+	font-size: 15px;
+	margin-top: 10px;
+}
+
+.blank {
+	background: url(../../images/park.png) no-repeat;
+	background-size: 100% 100%;
+}
+
+.action {
+	background: url(../../images/park-action.png) no-repeat;
+	background-size: 100% 100%;
+}
+
+.off {
+	background: url(../../images/park-off.png) no-repeat;
+	background-size: 100% 100%;
+}
+
+.ing {
+	background: url(../../images/park-ing.png) no-repeat;
+	background-size: 100% 100%;
+}
+
+.car-type ul {
+	list-style: none;
+}
+
+.car-type li {
+	width: 33%;
+	float: left;
+	text-align: center;
+	position: relative;
+}
+
+.car-type {
+	z-index: 100;
+	width: 100%;
+	height: auto;
+	overflow: hidden;
+	text-align: center;
+	margin: 0 auto;
+	padding: 10px 0;
+	background: white;
+	position: fixed;
+}
+
+.car-footer {
+	width: 100%;
+	position: fixed;
+	bottom: 0;
+	background: white;
+	height: auto;
+	overflow: hidden;
+}
+
+.time-qx {
+	width: 95%;
+	margin: 10px auto;
+}
+
+.time-qx span {
+	font-size: 18px;
+	font-weight: bold;
+}
+
+@media screen and (max-width: 320px) {
+	.time-qx span {
+		font-size: 16px;
+		font-weight: bold;
+	}
+	.time-qx {
+	width: 95%;
+	margin: 5px auto;
+}
+}
+
+.time-choice {
+	width: 98%;
+	margin: 0 auto;
+	padding-bottom: 15px;
+	border-bottom: 1px dashed gainsboro;
+	height: auto;
+	overflow: hidden;
+}
+
+.time-choice ul {
+	list-style: none;
+}
+
+.cl {
+	float: left;
+	width: 16%;
+	margin: 1.6%;
+	text-align: center;
+	border: 1px solid gainsboro;
+	padding: 5px 0;
+}
+
+.click {
+	border: 1px solid #FF8200;
+}
+
+.car-price {
+	width: 100%;
+	margin-top: 10px;
+	padding-bottom: 20px;
+	height: auto;
+	overflow: hidden;
+}
+
+.car-price span {
+	font-size: 17px;
+	float: left;
+	margin-left: 10px;
+	margin-top: 10px;
+}
+
+.car-price a {
+	font-size: 18px;
+	text-decoration: none;
+	color: white;
+	padding: 10px 20px;
+	background: #ff5000;
+	float: right;
+	margin-right: 10px;
+	border-radius: 5px;
+}
+
+@media screen and (max-width: 320px) {
+	.car-price {
+		width: 100%;
+		margin-top: 10px;
+		padding-bottom: 10px;
+		height: auto;
+		overflow: hidden;
+	}
+	.car-price span {
+		font-size: 14px;
+		float: left;
+		margin-left: 10px;
+		margin-top: 5px;
+	}
+	.car-price a {
+		font-size: 15px;
+		text-decoration: none;
+		color: white;
+		padding: 10px 20px;
+		background: #ff5000;
+		float: right;
+		margin-right: 10px;
+		border-radius: 5px;
+	}
+}
+
+.earth {
+	background: #e2e2e2;
+	text-align: center;
+	width: 70%;
+	margin: 0 auto;
+	position: relative;
+	height: auto;
+	overflow: hidden;
+	border: 1px solid #C5C5C3;
+	padding: 10px;
+	border-top-color: transparent;
+	border-bottom-left-radius: 50px;
+	border-bottom-right-radius: 50px;
+}
+
+.earth>a::before {
+	transform: rotate(135deg);
+}
+
+.earth>a::after {
+	transform: rotate(45deg);
+}
+
+.earth>a::before, .earth>a::after {
+	content: '';
+	position: absolute;
+	top: 50%;
+	margin-top: -1px;
+	display: inline-block;
+	height: 2px;
+	width: 10px;
+	background: black;
+	backface-visibility: hidden;
+}
+
+.earth>a::before, .earth>a::after {
+	right: 20%;
+	transform-origin: 9px 50%;
+}
+
+.ul_select1 {
+	display: none;
+	width: 49%;
+	margin: 0 auto;
+	text-align: center;
+	padding: 15px;
+	border: 1px solid #C5C5C3;
+	background: #e2e2e2;
+}
+
+.top-nav {
+	position: fixed;
+	top: 55px;
+	width: 100%;
+}
+
+.car-tip {
+	width: 300px;
+	margin: 0 auto;
+	display: block;
+	height: auto;
+	overflow: hidden;
+	position: fixed;
+}
+
+#bg {
+	background-color: #666;
+	position: absolute;
+	z-index: 99;
+	left: 0;
+	top: 0;
+	display: none;
+	width: 100%;
+	height: 100%;
+	opacity: 0.5;
+	filter: alpha(opacity = 50);
+	-moz-opacity: 0.5;
+}
+
+.box {
+	border-radius: 5px;
+	position: absolute;
+	width: 280px;
+	left: 50%;
+	height: auto;
+	z-index: 100;
+	background-color: #fff;
+	border: 1px #ddd solid;
+	padding-top: 5px;
+	font-family: "微软雅黑";
+	overflow: hidden;
+	text-align: center;
+	border: 1px solid gainsboro;
+}
+
+.close {
+	width: 48%;
+	margin-left: 1%;
+	float: left;
+	font-size: 16px;
+	padding: 10px 0;
+}
+
+.border {
+	border-right: 1px solid gainsboro;
+}
+
+.box p {
+	width: 100%;
+	border-bottom: 1px solid gainsboro;
+	padding: 10px;
+}
+
+html, body {
+	position: relative;
+	height: 100%;
+}
+
+body {
+	background: #eee;
+	font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+	font-size: 17px;
+	color: #000;
+	margin: 0;
+	padding: 0;
+}
+
+.swiper-container {
+	width: 100%;
+	height: 300px;
+	margin: 20px auto;
+}
+
+@media screen and (max-width: 320px) {
+	.swiper-container {
+		width: 100%;
+		height: 200px;
+		margin: 20px auto;
+	}
+}
+
+.swiper-slide {
+	text-align: center;
+	font-size: 18px;
+	width: 85%;
+	/* Center slide text vertically */
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: -webkit-flex;
+	display: flex;
+	-webkit-box-pack: center;
+	-ms-flex-pack: center;
+	-webkit-justify-content: center;
+	justify-content: center;
+	-webkit-box-align: center;
+	-ms-flex-align: center;
+	-webkit-align-items: center;
+	align-items: center;
+}
+
+.your-car {
+	width: 95%;
+	margin: 0 auto;
+}
+
+.room {
+	width: 100%;
+	padding: 15px 0;
+	border-bottom: 1px solid gainsboro;
+	height: auto;
+	overflow: hidden;
+}
+
+.tc {
+	width: 100%;
+	padding: 20px 0;
+	height: auto;
+	overflow: hidden;
+	font-size: 17px;
+}
+
+.color {
+	width: 100%;
+	padding: 10px 0;
+	background: gainsboro;
+}
+
+.car-order {
+	width: 100%;
+	overflow: hidden;
+	height: auto;
+}
+
+.first-site {
+	background: #e0463c;
+	border-radius: 10px;
+	height: auto;
+	overflow: hidden;
+	width: 95%;
+	height: 180px;
+	margin-right: 20px;
+	position: relative;
+	margin: 0 auto;
+}
+
+.second-site {
+	background: #529eff;
+	border-radius: 10px;
+	height: auto;
+	overflow: hidden;
+	width: 95%;
+	height: 180px;
+	margin-right: 20px;
+	position: relative;
+	margin: 0 auto;
+}
+
+.thrid-site {
+	background: #1e623b;
+	border-radius: 10px;
+	height: auto;
+	overflow: hidden;
+	width: 95%;
+	height: 180px;
+	margin-right: 20px;
+	position: relative;
+	margin: 0 auto;
+}
+
+@media screen and (max-width: 320px) {
+	.first-site {
+		background: #e0463c;
+		border-radius: 10px;
+		height: auto;
+		overflow: hidden;
+		width: 95%;
+		height: 130px;
+		margin-right: 20px;
+		position: relative;
+		margin: 0 auto;
+	}
+	.second-site {
+		background: #529eff;
+		border-radius: 10px;
+		height: auto;
+		overflow: hidden;
+		width: 95%;
+		height: 130px;
+		margin-right: 20px;
+		position: relative;
+		margin: 0 auto;
+	}
+	.thrid-site {
+		background: #1e623b;
+		border-radius: 10px;
+		height: auto;
+		overflow: hidden;
+		width: 95%;
+		height: 130px;
+		margin-right: 20px;
+		position: relative;
+		margin: 0 auto;
+	}
+}
+
+.you-site {
+	padding: 8px;
+	position: absolute;
+	left: 10px;
+	top: 10px;
+	border-radius: 5px;
+	color: white;
+}
+
+@media screen and (max-width: 320px) {
+	.you-site {
+		padding: 5px;
+		position: absolute;
+		left: 10px;
+		top: 10px;
+		border-radius: 5px;
+		color: white;
+		font-size: 15px;
+	}
+}
+
+.bb {
+	background: #ea6644;
+}
+
+.cc {
+	background: #7ab8ff;
+}
+
+.zz {
+	background: #009762;
+}
+
+.xxdz {
+	position: absolute;
+	bottom: 10px;
+	left: 10px;
+}
+
+.xxdz p {
+	color: white;
+}
+
+@media screen and (max-width: 320px) {
+	.xxdz p, .day-sit p {
+		color: white;
+		font-size: 14px;
+	}
+}
+
+.day-sit {
+	position: absolute;
+	bottom: 10px;
+	right: 10px;
+	color: white;
+}
+
+.sub-btn {
+	color: white;
+}
+
+.lease {
+	width: 90%;
+	background: #ff5000;
+	margin: 10px auto;
+	text-align: center;
+	padding: 10px 0;
+	border-radius: 10px;
+}
+
+.stop {
+	width: 90%;
+	background: #ff5000;
+	margin: 10px auto;
+	text-align: center;
+	padding: 10px 0;
+	border-radius: 10px;
+}
+
+@media screen and (max-width: 320px) {
+	.stop {
+		width: 90%;
+		background: #ff5000;
+		margin: 10px auto;
+		text-align: center;
+		padding: 5px 0;
+		border-radius: 10px;
+	}
+}
+
+@media screen and (max-width: 320px) {
+	.room {
+		width: 100%;
+		padding: 5px 0;
+		border-bottom: 1px solid gainsboro;
+		height: auto;
+		overflow: hidden;
+	}
+	.tc {
+		width: 100%;
+		padding: 5px 0;
+		height: auto;
+		overflow: hidden;
+		font-size: 15px;
+	}
+}
+
+.nice-select{
+
+	width: 70%;
+
+	padding: 0 10px;
+
+	height: 38px;
+
+	border: 1px solid gainsboro;
+	border-bottom-left-radius: 50px;
+    border-bottom-right-radius: 50px;;
+	position: relative;
+	margin: 0 auto;
+	text-align: center;
+
+	background: #eee;
+
+}
+.nice-select input{color: #7B7B7B;text-align: center;display: block;width: 100%;height: 38px;line-height: 38px \9;border: 0;outline: 0;background: none;}
+.nice-select ul{
+
+	width: 70%;
+
+	display: none;
+
+	position: absolute;
+
+	left: 15%;
+
+	top: 39px;
+
+	overflow: hidden;
+
+	background-color: #eee;
+
+	max-height: 150px;
+
+	overflow-y: auto;
+
+	border: 1px solid gainsboro;
+
+
+	z-index: 9999;
+
+}
+.nice-select ul li{height: 40px;line-height: 40px;overflow: hidden;padding: 0 10px;cursor: pointer;color: #7B7B7B ;}
+.nice-select ul li.on{background-color: #e0e0e0;}

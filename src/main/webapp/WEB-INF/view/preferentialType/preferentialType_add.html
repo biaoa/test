@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="UTF-8">
+<title>优惠类型维护</title> <#include '/common/resources.html'>
+<link rel="stylesheet" media="screen and (min-width: 1580px)" href="${base}/resources/css/sys/kd.css" />
+<link rel="stylesheet" media="screen and (max-width: 1580px)" href="${base}/resources/css/sys/kd-resolving.css" />
+<script src="${base}/resources/js/respond.js" type="text/javascript" async="async"></script>
+<style>
+.ads-choice input {
+	float: left;
+	margin-top: 10px;
+}
+
+.ads-choice span {
+	float: left;
+	margin-top: 8px;
+	margin-left: 5px;
+}
+
+.ads-choice label {
+	float: left;
+	margin-left: 10px;
+}
+
+.adstime {
+	margin-left: 20px;
+	width: 80%;
+	height: 35px;
+	border-radius: 3px;
+	float: left;
+	position: relative;
+	margin-bottom: 20px;
+}
+
+.adstime span {
+	float: left;
+}
+
+.adstime input {
+	float: left;
+	width: 150px;
+}
+
+.miaosu {
+	width: 300px;
+	height: 150px;
+	padding: 10px;
+}
+
+.kdleft2 {
+	width: 98%;
+	float: left;
+	margin: 15px 1%;
+	min-height: 100%;
+	background-color: white;
+	overflow: auto;
+	height: auto;
+	position: absolute;
+}
+</style>
+</head>
+
+<body>
+	<div class="kdwhole">
+		<ol class="breadcrumb">
+			<li><a href="javascript:void(0)">优惠</a></li>
+			<li class="active">优惠分类信息维护</li>
+		</ol>
+
+		<div class="kdleft2">
+			<div class="head">
+				<span class="mes-wh">优惠分类信息维护</span>
+			</div>
+			<div class="Sheet">
+				<div class="s-title">
+					<span class="choice">优惠名称：</span>
+					<div class="inp" style="width: 300px;">
+						<input maxlength="20" type="text"
+							onkeyup="javascript:setShowLength(this, 20, 'cost_tpl_title_length');" id="name"/>
+						<span class="cue" id="cost_tpl_title_length" >0/20</span>
+					</div>
+				</div>
+				
+				<div class="s-title">
+					<span class="choice">优惠类型：</span>
+					<div class="inp" style="width: 300px;">
+						<input type="text" placeholder="如：满减请输入MZ" id="type"/>
+					</div>
+				</div>
+				
+				<div class="s-title">
+					<span class="choice">优惠描述：</span>
+					<div class="inp" style="width: 300px;">
+						<input type="text" id="description"/>
+					</div>
+				</div>
+
+				<div class="s-address">
+					<button class="s-btn" style="cursor: pointer; float: left;">确认</button>
+				</div>
+			</div>
+
+
+		</div>
+
+	</div>
+	<script type="text/javascript">
+		function setShowLength(obj, maxlength, id) {
+			var rem = maxlength - obj.value.length;
+			var wid = id;
+			if (rem < 0) {
+				rem = 0;
+			}
+			document.getElementById(wid).innerHTML = rem + "/" + "20";
+		}
+		
+		$(".s-btn").click(function(){
+			
+			var name = $("#name").val();
+			var description = $("#description").val();
+			var type = $("#type").val();
+			if(name==''){
+				layer.msg("类型名称不能为为空");
+				return false;
+			}
+			if(type==''){
+				layer.msg("类型不能为空");
+				return false;
+			}
+			if(description==''){
+				layer.msg("类型描述不能为为空");
+				return false;
+			}
+		  $.post('${base}/preferentialType/add', {'name':name,'type': type,'description':description}, function (data) {
+				 layer.msg(data.msg,{
+				     	shift: 0
+				     }, function(){
+				    	 window.location.href="${base}/preferentialType/list";
+				     });
+          })
+		})
+	</script>
+</body>
+
+</html>

@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="UTF-8">
+<title>快递订单</title> <#include '/common/resources.html'>
+<link rel="stylesheet" media="screen and (min-width: 1580px)" href="${base}/resources/css/sys/jquery.tableui.css" />
+<link rel="stylesheet" media="screen and (max-width: 1580px)" href="${base}/resources/css/sys/tableui-resolving.css" />
+<link rel="stylesheet" href="${base}/resources/css/sys/jquery-ui.min.css" />
+<link rel="stylesheet" type="text/css" href="${base}/resources/datetimepicker/jquery.datetimepicker.css"/>
+<script src="${base}/resources/js/respond.js" type="text/javascript" async="async"></script>
+<script type="text/javascript" src="${base}/resources/js/jquery-ui.min.js"></script>
+<script src="${base}/resources/datetimepicker/jquery.datetimepicker.js" ></script>
+
+<style>
+.bz {
+	width: auto;
+	margin: 0 auto;
+	text-align: left;
+	max-width: 200px;
+	min-width: 150px;
+}
+.kd-text{float: left;margin-left: 15px;width: 250px;min-height: 100px;}
+#express {margin:0 30% 0 30%;background-color:#fff; border:0; min-height:300px;height: auto ;overflow:hidden;top:15%; margin:0 auto padding:1px; position:absolute; min-width:500px;width: auto; z-index:5; border-radius:5px; display:none;padding-bottom: 30px; }
+#express p { padding: 15px 0 15px 15px;font-size: 17px;border-bottom: 1px solid gainsboro;} 
+#express p.car-tit { text-align:left; padding-left:20px; } 
+#express p.car-tit a { color:black; text-decoration:none; } 
+
+#fullbg {
+    background-color: rgba(204, 204, 204,0.5);
+    left: 0;
+    opacity: 0.5;
+    position: fixed;
+    top: 0;
+    z-index: 3;
+    filter: alpha(opacity=50);
+    -moz-opacity: 0.5;
+    -khtml-opacity: 0.5;
+}
+.car-btn a{padding: 5px 15px;border: 0;color: white;margin-right: 10px;cursor: pointer;}
+.car-next{background: #ff4401;}
+.car-close{background: black;}
+
+.car-one{width: 90%;margin: 10px auto;padding: 10px 0;height: auto;overflow: hidden;}
+			.car-one span{font-size: 16px;}
+			.car-one input{float: left;margin-left: 15px;font-size: 16px;padding: 5px;}
+			.car-sp{width: 82px;float: left;text-align: right;margin-top: 8px;margin-bottom: 5px;}
+			.ck-name{width: 250px;}
+.car-btn{float: right;margin-top: 20px;margin-right: 20px;}
+</style>
+</head>
+
+<body>
+	<div class="whole">
+		<ol class="breadcrumb">
+			<li><a href="javascript:void(0)">服务中心</a></li>
+			<li class="active">快递订单</li>
+		</ol>
+		<div class="o-order">
+			<div class="o-first">
+				<span class="o-span">订单号&nbsp;：</span>
+				<form action="${base}/sentInfo/list" method="post" id="pagerForm">
+				<div class="o-input">
+					<input class="my-price" type="text" name="orderNo" value="${orderNo!!}"/>
+				</div>
+				<span class="o-span">处理状态：</span>
+				<div class="o-div">
+					<select class="o-select" name="sentStatus" id="sentStatus">
+						<option value="">全部</option>
+						<option value="2">已处理</option>
+						<option value="0">未处理</option>
+						<option value="1">不处理</option>
+						<option value="3">已完成</option>
+					</select>
+				</div>
+			</div>
+			<div class="o-second">
+				<span class="o-span">申请用户：</span>
+				<div class="o-input">
+					<input class="my-price" type="text" placeholder="姓名或手机号" name="uname" value="${uname!!}"/>
+				</div>
+				<span class="o-span">申请时间：</span>
+				<div class="o-input">
+					<input class="my-times" type="text" id="datepicker4" name="createDate" value="${createDate!!}"/>
+				</div>
+				<span class="o-span">预约时间：</span>
+				<div class="o-input">
+					<input class="my-times" type="text" id="datepicker2" name="beginDate" value="${beginDate!!}"/>
+				</div>
+				<span class="o-span">--</span>
+				<div class="o-input">
+					<input class="my-times" type="text" id="datepicker3" name="endDate" value="${endDate!!}"/>
+				</div>
+			</div>
+			<div class="o-thrid o-thrid-margin-left">
+				<a class="o-btn search_btn">搜索</a>
+<!-- 				<a class="o-btn">发送通知</a> -->
+<!-- 				<a class="o-btn">导出数据</a> -->
+			</div>
+		</div>
+		<div class="tab-order">
+			<div class="box tab2">
+				<ul class="tab_menu">
+					<li class="<#if sentStatus??><#else>current</#if>" val="">全部(0)</li>
+					<li class="<#if sentStatus?? && sentStatus==0>current</#if>" val="0">未处理(0)</li>
+					<li class="<#if sentStatus?? && sentStatus==2>current</#if>" val="2">已处理(0)</li>
+					<li class="<#if sentStatus?? && sentStatus==1>current</#if>" val="1">不处理(0)</li>
+					<li class="<#if sentStatus?? && sentStatus==3>current</#if>" val="3">已完成(0)</li>
+				</ul>
+				<div class="tab_box">
+					<div>
+						<table class="table_solid" border="0" cellspacing="0">
+							<tbody>
+								<tr class="evenRow">
+									<th>订单号</th>
+									<th>收件人</th>
+									<th>收件地址</th>
+									<th>快递选择</th>
+									<th>预约时间</th>
+									<th>申请时间</th>
+									<th>寄件人</th>
+									<th>房号</th>
+									<th>备注</th>
+									<th>交易状态</th>
+									<th>操作</th>
+								</tr>
+								<#if (pagelist.results)?exists && pagelist.results?size gt 0>
+								<#list pagelist.results as sent> 
+								<tr class="oddRow">
+									<td>${sent.orderNo}</td>
+									<td>
+										<p>${sent.addresseeName}</p>
+										<p>${sent.addresseePhone}</p>
+									</td>
+									<td>
+										<p>${sent.addresseeAddress}</p>
+									</td>
+									<td>${sent.expressName!"随机"}</td>
+									<td>
+										<#if sent.endDate??>
+											${sent.beginDate?string('yyyy-MM-dd HH')}-${sent.endDate?string('yyyy-MM-dd HH')}
+											<#else>
+											${sent.beginDate?string('yyyy-MM-dd HH')}-尽快
+										</#if>
+									</td>
+									<td>${sent.createDate?string('yyyy-MM-dd HH:mm')}</td>
+									<td>${sent.senderName}</td>
+									<td>${sent.overall}</td>
+									<td style="width: 250px;">
+										<div class="bz">
+											<p>${sent.remark!!}</p>
+										</div>
+									</td>
+									<td>
+										<#if sent.orderStatus==0>
+											待支付
+											<#elseif sent.orderStatus==1>
+											已支付
+											<#elseif sent.orderStatus==2>
+											已关闭
+										</#if>
+									</td>
+									<td>
+									<#if sent.sentStatus==0>
+										<a class="td-a operate common-btn-cz" href="javaScript:;" sid="${sent.id}" status="2">处理</a>
+										<a class="td-b operate common-btn-cz" href="javaScript:;" sid="${sent.id}" status="1" >不处理</a>
+										<#elseif sent.sentStatus==2>
+										<a class="td-a sendpay common-btn-cz" href="javaScript:;" sid="${sent.id}">通知付款</a>
+									</#if>
+									</td>
+								</tr>
+								</#list>
+							</tbody>
+						</table>
+						<#include '/common/pagination.html'>
+						</form>
+						<#else>
+						</table>
+						<div class="no-data">暂无数据~</div>
+						</#if>
+					</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	</div>
+	
+	<div id="fullbg"></div> 		
+		 <div id="bg"></div>
+		  <div id="express"> 
+			<p class="car-tit">快递信息编辑</p> 
+			<div class="car-first">
+			<div class="car-one">
+				<div class="car-sp"><span>价格：</span></div><input class="ck-name" type="text" placeholder="请输入价格" id="price"/>
+			</div> 
+			<div class="car-one">
+				<div class="car-sp"><span>备注：</span></div><textarea class="kd-text" id="remark"></textarea>
+			</div> 
+			<div class="car-btn">
+				<a class="car-close" onclick="closeBg()">取消</a><a class="car-next">提交</a>
+			</div>
+			</div>
+		</div>
+	<script src="${base}/resources/js/jquery.tabs.js"></script>
+	<script type="text/javascript">
+	var sid;
+		$(".search_btn").click(function(){
+			$("#pagerForm").submit();
+		})
+		<#if sentStatus??>
+			$("#sentStatus").val('${sentStatus}');
+		</#if>
+		
+		$(".tab_menu li").click(function(){
+			$("#sentStatus").val($(this).attr("val"));
+			$("#pagerForm").submit();
+		});
+		//处理或不处理
+		$(".operate").click(function(){
+			var sid=$(this).attr("sid");
+			var status=$(this).attr("status");
+			$.ajax({
+				type : "post",
+				data :{
+					 "sid": sid,
+					 "status":status
+				},
+				url : "${base}/sentInfo/operate",
+				success : function(data) {
+					 layer.msg(data.msg,{
+					     	shift: 0
+					     }, function(){
+					    	 window.location.reload();
+					     }); 
+				}
+			});
+		});
+		//通知付款
+		$(".sendpay").click(function(){
+			showBg();
+			sid=$(this).attr("sid");
+		})
+		
+		$(".car-next").click(function(){
+			var price = $("#price").val();
+			var remark = $("#remark").val();
+			if(price=='' || price==0){
+				layer.msg("价格不能为空");
+				return;
+			}
+			if(!Number(price)){
+				layer.msg("价格必须为数字");
+				return;
+			}
+			$.ajax({
+				type : "post",
+				data :{
+					 "sid": sid,
+					 "price":price,
+					 "remark":remark
+				},
+				url : "${base}/sentInfo/sendpay",
+				success : function(data) {
+					 layer.msg(data.msg,{
+					     	shift: 0
+					     }, function(){
+					    	 window.location.reload();
+					     }); 
+				}
+			});
+		})
+		
+		
+		
+		//关闭灰色 jQuery 遮罩 
+		function closeBg() { 
+			$("#fullbg,#express").hide();
+		}
+		
+		function showBg() { 
+			var bh = $("body").height(); 
+			var bw = $("body").width(); 
+				$("#fullbg").css({ 
+					height:bh, 
+					width:bw, 
+					display:"block" 
+				}); 
+				$("#fullbg").addClass('body')
+
+				$("#express").fadeIn(); 
+			}
+	</script>
+	<script>
+		$(function() {
+			$('#datepicker4,#datepicker2,#datepicker3').datetimepicker({
+				lang: 'ch',
+				timepicker: false,
+				format: 'Y-m-d',
+				formatDate: 'Y-m-d'
+			
+			});
+			
+			$('.tab2').Tabs({
+				event : 'click'
+			});
+		});
+	</script>
+
+</body>
+
+</html>

@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.linle.parkingspace.mapper.ParkingSpaceMapper" >
+  <resultMap id="BaseResultMap" type="com.linle.entity.sys.ParkingSpace" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="space" property="space" jdbcType="VARCHAR" />
+    <result column="price" property="price" jdbcType="VARCHAR" />
+    <result column="solded" property="solded" jdbcType="VARCHAR" />
+    <result column="garage_id" property="garageId" jdbcType="BIGINT" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+    <result column="delFlag" property="delFlag"/>
+    <result column="space_count" property="spaceCount"/>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, space, price, solded, garage_id, create_date, update_date,delFlag,space_count
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from parking_space
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from parking_space
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.linle.entity.sys.ParkingSpace" >
+    insert into parking_space (id, space, price, 
+      solded, garage_id, create_date, 
+      update_date,delFlag,space_count)
+    values (#{id,jdbcType=BIGINT}, #{space,jdbcType=VARCHAR}, #{price,jdbcType=VARCHAR}, 
+      #{solded,jdbcType=VARCHAR}, #{garageId,jdbcType=BIGINT}, #{createDate,jdbcType=TIMESTAMP}, 
+      #{updateDate,jdbcType=TIMESTAMP},#{delFlag},#{spaceCount})
+  </insert>
+  <insert id="insertSelective" parameterType="com.linle.entity.sys.ParkingSpace" >
+    insert into parking_space
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="space != null" >
+        space,
+      </if>
+      <if test="price != null" >
+        price,
+      </if>
+      <if test="solded != null" >
+        solded,
+      </if>
+      <if test="garageId != null" >
+        garage_id,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="updateDate != null" >
+        update_date,
+      </if>
+      <if test="delFlag !=null">
+      	delFlag,
+      </if>
+      <if test="spaceCount !=null">
+      	space_count,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="space != null" >
+        #{space,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null" >
+        #{price,jdbcType=VARCHAR},
+      </if>
+      <if test="solded != null" >
+        #{solded,jdbcType=VARCHAR},
+      </if>
+      <if test="garageId != null" >
+        #{garageId,jdbcType=BIGINT},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="delFlag !=null">
+      	#{delFlag},
+      </if>
+      <if test="spaceCount !=null">
+      	#{spaceCount},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.linle.entity.sys.ParkingSpace" >
+    update parking_space
+    <set >
+      <if test="space != null" >
+        space = #{space,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null" >
+        price = #{price,jdbcType=VARCHAR},
+      </if>
+      <if test="solded != null" >
+        solded = #{solded,jdbcType=VARCHAR},
+      </if>
+      <if test="garageId != null" >
+        garage_id = #{garageId,jdbcType=BIGINT},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="delFlag !=null">
+      	delFlag = #{delFlag},
+      </if>
+      <if test="spaceCount !=null">
+      	space_count = #{spaceCount},
+      </if>	
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.linle.entity.sys.ParkingSpace" >
+    update parking_space
+    set space = #{space,jdbcType=VARCHAR},
+      price = #{price,jdbcType=VARCHAR},
+      solded = #{solded,jdbcType=VARCHAR},
+      garage_id = #{garageId,jdbcType=BIGINT},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP},
+      delFlag = #{delFlag},
+      space_count = #{spaceCount}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  <select id="selectByGarageId" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from parking_space
+    where garage_id = #{value}
+  </select>
+  
+  <!-- 车位隐藏 -->
+  <update id="del" parameterType="java.lang.Long" >
+  	update parking_space
+  	set delFlag = 1
+  	where garage_id = #{id}
+  </update>
+  
+</mapper>

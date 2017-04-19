@@ -1,0 +1,433 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.linle.attendanceRecordMain.mapper.AttendanceRecordMainMapper" >
+  <resultMap id="BaseResultMap" type="com.linle.attendanceRecordMain.model.AttendanceRecordMain" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="uid" property="uid" jdbcType="BIGINT" />
+    <result column="template_id" property="templateId" jdbcType="BIGINT" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  
+  <resultMap type="SomeMonthAttenVO" id="SomeMonthAttenResult">
+  	<result column="datelist" property="date"/>
+  	<result column="status" property="status"/>
+  	<result column="on_duty" property="onDutyDate"/>
+  	<result column="off_duty" property="offDutyDate"/>
+  	<result column="on_date" property="onAttendanceDate"/>
+  	<result column="off_date" property="offAttendanceDate"/>
+  	<result column="onStatus" property="onStatus"/>
+  	<result column="offStatus" property="offStatus"/>
+  </resultMap>
+  
+  <resultMap type="com.linle.attendanceStatistics.model.MonthStatisticsVo" id="MonthStatisticsVoResult">
+  	<result column="name" property="name"/>
+  	<result column="department_name" property="departmentName"/>
+  	<result column="template_name" property="templateName"/>
+  	<result column="show_date" property="workDays"/>
+  	<result column="abnormalCount" property="abnormalCount"/>
+  </resultMap>
+  
+  <resultMap type="com.linle.attendanceStatistics.model.DayStatisticsVo" id="DayStatisticsResult">
+  	<result column="date" property="data"/>
+  	<result column="u_id" property="uid"/>
+  	<result column="name" property="name"/>
+  	<result column="department_name" property="departmentName"/>
+  	<result column="template_id" property="templateId"/>
+  	<result column="template_name" property="templateName"/>
+  	<result column="on_duty" property="onDuty"/>
+  	<result column="off_duty" property="offDuty"/>
+  	<result column="main_id" property="mainId"/>
+  	<result column="status" property="status"/>
+  	<result column="on_duty_date" property="onDutyDate"/>
+ 	<result column="off_duty_date" property="offDutyDate"/>
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    id, uid, template_id, status, create_date, update_date
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from attendance_record_main
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from attendance_record_main
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.linle.attendanceRecordMain.model.AttendanceRecordMain" >
+    insert into attendance_record_main (id, uid, template_id, 
+      status, create_date, update_date
+      )
+    values (#{id,jdbcType=BIGINT}, #{uid,jdbcType=BIGINT}, #{templateId,jdbcType=BIGINT}, 
+      #{status,jdbcType=INTEGER}, #{createDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.linle.attendanceRecordMain.model.AttendanceRecordMain" useGeneratedKeys="true" keyProperty="id">
+    insert into attendance_record_main
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="uid != null" >
+        uid,
+      </if>
+      <if test="templateId != null" >
+        template_id,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="updateDate != null" >
+        update_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="uid != null" >
+        #{uid,jdbcType=BIGINT},
+      </if>
+      <if test="templateId != null" >
+        #{templateId,jdbcType=BIGINT},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.linle.attendanceRecordMain.model.AttendanceRecordMain" >
+    update attendance_record_main
+    <set >
+      <if test="uid != null" >
+        uid = #{uid,jdbcType=BIGINT},
+      </if>
+      <if test="templateId != null" >
+        template_id = #{templateId,jdbcType=BIGINT},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.linle.attendanceRecordMain.model.AttendanceRecordMain" >
+    update attendance_record_main
+    set uid = #{uid,jdbcType=BIGINT},
+      template_id = #{templateId,jdbcType=BIGINT},
+      status = #{status,jdbcType=INTEGER},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  <select id="selectTodayMainRecordByUserId" parameterType="Long" resultMap="BaseResultMap">
+	  select 
+    <include refid="Base_Column_List" />
+    from attendance_record_main
+    where uid = #{uid} and year(NOW()) = year(create_date) and month(NOW())=month(create_date) and day(NOW()) = day(create_date)
+  </select>
+  
+  <!-- 修改主考勤记录的状态 -->
+  <update id="updateMainRecordStatus" parameterType="com.linle.attendanceRecordMain.model.AttendanceRecordMain">
+  	update attendance_record_main
+  	set  status = #{status,jdbcType=INTEGER},
+  	update_date = #{updateDate,jdbcType=TIMESTAMP}
+  	 where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  <select id="selectSomedayMainRecordByUserId" parameterType="map" resultMap="BaseResultMap">
+  	  select 
+    <include refid="Base_Column_List" />
+    from attendance_record_main
+    where uid = #{uid} and year(create_date) = #{year} and month(create_date)=#{month} and day(create_date) = #{day}
+  </select>
+  
+  <!-- 获得某个员工 某月的考勤记录 -->
+  <select id="getSomeMonthAttendanceByUserId" parameterType="map" resultMap="SomeMonthAttenResult">
+  		select datelist,attendance_record_main.`status`,on_duty,off_duty,on_record_detail.duty_date as on_date,off_record_detail.duty_date as off_date,on_record_detail.status as onstatus,off_record_detail.status as offstatus from calendar
+		left join (select id, uid,template_id,status,create_date from attendance_record_main where uid =#{uid})  attendance_record_main  
+		on year(datelist) = year(attendance_record_main.create_date) and month(attendance_record_main.create_date) = month(datelist) and day(attendance_record_main.create_date) = day(datelist)
+		left join (select id,on_duty,off_duty from attendance_template) as attendance_template
+		on attendance_record_main.template_id = attendance_template.id
+		left join (select main_id,duty_date,status from attendance_record_detail where type =0) as on_record_detail
+		on attendance_record_main.id = on_record_detail.main_id
+		left join (select main_id,duty_date,status from attendance_record_detail where type =1) as off_record_detail
+		on attendance_record_main.id = off_record_detail.main_id
+		where year(datelist) = #{year} and month(datelist) = #{month};
+  </select>
+  
+  <select id="dayStatistics" parameterType="page" resultMap="DayStatisticsResult">
+	  	SELECT
+		datelist as date,
+		community_employee.u_id,
+		community_employee.`name`,
+		community_department.`name` as department_name,
+		IFNULL(attendance_template.id,default_template.id) AS template_id,
+		IFNULL(attendance_template.`name`,default_template.`name`) AS template_name,
+	 	IFNULL(attendance_template.on_duty,default_template.on_duty) as on_duty,
+		IFNULL(attendance_template.off_duty,default_template.off_duty) as off_duty,
+		attendance_record_main.id as main_id,
+		attendance_record_main.`status`,
+		on_record_detail.duty_date as on_duty_date,
+		off_record_detail.duty_date as off_duty_date
+	FROM community_employee
+	LEFT JOIN community_department ON community_employee.department_id = community_department.id
+	LEFT JOIN attendance_template ON FIND_IN_SET(community_employee.u_id,attendance_template.uids)
+	LEFT JOIN (
+		SELECT
+			id,
+			community_id,
+			`name`,on_duty,off_duty
+		FROM
+			attendance_template
+		WHERE
+			type = 0
+	) AS default_template ON community_employee.community_id = default_template.community_id
+	left join 
+	(select datelist from calendar where 
+	<if test="(params.beginDate ==null or params.beginDate=='') and (params.endDate ==null or params.endDate=='')">
+		 TO_DAYS(datelist) =TO_DAYS(NOW())
+	</if>
+	<if test="params.beginDate !=null and params.beginDate!='' and (params.endDate ==null or params.endDate=='')">
+		 TO_DAYS(datelist) =TO_DAYS(#{params.beginDate})
+	</if>
+	<if test="(params.beginDate ==null or params.beginDate=='') and params.endDate !=null and params.endDate!=''">
+		 TO_DAYS(datelist) =TO_DAYS(#{params.endDate})
+	</if>
+	<if test="params.beginDate !=null and params.beginDate!='' and params.endDate !=null and params.endDate !=''">
+		 datelist BETWEEN #{params.beginDate} AND #{params.endDate}
+	</if>
+	) as calendar
+	on 1 =1
+	left join (select id,uid,status,create_date FROM attendance_record_main
+	<if test="params.status!=null and params.status !=-1">
+		where type = #{params.status}
+	</if>
+	) as attendance_record_main
+	on TO_DAYS(datelist) = TO_DAYS(attendance_record_main.create_date) and attendance_record_main.uid = community_employee.u_id
+	left join (select main_id,duty_date,status from attendance_record_detail where type =0) as on_record_detail
+	on attendance_record_main.id = on_record_detail.main_id
+	left join (select main_id,duty_date,status from attendance_record_detail where type =1) as off_record_detail
+	on attendance_record_main.id = off_record_detail.main_id
+	WHERE
+	community_employee.community_id = #{params.communityId}
+	<if test="params.name!=null and params.name!=''">
+		and community_employee.name like CONCAT('%','${params.name}','%')
+	</if>
+	<if test="params.departmentId!=null and params.departmentId !=-1">
+	   and community_employee.department_id = #{params.departmentId}
+	</if>
+  </select>
+  
+  <select id="monthStatistics" parameterType="page" resultMap="MonthStatisticsVoResult">
+  	select  community_employee.`name`,community_department.`name` as department_name,IFNULL(attendance_template.`name`,default_template.`name`) AS template_name
+	,IFNULL(attendance_template.show_date,default_template.show_date) as show_date,
+	case  when calendar.datelist is null then 0 else SUM(
+		IFNULL(on_record_detail.`status`,1) + IFNULL(off_record_detail.`status`,1)
+	)  end AS abnormalCount
+	from community_employee
+	left join community_department
+	on community_employee.department_id = community_department.id
+	LEFT JOIN 
+	attendance_template 
+	ON FIND_IN_SET(community_employee.u_id,attendance_template.uids)
+	LEFT JOIN 
+	(SELECT id,community_id,`name`,on_duty,off_duty,show_date,work_days FROM attendance_template WHERE type = 0
+	) AS default_template 
+	ON community_employee.community_id = default_template.community_id
+	left join 
+	(
+	select datelist from (select datelist,d1 from calendar 
+		left join
+		(select date_format(special_date,'%Y-%m-%d') as d1 from attendance_special_date where type=1) as sdate
+		on datelist = sdate.d1  
+		where
+	<![CDATA[datelist<NOW()]]>
+		<if test="(params.beginDate ==null or params.beginDate=='') and (params.endDate ==null or params.endDate=='')">
+			and date_format(datelist,'%Y-%m') = date_format(NOW(),'%Y-%m')
+		</if>
+		<if test="params.beginDate !=null and params.beginDate!='' and (params.endDate ==null or params.endDate=='')">
+			and date_format(datelist,'%Y-%m') = date_format(#{params.beginDate},'%Y-%m')
+		</if>
+		<if test="(params.beginDate ==null or params.beginDate=='') and params.endDate !=null and params.endDate!=''">
+			and date_format(datelist,'%Y-%m') = date_format(#{params.endDate},'%Y-%m')
+		</if>
+		<if test="params.beginDate !=null and params.beginDate!='' and params.endDate !=null and params.endDate !=''">
+			and   date_format(datelist,'%Y-%m') BETWEEN #{params.beginDate} and #{params.endDate}
+		</if>
+	) as tb1
+		where d1 is null
+	) as calendar
+	on 1 =1 and FIND_IN_SET(DAYOFWEEK(datelist)-1,IFNULL(attendance_template.work_days,default_template.work_days))
+	left join 
+	(select id,uid,status,create_date FROM attendance_record_main) as attendance_record_main
+	on TO_DAYS(datelist) = TO_DAYS(attendance_record_main.create_date) and attendance_record_main.uid = community_employee.u_id
+	left join 
+	(select main_id,duty_date,status from attendance_record_detail where type =0) as on_record_detail
+	on attendance_record_main.id = on_record_detail.main_id
+	left join (select main_id,duty_date,status from attendance_record_detail where type =1) as off_record_detail
+	on attendance_record_main.id = off_record_detail.main_id
+	where community_employee.community_id=#{params.communityId}
+	<if test="params.name!=null and params.name!=''">
+		and community_employee.`name` like CONCAT('%','${params.name}','%')
+	</if>
+	<if test="params.departmentId !=null and params.departmentId !=-1">
+		and community_employee.department_id = #{params.departmentId}
+	</if>
+	GROUP BY community_employee.u_id
+	<if test="params.status !=null and params.status !=-1 and params.status==0">
+		HAVING SUM(IFNULL(on_record_detail.`status`,1)+IFNULL(off_record_detail.`status`,1))=0
+	</if>
+	<if test="params.status !=null and params.status !=-1 and params.status==1">
+	 	<![CDATA[	HAVING SUM(IFNULL(on_record_detail.`status`,1)+IFNULL(off_record_detail.`status`,1))>0 ]]>
+	</if>
+	order by community_employee.department_id
+  </select>
+  
+  <select id="exportDayStatistics" parameterType="map" resultMap="DayStatisticsResult">
+  		  	SELECT
+		datelist as date,
+		community_employee.u_id,
+		community_employee.`name`,
+		community_department.`name` as department_name,
+		IFNULL(attendance_template.id,default_template.id) AS template_id,
+		IFNULL(attendance_template.`name`,default_template.`name`) AS template_name,
+	 	IFNULL(attendance_template.on_duty,default_template.on_duty) as on_duty,
+		IFNULL(attendance_template.off_duty,default_template.off_duty) as off_duty,
+		attendance_record_main.id as main_id,
+		attendance_record_main.`status`,
+		on_record_detail.duty_date as on_duty_date,
+		off_record_detail.duty_date as off_duty_date
+	FROM community_employee
+	LEFT JOIN community_department ON community_employee.department_id = community_department.id
+	LEFT JOIN attendance_template ON FIND_IN_SET(community_employee.u_id,attendance_template.uids)
+	LEFT JOIN (
+		SELECT
+			id,
+			community_id,
+			`name`,on_duty,off_duty
+		FROM
+			attendance_template
+		WHERE
+			type = 0
+	) AS default_template ON community_employee.community_id = default_template.community_id
+	left join 
+	(select datelist from calendar where 
+	<if test="(beginDate ==null or beginDate=='') and (endDate ==null or endDate=='')">
+		 TO_DAYS(datelist) =TO_DAYS(NOW())
+	</if>
+	<if test="beginDate !=null and beginDate!='' and (endDate ==null or endDate=='')">
+		 TO_DAYS(datelist) =TO_DAYS(#{beginDate})
+	</if>
+	<if test="(beginDate ==null or beginDate=='') and endDate !=null and endDate!=''">
+		 TO_DAYS(datelist) =TO_DAYS(#{endDate})
+	</if>
+	<if test="beginDate !=null and beginDate!='' and endDate !=null and endDate !=''">
+		 datelist BETWEEN #{beginDate} AND #{endDate}
+	</if>
+	) as calendar
+	on 1 =1
+	left join (select id,uid,status,create_date FROM attendance_record_main
+	<if test="status!=null and status !=-1">
+		where type = #{status}
+	</if>
+	) as attendance_record_main
+	on TO_DAYS(datelist) = TO_DAYS(attendance_record_main.create_date) and attendance_record_main.uid = community_employee.u_id
+	left join (select main_id,duty_date,status from attendance_record_detail where type =0) as on_record_detail
+	on attendance_record_main.id = on_record_detail.main_id
+	left join (select main_id,duty_date,status from attendance_record_detail where type =1) as off_record_detail
+	on attendance_record_main.id = off_record_detail.main_id
+	WHERE
+	community_employee.community_id = #{communityId}
+	<if test="name!=null and name!=''">
+		and community_employee.name like CONCAT('%','${name}','%')
+	</if>
+	<if test="departmentId!=null and departmentId !=-1">
+	   and community_employee.department_id = #{departmentId}
+	</if>
+  </select>
+  
+ <select id="exportMonthStatistics" parameterType="map" resultMap="MonthStatisticsVoResult">
+ 	select  community_employee.`name`,community_department.`name` as department_name,IFNULL(attendance_template.`name`,default_template.`name`) AS template_name
+	,IFNULL(attendance_template.show_date,default_template.show_date) as show_date,
+	case  when calendar.datelist is null then 0 else SUM(
+		IFNULL(on_record_detail.`status`,1) + IFNULL(off_record_detail.`status`,1)
+	)  end AS abnormalCount
+	from community_employee
+	left join community_department
+	on community_employee.department_id = community_department.id
+	LEFT JOIN 
+	attendance_template 
+	ON FIND_IN_SET(community_employee.u_id,attendance_template.uids)
+	LEFT JOIN 
+	(SELECT id,community_id,`name`,on_duty,off_duty,show_date,work_days FROM attendance_template WHERE type = 0
+	) AS default_template 
+	ON community_employee.community_id = default_template.community_id
+	left join 
+	(
+	select datelist from (select datelist,d1 from calendar 
+		left join
+		(select date_format(special_date,'%Y-%m-%d') as d1 from attendance_special_date where type=1) as sdate
+		on datelist = sdate.d1  
+		where
+	<![CDATA[datelist<NOW()]]>
+		<if test="(beginDate ==null or beginDate=='') and (endDate ==null or endDate=='')">
+			and date_format(datelist,'%Y-%m') = date_format(NOW(),'%Y-%m')
+		</if>
+		<if test="beginDate !=null and beginDate!='' and (endDate ==null or endDate=='')">
+			and date_format(datelist,'%Y-%m') = date_format(#{beginDate},'%Y-%m')
+		</if>
+		<if test="(beginDate ==null or beginDate=='') and endDate !=null and endDate!=''">
+			and date_format(datelist,'%Y-%m') = date_format(#{endDate},'%Y-%m')
+		</if>
+		<if test="beginDate !=null and beginDate!='' and endDate !=null and endDate !=''">
+			and   date_format(datelist,'%Y-%m') BETWEEN #{beginDate} and #{endDate}
+		</if>
+	) as tb1
+		where d1 is null
+	) as calendar
+	on 1 =1 and FIND_IN_SET(DAYOFWEEK(datelist)-1,IFNULL(attendance_template.work_days,default_template.work_days))
+	left join 
+	(select id,uid,status,create_date FROM attendance_record_main) as attendance_record_main
+	on TO_DAYS(datelist) = TO_DAYS(attendance_record_main.create_date) and attendance_record_main.uid = community_employee.u_id
+	left join 
+	(select main_id,duty_date,status from attendance_record_detail where type =0) as on_record_detail
+	on attendance_record_main.id = on_record_detail.main_id
+	left join (select main_id,duty_date,status from attendance_record_detail where type =1) as off_record_detail
+	on attendance_record_main.id = off_record_detail.main_id
+	where community_employee.community_id=#{communityId}
+	<if test="name!=null and name!=''">
+		and community_employee.`name` like CONCAT('%','${name}','%')
+	</if>
+	<if test="departmentId !=null and departmentId !=-1">
+		and community_employee.department_id = #{departmentId}
+	</if>
+	GROUP BY community_employee.u_id
+	<if test="status !=null and status !=-1 and status==0">
+		HAVING SUM(IFNULL(on_record_detail.`status`,1)+IFNULL(off_record_detail.`status`,1))=0
+	</if>
+	<if test="status !=null and status !=-1 and status==1">
+	 	<![CDATA[	HAVING SUM(IFNULL(on_record_detail.`status`,1)+IFNULL(off_record_detail.`status`,1))>0 ]]>
+	</if>
+	order by community_employee.department_id
+ </select>
+</mapper>

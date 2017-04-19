@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.linle.communitySuggestionsComment.mapper.CommunitySuggestionsCommentMapper" >
+  <resultMap id="BaseResultMap" type="com.linle.communitySuggestionsComment.model.CommunitySuggestionsComment" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="suggestions_id" property="suggestionsId" jdbcType="BIGINT" />
+    <result column="user_id" property="userId" jdbcType="BIGINT" />
+    <result column="content" property="content" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="is_del" property="isDel" jdbcType="INTEGER" />
+  </resultMap>
+  <resultMap id="ApiResultMap" type="com.linle.communitySuggestionsComment.model.CommunitySuggestionsComment" extends="BaseResultMap">
+  	<result column="user_name" property="userName"  />
+  	 <result column="logo" property="userImg" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    id, suggestions_id, user_id, content, create_time, is_del
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from community_suggestions_comment
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from community_suggestions_comment
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.linle.communitySuggestionsComment.model.CommunitySuggestionsComment" >
+    insert into community_suggestions_comment (id, suggestions_id, user_id, 
+      content, create_time, is_del
+      )
+    values (#{id,jdbcType=BIGINT}, #{suggestionsId,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, 
+      #{content,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{isDel,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.linle.communitySuggestionsComment.model.CommunitySuggestionsComment" >
+    insert into community_suggestions_comment
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="suggestionsId != null" >
+        suggestions_id,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="content != null" >
+        content,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="isDel != null" >
+        is_del,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="suggestionsId != null" >
+        #{suggestionsId,jdbcType=BIGINT},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        #{isDel,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.linle.communitySuggestionsComment.model.CommunitySuggestionsComment" >
+    update community_suggestions_comment
+    <set >
+      <if test="suggestionsId != null" >
+        suggestions_id = #{suggestionsId,jdbcType=BIGINT},
+      </if>
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        is_del = #{isDel,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.linle.communitySuggestionsComment.model.CommunitySuggestionsComment" >
+    update community_suggestions_comment
+    set suggestions_id = #{suggestionsId,jdbcType=BIGINT},
+      user_id = #{userId,jdbcType=BIGINT},
+      content = #{content,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      is_del = #{isDel,jdbcType=INTEGER}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  <!-- 反馈建议详情，包含留言- -->
+  <select id="getSuggestionsDetailForApi" resultMap="ApiResultMap" parameterType="map" >
+     	SELECT suggestions.*,`user`.user_name,user.logo
+     	 FROM community_suggestions_comment suggestions
+		LEFT JOIN users user on `user`.id=suggestions.user_id
+		WHERE suggestions.suggestions_id=#{suggestionsId}
+		order by suggestions.create_time desc 
+		limit #{begin},#{end}
+  </select>
+  
+  <!-- 得到最新一条留言- -->
+  <select id="findNewsAdviceById" resultType="String" parameterType="long" >
+     	SELECT content as newsAdvice
+     	FROM community_suggestions_comment 
+     	where suggestions_id=#{id}
+		order by create_time desc 
+		limit 0,1
+  </select>
+  
+   <!-- 得到最新2条留言，时间顺序,后台用到- -->
+  <select id="selectNewCommentListById" resultMap="ApiResultMap" parameterType="long" >
+     SELECT a.* FROM (
+		SELECT suggestions.*,`user`.user_name,user.logo
+		     	 FROM community_suggestions_comment suggestions
+				LEFT JOIN users user on `user`.id=suggestions.user_id
+		     	where suggestions.suggestions_id=#{id}
+				order by suggestions.create_time desc 
+				limit 0,3
+		)a
+	 order by a.create_time asc 
+  </select>
+  
+  <!-- 反馈建议留言列表  ，后台用到- -->
+  <select id="selectCommentListById" resultMap="ApiResultMap" parameterType="map" >
+		SELECT suggestions.*,`user`.user_name,user.logo
+     	FROM community_suggestions_comment suggestions
+		LEFT JOIN users user on `user`.id=suggestions.user_id
+		WHERE suggestions.suggestions_id=#{suggestionsId}
+		order by suggestions.create_time asc 
+  </select>
+  
+  
+</mapper>

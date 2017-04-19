@@ -1,0 +1,711 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.linle.utilities.mapper.UtilitiesMapper" >
+  <resultMap id="BaseResultMap" type="com.linle.entity.sys.Utilities" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="community_id" property="communityId" jdbcType="BIGINT" />
+    <result column="house_owner" property="houseOwner" jdbcType="VARCHAR" />
+    <result column="house_number" property="houseNumber" jdbcType="VARCHAR" />
+    <result column="phone" property="phone" jdbcType="VARCHAR" />
+    <result column="last_meter_reading" property="lastMeterReading" jdbcType="REAL" />
+    <result column="this_meter_reading" property="thisMeterReading" jdbcType="REAL" />
+    <result column="actual_consumption" property="actualConsumption" jdbcType="REAL" />
+    <result column="price" property="price" jdbcType="DECIMAL" />
+    <result column="pooled_price" property="pooledPrice" jdbcType="REAL" />
+    <result column="balance" property="balance" jdbcType="DECIMAL" />
+    <result column="amount" property="amount" jdbcType="DECIMAL" />
+    <result column="last_balance" property="lastBalance" jdbcType="DECIMAL" />
+    <result column="actual_amount" property="actualAmount" jdbcType="DECIMAL" />
+    <result column="payable" property="payable" jdbcType="DECIMAL" />
+    <result column="meter_reading_date" property="meterReadingDate" jdbcType="TIMESTAMP" />
+    <result column="year" property="year" jdbcType="INTEGER" />
+    <result column="month" property="month" jdbcType="INTEGER" />
+    <result column="status" property="status"/>
+    <result column="order_no" property="orderNo"/>
+    <result column="type" property="type"/>
+    <result column="invoice_status" property="invoiceStatus"/>
+    <result column="remark" property="remark"/>
+    <result column="utilities_json" property="utilitiesJson" jdbcType="LONGVARCHAR" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+	<result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+	<result column="pay_date" property="payDate"/>
+	<association column="id" property="utilitiesChild" select="com.linle.utilitiesChild.mapper.UtilitiesChildMapper.getNewOneUtilitiesChild"/>
+  </resultMap>
+  
+   <resultMap id="deatilResultMap" type="com.linle.entity.sys.Utilities" extends="BaseResultMap">
+    <id column="ref_id" property="refId" jdbcType="BIGINT" />
+   </resultMap>
+   
+  <resultMap id="UtilitiesForAPIResult" type="com.linle.mobileapi.v1.model.UtilitiesVO">
+  	<result column="name" property="communityName"/>
+  	<result column="house_number" property="houseNumber"/>
+  	<result column="last_meter_reading" property="lastMeterReading"/>
+  	<result column="this_meter_reading" property="thisMeterReading"/>
+  	<result column="actual_consumption" property="actualConsumption"/>
+  	<result column="price" property="price"/>
+  	<result column="payable" property="payable"/>
+  	<result column="order_no" property="orderNo"/>
+  	<result column="status" property="status"/>
+  </resultMap>
+  
+  <resultMap id="UtilitiesExportVOUsersResult" type="com.linle.entity.vo.WaterVO">
+  	<result column="name" property="name"/>
+  	<result column="roomNo" property="roomNo"/>
+  	<result column="last_meter_reading" property="lastMeterReading"/>
+  	<result column="this_meter_reading" property="thisMeterReading"/>
+  	<result column="price" property="price"/>
+  	<result column="balance" property="balance" jdbcType="DECIMAL" />
+  	<result column="status" property="status"/>
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    id, community_id, house_owner, house_number, phone, last_meter_reading, this_meter_reading, 
+    actual_consumption, price, pooled_price, balance,amount,last_balance,actual_amount, payable, meter_reading_date, year, 
+    month,status,order_no,type,invoice_status ,remark,utilities_json,create_date,update_date,pay_date
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from utilities
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from utilities
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.linle.entity.sys.Utilities" >
+    insert into utilities (id, community_id, house_owner, 
+      house_number, phone, last_meter_reading, 
+      this_meter_reading, actual_consumption, price, 
+      pooled_price, balance,amount,last_balance,actual_amount, payable, 
+      meter_reading_date, year, month,status,order_no,type,invoice_status ,remark,utilities_json,create_date,update_date
+      ,pay_date)
+    values (#{id,jdbcType=BIGINT}, #{communityId,jdbcType=BIGINT}, #{houseOwner,jdbcType=VARCHAR}, 
+      #{houseNumber,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{lastMeterReading,jdbcType=REAL}, 
+      #{thisMeterReading,jdbcType=REAL}, #{actualConsumption,jdbcType=REAL}, #{price,jdbcType=DECIMAL}, 
+      #{pooledPrice,jdbcType=REAL}, #{balance,jdbcType=DECIMAL}
+      , #{amount,jdbcType=DECIMAL}, #{lastBalance,jdbcType=DECIMAL}, #{actualAmount,jdbcType=DECIMAL}, #{payable,jdbcType=DECIMAL}, 
+      #{meterReadingDate,jdbcType=TIMESTAMP}, #{year,jdbcType=INTEGER}, #{month,jdbcType=INTEGER},#{status}
+      ,#{orderNo},#{type},#{invoiceStatus},#{remark},,#{utilitiesJson},#{createDate},#{updateDate},#{payDate}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.linle.entity.sys.Utilities" useGeneratedKeys="true" keyProperty="id">
+    insert into utilities
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="communityId != null" >
+        community_id,
+      </if>
+      <if test="houseOwner != null" >
+        house_owner,
+      </if>
+      <if test="houseNumber != null" >
+        house_number,
+      </if>
+      <if test="phone != null" >
+        phone,
+      </if>
+      <if test="lastMeterReading != null" >
+        last_meter_reading,
+      </if>
+      <if test="thisMeterReading != null" >
+        this_meter_reading,
+      </if>
+      <if test="actualConsumption != null" >
+        actual_consumption,
+      </if>
+      <if test="price != null" >
+        price,
+      </if>
+      <if test="pooledPrice != null" >
+        pooled_price,
+      </if>
+      <if test="balance != null" >
+        balance,
+      </if>
+       <if test="amount != null" >
+        amount,
+      </if>
+       <if test="lastBalance != null" >
+        last_balance,
+      </if>
+      <if test="actualAmount != null" >
+        actual_amount,
+      </if>
+       <if test="payable != null" >
+        payable,
+      </if>
+      <if test="meterReadingDate != null" >
+        meter_reading_date,
+      </if>
+      <if test="year != null" >
+        year,
+      </if>
+      <if test="month != null" >
+        month,
+      </if>
+      <if test="status !=null">
+      	status,
+      </if>
+      <if test="orderNo !=null">
+      	order_no,
+      </if>
+      <if test="type !=null">
+      	type,
+      </if>
+      <if test="invoiceStatus !=null">
+      	invoice_status,
+      </if>
+      <if test="remark !=null">
+      	remark,
+      </if>
+      <if test="createDate !=null">
+      	create_date,
+      </if>
+      <if test="updateDate !=null">
+      	update_date,
+      </if>
+      <if test="payDate !=null">
+      	pay_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="communityId != null" >
+        #{communityId,jdbcType=BIGINT},
+      </if>
+      <if test="houseOwner != null" >
+        #{houseOwner,jdbcType=VARCHAR},
+      </if>
+      <if test="houseNumber != null" >
+        #{houseNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="lastMeterReading != null" >
+        #{lastMeterReading,jdbcType=REAL},
+      </if>
+      <if test="thisMeterReading != null" >
+        #{thisMeterReading,jdbcType=REAL},
+      </if>
+      <if test="actualConsumption != null" >
+        #{actualConsumption,jdbcType=REAL},
+      </if>
+      <if test="price != null" >
+        #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="pooledPrice != null" >
+        #{pooledPrice,jdbcType=REAL},
+      </if>
+      <if test="balance != null" >
+        #{balance,jdbcType=DECIMAL},
+      </if>
+       <if test="amount != null" >
+        #{amount,jdbcType=DECIMAL},
+      </if>
+       <if test="lastBalance != null" >
+        #{lastBalance,jdbcType=DECIMAL},
+      </if>
+       <if test="actualAmount != null" >
+        #{actualAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="payable != null" >
+        #{payable,jdbcType=DECIMAL},
+      </if>
+      <if test="meterReadingDate != null" >
+        #{meterReadingDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="year != null" >
+        #{year,jdbcType=INTEGER},
+      </if>
+      <if test="month != null" >
+        #{month,jdbcType=INTEGER},
+      </if>
+      <if test="status !=null">
+      	#{status},
+      </if>
+      <if test="orderNo !=null">
+      	#{orderNo},
+      </if>
+      <if test="type !=null">
+      	#{type},
+      </if>
+        <if test="invoiceStatus !=null">
+      	#{invoiceStatus},
+      </if>
+        <if test="remark !=null">
+      	#{remark},
+      </if>
+      <if test="createDate !=null">
+      	#{createDate},
+      </if>
+      <if test="updateDate !=null">
+      	#{updateDate},
+      </if>
+      <if test="payDate !=null">
+      	#{payDate},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.linle.entity.sys.Utilities" >
+    update utilities
+    <set >
+      <if test="communityId != null" >
+        community_id = #{communityId,jdbcType=BIGINT},
+      </if>
+      <if test="houseOwner != null" >
+        house_owner = #{houseOwner,jdbcType=VARCHAR},
+      </if>
+      <if test="houseNumber != null" >
+        house_number = #{houseNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="lastMeterReading != null" >
+        last_meter_reading = #{lastMeterReading,jdbcType=REAL},
+      </if>
+      <if test="thisMeterReading != null" >
+        this_meter_reading = #{thisMeterReading,jdbcType=REAL},
+      </if>
+      <if test="actualConsumption != null" >
+        actual_consumption = #{actualConsumption,jdbcType=REAL},
+      </if>
+      <if test="price != null" >
+        price = #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="pooledPrice != null" >
+        pooled_price = #{pooledPrice,jdbcType=REAL},
+      </if>
+      <if test="balance != null" >
+        balance = #{balance,jdbcType=DECIMAL},
+      </if>
+      <if test="amount != null" >
+        amount = #{amount,jdbcType=DECIMAL},
+      </if>
+      <if test="lastBalance != null" >
+        last_balance = #{lastBalance,jdbcType=DECIMAL},
+      </if>
+      <if test="actualAmount != null" >
+        actual_amount = #{actualAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="payable != null" >
+        payable = #{payable,jdbcType=DECIMAL},
+      </if>
+      <if test="meterReadingDate != null" >
+        meter_reading_date = #{meterReadingDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="year != null" >
+        year = #{year,jdbcType=INTEGER},
+      </if>
+      <if test="month != null" >
+        month = #{month,jdbcType=INTEGER},
+      </if>
+      <if test="status !=null">
+      	status = #{status},
+      </if>
+      <if test="orderNo !=null">
+      	order_no= #{orderNo},
+      </if>
+      <if test="type !=null">
+      	type = #{type},
+      </if>
+      <if test="invoiceStatus !=null">
+      	invoice_status=#{invoiceStatus},
+      </if>
+        <if test="remark !=null">
+      	remark=#{remark},
+      </if>
+      <if test="utilitiesJson !=null">
+      	utilities_json = #{utilitiesJson},
+      </if>
+      <if test="createDate !=null">
+      	create_date = #{createDate},
+      </if>
+      <if test="updateDate !=null">
+      	update_date = #{updateDate},
+      </if>
+      <if test="payDate !=null">
+      	pay_date = #{payDate},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.linle.entity.sys.Utilities" >
+    update utilities
+    set community_id = #{communityId,jdbcType=BIGINT},
+      house_owner = #{houseOwner,jdbcType=VARCHAR},
+      house_number = #{houseNumber,jdbcType=VARCHAR},
+      phone = #{phone,jdbcType=VARCHAR},
+      last_meter_reading = #{lastMeterReading,jdbcType=REAL},
+      this_meter_reading = #{thisMeterReading,jdbcType=REAL},
+      actual_consumption = #{actualConsumption,jdbcType=REAL},
+      price = #{price,jdbcType=DECIMAL},
+      pooled_price = #{pooledPrice,jdbcType=REAL},
+      balance = #{balance,jdbcType=DECIMAL},
+      amount = #{amount,jdbcType=DECIMAL},
+      last_balance = #{lastBalance,jdbcType=DECIMAL},
+      actual_amount = #{actualAmount,jdbcType=DECIMAL},
+      payable = #{payable,jdbcType=DECIMAL},
+      meter_reading_date = #{meterReadingDate,jdbcType=TIMESTAMP},
+      year = #{year,jdbcType=INTEGER},
+      month = #{month,jdbcType=INTEGER},
+      status = #{status},
+      order_no = #{orderNo},
+      type = #{type},
+      invoice_status=#{invoiceStatus},
+      remark=#{remark},
+      utilities_json = #{utilitiesJson},
+      create_date = #{createDate},
+      update_date = #{updateDate},
+      pay_date = #{payDate}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  <select id="getAllData"  resultMap="BaseResultMap" parameterType="page">
+  	 select 
+  	 utils.*
+    from utilities utils
+    where utils.community_id = #{params.community_id} and utils.type = #{params.type}
+    	<if test="params !=null and params.status != null and params.status !='' and params.status ==2">
+			and utils.status in (2,3)
+		</if>
+    	<if test="params !=null and params.status != null and params.status !='' and params.status !=2">
+    		and utils.status = #{params.status}
+    	</if>
+    	<if test="params !=null and params.orderNo != null and params.orderNo !=''">
+    		and utils.order_no = #{params.orderNo}
+    	</if>
+    	<if test="params !=null and params.year != null and params.year!=''">
+    		and utils.year = #{params.year} and month = #{params.month}
+    	</if>
+    	<if test="params !=null and params.owner!= null and params.owner!=''">
+    		and utils.house_owner =  #{params.owner}
+    	</if>
+    	<if test="params.roomno !=null and params.roomno !=''">
+    		and utils.house_number = #{params.roomno}
+    	</if>
+    	<if test="params !=null and params.buildingType != null and params.buildingType !=''">
+    		and	substring_index(utils.house_number, '-',1) = #{params.buildingType}
+    	</if>
+    	<if test="params !=null and params.unitType != null and params.unitType !=''">
+    		and	replace(substring_index(utils.house_number, '-',2),left(substring_index(utils.house_number, '-',2),2),'') = #{params.unitType}
+    	</if>
+  </select>
+  
+   <sql id="detail_Column_List" >
+    id, community_id, house_owner, house_number, phone, last_meter_reading, this_meter_reading, 
+    actual_consumption, price, pooled_price, balance, payable, meter_reading_date, year, 
+    month, status, order_no, type, invoice_status, remark, create_date, update_date
+  </sql>
+  
+   <select id="findAllOwnerUtilities"  resultMap="deatilResultMap" parameterType="page">
+   select b.* from (
+   SELECT 0 as ref_id, id, community_id, house_owner, house_number, phone, last_meter_reading, this_meter_reading, 
+    actual_consumption, price, pooled_price, balance, payable,amount,last_balance,actual_amount, meter_reading_date, year, 
+    month, status, order_no, type, invoice_status, remark, create_date, update_date FROM (
+  	 select 
+    DISTINCT utils.id did, utils.*
+    from utilities utils
+    LEFT JOIN  room_no room on utils.house_number=room.overall
+    where utils.community_id = #{params.community_id} and utils.type = #{params.type}
+    	<if test="params !=null and params.orderNo != null and params.orderNo !=''">
+    		and utils.order_no = #{params.orderNo}
+    	</if>
+    	<if test="params !=null and params.year != null and params.year!=''">
+    		and utils.year = #{params.year} and utils.month = #{params.month}
+    	</if>
+    	<if test="params !=null and params.owner!= null and params.owner!=''">
+    		and utils.house_owner =  #{params.owner}
+    	</if>
+    	<if test="params.roomno !=null and params.roomno !=''">
+    		and utils.house_number = #{params.roomno}
+    	</if>
+    	order by utils.`year` desc,utils.`month` desc,create_date desc
+    	)a
+    	union all select ref_id,  id, community_id, house_owner, house_number, phone, last_meter_reading, this_meter_reading, 
+	    actual_consumption, price, pooled_price, balance, payable,amount,last_balance,actual_amount, meter_reading_date, year, 
+	    month, status, order_no, type, invoice_status, remark, create_date, update_date  FROM utilities_child    
+		where community_id =#{params.community_id} and type =  #{params.type}
+		<if test="params !=null and params.orderNo != null and params.orderNo !=''">
+    		and order_no = #{params.orderNo}
+    	</if>
+    	<if test="params !=null and params.year != null and params.year!=''">
+    		and year = #{params.year} and month = #{params.month}
+    	</if>
+    	<if test="params !=null and params.owner!= null and params.owner!=''">
+    		and house_owner =  #{params.owner}
+    	</if>
+    	<if test="params.roomno !=null and params.roomno !=''">
+    		and house_number = #{params.roomno}
+    	</if>
+	order by `year` desc,`month` desc,create_date desc
+	)b
+  </select>
+  
+  <!-- 查询总数量：全部，待付款，线上缴费，线下缴费 -->
+   <select id="getStatisticQuantity"  resultType="com.linle.entity.sys.Utilities" parameterType="map">
+		select SUM(temp.count) sumQuantity,
+			sum(case temp.status when 1 then temp.count else 0 end) as 'waitQuantity',
+			sum(case temp.status when 2 then temp.count else 0 end) as 'onlineQuantity',
+			sum(case temp.status when 3 then temp.count else 0 end) as 'offlineQuantity'
+		from (
+			SELECT utils.status,COUNT(utils.id) count,house_number
+			FROM utilities utils
+			LEFT JOIN  (select overall from room_no where community_id=#{community_id}) room on utils.house_number=room.overall
+			WHERE utils.community_id = #{community_id} and utils.type = #{type}
+		   	<if test="orderNo != null and orderNo !=''">
+		   		and utils.order_no = #{orderNo}
+		   	</if>
+		   	<if test="year != null and year!=''">
+		   		and utils.year = #{year} and month = #{month}
+		   	</if>
+		   	<if test="owner!= null and owner!=''">
+		   		and utils.house_owner =  #{owner}
+		   	</if>
+		   	<if test="roomno !=null and roomno !=''">
+		   		and utils.house_number = #{roomno}
+		   	</if>
+		   	<if test="buildingType != null and buildingType !=''">
+		   		and	substring_index(utils.house_number, '-',1)  = #{buildingType}
+		   	</if>
+		   	<if test="unitType != null and unitType !=''">
+		   		and	replace(substring_index(utils.house_number, '-',2),left(substring_index(utils.house_number, '-',2),2),'') = #{unitType}
+		   	</if>
+			GROUP BY `status`
+		)temp
+   </select>
+   
+  <!-- 查询固定月份没有缴水电费的用户ID -->
+  <select id="needMessage" parameterType="map" resultType="String">
+  	SELECT  users.id
+    FROM  users
+	INNER JOIN (
+		SELECT room_no.id FROM utilities 
+		INNER JOIN room_no ON utilities.community_id = room_no.community_id
+		AND utilities.house_number = room_no.overall
+	 	where `year` = #{year} and `month`= #{month} and type=#{type} and `status`=1 )
+ 	AS tb1 
+ 	ON users.address_details = tb1.id  and users.community_id = #{community_id}
+  </select>
+  
+  <!-- 获得缴费账单 -->
+  <select id="getUtilitiesForAPI" parameterType="map" resultMap="UtilitiesForAPIResult">
+  	SELECT `name`,house_number,last_meter_reading,this_meter_reading,actual_consumption,price,payable,utilities.order_no,case utilities.status when 1 then 1 else  2 end as `status`
+  	from utilities
+	left join community 
+	on utilities.community_id = community.id
+	where utilities.community_id=#{community_id} and 
+	house_number = #{houseNumber} and type = #{type}
+	ORDER BY utilities.`status`,utilities.`year` DESC,utilities.`month` DESC
+	LIMIT 0,1
+  </select>
+  
+   <!-- 判断该小区该月该房号是否有已上传过同房号记录 -->
+  <select id="getUtilitiesCount" parameterType="map" resultType="int">
+  	SELECT count(*)
+  	from utilities
+	left join community 
+	on utilities.community_id = community.id
+	where utilities.community_id=#{community_id} and 
+	house_number = #{houseNumber} and type = #{type} and month = #{month} and year = #{year}
+  </select>
+  
+  <select id="getRecentlyDate"  resultMap="BaseResultMap" parameterType="map">
+   	 select 
+    `year` ,`month`,status,id,order_no,price
+    from utilities
+   where community_id = #{community_id} and type = #{type}
+   <if test="houseNumber != null and houseNumber !=''">
+  		and  house_number= #{houseNumber}
+   </if>
+   <if test="year != null and year !=''">
+  		and CONCAT(year,'-',month)!=#{year}-#{month}
+   </if>
+   ORDER BY `year` desc,`month` desc
+   limit 0,1
+   </select>
+   
+  <!-- 获得缴费业主 每个房号随意取一个用户  utilities_child子账单-->
+  <select id="getUtilitiesExportUsers" parameterType="map" resultMap="UtilitiesExportVOUsersResult">
+    SELECT room.id,utils.`house_owner` name, room.overall roomNo,utils.last_meter_reading,utils.this_meter_reading,
+    utils.price ,utils.balance,utils.status
+	FROM room_no room 
+	left JOIN users user on user.address_details=room.id and user.identity=4 and user.`status` !=2
+		LEFT JOIN (
+				SELECT utt.house_owner,utt.house_number,ifnull(utt.price,0) price,ifnull(utt.balance,0) balance,status,
+				IFNULL(child.this_meter_reading,utt.this_meter_reading) AS this_meter_reading ,
+				last_meter_reading
+				from (
+					SELECT house_owner,house_number,
+						case WHEN `price` <![CDATA[ <> ]]> #{settingPrice} then this_meter_reading 
+						WHEN `status` =1 then last_meter_reading 
+						else this_meter_reading
+						END last_meter_reading,
+						this_meter_reading,price,balance,status	
+					from utilities 
+						WHERE type = #{type} and month = #{month} and year = #{year} and community_id=#{community_id}
+						GROUP BY house_number
+				)utt
+				LEFT JOIN (SELECT a.* FROM (SELECT this_meter_reading,house_number from utilities_child ORDER BY create_date desc)a GROUP BY a.house_number )
+				child ON utt.house_number=child.house_number
+		)utils on utils.house_number=room.overall
+	WHERE room.community_id=#{community_id}
+	GROUP BY room.id
+	ORDER BY room.building+0 asc,room.unit asc,substr(room.room,length(room.room)-1) asc,LENGTH(room.room) asc,room.room asc
+  </select>
+   <!-- 账单生成界面数据 oldTemp是生成过的数据,页面应缴年月monthOld-->
+  <select id="getAllDataVo"  resultType="com.linle.entity.vo.WaterVO" parameterType="page">
+		SELECT
+			temp.roomNo,oldTemp.house_owner name,
+		IFNULL(oldTemp.last_meter_reading,temp.lastMeterReading) lastMeterReading,
+		0.0 thisMeterReading,
+		oldTemp.balance,oldTemp.price,
+		oldTemp.pooled_price pooledPrice
+		FROM
+			(
+				SELECT
+					room.overall roomNo,
+					utils.lastMeterReading lastMeterReading
+				FROM
+				room_no room
+				LEFT JOIN (
+							SELECT
+									utt.house_number,
+									IFNULL(
+										child.this_meter_reading,
+										utt.this_meter_reading
+									) AS lastMeterReading
+							FROM
+							(
+								SELECT
+											house_owner,
+											house_number,
+											case WHEN `status` =1 then last_meter_reading else this_meter_reading END this_meter_reading,
+											balance,status
+										FROM
+											utilities
+										WHERE
+										 type = #{params.type} and month =#{params.month} and year =#{params.year} and community_id=#{params.community_id}
+							) utt
+							LEFT JOIN (
+									SELECT
+										a.*
+									FROM
+										(
+											SELECT
+												case WHEN `status` =1 then last_meter_reading else this_meter_reading END this_meter_reading,
+												house_number,
+												`status`
+											FROM
+												utilities_child 
+											ORDER BY
+												create_date DESC
+										) a
+									GROUP BY
+									a.house_number
+							) child ON utt.house_number = child.house_number
+				) utils ON utils.house_number = room.overall
+			WHERE room.community_id=#{params.community_id}
+		    and room.overall not IN (
+								SELECT
+										house_number
+										FROM
+										utilities
+										WHERE
+										type = #{params.type} and month =#{params.month} and year =#{params.year} and community_id=#{params.community_id}
+				)
+			  	<if test="params !=null and params.buildingType != null and params.buildingType !=''">
+			   		and	room.building = #{params.buildingType}
+			   	</if>
+			   	<if test="params !=null and params.unitType != null and params.unitType !=''">
+			   		and	room.unit = #{params.unitType}
+			   	</if>
+			    <if test="params.roomno !=null and params.roomno !=''">
+			   		and room.overall = #{params.roomno}
+			   	</if>	
+				GROUP BY
+					room.id
+				ORDER BY room.building asc,room.unit asc,substr(room.room,length(room.room)-1) asc,LENGTH(room.room) asc,room.room asc
+			) temp
+		LEFT JOIN (
+			SELECT
+				house_owner,
+				house_number,
+				case 
+				WHEN `price`<![CDATA[ <> ]]>   #{params.settingPrice} then this_meter_reading 
+				WHEN `status` =1 then last_meter_reading 
+				else this_meter_reading
+				END last_meter_reading,
+				price,
+				pooled_price,
+				balance,
+				status 
+			FROM
+				utilities
+				where
+				type =  #{params.type}
+				AND MONTH = #{params.monthOld}
+				AND YEAR = #{params.yearOld}
+				AND community_id =#{params.community_id}
+		) oldTemp ON temp.roomNo = oldTemp.house_number 
+    	
+  </select>
+  
+  <!-- 修改缴费记录缴费状态 -->
+  <update id="updateStatus" parameterType="string">
+  	update utilities
+  	set status = 2
+  	where order_no = #{orderNo}
+  </update>
+  
+  	<update id="updateUtilitiesJson" parameterType="com.linle.entity.sys.Utilities">
+		update utilities
+		set utilities_json = #{utilitiesJson}
+		where id = #{id}
+	</update>
+	
+  <!-- 通过订单编号查询缴费记录 -->
+  <select id="selectByOrderNo" parameterType="string" resultMap="BaseResultMap">
+  	select 
+  	 <include refid="Base_Column_List" />
+    from utilities
+    where order_no = #{orderNo}
+  </select>
+  
+  <!-- 线下缴费后把缴费记录中的记录都改为线下缴费 -->
+  <update id="updateStatusForOffline" parameterType="map">
+  	update utilities
+  	set status = 3,update_date = now()
+  	where community_id = #{communityId} and year = #{year} and month = #{month} and  house_number= #{houseNumber} and type = #{type}
+  </update>
+  
+   <select id="selectUtilitiesByHousenumber" parameterType="map" resultMap="BaseResultMap">
+  	SELECT * FROM utilities
+	WHERE community_id=#{communityId} and order_no is not null and house_number IN (SELECT overall FROM room_no WHERE id=#{roomNoId} )
+	GROUP BY year,`month`
+  </select>
+  
+  <select id="selectBeforeUnPayableSum" parameterType="map" resultType="DECIMAL">
+     SELECT IFNULL(SUM(payable),0) FROM utilities WHERE community_id=#{communityId} and type=#{type} and `status`=1 and house_number= #{houseNumber}
+  </select>
+  
+  <!-- 线下缴费后把缴费记录中的记录都改为带到下期缴费 -->
+  <update id="updateUtilitiesStatusForNext" parameterType="map">
+  	update utilities
+  	set status = 4,update_date = now()
+  	where  id=#{id} 
+  </update>
+  <!-- 线上缴费成功后，修改缴费记录状态和支付时间 -->
+  <update id="paySuccessupdateStatus" parameterType="String">
+  	update utilities
+  	set status = 2,pay_date = now()
+  	where order_no = #{orderNo}
+  </update>
+  
+</mapper>

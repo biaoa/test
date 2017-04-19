@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.linle.system.mapper.SysHelpMapper">
+	<resultMap id="helpResult" type="SysHelp">
+		<result property="id" column="id" />
+		<result property="title" column="title" />
+		<result property="content" column="content" />
+		<result property="remark" column="remark" />
+		<result property="delFlag" column="del_flag" typeHandler="IntEnumTypeHandler"/>
+		<result property="createDate" column="create_Date"/>
+		<result property="updateDate" column="update_date"/>
+	</resultMap>
+	<insert id="addSysHelp" useGeneratedKeys="true" keyProperty="id" parameterType="SysHelp">
+		INSERT INTO sys_help
+		(id,title,content,remark,center_id,create_date,update_date)
+		VALUES(#{id},#{title},#{content},#{remark},#{centerId},now(),now())
+	</insert>
+	<update id="updateSysHelp" parameterType="SysHelp">
+		update sys_help 
+		<set>
+			<if test="title != null">
+				title = #{title},
+			</if>
+			<if test="content != null">
+				content = #{content},
+			</if>
+		</set>
+		where id=#{id}
+	</update>
+	<select id="getById" parameterType="long" resultMap="helpResult">
+		select * from sys_help where id = #{id}
+	</select>
+	<select id="getSysHelpsForPage" resultMap="helpResult" parameterType="Page">
+		select * from sys_help
+		<where>
+				(del_flag is null or del_flag = 0)
+			<if test="params !=null and params.id != null and params.id !=''">
+				and id =#{params.id}
+			</if>
+			<if test="params !=null and params.centerId != null and params.centerId !=''">
+				and center_id=#{params.centerId}
+			</if>
+		</where>
+	</select>
+	<select id="getSysHelps" resultMap="helpResult" parameterType="Long">
+		select * from sys_help where del_flag is null or del_flag = 0 
+	</select>
+	<update id="delHelpById" parameterType="SysHelp">
+		update sys_help 
+		<set>
+			<if test="delFlag != null">
+			del_flag = #{delFlag,typeHandler=IntEnumTypeHandler}
+			</if>
+		</set>
+		where id=#{id}
+	</update>
+</mapper>

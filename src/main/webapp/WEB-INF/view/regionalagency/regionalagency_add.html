@@ -1,0 +1,195 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<title>代理商信息</title> <#include '/common/resources.html'>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" href="${base}/resources/css/sys/add-new.css" />
+<script src="${base}/resources/js/respond.js" type="text/javascript" async="async"></script>
+<script type="text/javascript" charset="utf-8"
+	src="${base}/resources/ueditor1_4_3_1/ueditor.config.js"></script>
+<script type="text/javascript" charset="utf-8"
+	src="${base}/resources/ueditor1_4_3_1/ueditor.all.min.js"></script>
+<script type="text/javascript" charset="utf-8"
+	src="${base}/resources/ueditor1_4_3_1/lang/zh-cn/zh-cn.js"></script>
+<script type="text/javascript" src="${base}/resources/js/linle_common.js"></script>
+<style>
+</style>
+</head>
+<body>
+	<div class="whole">
+		<div class="a-plus">
+				<ol class="breadcrumb">
+		<li><a href="javascript:void(0)">代理商管理</a></li>
+		<li class="active">代理商编辑</li>
+	</ol>
+			<form action="${base}/regionalagency/addRegionalagenc" method="post" id="regionalagencform">
+				<div class="Sheet">
+				
+					<div class="a-title">
+						<span class="choice">类型：</span>
+						<#if cUser.identity=="SYS">
+							<span>一级代理商</span><input type="radio" name="type" value="1" checked="checked"/>
+							<span>二级代理商</span><input style="float: left;" type="radio" name="type" value="2" />
+							<#elseif cUser.identity=="YJDL" || cUser.identity=="EJDL">
+									<span style="float: left;">二级代理商</span><input style="float: left;" type="radio" name="type" value="2" checked="checked"/>
+							<#else>
+						</#if>
+					</div>
+				
+				
+					<div class="a-title">
+						<span class="choice">代理商名称：</span>
+						<div class="inp" style="width:70%">
+							<input maxlength="20" type="text"
+								onkeyup="javascript:setShowLength(this, 20, 'cost_tpl_title_length');"
+								name="name" id="name"  value="${regionalAgency.name!!}"
+								<#if regionalAgency.name??>
+									disabled="disabled"
+								</#if>/> <span class="cue" id="cost_tpl_title_length">0/20</span>
+						</div>
+					</div>
+					
+									<div class="a-title">
+						<span class="choice">联系电话：</span>
+						<div class="inp">
+							<input maxlength="20" type="text" name="phone" id="phone"  value="${regionalAgency.phone!!}"/> 
+						</div>
+					</div>
+					
+					<div class="a-title">
+						<span class="choice">联系地址：</span>
+						<div class="inp">
+							<input type="text" name="address"  value="${regionalAgency.address!!}"/>
+						</div>
+					</div>
+					
+					<div class="a-area">
+						<span class="choice">代理区域：</span>
+						<div class="province">
+							<select class="sele-pa" id="wy_provice" name="province.id">
+								<option value="-1">请选择</option> <#list provinceList as province>
+								<option value="${province.id}"
+								<#if regionalAgency.id??>
+		                   			<#if province.id==regionalAgency.province.id>
+		                   				selected="selected"
+		                   			</#if>
+		                   		</#if>
+								>${province.name}</option>
+								</#list>
+							</select>
+						</div>
+						<div class="city">
+							<select class="sele-pa" id="wy_citys" name="city.id">
+								<option value="-1">请选择</option> <#list cityList as city>
+								<option value="${city.id}"
+									<#if regionalAgency.id?? && (regionalAgency.city.id)??>
+			                   			<#if city.id==regionalAgency.city.id>
+			                   				selected="selected"
+			                   			</#if>
+			                   		</#if>
+								>${city.name}</option> </#list>
+							</select>
+						</div>
+					</div>
+
+				</div>
+				<div class="a-address">
+					<input type="hidden"  name="id" id="id" value="${regionalAgency.id!!}">
+					<button data-reveal-id="sav" data-animation="fade" class="s-btn">确认</button>
+
+				</div>
+			</form>
+			<div id="sav" class="reveal-modal"
+				style="opacity: 1; visibility: hidden; top: 150px;">
+				<h3>保存成功</h3>
+				<a class="close-reveal-modal">×</a>
+			</div>
+			<div class="reveal-modal-bg" style="display: none; cursor: pointer;">
+
+			</div>
+		</div>
+	</div>
+
+	<script type="text/javascript"
+		src="${base}/resources/js/jquery.reveal.js"></script>
+	<script>
+		function setShowLength(obj, maxlength, id) {
+			var rem = maxlength - obj.value.length;
+			var wid = id;
+			if (rem < 0) {
+				rem = 0;
+			}
+			document.getElementById(wid).innerHTML = rem + "/" + "20";
+		}
+
+		//动态选择省级数据，刷新市级县级数据
+		$("#wy_provice").change(
+				function() {
+					var parentId = $(this).val();
+					if (parentId == -1) {
+						return false;
+					}
+					$.ajax({
+						async : false,
+						type : "POST",
+						url : '${base}/sys/getCityList/' + parentId,
+						dataType : 'json',
+						success : function(q) {
+							$("#wy_citys").text("");
+							$("#wy_blocks").text("");
+							//刷新市级数据		
+							var html = "<option value='-1'>请选择</option>";
+							$.each(q, function(entryIndex, entry) {
+								html += "<option value='" + entry.id + "'>"
+										+ entry.name + "</option>";
+							});
+							$("#wy_citys").append(html);
+							var cityId = $("#wy_citys").val();
+						}
+					});
+				});
+
+		$("#regionalagencform").submit(function() {
+			
+			if($("#name").val()==''){
+				layer.msg("代理商名称不能为空");
+				return false;
+			}
+			if($("#phone").val()==''){
+				layer.msg("联系电话不能为空");
+				return false;
+			}
+			if($("#id").val()==""){
+//     			if(checkUserExsit($("#name").val(),'${base}')){
+//     				return false;
+//     			}
+    		}
+			
+			var ajax_url = $(this).attr("action"); //表单目标 
+			var ajax_type = $(this).attr('method'); //提交方法 
+			var ajax_data = $(this).serialize(); //表单数据 
+			$.ajax({
+				type : ajax_type, //表单提交类型 
+				url : ajax_url, //表单提交目标 
+				data : ajax_data, //表单数据
+				success : function(data) {
+					console.log(data);
+					layer.msg(data.msg,{
+				     	shift: 0
+				     }, function(){
+				    	 window.location.href="${base}/regionalagency/list";
+				     }); 
+				}
+			});
+			return false; //阻止表单的默认提交事件 
+		});
+		<#if regionalAgency.id??>
+		$("input[name='type'][value=${regionalAgency.type}]").attr("checked",true);
+		
+		</#if>
+	</script>
+
+</body>
+</html>

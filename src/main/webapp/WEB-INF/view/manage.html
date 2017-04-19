@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<html style="overflow: hidden;">
+<head>
+<meta charset="utf-8" />
+<meta name="renderer" content="webkit|ie-comp|ie-stand">
+<meta name="renderer" content="webkit">
+<title>邻乐科技后台管理系统</title> <#include '/common/resources.html'>
+<script type="text/javascript" src="${base}/resources/js/zUI.js" ></script>
+<script type="text/javascript" src="${base}/resources/js/html5.js" async="async"></script>
+<script type="text/javascript" src="${base}/resources/js/refresh.js"></script>
+<script src="${base}/resources/js/sockjs-0.3.min.js"></script>
+<link media="screen and (min-width: 1580px)" href="${base}/resources/css/sys/jquery-accordion-menu.css" rel="stylesheet" type="text/css">
+<link media="screen and (max-width: 1580px)" href="${base}/resources/css/sys/jquery-accordion-menu-resolving.css" rel="stylesheet" type="text/css">
+<style>
+*{
+ margin:0px;
+ padding:0px;
+}
+.choice-xq option {
+	background: #31373E;
+}
+select::-ms-expand {
+	display: none;
+}
+
+#dv{
+	width:16%;
+	height:18%;
+	background:#fff;
+	position:fixed;
+	right:20px;
+	top:100%;
+	z-index: 999;
+}
+#popHead{
+	line-height:32px;
+	background:#f6f0f3;
+	border-bottom:1px solid #e0e0e0;
+	position:relative;
+	font-size:12px;
+	padding:0 0 0 10px;
+}
+#popHead h2{
+	font-size:14px;
+	color:#666;
+	line-height:32px;
+	height:32px;
+}
+#popHead #popClose{
+	position:absolute;
+	right:10px;
+	top:14px;
+}
+#popHead a#popClose:hover{
+	color:#f00;
+	cursor:pointer;
+}
+#popContent{
+	border: 1px solid #eaeaea;
+	padding:5px  10px;
+	border-bottom: 0px;
+}
+#popTitle a{
+	line-height:24px;
+	font-size:14px;
+	font-family:'微软雅黑';
+	color:#333;
+	font-weight:bold;
+	text-decoration:none;
+
+
+}
+ 
+#popIntro{
+	font-size: 12px;
+	text-indent:24px;
+	line-height:171%;
+	margin:5px 0;
+	color:#666;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height:80px;
+	display:-webkit-box; /** 将对象作为伸缩盒子模型显示 **/
+    -webkit-box-orient: vertical; /** 设置或检索伸缩盒对象的子元素的排列方式 **/
+    -webkit-line-clamp:4; /** 显示的行数 **/
+    width:100%;
+}
+#popMore{
+	text-align:right;
+	border-top:none;
+	line-height:24px;
+	padding: 6px 0;
+	border: 1px solid #eaeaea;
+}
+ 
+#popMore a:hover{
+	color:#f00;
+}
+.btn-a{
+	padding: 1px 15px;
+	font-weight: bold;
+	font-size: 12px;
+	color:#fff;
+	display:inline-block;
+	text-decoration:none;
+	background:#009700;
+	position:relative;
+	top:-3px;
+	right:5px;
+}
+#popClose{
+	display:inline-block;
+	width:12px;
+	height:2px;
+	background:#999999;
+	font-size:0;
+	line-height:0;
+	vertical-align:middle;
+	-webkit-transform:
+	rotate(45deg);
+}
+#popClose:after{ 
+	content:'.';
+	display:block;
+	width:12px;
+	height:2px;
+	background:#999999;
+	-webkit-transform:rotate(-90deg);
+}
+
+
+</style>
+</head>
+<script type="text/javascript">
+// 	function show_cur_times() {
+// 		//获取当前日期
+// 		var date_time = new Date();
+// 		//定义星期
+// 		var week;
+// 		//switch判断
+// 		switch (date_time.getDay()) {
+// 		case 1:
+// 			week = "星期一";
+// 			break;
+// 		case 2:
+// 			week = "星期二";
+// 			break;
+// 		case 3:
+// 			week = "星期三";
+// 			break;
+// 		case 4:
+// 			week = "星期四";
+// 			break;
+// 		case 5:
+// 			week = "星期五";
+// 			break;
+// 		case 6:
+// 			week = "星期六";
+// 			break;
+// 		default:
+// 			week = "星期天";
+// 			break;
+// 		}
+
+// 		//年
+// 		var year = date_time.getFullYear();
+// 		//判断小于10，前面补0
+// 		if (year < 10) {
+// 			year = "0" + year;
+// 		}
+
+// 		//月
+// 		var month = date_time.getMonth() + 1;
+// 		//判断小于10，前面补0
+// 		if (month < 10) {
+// 			month = "0" + month;
+// 		}
+
+// 		//日
+// 		var day = date_time.getDate();
+// 		//判断小于10，前面补0
+// 		if (day < 10) {
+// 			day = "0" + day;
+// 		}
+
+// 		//时
+// 		var hours = date_time.getHours();
+// 		//判断小于10，前面补0
+// 		if (hours < 10) {
+// 			hours = "0" + hours;
+// 		}
+
+// 		//分
+// 		var minutes = date_time.getMinutes();
+// 		//判断小于10，前面补0
+// 		if (minutes < 10) {
+// 			minutes = "0" + minutes;
+// 		}
+
+// 		//秒
+// 		var seconds = date_time.getSeconds();
+// 		//判断小于10，前面补0
+// 		if (seconds < 10) {
+// 			seconds = "0" + seconds;
+// 		}
+
+// 		//拼接年月日时分秒
+// 		var date_str = year + "年" + month + "月" + day + "日 " + hours + ":"
+// 				+ minutes + ":" + seconds + " " + week;
+
+// 		//显示在id为showtimes的容器里
+// 		document.getElementById("systime").innerHTML = date_str;
+// 	}
+
+	//设置1秒调用一次show_cur_times函数
+// 	setInterval("show_cur_times()", 100);
+</script>
+<body>
+	<audio src="${base}/resources/IM/images/sms-received.mp3" id="audio"></audio>
+	<div class="header">
+		<div class="clearfix">
+			<div class="top-logo">
+				<strong class="str">邻乐</strong><strong class="stro">后台管理系统</strong>
+			</div>
+		
+			<div class="top-info">
+				<span class="time" id="systime"> <script>
+// 					show_cur_times();
+				</script></span> 
+				<div class="username" id="_window"></div>
+				<div class="username" id="_status"></div>
+				<#if communityList?exists && communityList?size gt 0>
+				<div class="username">切换小区:</div>
+				<select id="selectedCommunity" class="choice-xq"> <#list
+					communityList as community>
+					<option value="${community.id}"<#if
+						selectedCommunity == community.id> selected="selected" </#if>
+						>${community.name}</option> </#list>
+				</select> </#if>
+
+				<div class="userpic">
+					<img src="${base}/${cUser.logo!'resources/images/default_user.png'}">
+				</div>
+				<div class="username">
+					<span>${cUser.name!!}</span>
+				</div>
+ 				<div class="sets">
+					<img src="${base}/resources/images/system_msg.png" title="消息" /> 
+ 				</div> 
+				<div class="out">
+					<a href="${base}/logout" class="logout">
+					<img src="${base}/resources/images/icon_05.png" title="退出" /></a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<#include '/msg/msgBox.html'>
+	<div class="content">
+	
+		<div id="jquery-accordion-menu" class="jquery-accordion-menu red">
+			<ul id="demo-list">
+				
+				<@shiro.hasPermission name="system_home">
+				<li><img src="${base}/resources/images/menu_icon/index.png"><a href="${base}/sys/home" target="content">首页</a></li>
+				</@shiro.hasPermission>
+				
+				<@shiro.hasPermission name="system_statistics">
+					<li><img src="${base}/resources/images/menu_icon/index.png"><a href="${base}/sys2/home" target="content">首页</a></li>
+				</@shiro.hasPermission>
+				
+				
+				<@shiro.hasPermission name="system_manage">
+				<li>
+					<img src="${base}/resources/images/menu_icon/sys.png">
+					<a href="javascript:void(0);" target="content" >
+						系统管理
+						<span class="submenu-indicator">+</span>
+					</a>
+					<ul class="submenu">
+						<li><a href="${base}/sys/rolelist" target="content">角色管理</a></li>
+						<li><a href="${base}/sys/userlist" target="content">用户管理</a></li>
+					</ul>
+				</li>
+				</@shiro.hasPermission>
+				
+				<@shiro.hasPermission name="regionalagency_manage">
+					<li><img src="${base}/resources/images/menu_icon/dl.png"><a href="${base}/regionalagency/list" target="content">代理商管理</a></li>
+				</@shiro.hasPermission>
+				
+				<@shiro.hasPermission name="payment_manage">
+					<li>
+						<img src="${base}/resources/images/menu_icon/payment_icon.png">
+						<a href="javascript:void(0);" target="content" >
+							缴费管理
+<!-- 							 <span class="pay_m  tz">99<span> -->
+							<span class="submenu-indicator"></span>
+						</a>
+						<ul class="submenu">
+							<li><a href="${base}/utilities/list?type=1" target="content">水费</a></li>
+							<li><a href="${base}/utilities/list?type=2" target="content">电费</a></li>
+							<li><a href="${base}/utilities/list?type=3" target="content">燃气费</a></li>
+							<li><a href="${base}/propertyFee/list" target="content">物业费</a></li>
+							<li><a href="${base}/broadbandFee/list?type=1" target="content">宽带费</a></li>
+							<li><a href="${base}/broadbandFee/list?type=2" target="content">有限电视</a></li>
+							<li><a href="${base}/priceSetting/list" target="content">缴费单价设置</a></li>
+						</ul>
+					</li>
+				</@shiro.hasPermission>
+				
+				<@shiro.hasPermission name="community_manage">
+					<li>
+						<img src="${base}/resources/images/menu_icon/community_icon.png">
+						<a href="javascript:void(0);" target="content" >
+							小区管理
+							<span class="submenu-indicator">+</span>
+						</a>
+						<ul class="submenu">
+							<@shiro.hasPermission name="community_list">
+								<li><a href="${base}/community/list" target="content">小区管理</a></li>
+							</@shiro.hasPermission>
+					
+							<@shiro.hasPermission name="room_no">
+								<li><a href="${base}/community/room" target="content">房号管理</a></li>
+							</@shiro.hasPermission>
+							
+							<@shiro.hasPermission name="community_user">
+								<li><a href="${base}/community/communityUsers" target="content">小区用户管理</a></li>
+							</@shiro.hasPermission>
+						</ul>
+					</li>
+				</@shiro.hasPermission>
+				
+<!-- 				<@shiro.hasPermission name="globalSettings_manager"> -->
+<!-- 					<li><img src="${base}/resources/images/menu_icon/sz.png"><a href="${base}/globalSettings/list" target="content">缴费参数配置</a></li> -->
+<!-- 				</@shiro.hasPermission> -->
+				
+				<@shiro.hasPermission name="community_president_manage">
+					<li><img src="${base}/resources/images/menu_icon/sz.png"><a href="${base}/sys/communityPresident/list" target="content">社长信息管理</a></li>
+				</@shiro.hasPermission>
+				
+				<@shiro.hasPermission name="garage_manager">
+					<li>
+						<img src="${base}/resources/images/menu_icon/parke_icon.png">
+						<a href="javascript:void(0);" target="content" >
+							车位管理
+							<span class="submenu-indicator">+</span>
+						</a>
+						<ul class="submenu">
+							<li><a href="${base}/garage/list" target="content">车位管理</a></li>
+							<li><a href="${base}/garage/ordeList" target="content">订单信息维护</a></li>
+						</ul>
+					</li>
+				</@shiro.hasPermission>
+				
+<!-- 				<@shiro.hasPermission name="express_manager"> -->
+<!-- 					<li> -->
+<!-- 						<a href="javascript:void(0);" target="content" > -->
+<!-- 							<img src="${base}/resources/images/menu_icon/express_icon.png">快递管理 -->
+<!-- 							<span class="submenu-indicator">+</span> -->
+<!-- 						</a> -->
+<!-- 						<ul class="submenu"> -->
+<!-- 							<li><a href="${base}/communityExpress/list" target="content">快递信息维护</a></li> -->
+<!-- 							<li><a href="${base}/sentInfo/list" target="content">快递订单</a></li> -->
+<!-- 						</ul> -->
+<!-- 					</li> -->
+<!-- 				</@shiro.hasPermission> -->
+				
+				<@shiro.hasPermission name="community_info_manage">
+					<li>
+						<img src="${base}/resources/images/menu_icon/department_icon.png">
+						<a href="javascript:void(0);" target="content" >
+							小区信息管理
+							<span class="submenu-indicator">+</span>
+						</a>
+						<ul class="submenu">
+							<li><a href="${base}/communityDepartment/list" target="content">部门管理</a></li>
+							<li><a href="${base}/communityEmployee/list" target="content">人员管理</a></li>
+							
+							<@shiro.hasPermission name="community_person_positioning">
+								<li id="toBaiduHtml"><a href="${base}/communityEmployee/toBaiduHtml" target="content">员工定位监控</a></li>
+							</@shiro.hasPermission>
+						</ul>
+					</li>
+				</@shiro.hasPermission>
+				
+				<@shiro.hasPermission name="account_manage">
+					<li>
+						<img src="${base}/resources/images/menu_icon/account_icon.png">
+						<a href="javascript:void(0);" target="content" >
+							账户管理
+							<span class="submenu-indicator">+</span>
+						</a>
+						<ul class="submenu">
+							<@shiro.hasPermission name="modify_password">
+								<li><a href="${base}/sys/updatePasswdPage" target="content">修改密码</a></li>
+							</@shiro.hasPermission>
+							
+							<@shiro.hasPermission name="_edit_regionalagency">
+								<li><a href="${base}/regionalagency/edit" target="content">代理信息修改</a></li>
+							</@shiro.hasPermission>
+							
+							<@shiro.hasPermission name="_edit_propertyCompany">
+								<li><a href="${base}/propertyCompany/edit" target="content">物业信息修改</a></li>
+							</@shiro.hasPermission>
+							
+							<@shiro.hasPermission name="modify_president">
+								<li><a href="${base}/sys/communityPresident/edit" target="content">社长信息修改</a></li>
+							</@shiro.hasPermission>
+							
+							<@shiro.hasPermission name="_shop_edit">
+								<li><a href="${base}/sys/shop/editInfo" target="content">商家信息修改</a></li>
+							</@shiro.hasPermission>
+						</ul>
+					</li>
+				</@shiro.hasPermission>
+				
+				<@shiro.hasPermission name="earnings_manage">
+					<li>
+						<img src="${base}/resources/images/menu_icon/fund.png">
+						<a href="javascript:void(0);" target="content" >
+							收益管理
+							<span class="submenu-indicator">+</span>
+						</a>
+						<ul class="submenu">
+							<@shiro.hasPermission name="shop_earnings">
+								<li><a href="${base}/sys/funds/shopfund" target="content">商家收益</a></li>
+							</@shiro.hasPermission>
+					
+							<@shiro.hasPermission name="community_earnings">
+								<li><a href="${base}/sys/funds/communityfund" target="content">小区收益</a></li>
+							</@shiro.hasPermission>
+							
+							<@shiro.hasPermission name="user_income_list">
+								<li><a href="${base}/sys/withdraw/list" target="content">提现管理</a></li>
+							</@shiro.hasPermission>
+						</ul>
+					</li>
+				</@shiro.hasPermission>
+				
+				<@shiro.hasPermission name="community_service_manage">
+					<li>
+						<img src="${base}/resources/images/menu_icon/fund.png">
+						<a href="javascript:void(0);" target="content" >
+							服务管理
+							<span class="submenu-indicator">+</span>
+						</a>
+						<ul class="submenu">
+							<@shiro.hasPermission name="repair_manager">
+								<li><a href="${base}/repairRecord/list" target="content">报修服务</a></li>
+							</@shiro.hasPermission>
+					
+							<@shiro.hasPermission name="house_manager">
+								<li><a href="${base}/houseResource/list" target="content">房屋租售</a></li>
+							</@shiro.hasPermission>
+							
+							<@shiro.hasPermission name="commodity_feedback_manage">
+								<li><a href="${base}/communitySuggestions/list" target="content">投诉建议</a></li>
+							</@shiro.hasPermission>
+							
+							<@shiro.hasPermission name="vote_manage">
+								<li><a href="${base}/vote/list" target="content">活动投票</a></li>
+							</@shiro.hasPermission>
+						</ul>
+					</li>
+				</@shiro.hasPermission>
+				
+				<@shiro.hasPermission name="community_notice_manage">
+					<li>
+						<img src="${base}/resources/images/menu_icon/fund.png">
+						<a href="javascript:void(0);" target="content" >
+							通知管理
+							<span class="submenu-indicator">+</span>
+						</a>
+						<ul class="submenu">
+							<@shiro.hasPermission name="notice_manage">
+								<li><a href="${base}/communityNotice/list" target="content">临时通知管理</a></li>
+							</@shiro.hasPermission>
+					
+							<@shiro.hasPermission name="community_toIM">
+								<li><a href="${base}/IM/toIM" target="content">即时聊天</a></li>
+							</@shiro.hasPermission>
+						</ul>
+					</li>
+				</@shiro.hasPermission>
+				
+				<@shiro.hasPermission name="shopType_manage">
+					<li>
+						<img src="${base}/resources/images/menu_icon/shop_type.png">
+						<a href="javascript:void(0);" target="content" >
+							商家类型管理
+							<span class="submenu-indicator">+</span>
+						</a>
+						<ul class="submenu">
+							<li><a href="${base}/shopMainType/list" target="content">主类型管理</a></li>
+							<li><a href="${base}/shopChildType/list" target="content">子类型管理</a></li>
+						</ul>
+					</li>
+				</@shiro.hasPermission>
+				
+				<@shiro.hasPermission name="propertyCompany_manage">
+					<li><img src="${base}/resources/images/menu_icon/property_company.png"><a href="${base}/propertyCompany/list" target="content">物业管理</a></li>
+				</@shiro.hasPermission>
+				
+				<@shiro.hasPermission name="shop_manage">
+					<li><img src="${base}/resources/images/menu_icon/shop_icon.png"><a href="${base}/sys/shop/list" target="content">商家管理</a></li>
+				</@shiro.hasPermission>
+				
+				<@shiro.hasPermission name="commodity_manage">
+					<li><img src="${base}/resources/images/menu_icon/commodity.png"><a href="${base}/sys/commodity/list" target="content">商品管理</a></li>
+				</@shiro.hasPermission>
+				
+				<@shiro.hasPermission name="commodity_type_manage">
+					<li><img src="${base}/resources/images/menu_icon/commodity_type.png"><a href="${base}/sys/commodityType/list" target="content">商品类型管理</a></li>
+				</@shiro.hasPermission>
+				
+				
+				<@shiro.hasPermission name="repairType_manager">
+					<li><img src="${base}/resources/images/menu_icon/repair_icon.png"><a href="${base}/repairType/list" target="content">报修类型管理</a></li>
+				</@shiro.hasPermission>
+				
+				<@shiro.hasPermission name="preferentialType_manage">
+					<li><img src="${base}/resources/images/menu_icon/preferential.png"><a href="${base}/preferentialType/list" target="content">优惠类型管理</a></li>
+				</@shiro.hasPermission>
+				
+				<@shiro.hasPermission name="preferentialActivity_manage">
+				<li>
+					<img src="${base}/resources/images/patrol.png">
+					<a href="javascript:void(0);" target="content" >
+						优惠活动管理
+						<span class="submenu-indicator">+</span>
+					</a>
+					<ul class="submenu">
+						<li><a href="${base}/preferentialActivity/record_list" target="content">优惠活动记录</a></li>
+						<li><a href="${base}/preferentialActivity/list" target="content">优惠活动规则</a></li>
+					</ul>
+				</li>
+				</@shiro.hasPermission>
+				
+				<@shiro.hasPermission name="shopPreferential_manage">
+					<li><img src="${base}/resources/images/menu_icon/preferential.png"><a href="${base}/shopPreferential/list" target="content">优惠管理</a></li>
+				</@shiro.hasPermission>
+				
+				<@shiro.hasPermission name="commodity_order_manage">
+					<li><img src="${base}/resources/images/menu_icon/order.png"><a href="${base}/sysorder/commodityOrderList" target="content">订单管理</a></li>
+				</@shiro.hasPermission>
+				
+				<@shiro.hasPermission name="refund_order_manage">
+					<li><img src="${base}/resources/images/menu_icon/refund_order.png"><a href="${base}/orderRefund/refundOrderList" target="content">退款列表</a></li>
+				</@shiro.hasPermission>
+				
+				<@shiro.hasPermission name="banner_manager">
+					<li>
+						<img src="${base}/resources/images/menu_icon/ad.png">
+						<a href="javascript:void(0);" target="content" >
+							首页轮播图
+							<span class="submenu-indicator">+</span>
+						</a>
+						<ul class="submenu">
+							<li><a href="${base}/appBanner/list" target="content">轮播图管理</a></li>
+							<li><a href="${base}/appBanner/statistical" target="content">轮播图统计</a></li>
+						</ul>
+					</li>
+				</@shiro.hasPermission>
+				
+				<@shiro.hasPermission name="knowledge_manager">
+					<li><img src="${base}/resources/images/menu_icon/tip.png"><a href="${base}/littleKnowledge/list" target="content">邻乐速报管理</a></li>
+				</@shiro.hasPermission>
+				
+				<@shiro.hasPermission name="refund_manage">
+					<li><img src="${base}/resources/images/menu_icon/refund_order.png"><a href="${base}/refundOrder/list" target="content">退款管理</a></li>
+				</@shiro.hasPermission>
+				
+				<@shiro.hasPermission name="income_manage">
+					<li>
+						<img src="${base}/resources/images/menu_icon/income.png">
+						<a href="javascript:void(0);" target="content" >
+							提现管理
+							<span class="submenu-indicator">+</span>
+						</a>
+						<ul class="submenu">
+							<@shiro.hasPermission name="income_list">
+								<li><a href="${base}/sys/withdraw/list" target="content">提现列表</a></li>
+							</@shiro.hasPermission>
+							<@shiro.hasPermission name="withdraw_bank_manage">
+								<li><a href="${base}/sys/withdrawBank/list" target="content">提现银行卡列表</a></li>
+							</@shiro.hasPermission>
+						</ul>
+					</li>
+				</@shiro.hasPermission>
+				
+				<@shiro.hasPermission name="applyCooperae_manage">
+					<li><img src="${base}/resources/images/menu_icon/apply_cooperae.png"><a href="${base}/applyCooperae/list" target="content">申请合作管理</a></li>
+				</@shiro.hasPermission>
+				
+				<@shiro.hasPermission name="topic_manage">
+					<li>
+						<img src="${base}/resources/images/topicType.png">
+						<a href="javascript:void(0);" target="content" >
+							圈子管理
+							<span class="submenu-indicator">+</span>
+						</a>
+						<ul class="submenu">
+							<@shiro.hasPermission name="topicType_manage">
+								<li><a href="${base}/topicType/list" target="content">圈子类型管理</a></li>
+							</@shiro.hasPermission>
+							<li><a href="${base}/topicUserManager/list" target="content">圈子禁用用户管理</a></li>
+							<li><a href="${base}/topic/list" target="content">圈子话题管理</a></li>
+						</ul>
+					</li>
+				</@shiro.hasPermission>
+				
+				
+				<@shiro.hasPermission name="feedback_manage">
+					<li><img src="${base}/resources/images/feedback.png"><a href="${base}/feedback/list" target="content">意见反馈管理</a></li>
+				</@shiro.hasPermission>
+				
+				<@shiro.hasPermission name="commonProblem_manage">
+					<li>
+						<img src="${base}/resources/images/commonProblem.png">
+						<a href="javascript:void(0);" target="content" >
+							常见问题管理
+							<span class="submenu-indicator">+</span>
+						</a>
+						<ul class="submenu">
+							<li><a href="${base}/problemType/list" target="content">问题类型管理</a></li>
+							<li><a href="${base}/commonProblem/list" target="content">问题数据管理</a></li>
+						</ul>
+					</li>
+				</@shiro.hasPermission>
+				
+				<@shiro.hasPermission name="serviceAgreement_manage">
+					<li><img src="${base}/resources/images/menu_icon/serviceAgreement.png"><a href="${base}/serviceAgreement/list" target="content">服务协议管理</a></li>
+				</@shiro.hasPermission>
+				
+				<@shiro.hasPermission name="attendance_manage">
+					<li>
+						<img src="${base}/resources/images/commonProblem.png">
+						<a href="javascript:void(0);" target="content" >
+							考勤管理
+							<span class="submenu-indicator">+</span>
+						</a>
+						<ul class="submenu">
+							<li><a href="${base}/attendanceTemplate/list" target="content">考勤设置</a></li>
+							<li><a href="${base}/attendanceStatistics/dayStatistics" target="content">考勤记录</a></li>
+<!-- 							<li><a href="${base}/commonProblem/list" target="content">考勤统计</a></li>  -->
+						</ul>
+					</li>
+				</@shiro.hasPermission>
+				<@shiro.hasPermission name="patrol_manage">
+				<li>
+					<img src="${base}/resources/images/patrol.png">
+					<a href="javascript:void(0);" target="content" >
+						巡更管理
+						<span class="submenu-indicator">+</span>
+					</a>
+					<ul class="submenu">
+						<li><a href="${base}/qrCodeRoom/list" target="content">巡更二维码管理</a></li>
+						<li><a href="${base}/patrolRoomRecord/list" target="content">巡更记录</a></li>
+					</ul>
+				</li>
+				</@shiro.hasPermission>
+				
+				<@shiro.hasPermission name="versionManager_manage">
+					<li><img src="${base}/resources/images/vote.png"><a href="${base}/versionManager/list" target="content">软件版本管理</a></li>
+				</@shiro.hasPermission>
+				
+				<@shiro.hasPermission name="capitalFlow_manage">
+					<li><img src="${base}/resources/images/vote.png"><a href="${base}/capitalFlowManage/transactionflow" target="content">资金流水管理</a></li>
+				</@shiro.hasPermission>
+		
+			</ul>
+		</div>
+	</div>
+
+	<div class="main">
+			<@shiro.hasPermission name="system_statistics">
+					<iframe style="position: absolute; overflow: auto;" src="${base}/sys2/home" name="content" id="content"></iframe>
+			</@shiro.hasPermission>
+			<@shiro.hasPermission name="system_home">
+					<iframe style="position: absolute; overflow: auto;" src="${base}/sys/home" name="content" id="content"></iframe>
+			</@shiro.hasPermission>
+<!-- 测试webscoket -->
+<!-- <iframe style="position: absolute; overflow: auto;" src="${base}/sys/home" name="content" id="content"></iframe> -->
+	</div>
+	<script src="${base}/resources/js/jquery-accordion-menu.js" type="text/javascript"></script>
+	<script src="${base}/resources/js/respond.js" type="text/javascript" async="async"></script>
+	<script type="text/javascript" src="${base}/resources/js/action.js"></script>
+	<script type="text/javascript">
+		window.onload = initLinks;
+	    function initLinks(){
+            for(var i=0;i<document.links.length;i++){
+                  document.links[i].onclick = setContent;
+            }
+	    }
+	   function setContent(){
+            document.getElementById('content').contentWindow.document.location.href = this.href;   //获取、写入
+            return false;                     //阻止a第二次跳转
+	   }
+	   
+		function logout() {
+			document.getElementsByClassName("logout")[0].click();
+		}
+		//测试ifram 父子页面调用
+// 		$(".logout").click(function(){
+// 			alert("123");
+// 			content.window.a();
+// 		})
+
+	(function($) {
+			$.expr[":"].Contains = function(a, i, m) {
+				return (a.textContent || a.innerText || "").toUpperCase()
+						.indexOf(m[3].toUpperCase()) >= 0;
+			};
+		})(jQuery);
+		
+	<#if communityList?exists && communityList?size gt 0>
+		$("#selectedCommunity").change(function() {
+			var id = $(this).val();
+			$.ajax({
+				type : "post",
+				url : "${base}/sys/communityPresident/modifyCommunity",
+				data : {
+					id : id
+				},
+				success : function(data) {
+					layer.msg(data.msg, {
+						shift : 0
+					}, function() {
+						window.location.reload();
+					});
+				}
+			});
+		})
+		</#if>
+
+// 		$(function() {
+// 			$("body").moveStopEvent(function() {
+// 				run(); //加载页面时启动定时器  
+// 				var interval;
+// 				function run() {
+// 					interval = setInterval(refresh, "600000");
+// 				}
+// 				function refresh() {
+// 					top.frames['content'].location.reload();
+// 				}
+// 				$("body").mousemove(function(e) {
+// 					//清除setInterval
+// 					clearInterval(interval);
+// 				});
+// 			});
+// 		});
+
+		jQuery(document).ready(function() {
+			jQuery("#jquery-accordion-menu").jqueryAccordionMenu();
+
+		});
+		$(function() {
+			//顶部导航切换
+			$("#demo-list li").click(function() {
+				$("#demo-list li.active").removeClass("active")
+				$(this).addClass("active");
+			})
+			
+			$(".submenu li").click(function() {
+					$(".submenu li.active").removeClass("active")
+					$("#toBaiduHtml").removeClass("active")
+					$(this).addClass("active");
+			}) 
+		})
+		$(function() {
+				$(".content").panel({
+					iWheelStep: 32
+				});
+			});
+		
+		<#if cUser.identity.getCode()==3 || cUser.identity.getCode()==5>
+		//websocket
+		var websocket;
+		var host = window.location.host;
+		var base ='${base}';
+		var is_click=false;
+		var open_url;
+		var message_count=0;
+		var file = []; 
+		file['mp3'] = '${base}/resources/IM/images/sms-received.mp3'; 
+		file['ogg'] = '${base}/resources/IM/images/sms-received.ogg'; 
+		function create_websocket(){
+			if ('WebSocket' in window) {
+				websocket = new WebSocket(
+						"ws://"+ host +"/webSocketServer");
+			} else if ('MozWebSocket' in window) {
+				websocket = new MozWebSocket(
+						"ws://"+ host +"/webSocketServer");
+			} else {
+				websocket = new SockJS(
+						"http://"+ host +"/sockjs/webSocketServer");
+			}
+			websocket.onopen = function(evnt) {
+				console.log("连接成功");
+			};
+			websocket.onmessage = function(evnt) {
+				//收到消息
+				if(evnt.data!='' && evnt.data!=0){
+					message_count++;
+					is_click = false;
+					clearTimeout(t);
+					paly_redio(); // 播放声音
+					flash_title(); //title闪烁
+					open_url="";//每次清空url
+					show(eval('(' + evnt.data + ')')); //右下角弹出窗
+				}
+			};
+			websocket.onerror = function(evnt) {
+				console.log("连接错误")
+			};
+			websocket.onclose = disConnect;
+		}
+		//重新连接
+		function reconnect (){
+			create_websocket();
+		}
+		
+		var disConnect = function(){
+			console.log("连接断开，即将重新连接...");
+		    setTimeout(function(){
+		         reconnect();
+		    },60000);
+		}
+		
+		create_websocket();
+		 //新消息逻辑
+		 /*
+		 	1:来了新的消息 播放声音，title闪烁(声音只播放一次)，右下角弹窗提醒
+		 	2:只有用户操作了之后，闪烁才消息，提示框关闭
+		 */
+		 var t;
+		 var title = document.title;
+		 step=0;
+		 function flash_title(){
+			  step++;
+			  if (step==3){
+				  step=1;
+			  }   
+			  if (step==1){
+				  document.title='【你有新的消息】'
+			  }
+			  if (step==2){
+				  document.title='【　　　　　　】'
+			  }
+			 	 t = setTimeout("flash_title()",380);
+			  }
+		 //flash_title();
+		 function stop_flash_title(){
+			 clearTimeout(t);
+			 document.title=title;
+			 stop_redio();
+		 }
+		 
+		 function paly_redio(){
+			 audioplayer('audioplane', file, false);
+		 }
+		 
+		 function stop_redio(){
+			 audioplayer('audioplane');
+		 }
+		 
+		 $("#popContent").click(function() {
+			 var id = $(this).attr("msgId");
+				if(open_url!=''){
+					$("#content").attr("src", base+open_url);
+					closeMsgBox();
+					//标记消息已读
+					$.ajax({
+						type : "post",
+						url : "${base}/webScoketMsg/readMsg",
+						data : {
+							id : id
+						},
+						success : function(data) {
+						}
+					});
+				}
+			})
+			
+		</#if>
+		
+		function audioplayer(id, file, loop){ 
+			  var audioplayer = document.getElementById(id); 
+			  if(audioplayer!=null){ 
+			    document.body.removeChild(audioplayer); 
+			  } 
+			 
+			  if(typeof(file)!='undefined'){ 
+			    if(navigator.userAgent.indexOf("MSIE")>0){// IE 
+			   
+			    var player = document.createElement('bgsound'); 
+			    player.id = id; 
+			    player.src = file['mp3']; 
+			    player.setAttribute('autostart', 'true'); 
+			    if(loop){ 
+			      player.setAttribute('loop', 'infinite'); 
+			    } 
+			    document.body.appendChild(player); 
+			     
+			    }else{ // Other FF Chome Safari Opera 
+			   
+			    var player = document.createElement('audio'); 
+			    player.id = id; 
+			    player.setAttribute('autoplay','autoplay'); 
+			    if(loop){ 
+			      player.setAttribute('loop','loop'); 
+			    } 
+			    document.body.appendChild(player); 
+			     
+			    var mp3 = document.createElement('source'); 
+			    mp3.src = file['mp3']; 
+			    mp3.type= 'audio/mpeg'; 
+			    player.appendChild(mp3); 
+			     
+			    var ogg = document.createElement('source'); 
+			    ogg.src = file['ogg']; 
+			    ogg.type= 'audio/ogg'; 
+			    player.appendChild(ogg); 
+			     
+			    } 
+			  } 
+			} 
+		//toMsgList
+		$(".sets").click(function(){
+			layer.open({
+				  title:"消息列表",
+				  type: 2,
+				  area: ['960px', '550px'], //宽高
+				  content: ['${base}/webScoketMsg/toMsgList', 'no']
+				});
+			//加载数据
+		});
+		
+		function msgUrl(url){
+			layer.closeAll('iframe'); 
+			$("#content").attr("src", url);
+		}
+	</script>
+	
+</body>
+</html>
+

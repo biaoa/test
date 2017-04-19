@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.linle.cTopicType.mapper.CTopicTypeMapper" >
+  <resultMap id="BaseResultMap" type="com.linle.entity.sys.CTopicType" >
+    <id column="topic_type_id" property="topicTypeId" jdbcType="BIGINT" />
+    <result column="topic_type_name" property="topicTypeName" jdbcType="VARCHAR" />
+    <result column="order_no" property="orderNo" jdbcType="INTEGER" />
+    <result column="community_privg" property="communityPrivg" jdbcType="INTEGER" />
+    <result column="is_del" property="isDel" jdbcType="INTEGER" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <resultMap id="BaseResultApiMap" type="com.linle.mobileapi.v1.model.CTopicTypeVO" >
+    <id column="topic_type_id" property="id" jdbcType="BIGINT"/>
+    <result column="topic_type_name" property="name" jdbcType="VARCHAR" />
+    <result column="community_privg" property="communityPrivg" jdbcType="INTEGER" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    topic_type_id, topic_type_name, order_no, community_privg,is_del, remark
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from c_topic_type
+    where topic_type_id = #{topicTypeId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from c_topic_type
+    where topic_type_id = #{topicTypeId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.linle.entity.sys.CTopicType" >
+    insert into c_topic_type (topic_type_id, topic_type_name, order_no, 
+      community_privg,is_del, remark)
+    values (#{topicTypeId,jdbcType=BIGINT}, #{topicTypeName,jdbcType=VARCHAR}, #{orderNo,jdbcType=INTEGER}, 
+      #{communityPrivg,jdbcType=INTEGER}, #{isDel,jdbcType=BIT}, #{remark,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.linle.entity.sys.CTopicType" >
+    insert into c_topic_type
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="topicTypeId != null" >
+        topic_type_id,
+      </if>
+      <if test="topicTypeName != null" >
+        topic_type_name,
+      </if>
+      <if test="orderNo != null" >
+        order_no,
+      </if>
+      <if test="communityPrivg != null" >
+        community_privg,
+      </if>
+       <if test="isDel != null" >
+        is_del,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="topicTypeId != null" >
+        #{topicTypeId,jdbcType=BIGINT},
+      </if>
+      <if test="topicTypeName != null" >
+        #{topicTypeName,jdbcType=VARCHAR},
+      </if>
+      <if test="orderNo != null" >
+        #{orderNo,jdbcType=INTEGER},
+      </if>
+      <if test="communityPrivg != null" >
+        #{communityPrivg,jdbcType=INTEGER},
+      </if>
+       <if test="isDel != null" >
+         #{isDel,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.linle.entity.sys.CTopicType" >
+    update c_topic_type
+    <set >
+      <if test="topicTypeName != null" >
+        topic_type_name = #{topicTypeName,jdbcType=VARCHAR},
+      </if>
+      <if test="orderNo != null" >
+        order_no = #{orderNo,jdbcType=INTEGER},
+      </if>
+      <if test="communityPrivg != null" >
+        community_privg = #{communityPrivg,jdbcType=INTEGER},
+      </if>
+        <if test="isDel != null" >
+          is_del = #{isDel,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where topic_type_id = #{topicTypeId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.linle.entity.sys.CTopicType" >
+    update c_topic_type
+    set topic_type_name = #{topicTypeName,jdbcType=VARCHAR},
+      order_no = #{orderNo,jdbcType=INTEGER},
+      community_privg = #{communityPrivg,jdbcType=INTEGER},
+      is_del = #{isDel,jdbcType=INTEGER},
+      remark = #{remark,jdbcType=VARCHAR}
+    where topic_type_id = #{topicTypeId,jdbcType=BIGINT}
+  </update>
+  <select id="getAllType" resultMap="BaseResultApiMap">
+		select
+		<include refid="Base_Column_List" />
+		from c_topic_type where (is_del!=1 or isnull(is_del))
+		order by order_no
+   </select>
+	
+   <select id="getAllData" parameterType="page" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from c_topic_type where (is_del!=1 or isnull(is_del))
+		order by order_no
+   </select>
+   
+   <select id="getTypeUnreadCount" parameterType="map" resultType="int">
+   		select COUNT(id) from c_topic
+		left join (select id,community_id from users where community_id is not null) as users
+		on c_topic.user_id=users.id
+		left join (select topic_type_id as typeid,community_privg from c_topic_type) as c_topic_type
+		on c_topic.topic_type_id = c_topic_type.typeid
+		where  topic_type_id=#{typeId} and (community_privg=0 or (community_privg=1 and users.community_id=#{communityId}))
+		and c_topic.user_id != #{userId}
+		<if test="lastReadTime!=null and lastReadTime !=''">
+			and	<![CDATA[ create_time>=#{lastReadTime} ]]>  
+		</if>
+   </select>
+</mapper>

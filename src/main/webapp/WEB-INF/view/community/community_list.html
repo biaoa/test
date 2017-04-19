@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>小区管理</title>
+<meta name="content-type" content="text/html; charset=UTF-8">
+<#include '/common/resources.html'>
+<link rel="stylesheet" media="screen and (min-width: 1580px)" href="${base}/resources/css/sys/jquery.tableui.css" />
+<link rel="stylesheet" media="screen and (max-width: 1580px)" href="${base}/resources/css/sys/tableui-resolving.css" />
+<script src="${base}/resources/js/respond.js" type="text/javascript" async="async"></script>
+</head>
+<body>
+<div class="whole">
+	<!-- <span style="float: right"><button type="button"
+			class="btn-default" style="float: right;">新增小区</button></span> -->
+	<ol class="breadcrumb">
+		<li><a href="javascript:void(0)">小区管理</a></li>
+		<li class="active">小区列表</li>
+			<@shiro.hasPermission name="add_community">
+			<span style="float: right">
+				<button type="button" class="btn-default" style="float: right;">新增小区</button>
+			</span>
+			</@shiro.hasPermission>
+	</ol>
+				<div class="o-order">
+				<form action="${base}/community/list" id="pagerForm">
+				<div class="o-first">
+					<span class="o-span">小区名称：</span>
+					<div class="o-input" style="width: 250px;"><input class="my-price" type="text" name="communityName" value="${communityName!!}" placeholder="请输入小区名称/小区负责人电话"/></div>
+				</div>			
+				<div class="o-thrid role-search1">
+					<a class="o-btn search1">搜索</a>
+				</div>
+			</div>
+	
+	<div class="tab_box">
+	<table class="table_solid" border="0" cellspacing="0">
+		<tbody>
+			<tr class="evenRow">
+				<th>序号</th>
+				<th>小区名称</th>
+				<th>物业名称</th>
+				<th>地址</th>
+				<th>负责人</th>
+				<th>负责人电话</th>
+				<th>负责人地址</th>
+				<th>小区社长</th>
+				<th>社长电话</th>
+				<th>社长地址</th>
+				<th>添加时间</th>
+				<@shiro.hasPermission name="community_withdrawalFee_setting">
+					<th>提现手续费</th>
+				</@shiro.hasPermission>
+				<@shiro.hasPermission name="community_menu_setting">
+				<th>合作状态</th>
+				</@shiro.hasPermission>
+				<th>操作</th>
+			</tr>
+			<#if (pagelist.results)?exists && pagelist.results?size gt 0> <#list
+			pagelist.results as community>
+			<tr>
+				<td>${(community_index+1)+(pagelist.pageNo-1)*pagelist.pageSize}</td>
+				<td>${community.name}</td>
+				<td>${community.propertyCompany.name}</td>
+				<td>${community.address!!}</td>
+				<td>${community.principalName!!}</td>
+				<td>${community.principalPhone!!}</td>
+				<td>${community.principalAddress!!}</td>
+				<td>${community.president.name!!}</td>
+				<td>${community.president.phone!!}</td>
+				<td>${community.president.address!!}</td>
+				<td>${community.createDate?string('yyyy/MM/dd HH:mm:ss')}</td>
+				<@shiro.hasPermission name="community_withdrawalFee_setting">
+					<td>${community.withdrawalFee!!}</td>
+				</@shiro.hasPermission>
+				<@shiro.hasPermission name="community_menu_setting">
+					<td>
+					<a class="td-btn btn-default common-btn-cz collaborate" val="${community.id}" c="${community.collaborateFlag}" href="javascript:void(0);">
+						<#if community.collaborateFlag==0>
+							设置合作
+							<#elseif community.collaborateFlag==1>
+							取消合作
+						</#if>
+					</a>
+					</td>
+				</@shiro.hasPermission>
+				<td>
+					<@shiro.hasPermission name="edit_community">
+						<a class="td-btn btn-default common-btn-cz" href="${base}/community/addCommunity?id=${community.id}" value="">编辑</a>
+					</@shiro.hasPermission>
+					<@shiro.hasPermission name="community_menu_setting">
+						<a class="td-btn btn-default common-btn-cz" href="${base}/community/setAppMenu/${community.id}">设置app首页菜单 </a>
+					</@shiro.hasPermission>
+					<@shiro.hasPermission name="community_withdrawalFee_setting">
+						<a class="td-btn btn-default common-btn-cz withdrawalfee_setting" href="javascript:void(0);" fee="${community.withdrawalFee!!}" cid="${community.id!!}">设置提现手续费</a>
+					</@shiro.hasPermission>
+					
+				</td>
+			</tr>
+			</#list>
+		</tbody>
+	</table>
+	
+	<#include '/common/pagination.html'></form>
+	</#if>
+	</div>
+	</div>
+</body>
+<script type="text/javascript">
+	$(function() {
+		$("button").click(function() {
+			window.location.href = "${base}/community/addCommunity";
+		});
+		
+		$(".search1").click(function(){
+			$("#pagerForm").submit();
+		})
+	});
+	
+	$(".collaborate").click(function(){
+	     $.post("${base}/community/setCollaborate", {'id': $(this).attr("val"),"collaborateFlag":$(this).attr("c")}, function (data) {
+	    	 layer.msg(data.msg,{
+			     	shift: 0
+			     }, function(){
+			    		 window.location.reload();
+			     });
+	        });
+	})
+	
+	<@shiro.hasPermission name="community_withdrawalFee_setting">
+	$(".withdrawalfee_setting").click(function(){
+		var withdrawalFee = $(this).attr("fee");
+		var cid = $(this).attr("cid");
+		layer.prompt({
+			  formType: 0,
+			  value: withdrawalFee,
+			  title: '请输入提现手续费'
+			}, function(value, index, elem){
+				if(isNaN(value) || value<0 || value>1){
+					layer.msg("输入错误");
+					return false;
+				}else{
+					$.post("${base}/community/withdrawalFeeSetting", {'id': cid,"withdrawalFee":value}, function (data) {
+						layer.close(index);
+						layer.msg(data.msg,{
+					     	shift: 0
+					     }, function(){
+					    	 window.location.reload();
+					     }); 
+			        });
+				}
+			});
+		});
+	</@shiro.hasPermission>
+</script>
+<script>
+	$(function(){
+        document.onkeydown = function(e){ 
+        	var ev = document.all ? window.event : e;
+        		if(ev.keyCode==13) {
+            		$("#pagerForm").submit();
+            }
+        }
+    });  
+         
+</script>  
+
+</html>

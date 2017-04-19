@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>商品类型管理</title>
+<meta name="content-type" content="text/html; charset=UTF-8">
+<#include '/common/resources.html'>
+<link rel="stylesheet" media="screen and (min-width: 1580px)" href="${base}/resources/css/sys/jquery.tableui.css" />
+<link rel="stylesheet" media="screen and (max-width: 1580px)" href="${base}/resources/css/sys/tableui-resolving.css" />
+<script src="${base}/resources/js/respond.js" type="text/javascript" async="async"></script>
+</head>
+<body>
+<div class="whole">
+	<ol class="breadcrumb">
+		<li><a href="javascript:void(0)">商品类型管理</a></li>
+		<li class="active">类型列表</li>
+		
+	<span style="float: right"><button type="button"
+			class="btn-default" style="float: right;">新增类型</button></span>
+	</ol>
+	
+			<div class="tab_box">
+	<table class="table_solid" border="0" cellspacing="0">
+		<tbody>
+			<tr class="evenRow">
+				<th>序号</th>
+				<th>类型名称</th>
+<!-- 				<th>状态</th> -->
+				<th>排序</th>
+				<th>创建时间</th>
+				<th>操作</th>
+			</tr>
+			<#if (pagelist.results)?exists && pagelist.results?size gt 0> <#list
+			pagelist.results as commodityType>
+			<tr>
+				<td>${(commodityType_index+1)+(pagelist.pageNo-1)*pagelist.pageSize}</td>
+				<td>${commodityType.typeName}</td>
+<!-- 				<td> -->
+<!-- 					<#if commodityType.status==0> -->
+<!-- 						正常 -->
+<!-- 						<#else> -->
+<!-- 						禁用 -->
+<!-- 					</#if> -->
+<!-- 				</td> -->
+				<td>${commodityType.sort}</td>
+				<td>${commodityType.createDate?string('yyyy/MM/dd HH:mm:ss')}</td>
+				<td><a class="btn-default common-btn-cz" href="${base}/sys/commodityType/add?id=${commodityType.id}">修改</a>
+					<a class="btn-default common-btn-cz del" val="${commodityType.id}" info="${commodityType.typeName}" href="javascript:void(0);" >删除</a>
+				</td>
+			</tr>
+			</#list>
+		</tbody>
+	</table>
+	<form action="${base}/repairType/list" id="pagerForm"><#include
+		'/common/pagination.html'></form>
+	<#else>
+	</table>
+	<div class="no-data">暂无数据~</div>
+	</#if>
+	</div>
+	</div>
+</body>
+<script type="text/javascript">
+	$(function() {
+		$("button").click(function() {
+			window.location.href = "${base}/sys/commodityType/add";
+		});
+
+		//删除
+		$(".del").click(function(){
+			var id = $(this).attr("val");
+			var info = $(this).attr("info");
+			layer.confirm('确定删除:'+info+'?', function(index){
+				$.post("${base}/sys/commodityType/del?id=" + id, function(result) {
+					 layer.msg(result.msg,{
+					     	shift: 0
+					     }, function(){
+					    		if (result.code == 0) {
+									location.reload();
+								}
+					     }); 
+				}, 'json');
+				  layer.close(index);
+				}); 
+		})
+		
+	});
+	
+
+</script>
+
+</html>

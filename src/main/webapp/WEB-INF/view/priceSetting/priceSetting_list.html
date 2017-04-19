@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>缴费单价设置</title>
+<meta name="content-type" content="text/html; charset=UTF-8">
+<#include '/common/resources.html'>
+<link rel="stylesheet" media="screen and (min-width: 1580px)" href="${base}/resources/css/sys/jquery.tableui.css" />
+<link rel="stylesheet" media="screen and (max-width: 1580px)" href="${base}/resources/css/sys/tableui-resolving.css" />
+<script src="${base}/resources/js/respond.js" type="text/javascript" async="async"></script>
+<!-- <script type="text/javascript" src="${base}/resources/js/tooltips.js"></script> -->
+</head>
+<body>
+<div class="whole">
+	<ol class="breadcrumb">
+		<li><a href="javascript:void(0)">缴费单价管理</a></li>
+		<li class="active">缴费单价列表</li>
+		<span style="float: right">
+			<button id="addBtn" type="button" class="btn-default" style="float: right;">新增类型单价</button>
+		</span>
+	</ol>
+			<div class="tab_box">
+	<table class="table_solid" border="0" cellspacing="0">
+		<tbody>
+			<tr class="evenRow">
+				<th>序号</th>
+				<th>缴费类型</th>
+<!-- 				<th>楼层</th> -->
+				<th>单价</th>
+				<th>备注</th>
+				<th>创建时间</th>
+				<th>更新时间</th>
+				<th>操作</th>
+			</tr>
+			<#if (pagelist.results)?exists && pagelist.results?size gt 0> <#list
+			pagelist.results as record>
+			<tr>
+				<td>${(record_index+1)+(pagelist.pageNo-1)*pagelist.pageSize}</td>
+				<td>
+					<#if record.type=='water'>
+						水费
+						<#elseif record.type=='electricity'>
+						电费	
+						<#elseif record.type=='gas'>
+						燃气费	
+						<#elseif record.type=='propertyFee'>
+						物业费	
+						<#elseif record.type=='cableTelevision'>
+						有线电视费	
+						<#elseif record.type=='broadband'>
+						宽带费	
+					</#if>	
+				</td>
+<!-- 				<td>${record.floor!!}</td> -->
+				<td>${record.price!!}</td>
+				<td class="ahover" tooltips="${record.remark!!}">${record.remark!!}</td>
+				<td>${record.createDate?string('yyyy/MM/dd HH:mm:ss')}</td>
+				<td>
+				<#if record.updateDate??>
+					${record.updateDate?string('yyyy/MM/dd HH:mm:ss')}
+				</#if>
+				</td>
+				<td>
+					<a class="cz-a btn-default common-btn-cz" href="${base}/priceSetting/toAdd?id=${record.id}">编辑</a>
+					<a class="cz-a btn-default del common-btn-cz"  href="javascript:void(0)" id="${record.id}">删除</a>
+				</td>
+			</tr>
+			</#list>
+		</tbody>
+	</table>
+	<form action="${base}/priceSetting/list" id="pagerForm">
+	<#include '/common/pagination.html'>
+	</form>
+	<#else>
+	<div class="no-data">暂无数据~</div>
+	</#if>
+	</div>
+	</div>
+</body>
+<script type="text/javascript">
+	$(function() {
+		$("#addBtn").click(function() {
+			window.location.href = "${base}/priceSetting/toAdd";
+		});
+
+		$(".del").click(function() {
+			var id = $(this).attr("id");
+			layer.confirm('确定删除?', function(index){
+				$.post("${base}/priceSetting/del/" + id, function(data) {
+					layer.msg(data.msg,{
+				     	shift: 0
+				     }, function(){
+				    	 location.reload();
+				     });
+					;
+				}, 'json');
+				});
+		})
+	});
+	
+</script>
+
+</html>

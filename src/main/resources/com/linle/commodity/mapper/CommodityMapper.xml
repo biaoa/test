@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.linle.commodity.mapper.CommodityMapper" >
+  <resultMap id="BaseResultMap" type="com.linle.entity.sys.Commodity" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="logo" property="logo" jdbcType="VARCHAR" />
+    <result column="price" property="price" jdbcType="DECIMAL" />
+    <result column="quantity" property="quantity" jdbcType="INTEGER" />
+    <result column="shop_id" property="shopId" jdbcType="BIGINT" />
+<!--     <result column="type_id" property="typeId" jdbcType="BIGINT" /> -->
+    <result column="introduction" property="introduction" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="activity_flag" property="activityFlag" jdbcType="INTEGER" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+    <result column="genre" property="genre"/>
+    <result column="server_scope" property="serverScope"/>
+    <result column="server_detail" property="serverDetail"/>
+    <result column="description" property="description"/>
+    <association column="type_id" property="type" select="com.linle.commodityType.mapper.CommodityTypeMapper.selectByPrimaryKey"/>
+  </resultMap>
+  
+  
+  <resultMap id="GoodsForAPIResult"  type="com.linle.mobileapi.v1.model.ShopGoods">
+  	<result column="id" property="id"/>
+  	<result column="type_id" property="sort"/>
+  	<result column="logo" property="url"/>
+  	<result column="name" property="goodName"/>
+  	<result column="price" property="goodPrice"/>
+  	<result column="goodSales" property="goodSales"/>
+  	<result column="quantity" property="goodNums"/>
+  	<result column="description" property="introduction"/>
+  	<result column="genre" property="genre"/>
+<!-- 	<result column="server_scope" property="serverScope"/> -->
+<!-- 	<result column="server_detail" property="serverDetail"/> -->
+	<result column="activity_flag" property="activityFlag" />
+	<association column="{productId=id,userId=userId,shopId=shopId}" property="activityEnableNums" select="com.linle.sysOrder.mapper.SysOrderMapper.getBuyActivityProductNumByUserId"/>
+  </resultMap>
+  
+  <resultMap  id="HotCommodityResult" type="com.linle.entity.vo.HotCommodityVO">
+  	<result column="id" property="id"/>
+  	<result column="logo" property="logo"/>
+  	<result column="name" property="name"/>
+  	<result column="price" property="price"/>
+  	<result column="sales" property="sales"/>
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    id, name, logo, price, quantity, shop_id, type_id, introduction, status,activity_flag, create_date, 
+    update_date,genre,server_scope,server_detail,description
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from commodity
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from commodity
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.linle.entity.sys.Commodity" >
+    insert into commodity (id, name, logo, 
+      price, quantity, shop_id, 
+      type_id, introduction, status,activity_flag, 
+      create_date, update_date,genre,server_scope,server_detail,description)
+    values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{logo,jdbcType=VARCHAR}, 
+      #{price,jdbcType=DECIMAL}, #{quantity,jdbcType=INTEGER}, #{shopId,jdbcType=BIGINT}, 
+      #{type.id,jdbcType=BIGINT}, #{introduction}, #{status,jdbcType=INTEGER}, #{activityFlag,jdbcType=INTEGER}, 
+      #{createDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP},#{genre},#{serverScope},#{serverDetail},#{description})
+  </insert>
+  <insert id="insertSelective" parameterType="com.linle.entity.sys.Commodity" >
+    insert into commodity
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="logo != null" >
+        logo,
+      </if>
+      <if test="price != null" >
+        price,
+      </if>
+      <if test="quantity != null" >
+        quantity,
+      </if>
+      <if test="shopId != null" >
+        shop_id,
+      </if>
+      <if test="type != null" >
+        type_id,
+      </if>
+      <if test="introduction != null" >
+        introduction,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+           <if test="activityFlag != null" >
+        activity_flag,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="updateDate != null" >
+        update_date,
+      </if>
+      <if test="genre !=null">
+      	genre,
+      </if>
+      <if test="serverScope !=null">
+      	server_scope,
+      </if>
+      <if test="serverDetail !=null">
+      	server_detail,
+      </if>
+      <if test="description !=null">
+      	description,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="logo != null" >
+        #{logo,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null" >
+        #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="quantity != null" >
+        #{quantity,jdbcType=INTEGER},
+      </if>
+      <if test="shopId != null" >
+        #{shopId,jdbcType=BIGINT},
+      </if>
+      <if test="type != null" >
+        #{type.id,jdbcType=BIGINT},
+      </if>
+      <if test="introduction != null" >
+        #{introduction},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+         <if test="activityFlag != null" >
+        #{activityFlag,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="genre !=null">
+      	#{genre},
+      </if>
+      <if test="serverScope !=null">
+      	#{serverScope},
+      </if>
+      <if test="serverDetail !=null">
+      	#{serverDetail},
+      </if>
+      <if test="description !=null">
+		#{description},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.linle.entity.sys.Commodity" >
+    update commodity
+    <set >
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="logo != null" >
+        logo = #{logo,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null" >
+        price = #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="quantity != null" >
+        quantity = #{quantity,jdbcType=INTEGER},
+      </if>
+      <if test="shopId != null" >
+        shop_id = #{shopId,jdbcType=BIGINT},
+      </if>
+      <if test="type != null" >
+        type_id = #{type.id,jdbcType=BIGINT},
+      </if>
+      <if test="introduction != null" >
+        introduction = #{introduction},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="activityFlag != null" >
+        activity_flag = #{activityFlag,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="genre !=null">
+      	 genre = #{genre},
+      </if>
+      <if test="serverScope !=null">
+      	 server_scope = #{serverScope},
+      </if>
+      <if test="serverDetail !=null">
+      	 server_detail = #{serverDetail},
+      </if>
+      <if test="description !=null">
+      	description = #{description},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.linle.entity.sys.Commodity" >
+    update commodity
+    set name = #{name,jdbcType=VARCHAR},
+      logo = #{logo,jdbcType=VARCHAR},
+      price = #{price,jdbcType=DECIMAL},
+      quantity = #{quantity,jdbcType=INTEGER},
+      shop_id = #{shopId,jdbcType=BIGINT},
+      type_id = #{type.id,jdbcType=BIGINT},
+      introduction = #{introduction},
+      status = #{status,jdbcType=INTEGER},
+      activity_flag = #{activityFlag,jdbcType=INTEGER},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP},
+      genre = #{genre},
+      server_scope = #{serverScope},
+      server_detail = #{serverDetail},
+      description = #{description}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  <select id="getAllData" parameterType="page" resultMap="BaseResultMap">
+  		   select 
+    <include refid="Base_Column_List" />
+    from commodity
+    where shop_id = #{params.shopID}
+    <if test="params.commodityName!=null and params.commodityName!=''">
+    	and name like CONCAT('%','${params.commodityName}','%')
+    </if>
+    <if test="params.typeId!=null and params.typeId!=0">
+    	and type_id  = #{params.typeId}
+    </if>
+  </select>
+  
+  
+  <select id="GoodsForAPIResult" parameterType="map" resultMap="GoodsForAPIResult">
+  	select id,type_id,logo,name,price,ifnull(goodSales,0) as goodSales,quantity,ifnull(description,'') as description,
+  	genre,server_scope,server_detail,IFNULL(activity_flag,0) as activity_flag ,#{userId} as userId,#{shopId} as shopId
+  	from commodity
+  	left join (
+	  	select product_id,SUM(product_quantity) as goodSales from (
+		(select business_id,id from sys_order where type='commodity' and (order_status=3 or order_status=4) and business_id=#{shopId}) as sys_order
+		left join 
+		(select order_id,product_id,product_quantity from order_detail) order_detail
+		on sys_order.id=order_detail.order_id)
+		GROUP BY product_id
+  	) as product_sales
+  	on commodity.id = product_sales.product_id
+  	where type_id = #{id} and status = 0
+  </select>
+  
+  <!-- 购买时 验证数量是否满足 -->
+  <select id="verifyQuantity" parameterType="com.linle.mobileapi.v1.model.ShopGoods" resultType="int">
+  	 select  <![CDATA[#{goodNums}<=quantity]]> from commodity
+  	 where id =#{id}
+  </select>
+  <!-- 用户下单后修改订单数量。订单关闭后增加商品数量 -->
+  <update id="updateQuantity" parameterType="com.linle.entity.sys.Commodity">
+  	update commodity set quantity = quantity-#{quantity}
+	where id = #{id}
+  </update>
+  
+  <!-- 获得店铺正常的商品数量 -->
+  <select id="selectCommodityCount" parameterType="Long" resultType="int">
+  	select count(id) from commodity
+  	where shop_id = #{id} and status = 0 
+  </select>
+   
+  <select id="selectHotCommodityList" parameterType="Long" resultMap="HotCommodityResult">
+  	select SUM(product_quantity) as sales,commodity.id,commodity.`name`,commodity.logo,commodity.price from 
+		(select id from  sys_order where type='commodity' and business_id=#{id} and (order_status=3 or order_status=4)) as sys_order
+		left join order_detail
+		on sys_order.id=order_detail.order_id
+		left join commodity
+		on order_detail.product_id = commodity.id
+		GROUP BY order_detail.product_id
+		LIMIT 0,5
+  </select>
+</mapper>

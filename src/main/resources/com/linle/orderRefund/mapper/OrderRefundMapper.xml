@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.linle.orderRefund.mapper.OrderRefundMapper" >
+  <resultMap id="BaseResultMap" type="com.linle.entity.sys.OrderRefund" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="order_no" property="orderNo" jdbcType="VARCHAR" />
+    <result column="user_id" property="userId" jdbcType="BIGINT" />
+    <result column="shop_id" property="shopId" jdbcType="BIGINT" />
+    <result column="community_id" property="communityId" jdbcType="BIGINT" />
+    <result column="description" property="description" jdbcType="VARCHAR" />
+    <result column="folder_id" property="folderId" jdbcType="BIGINT" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+    <result column="refund_type" property="refundType"/>
+    <result column="fail_reason" property="failReason"/>
+    <collection column="folder_id" property="folder" select="com.linle.system.mapper.SysFolderMapper.selectByPrimaryKey" />
+  </resultMap>
+  
+  <resultMap  id="refundOrderDetailResult" type="com.linle.entity.sys.OrderRefund" extends="BaseResultMap">
+  	<association property="user" column="user_id" select="com.linle.user.mapper.UserMapper.selectByPrimaryKey" />
+  	<association property="shop" column="shop_id" select="com.linle.shop.mapper.ShopMapper.selectByPrimaryKey"/>
+  	<association property="community" column="community_id" select="com.linle.community.mapper.CommunityMapper.selectByPrimaryKey" />
+  </resultMap>
+  
+  <resultMap  id="RefundDetailResult" type="com.linle.mobileapi.v1.model.RefundOrderDetailVO">
+  	<result column="refund_type" property="refundType"/>
+  	<result column="description" property="description"/>
+  	<result column="create_date" property="createDate"/>
+  	<result column="fail_reason" property="failReason"/>
+  	<result column="update_date" property="operateDate"/>
+  	<result column="status" property="status"/>
+  	<result column="total_money" property="totalMoney"/>
+  	<result column="refund_time" property="refundTime"/>
+  	<result column="shop_name" property="shopName"/>
+  	<collection property="imgs" column="folder_id" select="com.linle.system.mapper.SysFileMapper.findFilesUrlByFolderId"/>
+  	<collection property="thumImages" column="folder_id" select="com.linle.system.mapper.SysFileMapper.findThumFilesUrlByFolderId" />
+  </resultMap>
+  
+  <resultMap id="ShopNoOperateRefundOrder" type="com.linle.entity.sys.OrderRefund"  extends="BaseResultMap">
+  	<result column="charge_id" property="chargeId"/>
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    id, order_no, user_id, shop_id, community_id, description, folder_id, status, create_date, 
+    update_date,refund_type,fail_reason
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from order_refund
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from order_refund
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.linle.entity.sys.OrderRefund" >
+    insert into order_refund (id, order_no, user_id, 
+      shop_id, community_id, description, 
+      folder_id, status, create_date, 
+      update_date,refund_type,fail_reason)
+    values (#{id,jdbcType=BIGINT}, #{orderNo,jdbcType=VARCHAR}, #{userId,jdbcType=BIGINT}, 
+      #{shopId,jdbcType=BIGINT}, #{communityId,jdbcType=BIGINT}, #{description,jdbcType=VARCHAR}, 
+      #{folderId,jdbcType=BIGINT}, #{status,jdbcType=INTEGER}, #{createDate,jdbcType=TIMESTAMP}, 
+      #{updateDate,jdbcType=TIMESTAMP},#{refundType},#{failReason})
+  </insert>
+  <insert id="insertSelective" parameterType="com.linle.entity.sys.OrderRefund" >
+    insert into order_refund
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="orderNo != null" >
+        order_no,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="shopId != null" >
+        shop_id,
+      </if>
+      <if test="communityId != null" >
+        community_id,
+      </if>
+      <if test="description != null" >
+        description,
+      </if>
+      <if test="folderId != null" >
+        folder_id,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="updateDate != null" >
+        update_date,
+      </if>
+      <if test="refundType !=null">
+      	refund_type,
+      </if>
+      <if test="failReason !=null">
+      	fail_reason,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="orderNo != null" >
+        #{orderNo,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="shopId != null" >
+        #{shopId,jdbcType=BIGINT},
+      </if>
+      <if test="communityId != null" >
+        #{communityId,jdbcType=BIGINT},
+      </if>
+      <if test="description != null" >
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="folderId != null" >
+        #{folderId,jdbcType=BIGINT},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="refundType !=null">
+      	#{refundType},
+      </if>
+      <if test="failReason !=null">
+      	#{failReason},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.linle.entity.sys.OrderRefund" >
+    update order_refund
+    <set >
+      <if test="orderNo != null" >
+        order_no = #{orderNo,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="shopId != null" >
+        shop_id = #{shopId,jdbcType=BIGINT},
+      </if>
+      <if test="communityId != null" >
+        community_id = #{communityId,jdbcType=BIGINT},
+      </if>
+      <if test="description != null" >
+        description = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="folderId != null" >
+        folder_id = #{folderId,jdbcType=BIGINT},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="refundType !=null">
+      	refund_type = #{refundType},
+      </if>
+      <if test="failReason !=null">
+      	fail_reason = #{failReason},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.linle.entity.sys.OrderRefund" >
+    update order_refund
+    set order_no = #{orderNo,jdbcType=VARCHAR},
+      user_id = #{userId,jdbcType=BIGINT},
+      shop_id = #{shopId,jdbcType=BIGINT},
+      community_id = #{communityId,jdbcType=BIGINT},
+      description = #{description,jdbcType=VARCHAR},
+      folder_id = #{folderId,jdbcType=BIGINT},
+      status = #{status,jdbcType=INTEGER},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP},
+      refund_type = #{refundType},
+      fail_reason = #{failReason}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  <!-- 通过订单号查询退款信息 -->
+  <select id="selectOrderRefundByOrderNo" parameterType="string" resultMap="BaseResultMap">
+  	  select 
+    <include refid="Base_Column_List" />
+    from order_refund
+    where order_no = #{orderNo}
+  </select>
+  
+  <select id="getRefundListAndDetail" parameterType="map" resultMap="com.linle.sysOrder.mapper.SysOrderMapper.OrderListDetailForAPI">
+  	select sys_order.id,order_refund.order_no,total_money,order_refund.create_date,order_refund.`status`,sys_order.type,business_name,business_id,refund_time from order_refund
+	left join sys_order on order_refund.order_no = sys_order.order_no
+	left join shop on sys_order.business_id = shop.id
+	where order_refund.user_id=#{uid}
+	order by order_refund.create_date DESC
+  	limit ${begin},${end}
+  </select>
+  
+  <select id="selectDetailForAPI" parameterType="string" resultMap="RefundDetailResult">
+  	select folder_id,refund_type,description,create_date,fail_reason,update_date,shop_name,refund_time,status,total_money
+  	from order_refund
+  	left join
+  	(select id, shop_name,refund_time from shop) as shop
+  	on order_refund.shop_id = shop.id
+  	left join
+  	(select order_no,total_money from sys_order) as s_order
+  	on order_refund.order_no = s_order.order_no
+  	where order_refund.order_no = #{orderNo}
+  </select>
+  <!-- 小区社长获得退款列表 -->
+  <select id="getRefundListByPresident" parameterType="page" resultMap="refundOrderDetailResult">
+  	select 
+    <include refid="Base_Column_List" />
+    from order_refund
+    where status = 5
+    and community_id in 
+    <foreach collection="params.communityList" item="community" index="index" open="(" separator="," close=")"> 
+    	#{params.communityList[${index}].id}
+    </foreach>
+  </select>
+  
+  <!-- 用户申请客服介入 -->
+  <update id="applyCustomerServices" parameterType="map">
+  	update order_refund
+  	set status = 5,update_date = now()
+  	where order_no = #{orderNo} and user_id = #{uid}
+  </update>
+  
+  <!-- 商家24小时未处理退款订单 -->
+  <select id="selectShopNoOperateRefundOrder" resultMap="ShopNoOperateRefundOrder">
+  	 	select id,order_refund.order_no,user_id,shop_id,community_id,description,folder_id,STATUS,create_date,update_date,
+	 refund_type,fail_reason,charge_id
+    from order_refund
+    left join (select order_no,charge_id from sys_order) as sys_order
+    on order_refund.order_no = sys_order.order_no
+    where order_refund.status = 0 and SUBSTRING_INDEX(timediff(now(),create_date),':',1)
+  </select>
+  <!-- 社长24小时未处理退款订单 -->
+  <select id="selectPresidentNoOperateRefundOrder" resultMap="ShopNoOperateRefundOrder">
+  	select id,order_refund.order_no,user_id,shop_id,community_id,description,folder_id,STATUS,create_date,update_date,
+	 refund_type,fail_reason,charge_id
+    from order_refund
+    left join (select order_no,charge_id from sys_order) as sys_order
+    on order_refund.order_no = sys_order.order_no
+    where order_refund.status = 5 and SUBSTRING_INDEX(timediff(now(),create_date),':',1)
+  </select>
+  
+  <!-- 用户24小时未处理的商家拒绝退款订单 -->
+  <select id="selectUserNoOperateRefundOrder" resultMap="ShopNoOperateRefundOrder">
+  	 	select id,order_refund.order_no,user_id,shop_id,community_id,description,folder_id,STATUS,create_date,update_date,
+	 refund_type,fail_reason,charge_id
+    from order_refund
+    left join (select order_no,charge_id from sys_order) as sys_order
+    on order_refund.order_no = sys_order.order_no
+    where order_refund.status = 2 and SUBSTRING_INDEX(timediff(now(),create_date),':',1)
+  </select>
+  
+  
+</mapper>

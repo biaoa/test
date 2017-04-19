@@ -1,0 +1,58 @@
+<!-- <?xml version="1.0" encoding="UTF-8"?> -->
+<!-- <beans xmlns="http://www.springframework.org/schema/beans" -->
+<!-- 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/tx" -->
+<!-- 	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:context="http://www.springframework.org/schema/context" -->
+<!-- 	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd -->
+<!-- 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd -->
+<!-- 		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.1.xsd"> -->
+<!-- 	<!-- 这里一定要配置，否则会造成拦截器拦不到 --> -->
+<!-- 	<mvc:annotation-driven conversion-service="conversionService" /> -->
+	
+	
+<!-- 	<mvc:interceptors> -->
+<!-- 	  <!-- 判断设备类型 --> -->
+<!--       resolve the device that originated the web request -->
+<!--       <bean class="org.springframework.mobile.device.DeviceResolverHandlerInterceptor" /> -->
+<!-- 	</mvc:interceptors>  -->
+	
+<!-- 	<!-- 开启事务 --> -->
+<!-- 	<tx:annotation-driven transaction-manager="transactionManager" /> -->
+<!-- 	<context:component-scan base-package="com.linle**.controller" /> -->
+	
+<!-- 	<!-- 静态资源 --> -->
+<!-- 	<mvc:resources mapping="/resources/**" location="/resources/" /> -->
+<!-- <!-- 	<mvc:resources mapping="/upload/**" location="/upload/" /> --> -->
+<!-- 	<mvc:resources mapping="/ueditor/**" location="/ueditor/" /> -->
+
+<!-- 	<mvc:interceptors> -->
+<!-- 		<mvc:interceptor> -->
+<!-- 			<mvc:mapping path="/**" /> -->
+<!-- 			<mvc:exclude-mapping path="/resources/**" /> -->
+<!-- 			<bean -->
+<!-- 				class="com.linle.common.interceptor.TimeCostInterceptor" /> -->
+<!-- 		</mvc:interceptor> -->
+<!-- 	</mvc:interceptors> -->
+
+
+
+<!-- 	<bean -->
+<!-- 		class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator" -->
+<!-- 		depends-on="lifecycleBeanPostProcessor" /> -->
+
+<!-- 	<bean -->
+<!-- 		class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor"> -->
+<!-- 		<property name="securityManager" ref="securityManager" /> -->
+<!-- 	</bean> -->
+
+<!-- <!-- 	<bean id="facadeMonitoringAdvisor" class="net.bull.javamelody.MonitoringSpringAdvisor"> --> -->
+<!-- <!-- 		<property name="pointcut"> --> -->
+<!-- <!-- 			<bean class="org.springframework.aop.support.JdkRegexpMethodPointcut"> --> -->
+<!-- <!-- 				<property name="patterns"> --> -->
+<!-- <!-- 					<array> --> -->
+<!-- <!-- 						<value>\..*</value> --> -->
+<!-- <!-- 					</array> --> -->
+<!-- <!-- 				</property> --> -->
+<!-- <!-- 			</bean> --> -->
+<!-- <!-- 		</property> --> -->
+<!-- <!-- 	</bean> --> -->
+<!-- </beans> -->

@@ -1,0 +1,242 @@
+.kq_rule_list_title,
+.kq_rule_list {
+	width: 98%;
+	margin: 0 auto;
+	height: auto;
+	overflow: hidden;
+}
+
+.first_rulename {
+	float: left;
+	width: 27%;
+	height: auto;
+	overflow: hidden;
+	padding-bottom: 15px;
+	margin-right: 3%;
+}
+
+.next_rule_time {
+	float: left;
+	width: 30%;
+	height: auto;
+	overflow: hidden;
+	padding-bottom: 15px;
+}
+
+.thrid_rulearea {
+	float: left;
+	width: 40%;
+	height: auto;
+	overflow: hidden;
+	padding-bottom: 15px;
+}
+
+.rule_titname {
+	font-weight: bold;
+}
+
+.p-card-area {
+	width: 60%;
+	margin-right: 20px;
+	float: left;
+}
+
+.rule_edit {
+	float: right;
+	width: 100px;
+	cursor: pointer;
+}
+
+.rule_edit_a:first-child {
+	color: #A7B8EF;
+}
+
+.rule_edit_a:last-child {
+	color: red;
+}
+
+.add_your_rule {
+	width: 98%;
+	margin: 0 auto;
+	cursor: pointer;
+	color: #009CEB;
+	height: auto;
+	overflow: hidden;
+}
+
+.kq-tab {
+	width: 98%;
+	margin: 15px auto;
+	height: auto;
+	overflow: hidden;
+}
+
+.kq-daily {
+	width: 10%;
+	float: left;
+	height: auto;
+	overflow: hidden;
+	padding: 10px;
+	text-align: center;
+	border: 1px solid gainsboro;
+	cursor: pointer;
+	min-width: 100px;
+	max-width: 130px;
+	font-size: 0.9em;
+}
+
+.kq-daily:first-child {
+	border-right: 0;
+}
+
+.kq-active {
+	background: #F12F1B;
+	color: white;
+}
+
+.kq-active a {
+	color: white;
+}
+
+.box {
+	z-index: 111;
+	min-width: 500px;
+/* 	width: auto; */
+	background: white;
+	min-height: 300px;
+	height: auto;
+	/*overflow: auto;*/
+	position: absolute;
+/* 	max-width: 800px; */
+}
+
+.box h2 {
+	color: white;
+	padding: 5px;
+	background: #00B7EE;
+}
+
+.kq-people {
+	width: 98%;
+	margin: 0 auto;
+}
+
+.kq-people img {
+	width: 100px;
+}
+
+.people-img {
+	width: 110px;
+	height: auto;
+	overflow: hidden;
+	float: left;
+}
+
+.people-miaosu {
+	width: 300px;
+	float: left;
+	height: auto;
+	overflow: hidden;
+	margin-top: 10px;
+	line-height: 25px;
+}
+
+.min-table {
+	border-bottom: 1px solid #CCCCCC;
+	border-right: 1px solid #CCCCCC;
+	position: relative;
+	width: 96%;
+	margin: 10px auto;
+	text-align: center;
+	min-width: 300px;
+}
+
+.min-table th {
+	background-color: #EAEAEA;
+	font-size: 14px;
+	min-width: 100px;
+}
+
+.min-table th,
+.min-table td {
+	border-left: 1px solid #CCCCCC;
+	border-top: 1px solid #CCCCCC;
+	color: #333333;
+	padding: 0.3em;
+	font-size: 14px;
+}
+
+.kqclose {
+	float: right;
+	cursor: pointer;
+	color: white;
+}
+
+.person {
+	cursor: pointer;
+}
+
+.kq-jg {
+	width: 98%;
+	margin: 15px auto;
+	height: auto;
+	overflow: hidden;
+}
+
+.tomounth {
+	width: 100px;
+	text-align: left;
+	float: left;
+}
+
+.kq-squer {
+	float: left;
+	width: auto;
+	height: auto;
+	overflow: hidden;
+	border: 1px solid gainsboro;
+	padding: 10px;
+	margin-left: 20px;
+}
+
+.kq-peo {
+	float: left;
+	min-width: 300px;
+	text-align: center;
+	width: 35%;
+	max-width: ;
+}
+
+.kq-peo p {
+	line-height: 25px;
+}
+
+.people-num {
+	color: orangered;
+}
+
+.kq-peo:first-child {
+	border-right: 1px solid gainsboro;
+}
+
+.kqbz-img {
+	max-width: 100px;
+	margin-left: 10px;
+	cursor: pointer;
+}
+
+.thumbnail-item {
+	position: relative;
+	float: left;
+	margin: 0px 5px;
+}
+
+.thumbnail-item a {
+	display: block;
+}
+
+.tooltip {
+	display: none;
+	position: absolute;
+	padding: 8px 0 0 8px;
+}

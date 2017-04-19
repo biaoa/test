@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.linle.communityNotice.mapper.CommunityNoticeMapper" >
+  <resultMap id="BaseResultMap" type="com.linle.entity.sys.CommunityNotice" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="community_id" property="communityId" jdbcType="BIGINT" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+    <result column="create_user" property="createUser" jdbcType="BIGINT" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.linle.entity.sys.CommunityNotice" extends="BaseResultMap" >
+    <result column="content" property="content" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  
+   <resultMap id="APIResultMap" type="com.linle.mobileapi.v1.model.CommunityNoticeVO" extends="BaseResultMap" >
+     <id column="id" property="id" jdbcType="BIGINT" />
+     <result column="title" property="title" jdbcType="VARCHAR" />
+     <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  
+  
+  <sql id="Base_Column_List" >
+    id, title, community_id, status,type, create_date, update_date, create_user
+  </sql>
+  <sql id="Blob_Column_List" >
+    content
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from community_notice
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from community_notice
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.linle.entity.sys.CommunityNotice" >
+    insert into community_notice (id, title, community_id, 
+      status,type, create_date, update_date, 
+      create_user, content)
+    values (#{id,jdbcType=BIGINT}, #{title,jdbcType=VARCHAR}, #{communityId,jdbcType=BIGINT}, 
+      #{status,jdbcType=INTEGER}, #{type,jdbcType=INTEGER},  #{createDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP}, 
+      #{createUser,jdbcType=BIGINT}, #{content,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.linle.entity.sys.CommunityNotice" >
+    insert into community_notice
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="title != null" >
+        title,
+      </if>
+      <if test="communityId != null" >
+        community_id,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="updateDate != null" >
+        update_date,
+      </if>
+      <if test="createUser != null" >
+        create_user,
+      </if>
+      <if test="content != null" >
+        content,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="title != null" >
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="communityId != null" >
+        #{communityId,jdbcType=BIGINT},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUser != null" >
+        #{createUser,jdbcType=BIGINT},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.linle.entity.sys.CommunityNotice" >
+    update community_notice
+    <set >
+      <if test="title != null" >
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="communityId != null" >
+        community_id = #{communityId,jdbcType=BIGINT},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+       <if test="type != null" >
+        type = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUser != null" >
+        create_user = #{createUser,jdbcType=BIGINT},
+      </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.linle.entity.sys.CommunityNotice" >
+    update community_notice
+    set title = #{title,jdbcType=VARCHAR},
+      community_id = #{communityId,jdbcType=BIGINT},
+      status = #{status,jdbcType=INTEGER},
+      type = #{type,jdbcType=INTEGER},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP},
+      create_user = #{createUser,jdbcType=BIGINT},
+      content = #{content,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.linle.entity.sys.CommunityNotice" >
+    update community_notice
+    set title = #{title,jdbcType=VARCHAR},
+      community_id = #{communityId,jdbcType=BIGINT},
+      status = #{status,jdbcType=INTEGER},
+      type = #{type,jdbcType=INTEGER},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP},
+      create_user = #{createUser,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  <select id="getAllData" parameterType="page" resultMap="BaseResultMap">
+  	select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from community_notice
+    where status = #{params.status} and community_id = #{params.communityId}
+    <if test="params.typeSerach==0">
+    	 and (type=#{params.typeSerach} or type is null)
+    </if>
+    <if test="params.typeSerach==1">
+    	 and type=#{params.typeSerach}
+    </if>
+    order by create_date desc
+  </select>
+  
+  <update id="del" parameterType="Long">
+  	update community_notice
+  	set status = 2
+  	where id = #{id}
+  </update>
+  
+  <select id="selectCommunityNoticeByCommunityId" parameterType="map" resultMap="BaseResultMap">
+  	 	select 
+    <include refid="Base_Column_List" />
+     from community_notice
+     where status = 0 and community_id = #{community_id}
+     <if test="typeSerach==0">
+    	 and (type=#{typeSerach} or type is null)
+    </if>
+    <if test="typeSerach==1">
+    	 and type=#{typeSerach}
+    </if>
+  </select>
+  
+  <!-- 通知内容列表 -->
+  <select id="getAllForAPI" resultMap="APIResultMap" parameterType="map">
+	  	select  id,title,create_date
+	  	from community_notice
+	  	where status = 1 and community_id = #{communityId} 
+	  	<if test="type==null or type==0">
+    		and (type=0 or type is null) 
+	    </if>
+	    <if test="type!=null and type==1">
+	    	and type=1
+	    </if>
+	  	order by create_date desc
+	  	limit #{begin},#{end}
+  </select>
+  
+  <!-- 获得详情 -->
+  <select id="selectByIdForAPI" resultMap="ResultMapWithBLOBs" parameterType="map">
+	  	select  *
+	  	from community_notice
+	  	where status = 1 and id=#{id}
+  </select>
+  
+    <!-- 公告内容列表，最新三条 -->
+  <select id="getAllPublicForAPI" resultMap="APIResultMap" parameterType="map">
+	  	select  id,title,create_date
+	  	from community_notice
+	  	where status = 1 and community_id = #{communityId} and type=1
+	  	order by create_date desc
+	  	limit 0,3
+  </select>
+  
+</mapper>

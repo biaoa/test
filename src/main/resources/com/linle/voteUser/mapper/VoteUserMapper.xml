@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.linle.voteUser.mapper.VoteUserMapper" >
+  <resultMap id="BaseResultMap" type="com.linle.voteUser.model.VoteUser" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="theme_id" property="themeId" jdbcType="BIGINT" />
+    <result column="options_id" property="optionsId" jdbcType="BIGINT" />
+    <result column="user_id" property="userId" jdbcType="BIGINT" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  
+   <resultMap id="VoteUserResultMap" type="com.linle.voteUser.model.VoteUser" extends="BaseResultMap">
+    <result column="createDateStr" property="createDateStr" jdbcType="VARCHAR" />
+    <association column="user_id" property="user" select="com.linle.user.mapper.UserMapper.selectByPrimaryKey"/>
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    id, theme_id, options_id, user_id, create_date
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from vote_user
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from vote_user
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.linle.voteUser.model.VoteUser" >
+    insert into vote_user (id, theme_id, options_id, 
+      user_id, create_date)
+    values (#{id,jdbcType=BIGINT}, #{themeId,jdbcType=BIGINT}, #{optionsId,jdbcType=BIGINT}, 
+      #{userId,jdbcType=BIGINT}, #{createDate,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.linle.voteUser.model.VoteUser" >
+    insert into vote_user
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="themeId != null" >
+        theme_id,
+      </if>
+      <if test="optionsId != null" >
+        options_id,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="themeId != null" >
+        #{themeId,jdbcType=BIGINT},
+      </if>
+      <if test="optionsId != null" >
+        #{optionsId,jdbcType=BIGINT},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.linle.voteUser.model.VoteUser" >
+    update vote_user
+    <set >
+      <if test="themeId != null" >
+        theme_id = #{themeId,jdbcType=BIGINT},
+      </if>
+      <if test="optionsId != null" >
+        options_id = #{optionsId,jdbcType=BIGINT},
+      </if>
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.linle.voteUser.model.VoteUser" >
+    update vote_user
+    set theme_id = #{themeId,jdbcType=BIGINT},
+      options_id = #{optionsId,jdbcType=BIGINT},
+      user_id = #{userId,jdbcType=BIGINT},
+      create_date = #{createDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+   <!--获取该活动投票数  -->
+   <select id="selectVoteCountByThemeId" resultType="long" parameterType="int" >
+      select count(*)  from vote_user where theme_id=#{theme_id}
+   </select>
+   
+    <!--获取参与投票成员总人数 -->
+   <select id="selectVoteUsersByThemeId" resultType="long" parameterType="int" >
+      select count(DISTINCT user_id)  from vote_user where theme_id=#{theme_id}
+   </select>
+   
+   <!--获取该活动该选项投票数  -->
+   <select id="selectCountByThemeIdAndOptionsId" resultType="long" parameterType="java.util.HashMap" >
+      select count(id) 
+      from vote_user 
+      where theme_id=#{themeId} and options_id = #{optionsId}
+   </select>
+   
+    <!--获取参与投票成员  -->
+   <select id="getVoteUsersById" resultMap="VoteUserResultMap" parameterType="java.util.HashMap" >
+      select vu.*,DATE_FORMAT(vu.create_date,'%m-%d %H:%i') createDateStr
+      from vote_user  vu
+      where vu.theme_id=#{themeId}
+      GROUP BY vu.user_id 
+       order by vu.create_date desc
+   </select>
+   
+    <!--获取该活动是否投过票  -->
+   <select id="selectCountByThemeIdAndUserId" resultType="long" parameterType="java.util.HashMap" >
+      select count(id) 
+      from vote_user 
+      where theme_id=#{themeId} and user_id = #{userId}
+   </select>
+   
+   <!--判断该活动是否有相同房号地址投过票  -->
+   <select id="selectCountByThemeIdAndAddressDetails" resultType="long" parameterType="java.util.HashMap" >
+       SELECT COUNT(*) FROM vote_user vo
+		LEFT JOIN users user ON `user`.id=vo.user_id
+		WHERE  theme_id=#{themeId} AND `user`.address_details=#{addressDetails.id}
+   </select>
+
+</mapper>

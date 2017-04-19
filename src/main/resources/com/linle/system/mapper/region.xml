@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.linle.system.mapper.RegionMapper">
+	<resultMap id="regionResult" type="SysRegion">
+		<result property="id" column="id" />
+		<result property="gb2260" column="gb2260" />
+		<result property="name" column="name" />
+		<result property="regionLevel" column="region_level"
+			typeHandler="IntEnumTypeHandler" />
+		<result property="parent.gb2260" column="parent_gb2260" />
+		<result property="parentIds" column="parent_ids" />
+		<result property="diallingCode" column="dialling_code" />
+		<association property="parent"  column="parent_id"  javaType="SysRegion"  select="getById"/>
+	</resultMap>
+	
+	<resultMap id="provinceResult" type="ProvinceVO">
+		<result property="id" column="id" />
+		<result property="name" column="name" />
+		<collection  property="cityList"  select="loadchild" column="id"/>
+	</resultMap>
+	
+	<resultMap id="areaResult" type="Area">
+		<result property="id" column="id" />
+		<result property="areaName" column="name" />
+		<collection  property="communityList"  select="loadCommunity" column="id" />
+	</resultMap>
+	
+	<resultMap id="communityResult" type="Community">
+		<result property="id" column="id" />
+		<result property="name" column="name" />
+	</resultMap>
+	
+	<insert id="add" useGeneratedKeys="true" keyProperty="id" parameterType="SysRegion">
+		INSERT INTO sys_region
+		(gb2260,name,region_level,parent_id,parent_gb2260,parent_ids,dialling_code,create_date,last_modified)
+		VALUES(#{gb2260},#{name},#{regionLevel,typeHandler=IntEnumTypeHandler},#{parent.id},#{parent.gb2260},#{parentIds},#{diallingCode},now(),now())
+	</insert>
+
+	<select id="getById" parameterType="long" resultMap="regionResult">
+		select * from sys_region where id = #{id}
+	</select>
+	<select id="findByLevel" resultMap="regionResult">
+		select * from sys_region
+		where region_level = #{level,typeHandler=IntEnumTypeHandler}
+		<if test="parents != null">
+			and parent_id = #{parents.id}
+		</if>
+	</select>
+	
+	<select id="findByLevels" resultMap="regionResult">
+		select * from sys_region
+		where region_level = #{regionLevel,typeHandler=IntEnumTypeHandler}
+	</select>
+	<select id="getByLevels"  resultMap="regionResult">
+		select * from sys_region
+	</select>
+	<select id="findLevelsByParent" resultMap="regionResult">
+		select * from sys_region where gb2260=#{parentGb2260}
+	</select>
+	
+	<select id="getAllData" resultMap="provinceResult">
+		select id,name from sys_region where parent_id  is NULL
+	</select>
+	
+	<select id="loadchild" resultMap="areaResult">
+		select ID,name from sys_region where parent_id = #{id} and region_level &lt; 3
+	</select>
+	
+	<select id="loadCommunity" resultMap="communityResult">
+		select id,name,city from community where property_id in (
+			select id from property_company where region_id  in 
+			(select id from sys_region where parent_id = #{id})
+		)
+		order by collaborate_flag desc		
+	</select>
+	<cache eviction="FIFO" flushInterval="60000"  size="1024" readOnly="true" />
+</mapper>

@@ -1,0 +1,28 @@
+﻿@charset "utf-8";
+
+
+
+/* tips */
+.tooltip-options .tips {
+	position:absolute;
+	top:53px;
+	left:300px;
+	width:182px;
+	height:123px;
+	visibility:hidden;
+	opacity:0.0;
+	-moz-transition:all 0.5s ease;
+	-webkit-transition:all 0.5s ease;
+	-o-transition:all 0.5s ease;
+}
+.tooltip-options .tips .tipscont {
+	width:100px;
+	text-align:center;
+	margin:10px 0 0 50px;
+}
+.tooltip-options .hover {
+	visibility:visible;
+	top:33px;
+	left:320px;
+	opacity:1;
+}

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport"
+	content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>邻乐-让生活过的更好</title>
+<#include '/common/base.html'>
+</head>
+
+<body>
+	<div>中秋活动
+		 <#if islogin==0>
+			 登陆用户
+			 <button id="go">点击跳转圈子</button>
+			 <button id="go2">点击跳转水费</button>
+			 <button id="go3">点击跳转物业费</button>
+		 <#else>
+		 	未登录用户 
+		 </#if>
+	</div>
+</body>
+<script type="text/javascript">
+	$("#go").click(function() {
+		try {
+			window.online.activity("0","circle","3");
+		} catch (e) {
+			onlineActivity("0","circle","3");
+		}
+	})
+	
+	$("#go2").click(function() {
+		try {
+			window.online.activity("0","water","0");
+		} catch (e) {
+			onlineActivity("0","water","0");
+		}
+	})
+	
+	$("#go3").click(function() {
+		try {
+			window.online.activity("0","propertyFee","0");
+		} catch (e) {
+			onlineActivity("0","propertyFee","0");
+		}
+	})
+	
+	
+</script>
+</html>

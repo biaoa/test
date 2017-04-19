@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.linle.communityDepartment.mapper.CommunityDepartmentMapper" >
+  <resultMap id="BaseResultMap" type="com.linle.entity.sys.CommunityDepartment" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="work_begin" property="workBegin" jdbcType="VARCHAR" />
+    <result column="work_end" property="workEnd" jdbcType="VARCHAR" />
+    <result column="phone" property="phone" jdbcType="VARCHAR" />
+    <result column="introduce" property="introduce" jdbcType="VARCHAR" />
+    <result column="community_id" property="communityId" jdbcType="BIGINT" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+    <result column="logo" property="logo"/>
+    <association property="count" column="id" select="com.linle.communityEmployee.mapper.CommunityEmployeeMapper.selelctEmployeeCount"/>
+  </resultMap>
+  
+  <resultMap type="com.linle.mobileapi.v1.model.DepartmentVO" id="DepartmentAPIResult">
+  	 <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="name" property="departmentName" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    id, name, work_begin, work_end, phone, introduce, community_id, create_date, update_date,logo
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from community_department
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from community_department
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.linle.entity.sys.CommunityDepartment" >
+    insert into community_department (id, name, work_begin, 
+      work_end, phone, introduce, 
+      community_id, create_date, update_date,logo
+      )
+    values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{workBegin}, 
+      #{workEnd}, #{phone,jdbcType=VARCHAR}, #{introduce,jdbcType=VARCHAR}, 
+      #{communityId,jdbcType=BIGINT}, #{createDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP}
+      ,#{logo})
+  </insert>
+  <insert id="insertSelective" parameterType="com.linle.entity.sys.CommunityDepartment" >
+    insert into community_department
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="workBegin != null" >
+        work_begin,
+      </if>
+      <if test="workEnd != null" >
+        work_end,
+      </if>
+      <if test="phone != null" >
+        phone,
+      </if>
+      <if test="introduce != null" >
+        introduce,
+      </if>
+      <if test="communityId != null" >
+        community_id,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="updateDate != null" >
+        update_date,
+      </if>
+      <if test="logo !=null">
+      	logo,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="workBegin != null" >
+        #{workBegin},
+      </if>
+      <if test="workEnd != null" >
+        #{workEnd},
+      </if>
+      <if test="phone != null" >
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="introduce != null" >
+        #{introduce,jdbcType=VARCHAR},
+      </if>
+      <if test="communityId != null" >
+        #{communityId,jdbcType=BIGINT},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="logo !=null">
+      	#{logo},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.linle.entity.sys.CommunityDepartment" >
+    update community_department
+    <set >
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="workBegin != null" >
+        work_begin = #{workBegin},
+      </if>
+      <if test="workEnd != null" >
+        work_end = #{workEnd},
+      </if>
+      <if test="phone != null" >
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="introduce != null" >
+        introduce = #{introduce,jdbcType=VARCHAR},
+      </if>
+      <if test="communityId != null" >
+        community_id = #{communityId,jdbcType=BIGINT},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="logo !=null">
+      	logo = #{logo},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.linle.entity.sys.CommunityDepartment" >
+    update community_department
+    set name = #{name,jdbcType=VARCHAR},
+      work_begin = #{workBegin},
+      work_end = #{workEnd},
+      phone = #{phone,jdbcType=VARCHAR},
+      introduce = #{introduce,jdbcType=VARCHAR},
+      community_id = #{communityId,jdbcType=BIGINT},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP},
+      logo = #{logo}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  <select id="getAllData" parameterType="page" resultMap="BaseResultMap">
+  	   select 
+    <include refid="Base_Column_List" />
+    from community_department
+    where community_id = #{params.communityId}
+  </select>
+  
+  <select id="getAllDepartment" parameterType="Long" resultMap="BaseResultMap">
+  	 select 
+    <include refid="Base_Column_List" />
+    from community_department
+    where community_id = #{communityId}
+  </select>
+  
+  <select id="getDepartmentListForAPI" parameterType="map" resultMap="DepartmentAPIResult">
+  		select id,name
+  		from community_department
+  		where community_id = #{communityId}
+  </select>
+</mapper>

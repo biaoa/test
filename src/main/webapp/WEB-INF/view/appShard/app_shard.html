@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<title>邻乐社区</title>
+		<#include '/common/base.html'>
+		<meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width">
+		<style type="text/css">
+			* {
+				margin: 0;
+				padding: 0;
+				-webkit-tap-highlight-color: transparent;
+			}
+			
+			li {
+				list-style: none
+			}
+			
+			img {
+				border: none
+			}
+			
+			input,
+			select,
+			textarea {
+				outline: none;
+				border: none;
+				background: none
+			}
+			
+			input {
+				-webkit-appearance: none
+			}
+			
+			textarea {
+				resize: none
+			}
+			
+			body,
+			button,
+			input,
+			select,
+			textarea {
+				font: 14px/1.5 tahoma, arial, 'Hiragino Sans GB', Microsoft YaHei, sans-serif;
+			}
+			
+			a {
+				color: #252525;
+				text-decoration: none;
+				-webkit-tap-highlight-color: transparent;
+			}
+			
+			a:visited {
+				color: #252525;
+			}
+			
+			body {
+				background: #fff;
+				color: #252525;
+				font: 14px/1.5 tahoma, arial, 'Hiragino Sans GB', Microsoft YaHei, sans-serif;
+			}
+			
+			img {}
+			
+			header {
+				position: relative;
+			}
+			
+			header img {
+				width: 100%;
+			}
+			
+			header p {
+				background: rgba(255, 255, 255, .5);
+				text-align: center;
+				line-height: 35px;
+				height: 35px;
+				color: #252525;
+			}
+			
+			header p b {
+				color: #fa5f64;
+			}
+			
+			.download {
+				position: absolute;
+				top: 46%;
+				width: 62%;
+				z-index: 2;
+				left: 19%;
+			}
+			
+			.download a {
+				display: block;
+				height: 46px;
+				line-height: 46px;
+				color: #fff;
+				border-radius: 5px;
+				font-size: 18px;
+				text-align: center;
+			}
+			
+			.download a:before {
+				content: "";
+				display: inline-block;
+				margin-right: 10px;
+				vertical-align: middle;
+			}
+			
+			.download a.ios:before {
+				background: url(${base}/resources/images/appShard/ico-ios.png) no-repeat;
+				background-size: 22px 27px;
+				width: 22px;
+				height: 27px;
+			}
+			
+			.download a.android:before {
+				background: url(${base}/resources/images/appShard/ico-android.png) no-repeat;
+				background-size: 24px 28px;
+				width: 24px;
+				height: 28px;
+			}
+			
+			.download a.ios {
+				background: #a5b1bd;
+				margin-bottom: 10px;
+			}
+			
+			.download a.android {
+				background: #8acebc;
+			}
+			
+			.area {
+				border-radius: 5px;
+				border: 1px solid #e6e6e6;
+				margin: 5px;
+				position: relative;
+			}
+			
+			.area .hd {
+				height: 32px;
+				line-height: 32px;
+				border-radius: 5px 5px 0 0;
+				padding-left: 58px;
+				position: relative;
+			}
+			
+			.area .hd h3 {
+				width: 53px;
+				position: absolute;
+				left: 0;
+				top: 0;
+				font-size: 18px;
+				font-weight: normal;
+				color: #fff;
+				text-align: right;
+			}
+			
+			.area .hd ul {}
+			
+			.area .hd ul li {
+				float: left;
+				text-align: center;
+				line-height: 32px;
+				color: #fff;
+				font-size: 13px;
+			}
+			
+			.area .bd {
+				padding: 20px;
+				text-align: center;
+			}
+			
+			.area .bd h2 {
+				font-size: 21px;
+				font-weight: normal;
+				margin-bottom: 10px;
+			}
+			
+			.area .bd p {
+				font-size: 13px;
+			}
+			
+			.baojie .hd {
+				background: #809bbf;
+			}
+			
+			.baojie .hd ul li {
+				width: 33.333%;
+			}
+			
+			.baojie .bd {
+				color: #003399;
+			}
+			
+			/*.baojie:after {
+				content: "";
+				display: block;
+				position: absolute;
+				width: 113px;
+				height: 113px;
+				background: url(http://dj.58cdn.com.cn/fe/public/appdownload/img/ico-baojie.png) no-repeat;
+				background-size: 113px 113px;
+				right: 0;
+				bottom: 0;
+			}*/
+			
+			.meijia .hd {
+				background: #4f6eb0;
+			}
+			
+			.meijia .hd ul li {
+				width: 33%;
+			}
+			
+			.meijia .bd {
+				color: #003399;
+			}
+			
+			/*.meijia:after {
+				content: "";
+				display: block;
+				position: absolute;
+				width: 60px;
+				height: 122px;
+				background: url(http://dj.58cdn.com.cn/fe/public/appdownload/img/ico-meijia.png) no-repeat;
+				background-size: 60px 122px;
+				left: 0;
+				bottom: 0;
+			}*/
+			
+			.sj .hd {
+				background: #30497d;
+			}
+			
+			.sj .hd ul li {
+				width: 33%;
+			}
+			
+			.sj .bd {
+				color: #003399;
+			}
+			.suyun .hd {
+				background: #282f51;
+			}
+			
+			.suyun .hd h3 {
+				/*width: 80px;*/
+			}
+			
+			.suyun ul {
+				width: 80%;
+				margin-left: 10%;
+			}
+			
+			.suyun .hd ul li {
+				width: 50%;
+			}
+			
+			.suyun .bd {
+				color: #003399;
+			}
+			
+			/*.suyun:after {
+				content: "";
+				display: block;
+				position: absolute;
+				width: 112px;
+				height: 78px;
+				background: url(http://dj.58cdn.com.cn/fe/public/appdownload/img/ico-suyun.png) no-repeat;
+				background-size: 112px 78px;
+				right: 0;
+				bottom: 10px;
+			}*/
+			
+			.solgan {
+				margin-bottom: 20px;
+				overflow: hidden;
+				color: #003399;
+			}
+			
+			.solgan h2 {
+				text-align: center;
+				font-weight: normal;
+				font-size: 19px;
+				padding: 15px 0 8px;
+			}
+			
+			.solgan ul {}
+			
+			.solgan li {
+				float: left;
+				width: 33%;
+				text-align: center;
+			}
+			
+			.solgan li:before {
+				content: "";
+				display: block;
+				width: 64px;
+				height: 64px;
+				border-radius: 33px;
+				/*border: 1px solid #e0dbd8;*/
+				margin: 0 auto;
+			}
+			
+			.solgan li:nth-child(1):before {
+				background: url(${base}/resources/images/appShard/gx_01.png) no-repeat center center;
+				background-size: 50px auto;
+			}
+			
+			.solgan li:nth-child(2):before {
+				background: url(${base}/resources/images/appShard/bj_02.png) no-repeat center center;
+				background-size: 50px auto;
+			}
+			
+			.solgan li:nth-child(3):before {
+				background: url(${base}/resources/images/appShard/fw_03.png) no-repeat center center;
+				background-size: 50px auto;
+			}
+			.top-im{
+				width: 100%;
+				margin: 0 auto;
+				text-align: center;
+				
+			}
+			.top-im img{
+				width: 50%;
+				margin: 10px auto;
+			}
+		</style>
+	</head>
+	<body>
+		<header>
+			<div class="top-im">
+				<img src="${base}/resources/images/appShard/logo_01.png"/>
+			</div>
+			<div class="download">
+				<a href="javascript:void(0);" onclick="openApp()" class="ios" target="_blank">iPhone版下载</a>
+				<a href="javascript:void(0);" onclick="openApp()" class="android" target="_blank">Android版下载</a>
+			</div>
+			<img src="${base}/resources/images/appShard/banner_02.jpg" alt="">
+		</header>
+		<section class="area baojie">
+			<div class="hd">
+				<h3>用户</h3>
+				<ul>
+					<li>一键报修</li>
+					<li>小区公告</li>
+					<li>轻松购物</li>
+					
+				</ul>
+			</div>
+			<div class="bd">
+				<h2>邻乐社区APP是一款综合类服务平台<br>以物业服务为核心的社区服务生态圈</h2>
+				<p>整合物业服务、周边生活配套<br>为业主提供“一站式管家”服务<br>让业主真正实现足不出户即可乐享生活服务</p>
+			</div>
+		</section>
+		<section class="area meijia">
+			<div class="hd">
+				<h3>微信</h3>
+				<ul>
+					<li>智能家居</li>
+					<li>掌上物业</li>
+					<li>健康生活服务</li>
+				</ul>
+			</div>
+			<div class="bd">
+				<h2>关注邻乐社区公众号<br>获取更多智能家居</h2>
+				<p>掌上物业及健康生活服务<br>体验社区精彩活动，关注邻乐社区</p>
+			</div>
+		</section>
+		<section class="area sj">
+			<div class="hd">
+				<h3>商家端</h3>
+				<ul>
+					<li>一键接单</li>
+					<li>查看订单</li>
+					<li>管理订单</li>
+				</ul>
+			</div>
+			<div class="bd">
+				<h2>商家免费试用</h2>
+				<p>随时查看订单状态<br>设立一键接单功能<br>让管理更加便捷</p>
+			</div>
+		</section>
+		<section class="area suyun">
+			<div class="hd">
+				<h3>物业</h3>
+				<ul>
+					<li>管理社区用户</li>
+					<li>发布社区通知</li>
+				</ul>
+			</div>
+			<div class="bd">
+				<h2>邻乐物业是一款为物业人员<br>量身定制的社区管理软件</h2>
+				<p>管理社区用户及发布社区通知<br>给社区居民和物业管理人员<br>带来更加便捷的社区管理体验</p>
+			</div>
+		</section>
+		<section class="solgan">
+			<h2>请相信我们能让生活过的更好</h2>
+			<ul>
+				<li>高效</li>
+				<li>便捷</li>
+				<li>服务</li>
+			</ul>
+		</section>			
+	</body>
+<script>
+/**
+ * 1.微信浏览器 和 qq浏览器跳转到应用宝
+ * 	 但，android手机 qq浏览器，会跳转到应用宝自动会打开app（若app已安装），ios跳转到appstore
+ * 
+ * 2.非微信浏览器 和非qq浏览器，若app已安装，会跳转到本地app打开，若没安装跳转到应用宝下载
+ *
+ */
+//在手机浏览器中用js代码请求该协议，如果在500ms内，如果有应用程序能解析这个协议，那么就能打开该应用；如果超过500ms就跳转到app下载页。
+function openApp(){ 
+	 var ua = window.navigator.userAgent.toLowerCase();  
+	 var iosUrl= "wx2ecb845a1df48db1://openwebview/";    //打开IOS客户端链接 LLCommunity://
+	 var androidUrl= "applinle://";  //打开ANdroid客户端的链接
+	 var downloadUrl="http://a.app.qq.com/o/simple.jsp?pkgname=linlekeji.com.linle";  //腾讯的应用宝
+	    //微信浏览器     qq浏览器 
+// 	    alert(ua);
+	    if((ua.match(/MicroMessenger/i) == 'micromessenger') ||(ua.indexOf('qq')!=-1)){  //android qq浏览器跳转到应用宝自动会打开app
+			//链接到腾讯应用宝
+			window.location.href=downloadUrl;
+	    }else{//非微信浏览器  ， 非qq浏览器
+	    	 if (navigator.userAgent.match(/(iPhone|iPod|iPad);?/i)) {//苹果
+// 	    		 	 alert(2);
+	             	 window.location.href="wx2ecb845a1df48db1://openwebview/"; //打开某手机上的某个app应用
+	                 setTimeout(function(){
+	                     window.location.href=downloadUrl;//如果超时就跳转到app下载页
+	                 },3000);
+			 } else if (navigator.userAgent.match(/android/i)) {//安卓
+// 				  if((ua.indexOf('xiaomi')!=-1)){//app存在，小米浏览器直接打不开app
+// 					 window.location.href=downloadUrl;
+// 				  }
+			      //这种方式，跳转不到应用宝
+// 				  var state = null;
+// 				  try {
+// 					  state = window.open(androidUrl, '_blank');//与APP约定的一个协议URL
+// 				  } catch(e) {}
+// 				  if (state) {
+// 					  window.close();
+// 				  } else {
+// 					  window.location = downloadUrl;
+// 				  }
+
+				 window.location.href=androidUrl; //打开某手机上的某个app应用
+                 setTimeout(function(){
+                     window.location.href=downloadUrl;//如果超时就跳转到app下载页
+                 },1000);
+		 	}
+	    }
+}
+</script>
+</html>

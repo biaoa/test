@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.linle.appBanner.mapper.AppbannerAccessRecordMapper" >
+  <resultMap id="BaseResultMap" type="com.linle.appBanner.model.AppbannerAccessRecord" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="uid" property="uid" jdbcType="BIGINT" />
+    <result column="community_id" property="communityId" jdbcType="BIGINT" />
+    <result column="banner_id" property="bannerId" jdbcType="BIGINT" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, uid, community_id, banner_id, create_date, update_date
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from appbanner_access_record
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from appbanner_access_record
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.linle.appBanner.model.AppbannerAccessRecord" >
+    insert into appbanner_access_record (id, uid, community_id, 
+      banner_id, create_date, update_date
+      )
+    values (#{id,jdbcType=BIGINT}, #{uid,jdbcType=BIGINT}, #{communityId,jdbcType=BIGINT}, 
+      #{bannerId,jdbcType=BIGINT}, #{createDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.linle.appBanner.model.AppbannerAccessRecord" >
+    insert into appbanner_access_record
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="uid != null" >
+        uid,
+      </if>
+      <if test="communityId != null" >
+        community_id,
+      </if>
+      <if test="bannerId != null" >
+        banner_id,
+      </if>
+        create_date,
+        update_date
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="uid != null" >
+        #{uid,jdbcType=BIGINT},
+      </if>
+      <if test="communityId != null" >
+        #{communityId,jdbcType=BIGINT},
+      </if>
+      <if test="bannerId != null" >
+        #{bannerId,jdbcType=BIGINT},
+      </if>
+    	 now(),now()
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.linle.appBanner.model.AppbannerAccessRecord" >
+    update appbanner_access_record
+    <set >
+      <if test="uid != null" >
+        uid = #{uid,jdbcType=BIGINT},
+      </if>
+      <if test="communityId != null" >
+        community_id = #{communityId,jdbcType=BIGINT},
+      </if>
+      <if test="bannerId != null" >
+        banner_id = #{bannerId,jdbcType=BIGINT},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.linle.appBanner.model.AppbannerAccessRecord" >
+    update appbanner_access_record
+    set uid = #{uid,jdbcType=BIGINT},
+      community_id = #{communityId,jdbcType=BIGINT},
+      banner_id = #{bannerId,jdbcType=BIGINT},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

@@ -1,0 +1,384 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.linle.propertyFee.mapper.PropertyFeeMapper">
+	<resultMap id="BaseResultMap" type="com.linle.entity.sys.PropertyFee">
+		<id column="id" property="id" jdbcType="BIGINT" />
+		<result column="house_owner" property="houseOwner" jdbcType="VARCHAR" />
+		<result column="house_number" property="houseNumber" jdbcType="VARCHAR" />
+		<result column="house_acreage" property="houseAcreage" jdbcType="REAL" />
+		<result column="price" property="price" jdbcType="DECIMAL" />
+		<result column="payable" property="payable" jdbcType="DECIMAL" />
+		<result column="order_no" property="orderNo" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+		<result column="fee_time" property="feeTime" jdbcType="VARCHAR" />
+		<result column="year" property="year" jdbcType="INTEGER" />
+		<result column="month" property="month" jdbcType="INTEGER" />
+		<result column="community_id" property="communityId" jdbcType="BIGINT" />
+		<result column="property_json" property="propertyJson" jdbcType="LONGVARCHAR" />
+		<result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+		<result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+		<result column="pay_date" property="payDate"/>
+	</resultMap>
+	
+	<resultMap type="PropertyFeeRES" id="PropertyFeeForAPIResult">
+		<result column="name" property="communityName"/>
+		<result column="house_number" property="houseNumber"/>
+		<result column="house_acreage" property="acreage"/>
+		<result column="price" property="price"/>
+		<result column="payable" property="payable"/>
+		<result column="fee_time" property="feeTime"/>
+		<result column="order_no" property="orderNo"/>
+		<result column="status" property="status"/>
+	</resultMap>
+	
+	<resultMap type="com.linle.entity.vo.PropertyFeeVO" id="PropertyFeeVOUsersResult">
+		<result column="name" property="name"/>
+		<result column="roomNo" property="roomNo"/>
+		<result column="price" property="price"/>
+		<result column="acreage" property="acreage"/>
+		<result column="payable" property="payable"/>
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		id, house_owner, house_number, house_acreage, price, payable, order_no,
+		status, fee_time,
+		year, month, community_id,property_json,create_date,update_date,pay_date
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from property_fee
+		where id = #{id,jdbcType=BIGINT}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		delete from property_fee
+		where id = #{id,jdbcType=BIGINT}
+	</delete>
+	<insert id="insert" parameterType="com.linle.entity.sys.PropertyFee">
+		insert into property_fee (id, house_owner, house_number,
+		house_acreage, price, payable,
+		order_no, status, fee_time,
+		year, month, community_id,create_date,update_date,pay_date
+		)
+		values (#{id,jdbcType=BIGINT}, #{houseOwner,jdbcType=VARCHAR},
+		#{houseNumber,jdbcType=VARCHAR},
+		#{houseAcreage,jdbcType=REAL}, #{price,jdbcType=DECIMAL}, #{payable,jdbcType=DECIMAL},
+		#{orderNo,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER},
+		#{feeTime,jdbcType=VARCHAR},
+		#{year,jdbcType=INTEGER}, #{month,jdbcType=INTEGER}, #{communityId,jdbcType=BIGINT},
+		#{createDate},#{updateDate},#{payDate}
+		)
+	</insert>
+	<insert id="insertSelective" parameterType="com.linle.entity.sys.PropertyFee" useGeneratedKeys="true" keyProperty="id">
+		insert into property_fee
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="houseOwner != null">
+				house_owner,
+			</if>
+			<if test="houseNumber != null">
+				house_number,
+			</if>
+			<if test="houseAcreage != null">
+				house_acreage,
+			</if>
+			<if test="price != null">
+				price,
+			</if>
+			<if test="payable != null">
+				payable,
+			</if>
+			<if test="orderNo != null">
+				order_no,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+			<if test="feeTime != null">
+				fee_time,
+			</if>
+			<if test="year != null">
+				year,
+			</if>
+			<if test="month != null">
+				month,
+			</if>
+			<if test="communityId != null">
+				community_id,
+			</if>
+			<if test="createDate !=null">
+				create_date,
+			</if>
+			<if test="updateDate !=null">
+				update_date,
+			</if>
+			<if test="payDate !=null">
+				pay_date,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=BIGINT},
+			</if>
+			<if test="houseOwner != null">
+				#{houseOwner,jdbcType=VARCHAR},
+			</if>
+			<if test="houseNumber != null">
+				#{houseNumber,jdbcType=VARCHAR},
+			</if>
+			<if test="houseAcreage != null">
+				#{houseAcreage,jdbcType=REAL},
+			</if>
+			<if test="price != null">
+				#{price,jdbcType=DECIMAL},
+			</if>
+			<if test="payable != null">
+				#{payable,jdbcType=DECIMAL},
+			</if>
+			<if test="orderNo != null">
+				#{orderNo,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=INTEGER},
+			</if>
+			<if test="feeTime != null">
+				#{feeTime,jdbcType=VARCHAR},
+			</if>
+			<if test="year != null">
+				#{year,jdbcType=INTEGER},
+			</if>
+			<if test="month != null">
+				#{month,jdbcType=INTEGER},
+			</if>
+			<if test="communityId != null">
+				#{communityId,jdbcType=BIGINT},
+			</if>
+			<if test="createDate !=null">
+				#{createDate},
+			</if>
+			<if test="updateDate !=null">
+				#{updateDate},
+			</if>
+			<if test="payDate !=null">
+				#{payDate}, 
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.linle.entity.sys.PropertyFee">
+		update property_fee
+		<set>
+			<if test="houseOwner != null">
+				house_owner = #{houseOwner,jdbcType=VARCHAR},
+			</if>
+			<if test="houseNumber != null">
+				house_number = #{houseNumber,jdbcType=VARCHAR},
+			</if>
+			<if test="houseAcreage != null">
+				house_acreage = #{houseAcreage,jdbcType=REAL},
+			</if>
+			<if test="price != null">
+				price = #{price,jdbcType=DECIMAL},
+			</if>
+			<if test="payable != null">
+				payable = #{payable,jdbcType=DECIMAL},
+			</if>
+			<if test="orderNo != null">
+				order_no = #{orderNo,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=INTEGER},
+			</if>
+			<if test="feeTime != null">
+				fee_time = #{feeTime,jdbcType=VARCHAR},
+			</if>
+			<if test="year != null">
+				year = #{year,jdbcType=INTEGER},
+			</if>
+			<if test="month != null">
+				month = #{month,jdbcType=INTEGER},
+			</if>
+			<if test="communityId != null">
+				community_id = #{communityId,jdbcType=BIGINT},
+			</if>
+			<if test="propertyJson != null">
+				property_json = #{propertyJson,jdbcType=BIGINT},
+			</if>
+			<if test="createDate !=null">
+				create_date = #{createDate},
+			</if>
+			<if test="updateDate !=null">
+				update_date = #{updateDate},
+			</if>
+			<if test="payDate !=null">
+				pay_date = #{payDate},
+			</if>
+		</set>
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.linle.entity.sys.PropertyFee">
+		update property_fee
+		set house_owner = #{houseOwner,jdbcType=VARCHAR},
+		house_number = #{houseNumber,jdbcType=VARCHAR},
+		house_acreage = #{houseAcreage,jdbcType=REAL},
+		price = #{price,jdbcType=DECIMAL},
+		payable = #{payable,jdbcType=DECIMAL},
+		order_no = #{orderNo,jdbcType=VARCHAR},
+		status = #{status,jdbcType=INTEGER},
+		fee_time = #{feeTime,jdbcType=VARCHAR},
+		year = #{year,jdbcType=INTEGER},
+		month = #{month,jdbcType=INTEGER},
+		community_id = #{communityId,jdbcType=BIGINT},
+		create_date = #{createDate},
+		update_date = #{updateDate},
+		pay_date = #{payDate}
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+
+	<select id="getAllData" resultMap="BaseResultMap" parameterType="page">
+		select
+		<include refid="Base_Column_List" />
+		from property_fee
+		where community_id = #{params.community_id}
+		<if test="params !=null and params.status != null and params.status !='' and params.status ==2">
+			and status in (2,3)
+		</if>
+		<if test="params !=null and params.status != null and params.status !='' and params.status !=2">
+			and status = #{params.status}
+		</if>
+		<if test="params !=null and params.orderNo != null and params.orderNo !=''">
+			and order_no = #{params.orderNo}
+		</if>
+		<if test="params !=null and params.year != null and params.year!=''">
+			and year = #{params.year} and month = #{params.month}
+		</if>
+		<if test="params !=null and params.yearDate != null and params.yearDate!=''">
+    		and year = #{params.yearDate}
+    	</if>
+		<if test="params !=null and params.owner!= null and params.owner!=''">
+			and house_owner = #{params.owner}
+		</if>
+		<if test="params.roomno !=null and params.roomno !=''">
+    		and house_number = #{params.roomno}
+    	</if>
+	</select>
+	
+	<!-- 查询总数量：全部，待付款，线上缴费，线下缴费 -->
+   <select id="getStatisticQuantity"  resultType="com.linle.entity.sys.PropertyFee" parameterType="map">
+		select SUM(temp.count) sumQuantity,
+			sum(case temp.status when 1 then temp.count else 0 end) as 'waitQuantity',
+			sum(case temp.status when 2 then temp.count else 0 end) as 'onlineQuantity',
+			sum(case temp.status when 3 then temp.count else 0 end) as 'offlineQuantity'
+		from (
+			SELECT status,COUNT(*) count
+			FROM property_fee WHERE community_id = #{community_id} 
+		   	<if test="orderNo != null and orderNo !=''">
+		   		and order_no = #{orderNo}
+		   	</if>
+		   	<if test="year != null and year!=''">
+		   		and year = #{year} and month = #{month}
+		   	</if>
+		   	<if test="owner!= null and owner!=''">
+		   		and house_owner =  #{owner}
+		   	</if>
+		   	<if test="roomno !=null and roomno !=''">
+		   		and house_number = #{roomno}
+		   	</if>
+			GROUP BY `status`
+		)temp
+   </select>
+   
+	<select id="getRecentlyDate"  resultMap="BaseResultMap" parameterType="map">
+   	 select 
+    `year` ,`month`
+    from property_fee
+   where community_id = #{community_id} 
+   ORDER BY `year` desc,`month`DESC
+   limit 0,1
+   </select>
+   
+	<!-- 需要发送消息的用户ID -->
+	<select id="getNeedMessageList" parameterType="map" resultType="String">
+		  	SELECT  users.id
+	    FROM  users
+		INNER JOIN (
+			SELECT room_no.id FROM property_fee 
+			INNER JOIN room_no ON property_fee.community_id = room_no.community_id
+			AND property_fee.house_number = room_no.overall
+		 	where `year` = #{year} and `month`= #{month} and `status`=1 )
+	 	AS tb1 
+	 	ON users.address_details = tb1.id and users.community_id = #{communityId}
+	</select>
+	
+	<select id="getPropertyFeeAPI" parameterType="map" resultMap="PropertyFeeForAPIResult">
+		SELECT `name`,house_number,price,payable,house_acreage,fee_time,order_no,property_fee.status
+	  	from property_fee
+		left join community 
+		on property_fee.community_id = community.id
+		where property_fee.community_id=#{community_id} and
+		house_number = #{houseNumber}
+		ORDER BY property_fee.`status`,property_fee.`year` DESC,property_fee.`month` DESC
+		LIMIT 0,1
+	</select>
+	
+	 <!-- 判断该小区该月该房号是否有已上传过同房号记录 -->
+	  <select id="getPropertyFeeCount" parameterType="map" resultType="int">
+	  	SELECT count(*)
+	  	from property_fee
+		left join community 
+		on property_fee.community_id = community.id
+		where property_fee.community_id=#{community_id} and 
+		house_number = #{houseNumber}  and month = #{month} and year = #{year}
+	  </select>
+  
+	  <!-- 获得缴费业主 每个房号随意取一个用户-->
+	  <select id="getPropertyFeeExportUsers" parameterType="map" resultMap="PropertyFeeVOUsersResult">
+				 SELECT room.id,user.`name`, room.overall roomNo,temp.house_acreage acreage,temp.price,temp.payable 	
+			FROM room_no room 
+			left JOIN users user on user.address_details=room.id and user.identity=4 and user.`status` !=2
+				LEFT JOIN (
+						SELECT `house_owner`,price,house_acreage,payable,house_number
+					FROM property_fee 
+					WHERE  month =#{month} and year =#{year} and community_id=#{community_id}
+					GROUP BY house_number
+				)temp on temp.house_number=room.overall
+			WHERE room.community_id=#{community_id}
+			GROUP BY room.id
+	  </select>
+  
+	<!-- 物业缴费成功后 将状态改为已付款 -->
+	<update id="paySuccessupdateStatus" parameterType="string">
+		update property_fee
+		set status = 2,pay_date = now()
+		where order_no = #{orderNo}
+	</update>
+	<update id="updatePropertyJson" parameterType="com.linle.entity.sys.PropertyFee">
+		update property_fee
+		set property_json = #{propertyJson}
+		where id = #{id}
+	</update>
+	
+	<!-- 根据订单编号 -->
+	<select id="selectByOrderNo" parameterType="string" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from property_fee
+		where order_no = #{orderNo}
+	</select>
+	
+	<!-- 线下缴费逻辑 -->
+	<update id="updateStatusForOffline" parameterType="map">
+		update property_fee
+		set status = 3,update_date = now(),pay_date = now()
+		where community_id = #{communityId} and year = #{year} and month = #{month} and house_number = #{houseNumber}
+	</update>
+	
+	
+	<select id="selectPropertyFeeByHousenumber" parameterType="map" resultMap="BaseResultMap">
+  	SELECT * FROM property_fee
+	WHERE community_id=#{communityId} and order_no is not null and house_number IN (SELECT overall FROM room_no WHERE id=#{roomNoId} )
+	GROUP BY year,`month`
+  </select>
+</mapper>

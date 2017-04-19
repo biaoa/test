@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.linle.topicUserManager.mapper.TopicUserManagerMapper" >
+  <resultMap id="BaseResultMap" type="com.linle.topicUserManager.model.TopicUserManager" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="user_id" property="userId" jdbcType="BIGINT" />
+    <result column="is_publish" property="isPublish" jdbcType="INTEGER" />
+    <result column="is_reply" property="isReply" jdbcType="INTEGER" />
+    <result column="topic_type_id" property="topicTypeId" jdbcType="BIGINT" />
+     <result column="comm_topic_type_id" property="commTopicTypeId" jdbcType="BIGINT" />
+     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="is_del" property="isDel" jdbcType="INTEGER" />
+  </resultMap>
+  
+  <resultMap id="ResultMapForPage" type="com.linle.topicUserManager.model.TopicUserManager" extends="BaseResultMap">
+    <result column="name" property="nickName" jdbcType="VARCHAR" />
+     <result column="topic_type_name" property="topicTypeName" jdbcType="VARCHAR" />
+      <result column="comm_topic_type_name" property="commTopicTypeName" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <resultMap id="BaseResultMapForApi" type="com.linle.mobileapi.v1.model.TopicUserManagerVo" >
+    <result column="is_publish" property="isPublish"  />
+    <result column="is_reply" property="isReply" />
+    <result column="topic_type_id" property="topicTypeId" />
+    <result column="comm_topic_type_id" property="commTopicTypeId" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    id, user_id, is_publish, is_reply, topic_type_id,comm_topic_type_id, create_time, is_del
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from topic_user_manager
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from topic_user_manager
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.linle.topicUserManager.model.TopicUserManager" >
+    insert into topic_user_manager (id, user_id, is_publish, 
+      is_reply, topic_type_id,comm_topic_type_id, create_time, is_del
+      )
+    values (#{id,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{isPublish,jdbcType=INTEGER}, 
+      #{isReply,jdbcType=INTEGER}, #{topicTypeId,jdbcType=BIGINT}, #{commTopicTypeId,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, #{isDel,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.linle.topicUserManager.model.TopicUserManager" >
+    insert into topic_user_manager
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="isPublish != null" >
+        is_publish,
+      </if>
+      <if test="isReply != null" >
+        is_reply,
+      </if>
+      <if test="topicTypeId != null" >
+        topic_type_id,
+      </if>
+       <if test="commTopicTypeId != null" >
+        comm_topic_type_id,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="isDel != null" >
+        is_del,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="isPublish != null" >
+        #{isPublish,jdbcType=INTEGER},
+      </if>
+      <if test="isReply != null" >
+        #{isReply,jdbcType=INTEGER},
+      </if>
+      <if test="topicTypeId != null" >
+        #{topicTypeId,jdbcType=BIGINT},
+      </if>
+       <if test="commTopicTypeId != null" >
+        #{commTopicTypeId,jdbcType=BIGINT},
+      </if>
+        <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        #{isDel,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.linle.topicUserManager.model.TopicUserManager" >
+    update topic_user_manager
+    <set >
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="isPublish != null" >
+        is_publish = #{isPublish,jdbcType=INTEGER},
+      </if>
+      <if test="isReply != null" >
+        is_reply = #{isReply,jdbcType=INTEGER},
+      </if>
+      <if test="topicTypeId != null" >
+        topic_type_id = #{topicTypeId,jdbcType=BIGINT},
+      </if>
+       <if test="commTopicTypeId != null" >
+        comm_topic_type_id = #{commTopicTypeId,jdbcType=BIGINT},
+      </if>
+       <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+        is_del = #{isDel,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.linle.topicUserManager.model.TopicUserManager" >
+    update topic_user_manager
+    set user_id = #{userId,jdbcType=BIGINT},
+      is_publish = #{isPublish,jdbcType=INTEGER},
+      is_reply = #{isReply,jdbcType=INTEGER},
+      topic_type_id = #{topicTypeId,jdbcType=BIGINT},
+       comm_topic_type_id = #{commTopicTypeId,jdbcType=BIGINT},
+       create_time = #{createTime,jdbcType=TIMESTAMP},
+      is_del = #{isDel,jdbcType=INTEGER}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+   <select id="getAllData" parameterType="page" resultMap="ResultMapForPage">
+	SELECT topic.*,type.topic_type_name,u.name,type2.topic_type_name comm_topic_type_name
+		from topic_user_manager topic
+		LEFT JOIN c_topic_type type on type.topic_type_id=topic.topic_type_id
+		LEFT JOIN c_topic_type type2 on type2.topic_type_id=topic.comm_topic_type_id
+		LEFT JOIN users u ON u.id=topic.user_id
+		WHERE  (topic.is_del!=1 OR  ISNULL(topic.is_del)) 
+		<if test="params.topicTypeId!=null and params.topicTypeId!=''">
+			and (topic.topic_type_id=#{params.topicTypeId} or topic.comm_topic_type_id=#{params.topicTypeId})
+		</if>
+		<if test="params.userName!=null and params.userName!=''">
+			and u.name like CONCAT('%','${params.userName}','%')
+		</if>
+	 	ORDER BY topic.create_time desc
+   </select>
+   
+    <select id="selectById" resultMap="BaseResultMap" parameterType="long" >
+       select * from topic_user_manager where user_id = #{userId} and (is_del!=1 OR  ISNULL(is_del))
+    </select>
+    
+     <select id="selectByIdForApi" resultMap="BaseResultMapForApi" parameterType="long" >
+       select * from topic_user_manager where user_id = #{userId} and (is_del!=1 OR  ISNULL(is_del))
+    </select>
+    
+    <select id="selectByUserIdAndTopicTypeId" parameterType="map" resultMap="BaseResultMap">
+    	select 
+	    <include refid="Base_Column_List" />
+	    from topic_user_manager
+	    where user_id = #{userId} and topic_type_id = #{typeId}
+	    <if test="type=='publish'">
+	    	and is_publish = 1
+	    </if>
+	    <if test="type=='reply'">
+	    	and is_reply = 1
+	    </if>
+    </select>
+</mapper>

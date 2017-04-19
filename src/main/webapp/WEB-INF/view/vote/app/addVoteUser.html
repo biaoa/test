@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<title>投票</title>		
+		<#include '/common/base.html'>
+		<link href="${base}/resources/voteFile/skins/square/blue.css" rel="stylesheet">
+		<link rel="stylesheet" type="text/css" href="${base}/resources/voteFile/css/checkbox.css"/>
+		
+		<script src="${base}/resources/voteFile/js/jquery-1.9.1.js"></script>
+		<script src="${base}/resources/voteFile/js/icheck.js"></script>
+		
+<!-- 		<link rel="stylesheet" href="${base}/resources/mui/mui.min.css"/>
+		<script src="${base}/resources/mui/mui.min.js"></script> -->
+		<style>
+		.not-vote{
+		background: #b6bdbf;
+		}
+		*{-webkit-text-size-adjust: 100%;-webkit-tap-highlight-color: rgba(0, 0, 0, 0);}
+		</style>
+	</head>
+
+	<body>
+	
+	<form action="${base}/vote/saveVoteUser" id="pagerForm">
+		<div class="voter-new">
+			<div class="vote-new-img">
+					<img src="${base}/${vote.user.logo!!}" />
+				</div>
+				
+				<div class="vote-new-mz">
+					<p>${vote.user.name}</p>
+					<p>${vote.createDateStr}</p>
+				</div>
+				<a class="voter-zter">
+						<#if vote.status==0>
+						    	未开始
+						    	<#elseif vote.status==1>
+						    	进行中
+						    	<#elseif vote.status==2>
+						    	 已结束
+						</#if>
+			</a>
+		</div>
+		<div class="voter-mytitle">
+			<p>${vote.content!!}</p>
+			<#if (vote.imgUrl)!="">
+				<img style="margin-top:10px;" src="${base}/${vote.imgUrl}" />
+			</#if>
+		</div>
+		<div class="vote-style">
+			<span>
+			<#if vote.pattern==2>
+		    	 多选,最多${vote.patternCount!!}项
+		    	<#else>
+		    	单选
+			</#if>
+			</span>
+		</div>
+		<#if vote.pattern==2>
+	    	 	<#if (vote.voteOptionsList)?exists && vote.voteOptionsList?size gt 0>
+					<#list vote.voteOptionsList as voteOptions> 
+						<label for="iCheck" name="optoinsLi" optionsId="${voteOptions.optionsId}">
+							<div class="vote-radio">
+								<input class="my-radio" type="checkbox" name="iCheck"><span>${voteOptions.content}</span>
+							</div>
+						</label>
+					</#list>
+					<#else>
+						无数据
+				</#if>
+	    	<#else>
+	    		<#if (vote.voteOptionsList)?exists && vote.voteOptionsList?size gt 0>
+					<#list vote.voteOptionsList as voteOptions> 
+						<label for="iCheck" name="optoinsLi" optionsId="${voteOptions.optionsId}">
+							<div class="vote-radio">
+								<input class="my-radio" type="radio" name="iCheck"><span>${voteOptions.content}</span>
+							</div>
+						</label>
+					</#list>
+					<#else>
+						无数据
+				</#if>
+		</#if>
+			
+		
+		
+		
+	
+		<div class="endoftime">
+			<span>截止时间：${vote.endDate}</span>
+		</div>
+		<input type="hidden" id="themeId" pattern="${vote.pattern}" patternCount="${vote.patternCount!!}" value="${vote.themeId}">
+		<a class="vote-start"  id="voteUserBtn">投票</a>
+		<a class="vote-start not-vote" style="display:none;" id="voteUserBtnNot">投票</a>
+	 </form>
+	
+		
+		<script>
+			$(document).ready(function() {
+				$('.my-radio').iCheck({
+					checkboxClass: 'icheckbox_square-blue',
+					radioClass: 'iradio_square-blue',
+					increaseArea: '20%' // optional
+				});
+				
+				//多选
+				$('.my-checkbox').iCheck({
+					checkboxClass: 'icheckbox_square-blue',
+					radioClass: 'iradio_square-blue',
+					increaseArea: '20%' // optional
+				});
+			});	
+			
+			
+			$('[name=optoinsLi]').bind("click",function(){
+				$("#voteUserBtnNot").hide();
+				$("#voteUserBtn").show();
+			});
+			
+			//
+			$("#voteUserBtn").bind("click",function(){
+				var themeId =  $("#themeId").val();
+				var pattern =  $("#themeId").attr("pattern");
+				var patternCount =  $("#themeId").attr("patternCount");
+				var optionsIds= new Array();
+				if(pattern==2){//多选
+					$("[name=optoinsLi]").each(function() {
+						 if($(this).find(".icheckbox_square-blue").attr("class")=="icheckbox_square-blue checked"){
+							 var optionsid=$(this).attr("optionsid");
+							 optionsIds.push(optionsid);
+						 }
+						
+					})
+				}else{//单选
+					 var optionsid2=$(" .iradio_square-blue.checked").parent().parent().attr("optionsid");
+					 optionsIds.push(optionsid2);
+				}
+				 
+				var checkbox_num = $(".checked").length;
+				if(pattern==2){//多选
+					var max=patternCount;              												
+					if(checkbox_num > max) {
+						layer.msg("不得超出"+max+"项")
+						return false;
+					}
+				}
+				if(checkbox_num ==0) {
+					//mui.toast("最少选一项")
+					 layer.msg("最少选一项")
+					return false;
+				}
+				$.ajax({
+					type : "post", //表单提交类型 
+					url : "${base}/api/1/saveVoteUser", //表单提交目标 
+					data : {themeId:themeId,"optionsIds":optionsIds.join(",")}, //表单数据
+					async:false,
+					success : function(data) {
+						 layer.msg(data.msg,{
+						     	shift: 0
+						     }, function(){
+						    	 //跳转到投票详情界面
+						    	 window.location.href="${base}/api/1/getAppVoteById?themeId="+themeId;
+						 }); 
+					}
+				}); 
+			});
+			
+			//多选计算
+			function checkboxNum() {
+				var checkbox_num = $(".checked").length;
+				var max=2;              												
+				if(checkbox_num > max) {
+					$(this).removeClass("checked");
+					layer.msg("不得超出"+max+"项")
+					return false;
+				}									
+			}
+			
+		</script>
+	</body>
+
+</html>

@@ -1,0 +1,247 @@
+.breadcrumb li {
+				margin-top: 10px;
+			}
+			
+			.take-orders {
+				padding: 10px 20px;
+				background: red;
+				float: right;
+				cursor: pointer;
+				border-radius: 3px;
+			}
+			
+			.new-order {
+				width: 100%;
+				margin: 10px auto;
+				height: auto;
+				overflow: hidden;
+				padding: 5px;
+				background: white;
+				padding: 8px 15px;
+			}
+			
+			.new-order-title {
+				width: 100%;
+				margin: 0 auto;
+			}
+			
+			.se-num {
+				font-size: 1.5em;
+				font-weight: bold;
+				float: left;
+				width: 100px;
+				margin-top: 5px;
+			}
+			
+			.ord-num {
+				float: left;
+				margin-top: 10px;
+				width: 280px;
+				margin-left: 50px;
+			}
+			
+			.pro-title {
+				float: left;
+				width: 30%;
+				padding: 5px 15px;
+			}
+			
+			.pro-price {
+				float: left;
+				width: 20%;
+				padding: 5px;
+				text-align: center;
+			}
+			
+			.pro-unm {
+				float: left;
+				width: 30%;
+				padding: 5px;
+				text-align: center;
+			}
+			
+			.pro-add {
+				float: left;
+				width: 15%;
+				padding: 5px;
+				text-align: center;
+			}
+			
+			.pro-message {
+				float: left;
+				width: 50%;
+				padding: 5px 30px;
+			}
+			
+			.new-list {
+				width: 30%;
+				float: left;
+				background: white;
+				padding: 5px 10px;
+			}
+			
+			.list-price {
+				float: left;
+				width: 20%;
+				background: white;
+				padding: 5px;
+			}
+			
+			.list-unm {
+				float: left;
+				width: 30%;
+				background: white;
+				padding: 5px;
+			}
+			
+			.list-add {
+				float: left;
+				width: 15%;
+				background: white;
+				padding: 5px;
+			}
+			
+			.my-order:after {
+				clear: both;
+				display: block;
+				content: "";
+				height: 6px;
+				margin-top: 20px;
+				background-color: ghostwhite;
+				background-size: 16px 20px;
+				background-image: linear-gradient(45deg, white 25%, transparent 25%, transparent), linear-gradient(-45deg, white 25%, transparent 25%, transparent), linear-gradient(45deg, transparent 75%, white 75%), linear-gradient(-45deg, transparent 75%, white 75%);
+			}
+			
+			.list-message {
+				float: left;
+				width: 50%;
+				background: white;
+				padding: 5px;
+			}
+			
+			.list-name {
+				margin-top: 10px;
+				margin-bottom: 15px;
+			}
+			
+			.list-mon {
+				margin-top: 10px;
+				margin-bottom: 15px;
+				text-align: center;
+			}
+			
+			.send-message {
+				float: left;
+				height: auto;
+				overflow: hidden;
+				padding: 10px 30px;
+				width: 25%;
+			}
+			
+			.border-send {
+				border-right: 1px solid gainsboro;
+				width: 1px;
+				height: 99%;
+				float: left;
+				position: absolute;
+				left: 75%;
+			}
+			
+			.send-message p {
+				padding: 5px;
+			}
+			
+			.my-order {
+				width: 100%;
+				height: auto;
+				overflow: hidden;
+				background: white;
+				position: relative;
+			}
+			
+			.left-order {
+				width: 50%;
+				margin: 0 auto;
+				float: left;
+			}
+			
+			.order-pay {
+				margin-left: 1%;
+				float: left;
+				width: 98%;
+				padding: 20px 10px;
+				border-top: 1px solid gainsboro;
+				border-bottom: 1px solid gainsboro;
+			}
+			
+			.pay-name {
+				float: left;
+				width: 85%;
+			}
+			
+			.pay-name p,
+			.pay-mon p {
+				padding: 5px;
+			}
+			
+			.pay-mon p:first-child {
+				color: #f74342;
+			}
+			
+			.pay-mon {
+				float: left;
+				text-align: right;
+			}
+			
+			.sj-pay {
+				width: 98%;
+				float: left;
+				text-align: right;
+				height: auto;
+				overflow: hidden;
+				padding: 30px 15px;
+			}
+			
+			.sj-pay span:last-child {
+				font-size: 1.5em;
+				color: #f74342;
+			}
+			
+			.order-list {
+				width: 100%;
+				overflow: hidden;
+				height: auto;
+			}
+			
+			.pro-list-title {
+				width: 50%;
+				float: left;
+			}
+			
+			.my-order-goods {
+				width: 50%;
+				float: left;
+			}
+			
+			.send-message-left {
+				width: 100%;
+				height: auto;
+				overflow: hidden;
+			}
+			
+			.send-message-right {
+				width: 90px;
+				float: left;
+				text-align: right;
+			}
+			
+			.send-message-p {
+				width: 70%;
+				float: left;
+			}
+			.star-margin{margin-top: 7px;}
+			.tuikuang{width: 100%;float: left;}
+			.tk-shop{width: 30%;float: left;margin: 5px 0 0 0;padding: 5px 15px;}
+			.tk-shop2{width: 20%;float: left;margin: 5px 0 0 0;text-align: center;}
+			.tk-shop3{width: 30%;float: left;margin: 5px 0 0 0;text-align: center;}
+			.tk-shop4{width: 15%;float: left;margin: 5px 0 0 0;text-align: center;}

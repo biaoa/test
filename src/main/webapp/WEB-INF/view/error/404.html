@@ -1,0 +1,27 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title></title>
+<#include '/common/base.html'>
+<link rel="stylesheet" type="text/css" href="${base}/resources/404/error.css" />
+</head>
+<body>
+<div class="bg">
+	<div class="cont">
+		<div class="c1"><img src="${base}/resources/404/01.png" class="img1" /></div>
+		<h1>404</h1>
+		<h2>哎呀。。页面找不到啦</h2>
+		<div class="c2"><a href="javascript:void(0);" class="re">返回上级</a><a href="${base}/sys/home" class="home">网站首页</a></div>
+		<div class="c3"><a href="javascript:void(0);" class="c3">邻乐</a>提醒您 - 您可能输入了错误的网址，或者该网页已删除或移动</div>
+	</div>
+</div>
+</body>
+<script type="text/javascript">
+	$(".re").click(function(){
+		window.history.go(-1);
+	})
+</script>
+</html>

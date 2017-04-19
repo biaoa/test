@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title></title> <#include '/common/resources.html'>
+<link rel="stylesheet" media="screen and (min-width: 1580px)" href="${base}/resources/css/sys/jquery.tableui.css" />
+<link rel="stylesheet" media="screen and (max-width: 1580px)" href="${base}/resources/css/sys/tableui-resolving.css" />
+<link rel="stylesheet" type="text/css" href="${base}/resources/css/sys/component.css" />
+<style>
+.table_solid th, .table_solid td {
+	border-right: 1px solid #EAEAEA;
+}
+.num-sx {
+	border: 1px solid gainsboro;
+	width: 50px;
+	padding: 5px;
+	text-align: center;
+}
+</style>
+</head>
+
+<body>
+	<div class="whole">
+		<ol class="breadcrumb">
+			<li><a href="javascript:void(0)">小区管理</a></li>
+			<li class="active">小区app首页菜单设置</li>
+		</ol>
+		<div class="clearfix"></div>
+		<div class="tab-order">
+			<form action="${base}/community/setAppMenu" method="post" id="menuform">
+				<div class="box tab2">
+					<div class="tab_box">
+						<table class="table_solid" border="0" cellspacing="0">
+							<tbody>
+								<tr class="evenRow">
+									<th>菜单配置</th>
+									<th>显示顺序</th>
+								</tr>
+								<#if menuList ?exists && menuList?size gt 0>
+									<#list menuList as menu>
+												<tr class="oddRow">
+													<td><input class="menu-check" type="checkbox" name="menus" value="${menu.id}"
+													<#if menu.checked==1>
+														checked="checked"
+													</#if>
+													><span>${menu.cnName}</span></td>
+													<td><input <#if menu.checked!=1>readonly="readonly" <#else> value='${menu.sort}'</#if> class="num-sx" type="text" name="sorts"></td>
+												</tr>
+									</#list>
+								</#if>
+							</tbody>
+						</table>
+					</div>
+					<button class="s-btn" style="cursor: pointer;">确认</button>
+				</div>
+				<input type="hidden" name="id" value="${community.id}">
+			</form>
+		</div>
+	</div>
+	<script>
+		$(function() {
+			$(".menu-check").click(
+			function() {
+				if ($(this).is(':checked')) {
+					$(this).parent().parent().find(".num-sx").removeAttr('readonly');
+				} else {
+					$(this).parent().parent().find(".num-sx").attr('readonly', "readonly");
+				}
+			});
+		});
+		
+	    $("#menuform").submit(function() {
+    		var ajax_url = $(this).attr("action"); //表单目标 
+    		var ajax_type = $(this).attr('method'); //提交方法 
+    		var ajax_data = $(this).serialize(); //表单数据 
+    		$.ajax({
+    			type : ajax_type, //表单提交类型 
+    			url : ajax_url, //表单提交目标 
+    			data : ajax_data, //表单数据
+    			success : function(data) {
+    				 layer.msg(data.msg,{
+    				     	shift: 0
+    				     }, function(){
+    				    		 window.location.reload();
+    				     });
+    			}
+    		});
+    		return false; //阻止表单的默认提交事件 
+    	});
+		
+	</script>
+</body>
+
+</html>

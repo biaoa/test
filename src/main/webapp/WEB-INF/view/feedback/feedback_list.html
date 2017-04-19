@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>意见反馈管理</title>
+<meta name="content-type" content="text/html; charset=UTF-8">
+<#include '/common/resources.html'>
+<link rel="stylesheet" media="screen and (min-width: 1580px)" href="${base}/resources/css/sys/jquery.tableui.css" />
+<link rel="stylesheet" media="screen and (max-width: 1580px)" href="${base}/resources/css/sys/tableui-resolving.css" />
+<script src="${base}/resources/js/respond.js" type="text/javascript" async="async"></script>
+<!-- <script type="text/javascript" src="${base}/resources/js/tooltips.js"></script> -->
+</head>
+<body>
+<div class="whole">
+	<ol class="breadcrumb">
+		<li><a href="javascript:void(0)">意见反馈管理</a></li>
+		<li class="active">反馈列表</li>
+	</ol>
+			<div class="tab_box">
+	<table class="table_solid" border="0" cellspacing="0">
+		<tbody>
+			<tr class="evenRow">
+				<th>序号</th>
+				<th>内容</th>
+				<th>设备</th>
+				<th>设备类型</th>
+				<th>手机系统版本号</th>
+				<th>软件版本号</th>
+				<th>反馈人</th>
+				<th>反馈时间</th>
+				<th>操作</th>
+			</tr>
+			<#if (pagelist.results)?exists && pagelist.results?size gt 0> <#list
+			pagelist.results as feedback>
+			<tr>
+				<td>${(feedback_index+1)+(pagelist.pageNo-1)*pagelist.pageSize}</td>
+				<td class="ahover" tooltips="${feedback.content!!}">${feedback.content!!}</td>
+				<td>${feedback.mobileInfo!!}</td>
+				<td>${feedback.type!!}</td>
+				<td>${feedback.mobileVersion!!}</td>
+				<td>${feedback.sysVersion!!}</td>
+				<td>
+				<#if (feedback.user)?exists>
+					${feedback.user.name}
+				</#if>
+				</td>
+				<td>${feedback.createDate?string('yyyy/MM/dd HH:mm:ss')}</td>
+				<td>
+				 <#if feedback.delFlag??>
+				 	<#if feedback.delFlag==0>
+				 		<a class="cz-a btn-default del common-btn-cz" href="javascript:void(0)" val="${feedback.id}" flag="1">删除</a>
+				 		<#else>
+				 		<a class="cz-a btn-default del common-btn-cz" href="javascript:void(0)" val="${feedback.id}" flag="0">恢复</a>
+				 	</#if>
+				 </#if>
+				</td>
+			</tr>
+			</#list>
+		</tbody>
+	</table>
+	<form action="${base}/feedback/list" id="pagerForm">
+	<#include '/common/pagination.html'>
+	</form>
+	<#else>
+	<div class="no-data">暂无数据~</div>
+	</#if>
+	</div>
+	</div>
+</body>
+<script type="text/javascript">
+	$(".del").click(function(){
+		var id = $(this).attr("val");
+		var flag = $(this).attr("flag");
+		$.ajax({
+			type : "post",
+			url :"${base}/feedback/del",
+			data : {id:id,delFlag:flag},
+			async:false,
+			success : function(data) {
+				 layer.msg(data.msg,{
+				     	shift: 0
+				     }, function(){
+				    	 window.location.reload();
+				     });
+			 }
+		}); 
+	});
+</script>
+
+</html>

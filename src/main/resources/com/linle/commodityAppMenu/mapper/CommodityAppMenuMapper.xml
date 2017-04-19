@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.linle.commodityAppMenu.mapper.CommodityAppMenuMapper" >
+  <resultMap id="BaseResultMap" type="com.linle.entity.sys.CommodityAppMenu" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="commodity_id" property="commodityId" jdbcType="BIGINT" />
+    <result column="menu_id" property="menuId" jdbcType="BIGINT" />
+    <result column="sort" property="sort" jdbcType="INTEGER" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+    <result column="u_id" property="uId" jdbcType="BIGINT" />
+  </resultMap>
+  
+  <resultMap  id="MenuResultForAPI" type="com.linle.mobileapi.v1.model.AppMenuVO">
+  	<result column="img" property="img"/>
+  	<result column="en_name" property="enName"/>
+  	<result column="cn_name" property="cnName"/>
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    id, commodity_id, menu_id, sort, create_date, update_date, u_id
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from commodity_app_menu
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from commodity_app_menu
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.linle.entity.sys.CommodityAppMenu" >
+    insert into commodity_app_menu (id, commodity_id, menu_id, 
+      sort, create_date, update_date, 
+      u_id)
+    values (#{id,jdbcType=BIGINT}, #{commodityId,jdbcType=BIGINT}, #{menuId,jdbcType=BIGINT}, 
+      #{sort,jdbcType=INTEGER}, #{createDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP}, 
+      #{uId,jdbcType=BIGINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.linle.entity.sys.CommodityAppMenu" >
+    insert into commodity_app_menu
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="commodityId != null" >
+        commodity_id,
+      </if>
+      <if test="menuId != null" >
+        menu_id,
+      </if>
+      <if test="sort != null" >
+        sort,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="updateDate != null" >
+        update_date,
+      </if>
+      <if test="uId != null" >
+        u_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="commodityId != null" >
+        #{commodityId,jdbcType=BIGINT},
+      </if>
+      <if test="menuId != null" >
+        #{menuId,jdbcType=BIGINT},
+      </if>
+      <if test="sort != null" >
+        #{sort,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="uId != null" >
+        #{uId,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.linle.entity.sys.CommodityAppMenu" >
+    update commodity_app_menu
+    <set >
+      <if test="commodityId != null" >
+        commodity_id = #{commodityId,jdbcType=BIGINT},
+      </if>
+      <if test="menuId != null" >
+        menu_id = #{menuId,jdbcType=BIGINT},
+      </if>
+      <if test="sort != null" >
+        sort = #{sort,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="uId != null" >
+        u_id = #{uId,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.linle.entity.sys.CommodityAppMenu" >
+    update commodity_app_menu
+    set commodity_id = #{commodityId,jdbcType=BIGINT},
+      menu_id = #{menuId,jdbcType=BIGINT},
+      sort = #{sort,jdbcType=INTEGER},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP},
+      u_id = #{uId,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  <select id="getCommodityAppMenu" parameterType="Long" resultMap="BaseResultMap">
+   	 select 
+    <include refid="Base_Column_List" />
+    from commodity_app_menu
+    where commodity_id = #{commodityId}
+  </select>
+  
+  <delete id="delCommodityAppMenu" parameterType="Long">
+  	delete from commodity_app_menu
+  	where commodity_id = #{commodityId} 
+  </delete>
+  
+  <select id="getAppMenuForAPI" parameterType="map" resultMap="MenuResultForAPI">
+  	select icon as img,en_name,cn_name from app_index_menu
+  	<if test="commodityId!=null">
+  		INNER JOIN commodity_app_menu
+		on app_index_menu.id = commodity_app_menu.menu_id and commodity_id = #{commodityId}
+		order by commodity_app_menu.sort
+  	</if>
+  </select>
+</mapper>

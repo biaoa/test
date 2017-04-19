@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="UTF-8">
+<title>商品类型维护</title> <#include '/common/resources.html'>
+<link rel="stylesheet" media="screen and (min-width: 1580px)" href="${base}/resources/css/sys/kd.css" />
+<link rel="stylesheet" media="screen and (max-width: 1580px)" href="${base}/resources/css/sys/kd-resolving.css" />
+<script src="${base}/resources/js/respond.js" type="text/javascript" async="async"></script>
+<style>
+.ads-choice input {
+	float: left;
+	margin-top: 10px;
+}
+
+.ads-choice span {
+	float: left;
+	margin-top: 8px;
+	margin-left: 5px;
+}
+
+.ads-choice label {
+	float: left;
+	margin-left: 10px;
+}
+
+.adstime {
+	margin-left: 20px;
+	width: 80%;
+	height: 35px;
+	border-radius: 3px;
+	float: left;
+	position: relative;
+	margin-bottom: 20px;
+}
+
+.adstime span {
+	float: left;
+}
+
+.adstime input {
+	float: left;
+	width: 150px;
+}
+
+.miaosu {
+	width: 300px;
+	height: 150px;
+	padding: 10px;
+}
+
+.kdleft2 {
+	width: 98%;
+	float: left;
+	margin: 15px 1%;
+	min-height: 100%;
+	background-color: white;
+	overflow: auto;
+	height: auto;
+	position: absolute;
+}
+</style>
+</head>
+
+<body>
+	<div class="kdwhole">
+		<ol class="breadcrumb">
+			<li><a href="javascript:void(0)">商家</a></li>
+			<li class="active">商品分类信息维护</li>
+		</ol>
+
+		<div class="kdleft2">
+			<div class="head">
+				<span class="mes-wh">商品分类信息维护</span>
+			</div>
+			<div class="Sheet">
+				<div class="s-title">
+					<span class="choice">分类名称：</span>
+					<div class="inp" style="width: 300px;">
+						<input maxlength="20" type="text"
+							onkeyup="javascript:setShowLength(this, 20, 'cost_tpl_title_length');" id="typeName" value="${commodityType.typeName!!}"/>
+						<span class="cue" id="cost_tpl_title_length" >0/20</span>
+					</div>
+				</div>
+
+				<div class="s-address">
+					<span class="choice">排&nbsp;&nbsp;序：</span>
+
+					<div class="ads" style="width: 300px;">
+						<input type="text" id="sort" value="${commodityType.sort!!}"/>
+					</div>
+				</div>
+				<input type="hidden" id="typeid" value="${commodityType.id!!}">
+				<div class="s-address">
+					<button class="s-btn" style="cursor: pointer; float: left;">确认</button>
+				</div>
+			</div>
+
+
+		</div>
+
+	</div>
+	<script type="text/javascript">
+		function setShowLength(obj, maxlength, id) {
+			var rem = maxlength - obj.value.length;
+			var wid = id;
+			if (rem < 0) {
+				rem = 0;
+			}
+			document.getElementById(wid).innerHTML = rem + "/" + "20";
+		}
+		
+		$(".s-btn").click(function(){
+			
+			var typeName = $("#typeName").val();
+			var sort = $("#sort").val();
+			if(typeName==''){
+				layer.msg("类型名称不能为为空");
+				return false;
+			}
+			var re =/^[0-9]*[1-9][0-9]*$/;
+			if(!re.test(sort)){
+				layer.msg("排序只能是正整数");
+				return false;
+			}
+		  $.post('${base}/sys/commodityType/add', {'typeName': typeName,'sort':sort,"id":$("#typeid").val()}, function (data) {
+				 layer.msg(data.msg,{
+				     	shift: 0
+				     }, function(){
+				    	 window.location.href="${base}/sys/commodityType/list";
+				     });
+          })
+		})
+	</script>
+</body>
+
+</html>

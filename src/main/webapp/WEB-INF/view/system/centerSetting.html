@@ -1,0 +1,206 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>管理中心</title>
+<#include '/common/resources.html'>
+<script src="${base}/resources/js/jquery.form.js"></script>
+<style >
+.dialog .dialog-body .qdyx{width:150px;margin-left: 100px;margin-top: 20px;font-size: 16px}
+</style>
+</head>
+<body> 
+<div id="center_content">
+	 <div class="fh_right_box">
+     <h3 style="margin-left:-30px;">
+     <div class="btn-group" style="margin-left:30px" role="group" aria-label="...">
+         <span type="button" id="on" class="btn btn-default active">中心介绍</span>
+         <span href="javascript:;" type="button" id="on" class="btn btn-default">优化政策</span>
+         <!-- <span href="javascript:;" type="button" id="on" class="btn btn-default">园区规划图</span> -->
+         <span href="javascript:;" type="button" id="gnty"  class="btn btn-default">功能体验</span>
+	 </div>
+	 <a href="javascript:;" style="display:none;line-height:40px" class="button button-action button-rounded dialogs" data-toggle="click" data-target="#tjzy" data-mask="1" data-width="50%">添加功能说明</a>
+     </h3>
+     <img src="${base}/resources/images/hr.jpg" class="xian"/>
+     </div>
+     <form id="qyjsForm" method="post" action="${base}/set/centerSetting">
+     <input name="id" value="${rep.id}" type="hidden"/>
+     <div class="tabmenus">
+	     <textarea rows="5"  name="intro" class="input" placeholder="中心介绍"  style="width:99.8%;height:600px;border:1px solid #ddd">${(rep.introduction)!''}</textarea>
+         <a href="javascript:;" class="btSubmit button button-action button-rounded pull-right" style="background:#1fbba6;margin-top:10px">修改</a>
+     </div>
+     <div class="tabmenus" style="display:none">
+     	 <textarea rows="5"  name="policy" class="input" placeholder="优化政策"  style="width:99.8%;height:600px;border:1px solid #ddd">${(rep.favouredPolicy)!''}</textarea>
+         <a href="#" class="btSubmit button button-action button-rounded pull-right" style="background:#1fbba6;margin-top:10px">修改</a>
+     </div>
+  <!--    <div class="tabmenus" style="display:none">
+      <a href="javascript:;"  class="btSubmit button button-action button-rounded pull-right" style="background:#1fbba6;margin-top:10px;border:1px solid #ddd">修改</a>
+     </div> -->
+     <div class="tabmenus" style="display:none">
+     	<table class="table" style="text-align:center">
+	       <tr>
+	         <td>序号</td>
+	         <td width="20%">问题</td>
+	         <td width="30%">回答</td>
+	         <td>创建时间</td>
+	         <td>操作</td>
+	      </tr>
+	      <#if (pagelist.results)?exists && pagelist.results?size gt 0>
+	      <#list pagelist.results as help>
+		      <tr>
+		         <td>${(help_index+1)+(pagelist.pageNo?eval-1)*pagelist.pageSize?eval}</td>
+		         <td>${(help.title)!''}</td>
+		         <td>${(help.content)!''}</td>
+		         <td>${help.createDate?string('yyyy/MM/dd HH:mm:ss')}</td>
+		         <td>
+		         <span><a href="javascript:;" helpid="${help.id}"  class="btn btn-default dialogs" role="button" data-toggle="click" data-target="#bz${help.id}" name="bz${help.id}" data-mask="1" data-width="50%">修改</a></span>
+		         <span><a href="javascript:;" helpid="${help.id}"  class="btn btn-default delHelp">删除</a></span>
+		         </td>
+		         <td style="display: none;">
+		         	  <!-- 修改帮助 -->
+					  <div id="bz${help.id}">
+					  <div class="dialog">
+					    <div class="dialog-head">
+					      <span class="close rotate-hover" ></span>
+					      <strong>修改帮助信息</strong>
+					    </div>
+					    <div class="dialog-body">
+										    <div class="form-group">
+			    <div class="field">
+			    <label for="detail" style="position:relative;top:-80px">标题：</label>
+			      <textarea class="input" id="title" name="title" style="width:85%;height:100px" placeholder="" data-validate="required:必填">${help.title!""}</textarea>
+			      <input type="hidden" value="${help.id}" name="helpid"/>
+			    </div>
+			  </div>       
+			  
+			   <div class="form-group">
+			    <div class="field">
+			    <label for="detail" style="position:relative;top:-80px">说明：</label>
+			      <textarea class="input" id="content" name="content" style="width:85%;height:100px" placeholder="" data-validate="required:必填">${help.content!""}</textarea>
+			    </div>
+			  </div>       
+          
+      <button type="submit" onclick="updateHelp($(this).parent().find('textarea[name=title]').val(),$(this).parent().find('textarea[name=content]').val(),$(this).parent().find('input[name=helpid]').val())"  class="button bg-main qdyx dialog-close">修改</button>
+					    </div>
+					    <a style="display: none;" class="button bg-main bz${help.id} dialog-close"  name="reset${help.id}" id="reset${help.id}"/>
+					    <a style="display: none;" class="btn btn-default" href="javascript:;" role="button" data-toggle="click" data-target="#bz${help.id}" name="bz${help.id}" data-mask="1" >修改</a>
+					  </div>
+					</div>
+		         </td>
+		      </tr>
+		   </#list> 
+	      </#if>
+		</table>
+		<form action="${base}/set/settingPage" id="pagerForm" >
+		 <#include '/common/pagination.html'>
+		</form>  
+     </div>
+     </form> 
+</div>
+</body>
+<div id="tjzy">
+  <div class="dialog">
+    <div class="dialog-head">
+      <span class="close rotate-hover"></span>
+      <strong>添加</strong>
+    </div>
+     <div class="dialog-body" style="width:90%;height:320px">
+			    <div class="form-group">
+			    <div class="field">
+			    <label for="detail" style="position:relative;top:-80px">标题：</label>
+			      <textarea class="input" id="title" name="title" style="width:85%;height:100px" placeholder="" data-validate="required:必填"></textarea>
+			    </div>
+			  </div>       
+			  
+			   <div class="form-group">
+			    <div class="field">
+			    <label for="detail" style="position:relative;top:-80px">说明：</label>
+			      <textarea class="input" id="content" name="content" style="width:85%;height:100px" placeholder="" data-validate="required:必填"></textarea>
+			    </div>
+			  </div>       
+          
+      <button type="submit" onclick="addHelp($(this).parent().find('textarea[name=title]').val(),$(this).parent().find('textarea[name=content]').val())"  class="button bg-main qdyx dialog-close">添加</button>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+$(document).ready(function() {
+	$('.btn-group').find('span').click(function(){
+		  $('.dialogs').css('display','none');
+	      $('#center_content').find('.tabmenus').css('display','none');
+	      $('#center_content').find('.tabmenus').eq($(this).index()).css('display','block');
+		  if($(this).index() == 2){
+			  $('.dialogs').show();	
+		  }
+	});
+	
+    $('.btSubmit').on('click', function(e) {
+          var $form = $("#qyjsForm");
+          $.post($form.attr('action'), $form.serialize(), function(result) {
+        	  layer.msg(result.msg);
+         /* 	$.gritter.add({  
+         	    title: '',  
+         	    text: result.msg,  
+         	    sticky: false,  
+         	    time: 2000,  
+         	    speed:500,  
+         	    class_name: 'gritter-success'//gritter-center   
+         	});   */
+         }, 'json');
+          
+    });
+    $(".delHelp").click(function () {
+    	if(!confirm('删除后无法恢复,确定要删除吗')){
+			return;
+		}
+    	var helpid = $(this).attr("helpid");
+    		$.post(
+    			"${base}/sys/delHelp/"+helpid,
+    			function(result) {
+    				layer.msg(result.msg);
+    				location.reload();
+        }, 'json');
+    });
+});
+function addHelp(title,content){
+	 $.ajax({
+        url: '${base}/sys/addHelpInfo',
+       data: {
+            "title": title,
+            "content":content
+        },
+        type: 'post',
+        dataType: 'json',
+        success: function(data) {
+        	layer.msg(data.msg);
+        },
+        error: function() {
+            layer.msg("异常！");
+        }
+        
+    }); 
+}
+
+function updateHelp(title,content,id){
+	 $.ajax({
+	        url: '${base}/sys/modifyHelpInfo',
+	       data: {
+	            "title": title,
+	            "content":content,
+	           	"id":id
+	        },
+	        type: 'post',
+	        dataType: 'json',
+	        success: function(data) {
+	        	layer.msg(data.msg);
+	        	window.location.reload();
+	        },
+	        error: function() {
+	            layer.msg("异常！");
+	        }
+	        
+	    }); 
+}
+
+</script>
+</html>

@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>用户管理</title>
+<#include '/common/resources.html'>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" media="screen and (min-width: 1580px)" href="${base}/resources/css/sys/jquery.tableui.css" />
+<link rel="stylesheet" media="screen and (max-width: 1580px)" href="${base}/resources/css/sys/tableui-resolving.css" />
+<script src="${base}/resources/js/respond.js" type="text/javascript" async="async"></script>
+</head>
+<body>
+	<div class="whole">
+	
+	<ol class="breadcrumb">
+		<li><a href="javascript:void(0)">系统管理</a></li>
+		<li class="active">用户管理</li>
+	</ol>
+				<div class="o-order">
+				<form action="${base}/sys/userlist" id="pagerForm">
+				<div class="o-first">
+					<span class="o-span">用户&nbsp;：</span>
+					<div class="o-input"><input class="my-price" type="text" name="userName" value="${userName!!}" placeholder="请输入用户名或者手机号码"/></div>
+					<span class="o-span">用户类型：</span>
+					<div class="o-div">
+					<select class="o-select" name="userType" id="userType">
+						<option value="-1">全部</option>
+						<option value="0">系统管理员</option>
+						<option value="1">一级代理</option>
+						<option value="7">二级代理</option>
+						<option value="2">物业</option>
+						<option value="3">小区</option>
+						<option value="4">小区居民</option>
+						<option value="5">社长</option>
+						<option value="6">商家</option>
+						<option value="9">运营部</option>
+						<option value="12">财务部</option>
+					</select>
+					</div>
+				</div>			
+				<div class="o-thrid role-search-btn">
+					<a class="o-btn search1">搜索</a>
+				</div>
+			</div>
+	
+	<div class="tab_box">
+	<table class="table_solid" border="0" cellspacing="0">
+	<tbody>
+		<tr>
+			<th>序号</th>
+			<th>用户名</th>
+			<th>描述</th>
+			<th>创建时间</th>
+			<th>状态</th>
+			<th>操作</th>
+		</tr>
+		<#if (pagelist.results)?exists && pagelist.results?size gt 0>
+		<#list pagelist.results as user>
+		<tr>
+			<td>${(user_index+1)+(pagelist.pageNo-1)*pagelist.pageSize}</td>
+			<td>${user.userName}</td>
+			<td>${user.identity.getName()}</td>
+			<td>${user.createDate?string('yyyy/MM/dd HH:mm:ss')}</td>
+			<td>${user.status.getName()}</td>
+			<td> 
+			<#if user.identity!="SYS">
+				<a class="reset-password"  title="重置后密码为123456"  onclick="resetPass('${user.id}')">重置密码</a>
+				<#if user.status=="normal" >
+					<a class="reset-password"  onclick="userStatus('${user.id}',1)">禁用</a>
+					<#elseif user.status!="normal" >
+					<a class="reset-password"  onclick="userStatus('${user.id}',0)">启用</a>
+				</#if>
+			</#if>
+			</td>
+			<td style="display:none">
+			   <div id="rysq${user_index}">
+				  <div class="dialog">
+				    <div class="dialog-head">
+				      <span class="close rotate-hover"></span>
+				      <strong>用户信息修改</strong>
+				    </div>
+				    <div class="dialog-body" style="height:400px">
+				        <table class="table table-bordered">
+				          <tr>
+				            <td style="width:110px">用户名：</td>
+				            <td>${(user.userName)!''}</td>
+				          </tr>
+				          <tr>
+				            <td>用户类型：</td>
+				            <td>${user.identity.getName()}</td>
+				          </tr>
+				          <tr>
+				            <td>姓名：</td>
+				            <td>${(user.name)!''}</td>
+				          </tr>
+				           <tr>
+				            <td>联系电话：</td>
+				            <td>${(user.mobilePhone)!''}</td>
+				          </tr>
+				        </table>
+				        <button style="width:150px;margin-top:150px">确定</button>
+				    </div>
+				  </div>
+				</div>	
+			</td>
+		</tr>
+		</tbody>
+		</#list> 
+		</#if>
+	</table>
+	
+		<#include '/common/pagination.html'></form>
+		</div>
+		</div>
+</body>
+
+<script type="text/javascript">
+	function resetPass(id){
+		layer.confirm('确定要重置该用户的密码?', function(index){
+			$.post("${base}/sys/resetPassword/" + id, function(result) {
+				if (result.code == 0) {
+					layer.msg(result.msg);
+					 window.location.reload();
+				}
+				;
+			}, 'json');
+			  layer.close(index);
+			}); 
+	}
+	
+// 	function userStatus(id,status){
+// 		var msg = status==1?"禁用":"启用";
+// 		layer.confirm('确定要'+msg+'该用户?', function(index){
+// 			$.post("${base}/sys/userStatus/" + id+"/"+status, function(result) {
+// 				if (result.code == 0) {
+// 					layer.msg(result.msg);
+// 					 window.location.reload();
+// 				}
+// 				;
+// 			}, 'json');
+// 			  layer.close(index);
+// 			}); 
+// 	}
+
+	function userStatus(id,status){
+		//默认prompt
+		if(status=='1'){
+			layer.prompt({
+				 	 title: '输入禁用用户原因'
+					},function(reason){
+					$.ajax({
+						type : "post", //表单提交类型 
+						url : "${base}/sys/userStatus", //表单提交目标 
+						data : {uid:id,status:status,reason:reason}, //表单数据
+						success : function(result) {
+							if (result.code == 0) {
+								layer.msg(result.msg);
+								window.location.reload();
+							}
+						 }
+					}); 
+			});
+		}else if(status=='0'){
+	 		var msg = status==1?"禁用":"启用";
+	 		layer.confirm('确定要'+msg+'该发布者?', function(index){
+	 			$.ajax({
+					type : "post", //表单提交类型 
+					url : "${base}/sys/userStatus", //表单提交目标 
+					data : {uid:id,status:status,reason:''}, //表单数据
+					success : function(result) {
+						if (result.code == 0) {
+							layer.msg(result.msg);
+							 window.location.reload();
+						}
+					 }
+				}); 
+	 		}); 
+		}
+		
+
+	}
+	
+	$(".search1").click(function(){
+		$("#pagerForm").submit();
+	})
+	
+	<#if userType??>
+		$("#userType").val(${userType})
+	</#if>
+</script>
+<script>
+$(function(){
+        document.onkeydown = function(e){ 
+        var ev = document.all ? window.event : e;
+        if(ev.keyCode==13) {
+            $("#pagerForm").submit();
+            }
+        }
+    });  
+         
+</script>       
+</html>

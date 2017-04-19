@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.linle.sms.mapper.SmsRecordMapper" >
+  <resultMap id="BaseResultMap" type="com.linle.entity.SmsRecord" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+    <result column="phone" property="phone" jdbcType="VARCHAR" />
+    <result column="code" property="code" jdbcType="VARCHAR" />
+    <result column="content" property="content" jdbcType="VARCHAR" />
+    <result column="result" property="result" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="senddate" property="senddate" jdbcType="TIMESTAMP" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, type, phone, code, content,result, status, senddate, create_date
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from sms_record
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from sms_record
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="add" parameterType="com.linle.entity.SmsRecord" >
+    insert into sms_record (id, type, phone, 
+      code, content,result, status, 
+      senddate, create_date)
+    values (#{id,jdbcType=INTEGER}, #{type,jdbcType=INTEGER}, #{phone,jdbcType=VARCHAR}, 
+      #{code,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR}, #{result,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, 
+      #{senddate,jdbcType=TIMESTAMP}, now())
+  </insert>
+  <insert id="insertSelective" parameterType="com.linle.entity.SmsRecord" >
+    insert into sms_record
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="phone != null" >
+        phone,
+      </if>
+      <if test="code != null" >
+        code,
+      </if>
+      <if test="content != null" >
+        content,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="senddate != null" >
+        senddate,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=INTEGER},
+      </if>
+      <if test="phone != null" >
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="code != null" >
+        #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="senddate != null" >
+        #{senddate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.linle.entity.SmsRecord" >
+    update sms_record
+    <set >
+      <if test="type != null" >
+        type = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="phone != null" >
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="code != null" >
+        code = #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="senddate != null" >
+        senddate = #{senddate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.linle.entity.SmsRecord" >
+    update sms_record
+    set type = #{type,jdbcType=INTEGER},
+      phone = #{phone,jdbcType=VARCHAR},
+      code = #{code,jdbcType=VARCHAR},
+      content = #{content,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
+      senddate = #{senddate,jdbcType=TIMESTAMP},
+      create_date = #{createDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <!-- ============================================================================= -->
+  
+  <!-- 查询验证码的最近记录 -->
+  <select id="getSmsRecord" resultType="com.linle.entity.SmsRecord">
+  	SELECT * FROM `sms_record` WHERE TYPE=#{type} AND phone=#{phone} and code = #{code} AND NOW()&lt;DATE_ADD(senddate,INTERVAL 15 MINUTE) ORDER BY senddate DESC LIMIT 0,1
+  </select>
+  
+</mapper>

@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.linle.attendanceRecordDetail.mapper.AttendanceRecordDetailMapper" >
+  <resultMap id="BaseResultMap" type="com.linle.attendanceRecordDetail.model.AttendanceRecordDetail" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="main_id" property="mainId" jdbcType="BIGINT" />
+    <result column="duty_date" property="dutyDate" jdbcType="TIMESTAMP" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="description" property="description" jdbcType="VARCHAR" />
+    <result column="folder_id" property="folderId" jdbcType="BIGINT" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+    <result column="attendance_address" property="attendanceAddress"/>
+  </resultMap>
+  
+  <resultMap  id="AttendanceRecordInfoAPIResult" type="AttendanceInfoMode" >
+  	<result column="duty_date" property="dutyDate"/>
+  	<result column="attendance_address" property="address"/>
+  	<result column="description" property="description"/>
+  	<result column="status" property="status"/>
+  	<collection property="imgs" column="folder_id" select="com.linle.system.mapper.SysFileMapper.findFilesUrlByFolderId"/>
+  </resultMap>
+  
+  <resultMap type="WEBAttendanceInfoMode" id="WEBAttendanceInfoModeResult" extends="AttendanceRecordInfoAPIResult">
+  	<result column="type" property="type"/>
+  </resultMap>
+  
+  <resultMap type="com.linle.mobileapi.attendance.model.AttendanceDetail" id="AttendanceRecordDetailAPIResult">
+  	<result column="duty_date" property="dutyDate"/>
+  	<result column="description" property="description"/>
+  	<result column="status" property="status"/>
+  	<collection property="imgs" column="folder_id" select="com.linle.system.mapper.SysFileMapper.findFilesUrlByFolderId"/>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, main_id, duty_date, address, description, folder_id, status, create_date, update_date, 
+    type,attendance_address
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from attendance_record_detail
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from attendance_record_detail
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.linle.attendanceRecordDetail.model.AttendanceRecordDetail" >
+    insert into attendance_record_detail (id, main_id, duty_date, 
+      address, description, folder_id, 
+      status, create_date, update_date, 
+      type,attendance_address)
+    values (#{id,jdbcType=BIGINT}, #{mainId,jdbcType=BIGINT}, #{dutyDate,jdbcType=TIMESTAMP}, 
+      #{address,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}, #{folderId,jdbcType=BIGINT}, 
+      #{status,jdbcType=INTEGER}, #{createDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP}, 
+      #{type,jdbcType=INTEGER},#{attendanceAddress})
+  </insert>
+  <insert id="insertSelective" parameterType="com.linle.attendanceRecordDetail.model.AttendanceRecordDetail" >
+    insert into attendance_record_detail
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="mainId != null" >
+        main_id,
+      </if>
+      <if test="dutyDate != null" >
+        duty_date,
+      </if>
+      <if test="address != null" >
+        address,
+      </if>
+      <if test="description != null" >
+        description,
+      </if>
+      <if test="folderId != null" >
+        folder_id,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="updateDate != null" >
+        update_date,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="attendanceAddress !=null">
+      	attendance_address,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="mainId != null" >
+        #{mainId,jdbcType=BIGINT},
+      </if>
+      <if test="dutyDate != null" >
+        #{dutyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="address != null" >
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null" >
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="folderId != null" >
+        #{folderId,jdbcType=BIGINT},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=INTEGER},
+      </if>
+      <if test="attendanceAddress !=null">
+      	#{attendanceAddress},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.linle.attendanceRecordDetail.model.AttendanceRecordDetail" >
+    update attendance_record_detail
+    <set >
+      <if test="mainId != null" >
+        main_id = #{mainId,jdbcType=BIGINT},
+      </if>
+      <if test="dutyDate != null" >
+        duty_date = #{dutyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="address != null" >
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null" >
+        description = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="folderId != null" >
+        folder_id = #{folderId,jdbcType=BIGINT},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="attendanceAddress !=null">
+      	attendance_address = #{attendanceAddress},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.linle.attendanceRecordDetail.model.AttendanceRecordDetail" >
+    update attendance_record_detail
+    set main_id = #{mainId,jdbcType=BIGINT},
+      duty_date = #{dutyDate,jdbcType=TIMESTAMP},
+      address = #{address,jdbcType=VARCHAR},
+      description = #{description,jdbcType=VARCHAR},
+      folder_id = #{folderId,jdbcType=BIGINT},
+      status = #{status,jdbcType=INTEGER},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP},
+      type = #{type,jdbcType=INTEGER},
+      attendance_address = #{attendanceAddress}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  <select id="selectAttendanceRecordDetail" parameterType="map" resultMap="AttendanceRecordDetailAPIResult">
+  	select duty_date,description,`status`,folder_id 
+  	from attendance_record_detail
+	where main_id = #{mainId} and type =#{type}
+  </select>
+  
+  <select id="selectDetailByMainIdAndType" parameterType="map" resultMap="AttendanceRecordDetailAPIResult">
+  	   select 
+    <include refid="Base_Column_List" />
+    from attendance_record_detail
+    where main_id = #{mainId} and type = #{type}
+  </select>
+  
+  <select id="selectAttendanceRecordDetailByMainId" parameterType="Long" resultMap="BaseResultMap">
+  	   select 
+    <include refid="Base_Column_List" />
+    from attendance_record_detail
+    where main_id = #{mainId}
+  </select>
+  
+  <select id="selectInfoByMainIdAndType" parameterType="map" resultMap="AttendanceRecordInfoAPIResult">
+  		select duty_date,attendance_address,description,status,folder_id
+  		from attendance_record_detail
+  		where main_id = #{id} and type = #{type}
+  </select>
+  
+  <select id="getSomeDayInfo" parameterType="Long" resultMap="WEBAttendanceInfoModeResult">
+  		select type,duty_date,attendance_address,description,status,folder_id
+  		from attendance_record_detail
+  		where main_id = #{mainId}
+  </select>
+</mapper>

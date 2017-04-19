@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+<#include '/common/resources.html'>
+<meta charset="UTF-8">
+<title></title>
+<link rel="stylesheet" media="screen and (min-width: 1580px)" href="${base}/resources/css/sys/kd.css" />
+<link rel="stylesheet" media="screen and (max-width: 1580px)" href="${base}/resources/css/sys/kd-resolving.css" />
+<script src="${base}/resources/js/respond.js" type="text/javascript" async="async"></script>
+</head>
+
+<body>
+	<div class="kdwhole">
+		<ol class="breadcrumb">
+			<li><a href="javascript:void(0)">商家类型</a></li>
+			<li class="active">子分类维护</li>
+		</ol>
+
+		<div class="kdleft">
+			<div class="head">
+				<span class="mes-wh">子分类维护</span><span class="rec"
+					onclick="showBg()">添加</span><img src="${base}/resources/images/add_03.png">
+			</div>
+			<#if (pagelist.results)?exists && pagelist.results?size gt 0>
+			<#list pagelist.results as shopChildType>
+			<div class="nr">
+				<div class="off-title">
+					<h3>${shopChildType.parent.typeName!!}-${shopChildType.typeName}</h3>
+				</div>
+				<div class="time-bt">
+					<span>${shopChildType.createDate?string('yyyy/MM/dd HH:mm:ss')}</span><img class="edit_"  data='${shopChildType}' src="${base}/resources/images/xiugai.png">
+				</div>
+				<div class="reveal-modal-bg" style="cursor: pointer; display: none;">
+
+				</div>
+			</div>
+			</#list>
+			<#else>
+			<div class="no-data">暂无数据~</div>
+			</#if>
+			</div>
+		<div class="kdrignt">
+			<div class="head">
+				<span>店铺子分类信息编辑</span>
+			</div>
+			<form action="${base}/shopChildType/add" method="post" id="form1">
+			<input type="hidden" name="id" id="id"/>
+			<div class="Sheet">
+				<div class="s-title">
+					<span class="choice">分类名称：</span>
+					<div class="inp">
+						<input maxlength="20" type="text"
+							onkeyup="javascript:setShowLength(this, 20, 'cost_tpl_title_length');" name="typeName" id="typeName"/>
+						<span class="cue" id="cost_tpl_title_length">0/20</span>
+					</div>
+				</div>
+					<div class="s-title"> 
+					<span class="choice">主 分类：</span>
+					<div class="province" style="margin-left: 25px;">
+						<select class="sele-pa" id="parentId" name="parent.id"  class="form-control">
+						.	<#list list as main>
+								<option value="${main.id}">${main.typeName!!}</option>
+							</#list>
+						</select>
+					</div>
+					</div>
+				<button  class="s-btn" style="cursor: pointer;">确认</button>
+			</div>
+			</form>
+		</div>
+
+	<script type="text/javascript">
+		function showBg() {
+			$(".kdrignt").fadeIn();
+		}
+		
+		$("#form1").submit(function() {
+			var ajax_url = $(this).attr("action"); //表单目标 
+			var ajax_type = $(this).attr('method'); //提交方法 
+			var ajax_data = $(this).serialize(); //表单数据 
+			$.ajax({
+				type : ajax_type, //表单提交类型 
+				url : ajax_url, //表单提交目标 
+				data : ajax_data, //表单数据
+				success : function(data) {
+					 layer.msg(data.msg,{
+					     	shift: 0
+					     }, function(){
+					    	 $(".kdrignt").fadeOut();
+					    	 window.location.reload();
+					     }); 
+				}
+			});
+			return false; //阻止表单的默认提交事件 
+		});
+		
+		
+		$(".edit_").click(function(){
+			var data = eval("("+$(this).attr("data")+")");
+			$("#typeName").val(data.typeName);
+			$("#id").val(data.id);
+			$("#parentId").val(data.parent.id);
+			$(".kdrignt").fadeIn();
+		})
+	</script>
+	<script>
+		function setShowLength(obj, maxlength, id) {
+			var rem = maxlength - obj.value.length;
+			var wid = id;
+			if (rem < 0) {
+				rem = 0;
+			}
+			document.getElementById(wid).innerHTML = rem + "/" + "20";
+		}
+	</script>
+</body>
+
+</html>

@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.linle.withdraw.mapper.WithdrawMapper" >
+  <resultMap id="BaseResultMap" type="com.linle.entity.sys.Withdraw" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="u_id" property="uId" jdbcType="BIGINT" />
+    <result column="amount" property="amount" jdbcType="DECIMAL" />
+    <result column="statuss" property="statuss" jdbcType="INTEGER" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+    <result column="apply_amount" property="applyAmount"/>
+    <result column="poundage_amount" property="poundageAmount"/>
+    <result column="cut_amount" property="cutAmount"/>
+    <result column="withdraw_type" property="withdrawType"/>
+    <association column="withdraw_bank" property="withdrawbank" select="com.linle.withdrawBank.mapper.WithdrawBankMapper.selectByPrimaryKey"/>
+    <association property="user" column="u_id" select="com.linle.user.mapper.UserMapper.selectByPrimaryKey"/>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, u_id, amount, statuss, create_date, update_date,apply_amount,poundage_amount,cut_amount,withdraw_type,withdraw_bank
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from withdraw
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from withdraw
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.linle.entity.sys.Withdraw" >
+    insert into withdraw (id, u_id, amount, 
+      statuss, create_date, update_date,apply_amount,poundage_amount,cut_amount,withdraw_type,withdraw_bank
+      )
+    values (#{id,jdbcType=BIGINT}, #{uId,jdbcType=BIGINT}, #{amount,jdbcType=DECIMAL}, 
+      #{statuss,jdbcType=INTEGER}, #{createDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP},
+      #{applyAmount},#{poundageAmount},#{poundageAmount},#{withdrawType},#{withdrawbank.id}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.linle.entity.sys.Withdraw" >
+    insert into withdraw
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="uId != null" >
+        u_id,
+      </if>
+      <if test="amount != null" >
+        amount,
+      </if>
+      <if test="statuss != null" >
+        statuss,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="updateDate != null" >
+        update_date,
+      </if>
+      <if test="applyAmount !=null">
+      	apply_amount,
+      </if>
+      <if test="poundageAmount !=null">
+      	poundage_amount,
+      </if>
+      <if test="cutAmount !=null">
+      	cut_amount,
+      </if>
+      <if test="withdrawType !=null">
+      	withdraw_type,
+      </if>
+      <if test="withdrawbank !=null">
+      	withdraw_bank,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="uId != null" >
+        #{uId,jdbcType=BIGINT},
+      </if>
+      <if test="amount != null" >
+        #{amount,jdbcType=DECIMAL},
+      </if>
+      <if test="statuss != null" >
+        #{statuss,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="applyAmount !=null">
+      	#{applyAmount},
+      </if>
+      <if test="poundageAmount !=null">
+      	#{poundageAmount},
+      </if>
+      <if test="cutAmount !=null">
+      	#{cutAmount},
+      </if>
+      <if test="withdrawType !=null">
+      	#{withdrawType},
+      </if>
+      <if test="withdrawbank !=null">
+      	#{withdrawbank.id},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.linle.entity.sys.Withdraw" >
+    update withdraw
+    <set >
+      <if test="uId != null" >
+        u_id = #{uId,jdbcType=BIGINT},
+      </if>
+      <if test="amount != null" >
+        amount = #{amount,jdbcType=DECIMAL},
+      </if>
+      <if test="statuss != null" >
+        statuss = #{statuss,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+       <if test="applyAmount !=null">
+      	apply_amount = #{applyAmount},
+      </if>
+      <if test="poundageAmount !=null">
+      	poundage_amount = #{poundageAmount},
+      </if>
+      <if test="cutAmount !=null">
+      	cut_amount = #{cutAmount},
+      </if>
+      <if test="withdrawType !=null">
+      	withdraw_type = #{withdrawType},
+      </if>
+      <if test="withdrawbank !=null">
+      	withdraw_bank = #{withdrawbank.id},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.linle.entity.sys.Withdraw" >
+    update withdraw
+    set u_id = #{uId,jdbcType=BIGINT},
+      amount = #{amount,jdbcType=DECIMAL},
+      statuss = #{statuss,jdbcType=INTEGER},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP},
+      apply_amount = #{applyAmount},
+      poundage_amount = #{poundageAmount},
+      cut_amount = #{cutAmount},
+      withdraw_type = #{withdrawType},
+      withdraw_bank = #{withdrawbank.id},
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  <!-- 统计提现金额 -->
+  <select id="sumWithdrawMoney" parameterType="Long" resultType="BigDecimal">
+  	select ifnull(sum(apply_amount),0) from withdraw
+  	where u_id = #{uid}
+  	<if test="orderType!=null and orderType !=''">
+  		and withdraw_type = #{orderType}
+  	</if>
+  </select>
+  
+  <select id="getAllData" parameterType="page" resultMap="BaseResultMap">
+  	 select 
+   	id, u_id, amount, statuss, create_date, update_date,apply_amount,ifnull(poundage_amount,0) as poundage_amount,cut_amount,withdraw_type,withdraw_bank
+    from withdraw
+    left join (select id as uid,user_name from users) as user
+    on withdraw.u_id = user.uid
+    <where>
+    	 <if test="params.status!=-1">
+    		and  statuss = #{params.status}
+   		 </if>
+   		 <if test="params.beginDate!=null and params.endDate==null">
+  			and  <![CDATA[  create_date>=#{params.beginDate} ]]>
+  		</if>
+  		<if test="params.beginDate==null and params.endDate!=null">
+  			and  <![CDATA[ create_date<=#{params.endDate} ]]>
+  		</if>
+  		<if test="params.beginDate!=null and params.endDate!=null">
+  			and  <![CDATA[ (create_date >=#{params.beginDate} and create_date<=#{params.endDate}) ]]>
+  		</if>
+  		<if test="params.userName!='' and params.userName!=null">
+  			and  user_name like CONCAT('%','${params.userName}','%')
+  		</if>
+  		<if test="params.uid!=null">
+  		    and  u_id = #{params.uid}
+  		</if>
+    </where>
+    order by create_date desc
+  </select>
+</mapper>

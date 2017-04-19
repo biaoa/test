@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>轮播图管理</title>
+<meta name="content-type" content="text/html; charset=UTF-8">
+<#include '/common/resources.html'>
+<link rel="stylesheet" media="screen and (min-width: 1580px)" href="${base}/resources/css/sys/jquery.tableui.css" />
+<link rel="stylesheet" media="screen and (max-width: 1580px)" href="${base}/resources/css/sys/tableui-resolving.css" />
+<script src="${base}/resources/js/respond.js" type="text/javascript" async="async"></script>	    
+</head>
+<body>
+<div class="whole">
+	<ol class="breadcrumb">
+		<li><a href="javascript:void(0)">banner管理</a></li>
+		<li class="active">banner列表</li>
+	<span style="float: right"><button type="button"
+			class="btn-default" style="float: right;">新增banner</button></span>
+	</ol>
+
+	<div class="tab_box">
+	<table class="table_solid" border="0" cellspacing="0">
+		<tbody>
+			<tr class="evenRow">
+				<th>序号</th>
+				<th>描述</th>
+				<th>是否置顶</th>
+				<th>状态</th>
+				<th>排序</th>
+				<th>创建时间</th>
+				<th>操作</th>
+			</tr>
+			<#if (pagelist.results)?exists && pagelist.results?size gt 0> <#list
+			pagelist.results as AppBanner>
+			<tr>
+				<td>${(AppBanner_index+1)+(pagelist.pageNo-1)*pagelist.pageSize}</td>
+				<td>${AppBanner.description!!}</td>
+				<td>
+					<#if AppBanner.isTop==0>
+						是
+						<#else>
+						否
+					</#if>
+				</td>
+				<td>
+					<#if AppBanner.delFlag==0>
+						显示
+						<#else>
+						隐藏
+					</#if>
+				</td>
+				<td>${AppBanner.orderNo!!}</td>
+				<td>${AppBanner.createDate?string('yyyy/MM/dd HH:mm:ss')}</td>
+				<td>
+					<#if AppBanner.isTop==0>
+						<a class="cz-a btn-default common-btn-cz" href="javaScript:void(0);" onclick="setTop('${AppBanner.id}',1)">取消置顶</a>
+						<#else>
+						<a class="cz-a btn-default common-btn-cz" href="javaScript:void(0);" onclick="setTop('${AppBanner.id}',0)">置顶</a>
+					</#if>
+						<#if AppBanner.delFlag==0>
+						<a class="cz-a btn-default common-btn-cz" href="javaScript:void(0);" onclick="isShow('${AppBanner.id}',1)">隐藏</a>
+						<#else>
+						<a class="cz-a btn-default common-btn-cz" href="javaScript:void(0);" onclick="isShow('${AppBanner.id}',0)">显示</a>
+					</#if>
+					<a class="cz-a btn-default common-btn-cz" href="${base}/appBanner/detail/${AppBanner.id}" target="_blank">预览</a>
+					<a class="cz-a btn-default common-btn-cz" href="${base}/appBanner/add?id=${AppBanner.id}" >编辑</a>
+					<a class="cz-a btn-default del common-btn-cz" href="javascript:void(0)" val="${AppBanner.id}">删除</a>
+				</td>
+			</tr>
+			</#list>
+		</tbody>
+	</table>
+	
+	<form action="${base}/appBanner/list" id="pagerForm"><#include
+		'/common/pagination.html'></form>
+	<#else>
+	
+	<div class="no-data" >暂无数据~</div>
+	</#if>
+	</div>
+	</div>
+</body>
+<script type="text/javascript">
+	$(function() {
+		$("button").click(function() {
+			window.location.href = "${base}/appBanner/add";
+		});
+	});
+	
+	function setTop(id,istop){
+		$.ajax({
+			type : "post", //表单提交类型 
+			url : "${base}/appBanner/setTop", //表单提交目标 
+			data : {id:id,isTop:istop}, //表单数据
+			success : function(data) {
+				 layer.msg(data.msg,{
+				     	shift: 0
+				     }, function(){
+				    	 window.location.href="${base}/appBanner/list";
+				     }); 
+			}
+		});
+	}
+	
+	function isShow(id,ishow){
+		$.ajax({
+			type : "post", 
+			url : "${base}/appBanner/setShow",
+			data : {id:id,delFlag:ishow},
+			success : function(data) {
+				 layer.msg(data.msg,{
+				     	shift: 0
+				     }, function(){
+				    	 window.location.href="${base}/appBanner/list";
+				     }); 
+			}
+		});
+	}
+	
+	$(".del").click(function(){
+		var id = $(this).attr("val");
+			$.ajax({
+			type : "post", 
+			url : "${base}/appBanner/del",
+			data : {id:id},
+			success : function(data) {
+				 layer.msg(data.msg,{
+				     	shift: 0
+				     }, function(){
+				    	 window.location.href="${base}/appBanner/list";
+				     }); 
+			}
+		});
+	})
+</script>
+
+</html>

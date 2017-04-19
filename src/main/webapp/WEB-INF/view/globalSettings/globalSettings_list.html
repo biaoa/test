@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>参数配置管理</title>
+<meta name="content-type" content="text/html; charset=UTF-8">
+<#include '/common/resources.html'>
+<link rel="stylesheet" media="screen and (min-width: 1580px)" href="${base}/resources/css/sys/jquery.tableui.css" />
+<link rel="stylesheet" media="screen and (max-width: 1580px)" href="${base}/resources/css/sys/tableui-resolving.css" />
+<script src="${base}/resources/js/respond.js" type="text/javascript" async="async"></script>
+<!-- <script type="text/javascript" src="${base}/resources/js/tooltips.js"></script> -->
+</head>
+<body>
+<div class="whole">
+	<ol class="breadcrumb">
+		<li><a href="javascript:void(0)">参数配置管理</a></li>
+		<li class="active">参数配置列表</li>
+		<span style="float: right">
+			<button id="addBtn" type="button" class="btn-default" style="float: right;">新增参数配置</button>
+		</span>
+	</ol>
+			<div class="tab_box">
+	<table class="table_solid" border="0" cellspacing="0">
+		<tbody>
+			<tr class="evenRow">
+				<th>序号</th>
+				<th>缴费类型</th>
+				<th>描述</th>
+				<th>是否启用</th>
+				<th>创建时间</th>
+				<th>更新时间</th>
+				<th>操作</th>
+			</tr>
+			<#if (pagelist.results)?exists && pagelist.results?size gt 0> <#list
+			pagelist.results as record>
+			<tr>
+				<td>${(record_index+1)+(pagelist.pageNo-1)*pagelist.pageSize}</td>
+				<td>
+						<#if record.settingKey=='water'>
+						水费
+						<#elseif record.settingKey=='electricity'>
+						电费	
+						<#elseif record.settingKey=='gas'>
+						燃气费	
+						<#elseif record.settingKey=='propertyFee'>
+						物业费	
+						<#elseif record.settingKey=='cableTelevision'>
+						有线电视费	
+						<#elseif record.settingKey=='broadband'>
+						宽带费	
+					</#if>	
+				</td>
+				<td class="ahover" tooltips="${record.remark!!}">${record.remark!!}</td>
+				<td>
+				<#if record.settingValue=='Y'>
+					是
+					<#else>
+					否
+				</#if>
+				</td>
+				<td>${record.createDate?string('yyyy/MM/dd HH:mm:ss')}</td>
+				<td>
+				<#if record.updateDate??>
+					${record.updateDate?string('yyyy/MM/dd HH:mm:ss')}
+				</#if>
+				</td>
+				<td>
+					<a class="cz-a btn-default common-btn-cz" href="${base}/globalSettings/toAdd?id=${record.id}">编辑</a>
+					<@shiro.hasPermission name="globalSettings_add">
+					<a class="cz-a btn-default del common-btn-cz"  href="javascript:void(0)" id="${record.id}">删除</a>
+					</@shiro.hasPermission>
+				</td>
+			</tr>
+			</#list>
+		</tbody>
+	</table>
+	<form action="${base}/globalSettings/list" id="pagerForm">
+	<#include '/common/pagination.html'>
+	</form>
+	<#else>
+	<div class="no-data">暂无数据~</div>
+	</#if>
+	</div>
+	</div>
+</body>
+<script type="text/javascript">
+	$(function() {
+		$("#addBtn").click(function() {
+			window.location.href = "${base}/globalSettings/toAdd";
+		});
+
+		$(".del").click(function() {
+			var id = $(this).attr("id");
+			layer.confirm('确定删除?', function(index){
+				$.post("${base}/globalSettings/del/" + id, function(data) {
+					layer.msg(data.msg,{
+				     	shift: 0
+				     }, function(){
+				    	 location.reload();
+				     });
+					;
+				}, 'json');
+				});
+		})
+	});
+	
+</script>
+
+</html>

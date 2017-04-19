@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>小区管理</title>
+<meta name="content-type" content="text/html; charset=UTF-8">
+<#include '/common/resources.html'>
+<link rel="stylesheet" media="screen and (min-width: 1580px)" href="${base}/resources/css/sys/jquery.tableui.css" />
+<link rel="stylesheet" media="screen and (max-width: 1580px)" href="${base}/resources/css/sys/tableui-resolving.css" />
+<script src="${base}/resources/js/respond.js" type="text/javascript" async="async"></script>
+</head>
+<body>
+<div class="whole">
+	<!-- <span style="float: right"><button type="button"
+			class="btn-default" style="float: right;">新增小区</button></span> -->
+	<ol class="breadcrumb">
+		<li><a href="javascript:void(0)">社长管理</a></li>
+		<li class="active">社长列表</li>
+		<span style="float: right"><button type="button"
+			class="btn-default" style="float: right;">新增社长</button></span>
+	</ol>
+
+			<div class="tab_box">
+	<table class="table_solid" border="0" cellspacing="0">
+		<tbody>
+			<tr class="evenRow">
+				<th>序号</th>
+				<td>社长名称</td>
+				<td>联系电话</td>
+				<td>联系地址</td>
+				<td>添加时间</td>
+				<td>备注信息</td>
+				<td>操作</td>
+			</tr>
+			<#if (pagelist.results)?exists && pagelist.results?size gt 0> <#list
+			pagelist.results as communityPresident>
+			<tr>
+				<td>${(communityPresident_index+1)+(pagelist.pageNo-1)*pagelist.pageSize}</td>
+				<td>${communityPresident.name}</td>
+				<td>${communityPresident.phone}</td>
+				<td>${communityPresident.address!!}</td>
+				<td>${communityPresident.createDate?string('yyyy/MM/dd HH:mm:ss')}</td>
+				<td>${communityPresident.other!!}</td>
+				<td><a class="td-btn btn-default common-btn-cz" href="${base}/sys/communityPresident/add?id=${communityPresident.id}" value="">编辑</a></td>
+			</tr>
+			</#list>
+		</tbody>
+	</table>
+	
+	<form action="${base}/community/list" id="pagerForm"><#include
+		'/common/pagination.html'></form>
+		<#else>
+		</table>
+		<div class="no-data">暂无数据~</div>
+	</#if>
+	</div>
+	</div>
+</body>
+<script type="text/javascript">
+	$(function() {
+		$("button").click(function() {
+			window.location.href = "${base}/sys/communityPresident/add";
+		});
+	});
+</script>
+
+</html>

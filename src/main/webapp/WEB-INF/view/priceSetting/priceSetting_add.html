@@ -1,0 +1,148 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta name="renderer" content="webkit|ie-comp|ie-stand">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<title>缴费单价设置管理</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<#include '/common/resources.html'>
+	<link rel="stylesheet" href="${base}/resources/css/sys/add-new.css"/>
+    <link rel="stylesheet" type="text/css" href="${base }/resources/uploadify/uploadify.css">
+    <script src="${base}/resources/js/respond.js" type="text/javascript" async="async"></script>
+</head>
+<body>
+	<div class="whole">
+		<div class="a-plus">
+			<div class="head">
+				<span>缴费单价编辑</span>
+			</div>
+				<form action="${base}/priceSetting/doOperate"
+				method="post" id="form1"> 
+			<div class="Sheet">
+					<span class="choice" style="margin-left:15px;">缴费类型：</span>
+					<div class="province">
+							<select name="type" id="type"  style="width: 146px;">
+							<option value="water">水费</option>
+							<option value="electricity">电费</option>
+							<option value="gas">燃气费</option>
+							<option value="propertyFee">物业费</option>
+						</select>
+					</div>
+			</div>
+<!-- 			<div class="Sheet" id="floorDiv"> -->
+<!-- 				<div class="content"> -->
+<!-- 					<span class="choice" style="margin-left:38px;">楼层：</span> -->
+<!-- 					<div class="inp" style="width: 22%;"> -->
+<!-- 						<input maxlength="20" type="text" -->
+<!-- 							name="floor" id="floor" value="${priceSetting.floor!!}"/> -->
+<!-- 					</div> -->
+<!-- -- -->
+<!-- 					<div class="inp" style="width: 22%;"> -->
+<!-- 						<input maxlength="20" type="text" -->
+<!-- 							name="floor" id="floor" value="${priceSetting.floor!!}"/> -->
+<!-- 					</div> -->
+<!-- 				</div> -->
+<!-- 				<div>
+<!-- 					<span>提示：若每个楼层价格不一样，则填入楼层n （n楼层下的价格），价格一样，无需填值</span> -->
+<!-- 				</div> -->
+<!-- 			</div> -->
+			
+			<div class="Sheet">
+				<div class="content">
+					<span class="choice" style="margin-left:38px;">单价：</span>
+					<div class="inp"  style="width: 22%;">
+						<input maxlength="20" type="text"
+							name="price" id="price" value="${priceSetting.price!!}"/>
+					</div>
+				</div>
+			</div>
+			
+			<div class="Sheet">
+				<div class="a-title">
+					<span class="choice" style="margin-left:38px;">备注：</span>
+					<div class="province">
+						<textarea class="miaosu" style="width: 453px;height: 150px;"  type="text" name="remark" >${priceSetting.remark!!}</textarea>
+					</div>
+				</div>
+			</div>
+			
+			<div class="a-address">
+				<button data-reveal-id="sav" data-animation="fade" class="s-btn">确认</button>
+			</div>
+			<div id="sav" class="reveal-modal"
+				style="opacity: 1; visibility: hidden; top: 150px;">
+				<h3>保存成功</h3>
+				<a class="close-reveal-modal">×</a>
+			</div>
+			<input type="hidden" name="id" value="${priceSetting.id!!}" />
+			</form>
+			
+			<div style="float: left;margin-top: -67px;margin-left: 513px;">
+					<button data-reveal-id="close" onclick="closeBg()" data-animation="fade" class="s-btn">取消</button>
+			</div>
+				
+			<div class="reveal-modal-bg" style="display: none; cursor: pointer;">
+			</div>
+		</div>
+	</div>
+
+	<!--style给定宽度可以影响编辑器的最终宽度-->
+
+	<script type="text/javascript" src="${base}/resources/js/jquery.reveal.js"></script>
+	<script>
+		function setShowLength(obj, maxlength, id) {
+			var rem = maxlength - obj.value.length;
+			var wid = id;
+			if (rem < 0) {
+				rem = 0;
+			}
+			document.getElementById(wid).innerHTML = rem + "/" + "20";
+		}
+		function closeBg() { 
+			 window.location.href="${base}/priceSetting/list";
+		} 
+    	$("#form1").submit(function() {
+			var ajax_url = $(this).attr("action"); //表单目标 
+			var ajax_type = $(this).attr('method'); //提交方法 
+			var ajax_data = $(this).serialize(); //表单数据 
+			var price=$("#price").val();
+// 			var floor=$("#floor").val();
+			if(price==''){
+				layer.msg("单价不能为空");
+				if(isNaN(price)){
+					layer.msg("单价只能为数字");
+				}
+				return false;
+			}
+// 			if(floor!=''){
+// 				if(isNaN(floor)){
+// 					layer.msg("楼层只能为数字");
+// 					return false;
+// 				}
+// 			}
+			$.ajax({
+				type : ajax_type, //表单提交类型 
+				url : ajax_url, //表单提交目标 
+				data : ajax_data, //表单数据
+				success : function(data) {
+					 layer.msg(data.msg,{
+					     	shift: 0
+					     }, function(){
+					    	 if(data.code==0){
+						    	 window.location.href="${base}/priceSetting/list";
+					    	 }
+					     }); 
+				}
+			});
+			return false; //阻止表单的默认提交事件 
+		});
+    
+	</script>
+	<script>
+		<#if priceSetting.id??>
+			$("#type").val('${priceSetting.type}');
+		</#if>
+	</script>
+</body>
+</html>

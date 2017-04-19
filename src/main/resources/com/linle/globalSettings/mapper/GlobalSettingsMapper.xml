@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.linle.globalSettings.mapper.GlobalSettingsMapper" >
+  <resultMap id="BaseResultMap" type="com.linle.globalSettings.model.GlobalSettings" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="community_id" property="communityId" jdbcType="BIGINT" />
+    <result column="setting_key" property="settingKey" jdbcType="VARCHAR" />
+    <result column="setting_value" property="settingValue" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="is_del" property="isDel" jdbcType="INTEGER" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, community_id, setting_key, setting_value, remark, is_del, create_date, update_date
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from global_settings
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from global_settings
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.linle.globalSettings.model.GlobalSettings" >
+    insert into global_settings (id, community_id, setting_key, 
+      setting_value, remark, is_del, 
+      create_date, update_date)
+    values (#{id,jdbcType=BIGINT}, #{communityId,jdbcType=BIGINT}, #{settingKey,jdbcType=VARCHAR}, 
+      #{settingValue,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{isDel,jdbcType=INTEGER}, 
+      #{createDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.linle.globalSettings.model.GlobalSettings" >
+    insert into global_settings
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="communityId != null" >
+        community_id,
+      </if>
+      <if test="settingKey != null" >
+        setting_key,
+      </if>
+      <if test="settingValue != null" >
+        setting_value,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="isDel != null" >
+        is_del,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="updateDate != null" >
+        update_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="communityId != null" >
+        #{communityId,jdbcType=BIGINT},
+      </if>
+      <if test="settingKey != null" >
+        #{settingKey,jdbcType=VARCHAR},
+      </if>
+      <if test="settingValue != null" >
+        #{settingValue,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="isDel != null" >
+        #{isDel,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.linle.globalSettings.model.GlobalSettings" >
+    update global_settings
+    <set >
+      <if test="communityId != null" >
+        community_id = #{communityId,jdbcType=BIGINT},
+      </if>
+      <if test="settingKey != null" >
+        setting_key = #{settingKey,jdbcType=VARCHAR},
+      </if>
+      <if test="settingValue != null" >
+        setting_value = #{settingValue,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="isDel != null" >
+        is_del = #{isDel,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.linle.globalSettings.model.GlobalSettings" >
+    update global_settings
+    set community_id = #{communityId,jdbcType=BIGINT},
+      setting_key = #{settingKey,jdbcType=VARCHAR},
+      setting_value = #{settingValue,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      is_del = #{isDel,jdbcType=INTEGER},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  
+  <select id="selectBySettingKey" resultMap="BaseResultMap" parameterType="map" >
+    select
+    <include refid="Base_Column_List" />
+    from global_settings
+    where setting_key = #{settingKey} and community_id = #{communityId}
+  </select>
+  
+   <select id="getAllData" resultMap="BaseResultMap" parameterType="page" >
+    select
+    <include refid="Base_Column_List" />
+    from global_settings
+    where    is_del!= 1
+    <if test="params.communityId != null" >
+      and community_id = #{params.communityId}
+    </if>
+ 
+  </select>
+  
+</mapper>

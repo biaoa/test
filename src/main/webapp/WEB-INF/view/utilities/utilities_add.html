@@ -1,0 +1,294 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta name="renderer" content="webkit|ie-comp|ie-stand">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<title>缴费管理</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<#include '/common/resources.html'>
+	<link rel="stylesheet" href="${base}/resources/css/sys/add-new.css"/>
+    <link rel="stylesheet" type="text/css" href="${base }/resources/uploadify/uploadify.css">
+    <script src="${base}/resources/js/respond.js" type="text/javascript" async="async"></script>
+    <script src="${base }/resources/uploadify/jquery.uploadify.min.js" type="text/javascript"></script>
+    <style>
+    .cj{
+    padding:10px 10px;
+    font-weight:bold;
+    margin-left:325px;
+    width:360px;
+    background:#ffcb97;
+    position: relative;
+    top:-20px;
+    border-radius: 10px;
+    visibility:hidden;
+      
+}
+	.cj:before{
+	content: '';
+	position: absolute;
+	right: 100%;
+	top: 20px;
+	width: 0;
+	height: 0;
+	border-top: 13px solid transparent;
+	border-right:26px solid #ffcb97;
+	border-bottom: 13px solid transparent;
+}
+   .yx{
+  width:35px;
+  height:35px;
+  line-height:35px;
+  text-align:center;
+  background:#cc9900;
+  border-radius:32px; 
+  display:inline-block;
+  color:white;
+  cursor:pointer;
+} 
+    
+    </style>
+</head>
+<body>
+	<div class="whole">
+		<div class="a-plus">
+			<div class="head">
+				<span>	<#if utilities.type==1>
+						水费
+					<#elseif utilities.type==2>
+						电费
+					<#elseif utilities.type==3>
+						燃气费
+					</#if>管理</span>
+			</div>
+				<form action="${base}/utilities/doOperate" method="post" id="form1"> 
+			
+			<div class="Sheet">
+				<div class="content">
+					<span class="choice" style="margin-left: 74px;">房号：</span>
+					<div class="inp" style="width: 20%;">
+						<input maxlength="40" disabled="disabled" type="text" name="houseNumber" id="houseNumber" value="${utilities.houseNumber!!}"/>
+					</div>
+				</div>
+			</div>	
+		   <div class="Sheet">
+				<div class="content">
+					<span class="choice" style="margin-left: 74px;">业主：</span>
+					<div class="inp" style="width: 20%;">
+						<input maxlength="40" disabled="disabled" type="text" name="houseOwner" id="houseOwner" value="${utilities.houseOwner!!}"/>
+					</div>
+				</div>
+			</div>
+			
+			<div class="Sheet">
+				<div class="content">
+					<span class="choice">上次抄表(米³)：</span>
+					<div class="inp" style="width: 20%;">
+						<input maxlength="40" disabled="disabled" type="text" name="lastMeterReading" id="lastMeterReading" value="${utilities.lastMeterReading!!}"/>
+					</div>
+				</div>
+			</div>	
+			<#if utilities.utilitiesChild??>
+			<div class="Sheet">
+				<div class="content">
+					<span class="choice" style="color:red;">最新抄表(米³)：</span>
+					<div class="inp" style="width: 20%;">
+						<input  maxlength="40" style="background-color: #e8e8ef;" type="text" readonly="readonly" name="newThisMeterReading" id="newThisMeterReading" value="${utilities.utilitiesChild.thisMeterReading!!}"/>
+					</div>
+					    <span style="color:red;margin-left: 10px;line-height: 35px">最新抄表值来源于此账单子帐单记录的本次抄表</span>
+				</div>
+			</div>	
+			</#if>
+			<div class="Sheet">
+				<div class="content">
+					<span class="choice">本次抄表(米³)：</span>
+					<div class="inp" style="width: 20%;">
+						<input  maxlength="40" type="text" name="thisMeterReading" id="thisMeterReading" value="${utilities.thisMeterReading!!}"/>
+					</div>
+				</div>
+			</div>	
+					
+			<div class="Sheet">
+				<div class="content">
+					<span class="choice" style="margin-left: 32px;">实用(米³)：</span>
+					<div class="inp" style="width: 20%;">
+						<input  style="background-color: #e8e8ef;" readonly="readonly" maxlength="10" type="text" name="actualConsumption" id="actualConsumption" value="${utilities.actualConsumption!!}"/>
+					</div>
+				</div>
+			</div>
+				<div class="Sheet">
+				<div class="content">
+					<span class="choice" style="margin-left: 32px;">公摊(米³)：</span>
+					<div class="inp" style="width: 20%;">
+						<input maxlength="10" type="text" name="pooledPrice" id="pooledPrice" value="${utilities.pooledPrice!!}"/>
+					</div>
+				</div>
+			</div>
+				<div class="Sheet">
+				<div class="content">
+					<span class="choice">单价(米³/元)：</span>
+					<div class="inp" style="width: 20%;">
+						<input  maxlength="10" type="text" name="price" id="price" value="${utilities.price!!}"/>
+					</div>
+				</div>
+			</div>
+				<div class="Sheet">
+				<div class="content">
+					<span class="choice">合计应缴(元)：</span>
+					<div class="inp" style="width: 20%;">
+						<input maxlength="10" type="text" name="payable" id="payable" value="${utilities.payable!!}"/>
+					</div> 
+					<span class="yx">？</span>
+					<div class="cj">情况1:最新抄表无值时</br>合计应缴=（本次抄表-上次抄表）*单价+公摊</br></br>情况2:最新抄表有值时</br>合计应缴=（本次抄表-最新抄表）*单价+公摊</div>
+				</div>
+			</div>
+			
+			<div class="Sheet">
+				<span class="choice" style="margin-left: 74px;">备注：</span>
+					<div class="province" >
+					<textarea class="miaosu" name="remark" id="remark"  style="width: 300px;height: 100px;">
+					<#if utilities.status==1>
+					${utilities.remark!!}
+					</#if>
+					</textarea>
+				</div>
+			</div>
+			
+			<div class="a-address">
+				<input type="hidden" id="id" name="id" value="${utilities.id!!}">
+				<input type="hidden" id="orderNo" name="orderNo" value="${utilities.orderNo!!}">
+				<input type="hidden" id="status" name="status" value="${utilities.status!!}">
+				<button data-reveal-id="sav" data-animation="fade" class="s-btn">确认</button>
+
+			</div>
+			<div id="sav" class="reveal-modal"
+				style="opacity: 1; visibility: hidden; top: 150px;">
+				<h3>保存成功</h3>
+				<a class="close-reveal-modal">×</a>
+			</div>
+			</form>
+				<div style="float: left;margin-top: -67px;margin-left: 513px;">
+					<button data-reveal-id="close" onclick="closeBg()" data-animation="fade" class="s-btn">取消</button>
+			</div>
+			<div class="reveal-modal-bg" style="display: none; cursor: pointer;">
+			</div>
+		</div>
+	</div>
+
+	<script type="text/javascript">
+    $("#form1").submit(function() {
+    	if($("#payable").val()==''){
+    		layer.msg("合计应缴不能为空");
+    		return false;
+    	}
+		var ajax_url = $(this).attr("action"); //表单目标 
+		var ajax_type = $(this).attr('method'); //提交方法 
+		var ajax_data = $(this).serialize(); //表单数据 
+    	var lastMeterReading=$("#lastMeterReading").val();//上次抄表
+    	var newThisMeterReading=$("#newThisMeterReading").val();//最新抄表
+    	var thisMeterReading=$("#thisMeterReading").val();//本次抄表
+    	var actualConsumption=$("#actualConsumption").val();//实用
+    	if(newThisMeterReading!=null&&newThisMeterReading!=undefined){
+    		actualConsumption=Number(thisMeterReading)-Number(newThisMeterReading);
+    		if(Number(actualConsumption)<0){
+        		layer.msg("本次抄表不能小于最新抄表");
+        		$("#thisMeterReading").focus();
+        		return false;
+    		}
+    	}else{
+    		actualConsumption=Number(thisMeterReading)-Number(lastMeterReading);
+    		if(Number(actualConsumption)<0){
+        		layer.msg("本次抄表不能小于上次抄表");
+        		$("#thisMeterReading").focus();
+        		return false;
+    		}
+    	}
+		$.ajax({
+			type : ajax_type, //表单提交类型 
+			url : ajax_url, //表单提交目标 
+			data : ajax_data, //表单数据
+			success : function(data) {
+				 layer.msg(data.msg,{
+				     	shift: 0
+				     }, function(){
+				    	 window.location.href="${base}/utilities/list?type=${utilities.type}";
+				     }); 
+			}
+		});
+		return false; //阻止表单的默认提交事件 
+	});
+    
+    function closeBg() { 
+		 window.location.href="${base}/utilities/list?type=${utilities.type}";
+	} 
+    $("#thisMeterReading,#pooledPrice,#price").on("keyup",function(){
+    	var value=$(this).val();
+    	if(isNaN(value)){
+    		layer.msg("输入有误，只能为数字");
+    		return false;
+    	}else{
+    		calculateCommon($(this));
+    	}
+    })
+    
+    $("#thisMeterReading,#pooledPrice,#price").on("blur",function(){
+    	var value=$(this).val();
+    	var flag=true;
+    	if(isNaN(value)){
+    		layer.msg("输入有误，只能为数字");
+    		flag=false;
+    	}else{
+    		var flag=calculateCommon($(this));
+    	}
+    	if(!flag){
+    		$(this).focus();
+    		return false;
+    	}
+    })
+    function calculateCommon($obj){
+    	var lastMeterReading=$("#lastMeterReading").val();//上次抄表
+    	var newThisMeterReading=$("#newThisMeterReading").val();//最新抄表
+    	var thisMeterReading=$("#thisMeterReading").val();//本次抄表
+    	var actualConsumption=$("#actualConsumption").val();//实用
+    	var pooledPrice=$("#pooledPrice").val();//公摊
+    	var price=$("#price").val();//单价
+    	if(newThisMeterReading!=null&&newThisMeterReading!=undefined){
+    		actualConsumption=Number(thisMeterReading)-Number(newThisMeterReading);
+    		if(Number(actualConsumption)<0){
+        		layer.msg("本次抄表不能小于最新抄表");
+        		$("#thisMeterReading").focus();
+        		return false;
+    		}
+    	}else{
+    		actualConsumption=Number(thisMeterReading)-Number(lastMeterReading);
+    		if(Number(actualConsumption)<0){
+        		layer.msg("本次抄表不能小于上次抄表");
+        		$("#thisMeterReading").focus();
+        		return false;
+    		}
+    	}
+    	
+    	$("#actualConsumption").val(actualConsumption);
+    	var payable=Number(actualConsumption)*Number(price)+Number(pooledPrice)
+    	//情况1：合计应缴=（本次抄表-上次抄表）*单价 + 公摊
+    	//情况2：合计应缴=（本次抄表-最新抄表）*单价 + 公摊
+    	
+    	$("#payable").val(payable);
+    	return true;
+    	
+    }
+	</script>
+<script>
+$(document).ready(function(){
+	$('.yx').mouseover(function(){
+	$(".cj").css("visibility","visible");
+  })
+    $('.yx').mouseout(function(){
+	$(".cj").css("visibility","hidden"); 
+  })
+})	
+	
+	
+</script>
+</body>
+</html>

@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.linle.attendanceSpecialDate.mapper.AttendanceSpecialDateMapper" >
+  <resultMap id="BaseResultMap" type="com.linle.attendanceSpecialDate.model.AttendanceSpecialDate" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="template_id" property="templateId" jdbcType="BIGINT" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+    <result column="special_date" property="specialDate" jdbcType="TIMESTAMP" />
+    <result column="description" property="description" jdbcType="VARCHAR" />
+    <result column="create_user" property="createUser" jdbcType="BIGINT" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, template_id, type, special_date, description, create_user, create_date, update_date
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from attendance_special_date
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from attendance_special_date
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.linle.attendanceSpecialDate.model.AttendanceSpecialDate" >
+    insert into attendance_special_date (id, template_id, type, 
+      special_date, description, create_user, 
+      create_date, update_date)
+    values (#{id,jdbcType=BIGINT}, #{templateId,jdbcType=BIGINT}, #{type,jdbcType=INTEGER}, 
+      #{specialDate,jdbcType=TIMESTAMP}, #{description,jdbcType=VARCHAR}, #{createUser,jdbcType=BIGINT}, 
+      #{createDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.linle.attendanceSpecialDate.model.AttendanceSpecialDate" >
+    insert into attendance_special_date
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="templateId != null" >
+        template_id,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="specialDate != null" >
+        special_date,
+      </if>
+      <if test="description != null" >
+        description,
+      </if>
+      <if test="createUser != null" >
+        create_user,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="updateDate != null" >
+        update_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="templateId != null" >
+        #{templateId,jdbcType=BIGINT},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=INTEGER},
+      </if>
+      <if test="specialDate != null" >
+        #{specialDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="description != null" >
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null" >
+        #{createUser,jdbcType=BIGINT},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.linle.attendanceSpecialDate.model.AttendanceSpecialDate" >
+    update attendance_special_date
+    <set >
+      <if test="templateId != null" >
+        template_id = #{templateId,jdbcType=BIGINT},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="specialDate != null" >
+        special_date = #{specialDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="description != null" >
+        description = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null" >
+        create_user = #{createUser,jdbcType=BIGINT},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.linle.attendanceSpecialDate.model.AttendanceSpecialDate" >
+    update attendance_special_date
+    set template_id = #{templateId,jdbcType=BIGINT},
+      type = #{type,jdbcType=INTEGER},
+      special_date = #{specialDate,jdbcType=TIMESTAMP},
+      description = #{description,jdbcType=VARCHAR},
+      create_user = #{createUser,jdbcType=BIGINT},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  <select id="selectByTemplate" parameterType="Long" resultMap="BaseResultMap">
+  	 select 
+    <include refid="Base_Column_List" />
+    from attendance_special_date
+    where template_id = #{templateId}
+  </select>
+  
+  <delete id="deleteAttendanceSpecialDateByTemplate" parameterType="Long">
+  	delete from attendance_special_date
+    where template_id = #{templateId}
+  </delete>
+  <!-- 根据考勤模板Id查询今天的特殊打卡时间 -->
+  <select id="toDaySpecialDateByTemplateId" parameterType="Long" resultMap="BaseResultMap">
+  	select  <include refid="Base_Column_List" />
+  	from attendance_special_date
+	where template_id = 7 and year(NOW()) = year(special_date) and month(NOW())=month(special_date) and day(NOW()) = day(special_date)
+  </select>
+</mapper>

@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>考勤统计</title>
+<#include '/common/resources.html'>
+<link rel="stylesheet" media="screen and (min-width: 1580px)" href="${base}/resources/css/sys/Check_work.css">
+<link rel="stylesheet" media="screen and (max-width: 1580px)" href="${base}/resources/css/sys/Check_work-resolving.css">
+<link rel="stylesheet" media="screen and (max-width: 1580px)" href="${base}/resources/css/sys/tableui-resolving.css">
+<link rel="stylesheet" media="screen and (min-width: 1580px)" href="${base}/resources/css/sys/jquery.tableui.css">
+<link rel="stylesheet" href="${base}/resources/css/sys/jquery-ui.min.css">
+<link rel="stylesheet" type="text/css" href="${base}/resources/css/sys/kqadd.css" />
+<link rel="stylesheet" type="text/css" href="${base}/resources/datetimepicker/jquery.datetimepicker.css" />
+</head>
+<body>
+	<div class="whole">
+		<ol class="breadcrumb">
+			<li><a href="javascript:void(0)">物业中心</a></li>
+			<li class="active">考勤统计</li>
+		</ol>
+
+		<div class="kq-tab">
+			<div class="kq-daily nowday kq-active">
+				<a href="${base}/attendanceStatistics/dayStatistics"><span>按日统计</span></a>
+			</div>
+			<div class="kq-daily nowmouth">
+				<a href="${base}/attendanceStatistics/monthStatistics"><span>按月统计</span></a>
+			</div>
+		</div>
+		<form action="${base}/attendanceStatistics/dayStatistics" id="pagerForm">
+		<div class="o-order">
+			<div class="o-second">
+				<span class="o-span">员工名称：</span>
+				<div class="o-input">
+					<input type="text" placeholder="请输入姓名" name="name" value="${name!!}" id="name">
+				</div>
+				<span class="o-span">时间段：</span>
+				<div class="o-input">
+					<input class="my-times spec_time_kq" type="text" name="beginDate" value="${beginDate!!}" readonly="readonly" id="beginDate"/>
+				</div>
+				<span class="o-span">--</span>
+				<div class="o-input">
+					<input class="my-times spec_time_kq" type="text" name="endDate" value="${endDate!!}" readonly="readonly" id="endDate"/>
+				</div>
+				<span class="o-span">状态：</span>
+				<div class="o-div">
+					<select class="o-select" name="status" id="status">
+						<option value="-1">全部</option>
+						<option value="0">正常</option>
+						<option value="1">异常</option>
+					</select>
+				</div>
+			</div>
+			<div class="o-second">
+				<span class="o-span">部门选择：</span>
+				<div class="o-div">
+					<select class="o-select" name="departmentId" id="departmentId">
+						<option value="-1">全部</option>
+						<#if departmentList?exists && departmentList?size gt 0>
+							<#list departmentList as department>
+								<option value="${department.id}">${department.name}</option>
+							</#list>
+						</#if>
+					</select>
+				</div>
+			</div>
+			<div class="o-thrid o-thrid-margin-left">
+				<a class="o-btn search1" href="javascript:void(0);">搜索</a>
+				<a class="o-btn export" href="${base}/attendanceStatistics/exportDayStatistics?name=${name!!}&beginDate=${beginDate!!}&endDate=${endDate!!}&status=${status!!}&departmentId=${departmentId!!}">导出考勤报表</a>
+			</div>
+		</div>
+
+		<div class="tab_box daily-kq">
+			<div>
+				<table class="table_solid" border="0" cellspacing="0">
+					<tbody>
+						<tr class="evenRow">
+							<th>时间</th>
+							<th>姓名</th>
+							<th>部门</th>
+							<th>所属规则</th>
+							<th>上班时间</th>
+							<th>签到时间</th>
+							<th>下班时间</th>
+							<th>签退时间</th>
+							<th>状态</th>
+							<th>操作</th>
+						</tr>
+						<#if (pagelist.results)?exists && pagelist.results?size gt 0>
+						<#list pagelist.results as dayStatistics>
+							
+						<tr class="oddRow">
+							<td>${dayStatistics.data?string('yyyy/MM/dd')}</td>
+							<td>${dayStatistics.name!!}</td>
+							<td>${dayStatistics.departmentName!!}</td>
+							<td>${dayStatistics.templateName!!}</td>
+							<td>${dayStatistics.onDuty}</td>
+							<td>
+								<#if dayStatistics.onDutyDate??>
+									${dayStatistics.onDutyDate?string('yyyy/MM/dd HH:mm')}
+									<#else>
+									无记录
+								</#if>
+							</td>
+							<td>${dayStatistics.offDuty}</td>
+							<td>
+								<#if dayStatistics.offDutyDate??>
+									${dayStatistics.offDutyDate?string('yyyy/MM/dd HH:mm')}
+									<#else>
+									无记录
+								</#if>
+							</td>
+							<td>
+								<#if dayStatistics.status??>
+									<#if dayStatistics.status==0>
+										正常
+										<#elseif dayStatistics.status==1>
+										异常
+										<#elseif dayStatistics.status==2>
+										节假日
+									</#if>
+								</#if>
+							</td>
+							<td><a class="zxc common-btn-cz" main="${dayStatistics.mainId!!}" departmentName="${dayStatistics.departmentName!!}" tname="${dayStatistics.templateName}" val="${dayStatistics.mainId!!}" employee_name="${dayStatistics.name!!}" date="${dayStatistics.data?string('yyyy/MM/dd')}">查看</a></td>
+						</tr>
+						</#list>
+					</tbody>
+				</table>
+				<#include '/common/pagination.html'>
+				<#else>
+					</table>
+				<div class="no-data">暂无数据~</div>
+				</#if>
+			</div>
+		</div>
+		</form>
+	</div>
+	<div id="bg"></div>
+	<div class="box" style="display: none">
+		<h2>
+			<span id="date"></span><a class="kqclose">X</a>
+		</h2>
+		<div class="kq-people">
+			<div class="people-img">
+				<img src="${base}/resources/images/default_user.png" id="employee_logo"/>
+			</div>
+			<div class="people-miaosu">
+				<p id="employee_name"></p>
+				<p id="employee_template"></p>
+			</div>
+		</div>
+		<table class="min-table" border="0" cellspacing="0">
+			<tbody>
+				<tr class="evenRow">
+					<th>打卡类型</th>
+					<th>打卡时间</th>
+					<th>打卡地点</th>
+					<th>备注</th>
+				</tr>
+				<tr class="oddRow">
+					<td>上班打卡</td>
+					<td>2016-09-09 11:00</td>
+					<td>万达广场</td>
+					<td>
+						<div class="thumbnail-item">
+								<a href="#"><img src="${base}/resources/404/01.png" class="thumbnail kqbz-img " /></a>
+						<div class="tooltip">
+							<img src="${base}/resources/404/01.png" alt="" width="330" />									
+						</div>
+						</div>
+						<p>桂花城考勤</p>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+
+	</div>
+	<script type="text/javascript" src="${base}/resources/datetimepicker/jquery.datetimepicker.js"></script>
+	<script>
+	var b = '${base}';
+		$('.spec_time_kq').datetimepicker({
+			lang : 'ch',
+			timepicker : false,
+			format : 'Y-m-d',
+			formatDate : 'Y-m-d'
+		});
+
+		$(".kq-daily").click(function() {
+			$(this).addClass("kq-active").siblings().removeClass("kq-active");
+		})
+		$(".person").click(function() {
+			$(".mouth-kq").hide();
+			$(".daily-kq").hide();
+			$(".daily-kq-person").show();
+		})
+
+		$(function() {
+			$(".zxc").click(function() {
+				if($(this).attr("val")==""){
+					layer.msg("没有相关的考勤记录");
+					return false;
+				}
+				var mainId = $(this).attr("main");
+				$("#employee_name").text($(this).attr("employee_name"));
+				$("#date").text($(this).attr("date"));
+				$("#employee_template").text("部门："+$(this).attr("departmentName")+"|所属规则："+$(this).attr("tname")+"");
+				　$.post('${base}/attendanceStatistics/someDayInfo', { mainId: mainId }, function (data, status) {
+					$(".min-table tr:not(:first)").remove(); //清除原来的内容
+					var html="";
+					
+					$.each(data,function(index,element){
+						html+="<tr class='oddRow'>";
+						if(element.type==0){
+							html+="<td>上班打卡</td>";
+						}else{
+							html+="<td>下班打卡</td>";
+						}
+						html+="<td>"+element.dutyDate+"</td>";
+						html+="<td>"+element.address+"</td>";
+						html+="<td>";
+						if(element.imgs!=null){
+							$.each(element.imgs,function(key,val){ 
+								html+="<div class='thumbnail-item'>";
+								html+="<a href='#'><img src='"+b+"/"+val+"' class='thumbnail kqbz-img'/></a>";
+								html+="<div class='tooltip'>";
+								html+="<img src='"+b+""+val+"' alt='' width='330' />";
+								html+="</div></div>";
+								})
+						}
+						html+="<p style='float: left;margin-top: 5px;'>"+element.description+"</p>";
+						html+="</td>";
+						html+"</tr>";
+					})
+					
+					$(".min-table").append(html);
+				 });
+				
+						$("#bg").css({
+							display : "block",
+							height : $(document).height()
+						});
+						var $box = $('.box');
+						$box.css({
+							//设置弹出层距离左边的位置
+							left : ($("body").width() - $box.width()) / 2 - 20
+									+ "px",
+							//设置弹出层距离上面的位置
+							top : ($(window).height() - $box.height()) / 3
+									+ $(window).scrollTop() + "px",
+							display : "block"
+						});
+					});
+			//点击关闭按钮的时候，遮罩层关闭
+			$(".kqclose").click(function() {
+				$("#bg,.box").css("display", "none");
+			});
+		});
+		<#if status??>
+			$("#status").val(${status});
+		</#if>
+		<#if departmentId??>
+			$("#departmentId").val(${departmentId});
+		</#if>
+		$(".search1").click(function(){
+			$("#pagerForm").submit();
+		})
+		
+	</script>
+		<script type="text/javascript">
+			// Load this script once the document is ready  
+			$(document).ready(function() {
+				// Get all the thumbnail  
+				$('div.thumbnail-item').mouseenter(function(e) {
+					// Calculate the position of the image tooltip  
+					x = e.pageX - $(this).offset().left;
+					y = e.pageY - $(this).offset().top;
+					// Set the z-index of the current item,   
+					// make sure it's greater than the rest of thumbnail items  
+					// Set the position and display the image tooltip  
+					$(this).css('z-index', '15')
+						.children("div.tooltip")
+						.css({
+							'top': y + 10,
+							'left': x + 20,
+							'display': 'block'
+						});
+				}).mousemove(function(e) {
+					// Calculate the position of the image tooltip           
+					x = e.pageX - $(this).offset().left;
+					y = e.pageY - $(this).offset().top;
+					// This line causes the tooltip will follow the mouse pointer 
+					$(this).children("div.tooltip").css({
+						'top': y + 10,
+						'left': x + 20
+					});
+				}).mouseleave(function() {
+					// Reset the z-index and hide the image tooltip  
+					$(this).css('z-index', '1')
+						.children("div.tooltip")
+						.animate({
+							"opacity": "hide"
+						}, "fast");
+				});
+
+			});
+			$(".nowday").click(function(){
+				window.location.href="${base}/attendanceStatistics/dayStatistics";
+			});
+			
+			$(".nowmouth").click(function(){
+				window.location.href="${base}/attendanceStatistics/monthStatistics";
+			})
+			
+		</script>
+		<script>
+		$(function(){
+        		document.onkeydown = function(e){ 
+        			var ev = document.all ? window.event : e;
+        				if(ev.keyCode==13) {
+            				$("#pagerForm").submit();
+            }
+        }
+    });  
+         
+    </script>      
+		
+</body>
+
+</html>

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<#include '/common/resources.html'>
+		<title></title>
+		<link rel="stylesheet" media="screen and (min-width: 1580px)" href="${base}/resources/css/sys/jquery.tableui.css" />
+		<link rel="stylesheet" media="screen and (max-width: 1580px)" href="${base}/resources/css/sys/tableui-resolving.css" />
+		<link rel="stylesheet" href="${base}/resources/css/sys/jquery-ui.min.css" />
+		<script src="${base}/resources/js/respond.js" type="text/javascript" async="async"></script>
+		<script type="text/javascript" src="${base}/resources/js/jquery-ui.min.js"></script>
+	</head>
+	<body>
+		<div class="whole">
+			<ol class="breadcrumb">
+				<li><a href="javascript:void(0)">订单中心</a></li>
+				<li class="active">退款列表</li>
+			</ol>
+			<div class="o-order">
+				<form action="${base}/sysorder/commodityOrderList" id="pagerForm">
+				<div class="o-first">
+					<span class="o-span">订&nbsp;单&nbsp;号&nbsp;：</span>
+					<div class="o-input"><input class="my-price" type="text" name="orderNo" value="${orderNo!!}"/></div>
+				</div>
+				<div class="o-thrid o-thrid-margin-left3">
+					<a class="o-btn search1">搜索</a>
+				</div>
+			</div>
+			<div class="tab-order">
+				<div class="box tab2">
+					<div class="tab_box">
+						<div class="">
+							<table class="table_solid" border="0" cellspacing="0">
+								<tbody>
+									<tr class="evenRow">
+										<th>订单号</th>
+										<th>小区名</th>
+										<th>商家名</th>
+										<th>用户名</th>
+										<th>申请退款时间</th>
+										<th>操作</th>
+									</tr>
+									<#if (pagelist.results)?exists && pagelist.results?size gt 0>
+								<#list pagelist.results as orderRefund>
+									<tr class="oddRow">
+										<td>${orderRefund.orderNo}</td>
+										<td>${orderRefund.community.name}</td>
+										<td>${orderRefund.shop.shopName}</td>
+										<td>${orderRefund.user.name}</td>
+										<td>${orderRefund.createDate?string('yyyy/MM/dd HH:mm')}</td>
+										<td><a class="td-b common-btn-cz" href="${base}/orderRefund/detail/${orderRefund.orderNo}">详情</a></td>
+									</tr>
+								</#list>
+								<#else>
+								</table>
+								<div class="no-data">暂无数据~</div>
+								</#if>
+								</tbody>
+							</table>
+							<#include '/common/pagination.html'>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script src="${base}/resources/js/jquery.tabs.js"></script>
+		<script type="text/javascript">
+			$(function() {
+				$('.tab2').Tabs({
+					event: 'click'
+				});
+			});
+		</script>
+		<script type="text/javascript" src="${base}/resources/js/placeholder.js"></script>
+		<script type="text/javascript">
+			$(".search1").click(function(){
+				$("#pagerForm").submit();
+			});
+		</script>
+		<script>
+$(function(){
+        document.onkeydown = function(e){ 
+        var ev = document.all ? window.event : e;
+        if(ev.keyCode==13) {
+            $("#pagerForm").submit();
+            }
+        }
+    });  
+         
+</script>
+<script>
+$(function(){
+        document.onkeydown = function(e){ 
+        var ev = document.all ? window.event : e;
+        if(ev.keyCode==13) {
+            $("#pagerForm").submit();
+            }
+        }
+    });  
+         
+</script>              
+</body>
+
+</html>

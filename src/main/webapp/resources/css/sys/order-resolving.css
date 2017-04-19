@@ -1,0 +1,88 @@
+.o-order{width: 98%;margin: 5px auto;height: auto;overflow: hidden;background: white;padding-left: 15px;border-bottom: 1px dashed gainsboro;}
+.o-span{font-size: 12px;float: left;margin-right: 5px;margin-top: 5px;}
+.o-input{width: 150px;border: 0;float: left;margin-right: 10px;border: 1px solid gainsboro;height: auto;overflow: hidden;}
+.o-input-time{width: 100px;border: 0;float: left;margin-right: 10px;border: 1px solid gainsboro;height: auto;overflow: hidden;}
+.o-first,.o-second,.o-thrid{width: 100%;margin: 10px auto;float: left;}
+.o-title{width: 100px;float: left;text-align: right;}
+.o-input input{width:100%;padding-top: 4px;padding-bottom: 4px;border: 0;outline: none;}
+.o-input-time input{width:100%;padding-top: 4px;padding-bottom: 4px;border: 0;outline: none;}
+.o-select{padding:3px 0 3px 5px ;width: 200px;border: 0;}
+.o-select option{color:black;font-family: 微软雅黑;}
+.o-div{width: 200px;border: 0;float: left;margin-right: 20px;border: 1px solid gainsboro;height: auto;overflow: hidden;}
+.o-btn{border: 0;margin-right: 15px;background: #3f4750;color: white;font-size: 13px;cursor: pointer;}
+.o-thrid{padding-left: 53px;}
+.o-thrid-margin-left{margin-left:13px;}
+.o-thrid-margin-left2{margin-left:36px;}
+.o-thrid-margin-left3{margin-left:36px;}
+.o-btn:hover{background: #ff5505;}
+.box{width:98%;margin:5px auto;background:#fff;}
+.tab_menu{overflow:hidden;}
+.tab_menu li{width:100px;float:left;height:auto;overflow: hidden;line-height:30px;color:black;background:white;text-align:center;cursor:pointer;font-size: 13px;padding-bottom: 10px;}
+.tab_menu li.current{color:#ff7442;background:#fff;border-bottom: 2px solid #ff7442;}
+.tab_menu li a{color:#fff;text-decoration:none;}
+.tab_menu li.current a{color:#333;}
+.tab_box{height: auto;overflow: auto;}
+.tab_box li{height:24px;line-height:24px;overflow:hidden;float: left;}
+.tab_box li a{margin: 0 5px 0 0; font-family: "宋体";font-size: 13px; font-weight: bolder; color: #636363;}
+.tab_box .hide{display:none;}}
+.td-img{float: left;width: 50px;}
+td span{float: left;margin-top: 15px;}
+.td-buy{max-width: 150px;}
+.td-img img{float: left;width:50px;}
+.td-a{color: white;cursor: pointer;font-size:12px;}
+.td-b{color: white;cursor: pointer;margin-right: 10px;}
+.td-c{color: white;cursor: pointer;margin-left: 10px;}
+.td-a:hover{color:white;}
+.td-b:hover{color:white;}
+.td-c:hover{color:white;}
+.zxc{cursor: pointer;}
+.zxc:hover{color:white;}
+.my-time{background: url(../../images/time_03.png)no-repeat right;padding-left: 5px;}
+.my-times{background: url(../../images/time_03.png)no-repeat left;padding-left: 25px; background-position: 5px;}
+#o-btn{padding-left: 63px;}
+.o-pad{padding-top: 30px;}
+.t-btn{color: black;padding-right: 10px;cursor: pointer;}
+.reveal-modal-edit{visibility: hidden; top: 150px; left: 50%; margin-left: -300px;
+width: 520px; position: absolute; z-index: 101; padding: 10px 0px 34px;
+-moz-border-radius: 5px; 
+-webkit-border-radius: 5px;
+border-radius: 5px; 
+-moz-box-shadow: 0 0 10px rgba(0,0,0,.4); 
+-webkit-box-shadow: 0 0 10px rgba(0,0,0,.4); 
+-box-shadow: 0 0 10px rgba(0,0,0,.4); 
+background-color: #FFF;
+}
+.reveal-modal-edit.small{ width: 200px; margin-left: -140px;}	
+.reveal-modal-edit.medium { width: 400px; margin-left: -240px;}	
+.reveal-modal-edit.large { width: 600px; margin-left: -340px;}	
+.reveal-modal-edit.xlarge { width: 800px; margin-left: -440px;}		
+.reveal-modal-edit .close-reveal-modal { 
+font-size: 22px; line-height: 0.5; position: absolute;
+top: 8px; right: 11px; color: #333; text-shadow: 0 -1px 1px rbga(0,0,0,.6);
+font-weight: bold; cursor: pointer;			
+} 
+.o-edit{width: 100%;padding-left: 10px;border-bottom: 1px solid gainsboro;padding-bottom: 10px;}
+.o-name,.o-zhh{width: 90%;margin: 15px 5%;float: left;}
+.n-left{float: left;margin-top: 3px;text-align: right;width: 82px;}
+.o-int{float: left;width: 180px;border: 1px solid gainsboro;height: auto;overflow: hidden;margin-right: 10px;}
+.o-int input,.o-int select,.o-text input{border: 0;padding-left: 5px;padding-top: 5px;padding-bottom: 5px;outline: none;width: 100%;margin-right: 10px;}
+.o-sp{float: left;}
+.o-edit-btn{width: 90%;margin: 15px 5%;float: left;text-align: right;}
+.aclose{cursor: pointer;background-color: #3f4750;}
+.o-text{float: left;width: 280px;border: 1px solid gainsboro;height: auto;overflow: hidden;margin-right: 10px;}
+.abtn{cursor: pointer;}
+.rep-sp{float: left;margin-top: 10px;text-align: left;margin-left: 10px;cursor: pointer;}
+.rep-img{width: 50px;float: right;}
+.reimg{width: 30%;float: left;}
+.resp{float: left;width: 50%;}
+.my-price{padding-left: 15px;}
+.no-data{margin: 0 auto;text-align: center;}
+.upload-data{float:left;margin-left:10px;font-size:13px;}.download-btn{float:left;}
+.role-search1{padding-left:65px;}
+.role-search2{padding-left:42px;}
+.assets {padding: 10px;list-style: none;background-color: #f15822;border-radius: 2px;width: 100%;margin: 5px auto;height: auto;overflow: hidden;}			
+.assets-first {width: 32%;float: left;border-right: 1px solid #eeeeee;height: 70px;color: white;padding-left: 15px;position: relative;}			
+.assets-first:last-child {border: 0;}			
+.assets-first p:first-child {margin-top: 5px;font-size: 14px;}
+.assets-first p:last-child {margin-top: 15px;font-size: 2em;}			
+.withdraw {padding: 5px 15px;background: #ff5505;color: white;position: absolute;right: 0;bottom: 0;border-radius: 3px;cursor: pointer;font-size: 15px;}

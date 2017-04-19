@@ -1,0 +1,97 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta name="renderer" content="webkit|ie-comp|ie-stand">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<title>问题类型管理</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<#include '/common/resources.html'>
+	<link rel="stylesheet" href="${base}/resources/css/sys/add-new.css"/>
+    <link rel="stylesheet" type="text/css" href="${base }/resources/uploadify/uploadify.css">
+    <script src="${base}/resources/js/respond.js" type="text/javascript" async="async"></script>
+    <script src="${base }/resources/uploadify/jquery.uploadify.min.js" type="text/javascript"></script>
+    <script type="text/javascript" charset="utf-8" src="${base}/resources/ueditor1_4_3_1/ueditor.config.js"></script>
+    <script type="text/javascript" charset="utf-8" src="${base}/resources/ueditor1_4_3_1/ueditor.all.min.js"></script>
+    <script type="text/javascript" charset="utf-8" src="${base}/resources/ueditor1_4_3_1/lang/zh-cn/zh-cn.js"></script>
+</head>
+<body>
+	<div class="whole">
+		<div class="a-plus">
+			<div class="head">
+				<span>问题类型管理</span>
+			</div>
+				<form action="${base}/problemType/addProblemType" method="post" id="form1"> 
+			
+			<div class="Sheet">
+				<div class="content">
+					<span class="choice">类型名称：</span>
+					<div class="inp">
+						<input maxlength="40" type="text" name="typeName" id="typeName" value="${problemType.typeName!!}"/>
+					</div>
+				</div>
+			</div>	
+			<div class="Sheet">
+				<div class="content">
+					<span class="choice" >&nbsp;&nbsp;排序：</span>
+					<div class="inp" style="width: 17%;">
+						<input maxlength="10" type="text" name="sort" id="sort" value="${problemType.sort!!}"/>
+					</div>
+				</div>
+			</div>
+			<div class="Sheet">
+				<div class="a-title">
+					<span class="choice" style="margin-left:32px;">属于：</span>
+					<div class="ads-choice" >
+					<label for="stata"><input id="stata" type="radio" name="belongTo" value="0" checked="checked" style="margin-top:10px"/><span style="margin-top:8px">用户</span></label>
+					<label for="normal"><input id="normal" type="radio" name="belongTo" value="1"  style="margin-top:10px;margin-left:21px;"/><span style="margin-top:8px">商家</span></label>
+					<label for="normal2"><input id="normal2" type="radio" name="belongTo" value="2"  style="margin-top:10px;margin-left:21px;"/><span style="margin-top:8px">物业</span></label>
+					</div>
+				</div>
+			</div>
+			
+			<div class="a-address">
+				<input type="hidden" id="id" name="id" value="${problemType.id!!}">
+				<button data-reveal-id="sav" data-animation="fade" class="s-btn">确认</button>
+
+			</div>
+			<div id="sav" class="reveal-modal"
+				style="opacity: 1; visibility: hidden; top: 150px;">
+				<h3>保存成功</h3>
+				<a class="close-reveal-modal">×</a>
+			</div>
+			</form>
+			<div class="reveal-modal-bg" style="display: none; cursor: pointer;">
+			</div>
+		</div>
+	</div>
+
+	<script type="text/javascript">
+    $("#form1").submit(function() {
+    	if($("#title").val()==''){
+    		layer.msg("title不能为空");
+    		return false;
+    	}
+		var ajax_url = $(this).attr("action"); //表单目标 
+		var ajax_type = $(this).attr('method'); //提交方法 
+		var ajax_data = $(this).serialize(); //表单数据 
+		$.ajax({
+			type : ajax_type, //表单提交类型 
+			url : ajax_url, //表单提交目标 
+			data : ajax_data, //表单数据
+			success : function(data) {
+				 layer.msg(data.msg,{
+				     	shift: 0
+				     }, function(){
+				    	 window.location.href="${base}/problemType/list";
+				     }); 
+			}
+		});
+		return false; //阻止表单的默认提交事件 
+	});
+    <#if problemType.id??>
+   		 $("input[name='belongTo'][value=${problemType.belongTo}]").attr("checked",true);
+    </#if>
+	</script>
+</body>
+</html>

@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.linle.qrCodeRoom.mapper.QrCodeRoomMapper" >
+  <resultMap id="BaseResultMap" type="com.linle.qrCodeRoom.model.QrCodeRoom" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="community_id" property="communityId" jdbcType="BIGINT" />
+    <result column="building" property="building" jdbcType="VARCHAR" />
+    <result column="unit" property="unit" jdbcType="VARCHAR" />
+    <result column="qr_code_name" property="qrCodeName" jdbcType="VARCHAR" />
+    <result column="path" property="path" jdbcType="VARCHAR" />
+    <result column="fileName" property="fileName" jdbcType="VARCHAR" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, community_id, building, unit, qr_code_name, path,fileName, create_date
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from qr_code_room
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from qr_code_room
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.linle.qrCodeRoom.model.QrCodeRoom" >
+    insert into qr_code_room (id, community_id, building, 
+      unit, qr_code_name, path,fileName, 
+      create_date)
+    values (#{id,jdbcType=BIGINT}, #{communityId,jdbcType=BIGINT}, #{building,jdbcType=VARCHAR}, 
+      #{unit,jdbcType=VARCHAR}, #{qrCodeName,jdbcType=VARCHAR}, #{path,jdbcType=VARCHAR}, #{fileName,jdbcType=VARCHAR}, 
+      #{createDate,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.linle.qrCodeRoom.model.QrCodeRoom" >
+    insert into qr_code_room
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="communityId != null" >
+        community_id,
+      </if>
+      <if test="building != null" >
+        building,
+      </if>
+      <if test="unit != null" >
+        unit,
+      </if>
+      <if test="qrCodeName != null" >
+        qr_code_name,
+      </if>
+      <if test="path != null" >
+        path,
+      </if>
+      <if test="fileName != null" >
+        fileName,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="communityId != null" >
+        #{communityId,jdbcType=BIGINT},
+      </if>
+      <if test="building != null" >
+        #{building,jdbcType=VARCHAR},
+      </if>
+      <if test="unit != null" >
+        #{unit,jdbcType=VARCHAR},
+      </if>
+      <if test="qrCodeName != null" >
+        #{qrCodeName,jdbcType=VARCHAR},
+      </if>
+      <if test="path != null" >
+        #{path,jdbcType=VARCHAR},
+      </if>
+      <if test="fileName != null" >
+        #{fileName,jdbcType=VARCHAR},
+      </if>
+      
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.linle.qrCodeRoom.model.QrCodeRoom" >
+    update qr_code_room
+    <set >
+      <if test="communityId != null" >
+        community_id = #{communityId,jdbcType=BIGINT},
+      </if>
+      <if test="building != null" >
+        building = #{building,jdbcType=VARCHAR},
+      </if>
+      <if test="unit != null" >
+        unit = #{unit,jdbcType=VARCHAR},
+      </if>
+      <if test="qrCodeName != null" >
+        qr_code_name = #{qrCodeName,jdbcType=VARCHAR},
+      </if>
+      <if test="path != null" >
+        path = #{path,jdbcType=VARCHAR},
+      </if>
+      <if test="fileName != null" >
+        fileName = #{fileName,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.linle.qrCodeRoom.model.QrCodeRoom" >
+    update qr_code_room
+    set community_id = #{communityId,jdbcType=BIGINT},
+      building = #{building,jdbcType=VARCHAR},
+      unit = #{unit,jdbcType=VARCHAR},
+      qr_code_name = #{qrCodeName,jdbcType=VARCHAR},
+      path = #{path,jdbcType=VARCHAR},
+      fileName = #{fileName,jdbcType=VARCHAR},
+      create_date = #{createDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  <select id="getAllData" resultMap="BaseResultMap" parameterType="Page">
+		select
+		<include refid="Base_Column_List" />
+		from qr_code_room where community_id = #{params.communityId}
+		<if test="params !=null and params.buildingType != null and params.buildingType !=''">
+    		and	building = #{params.buildingType}
+    	</if>
+    	<if test="params !=null and params.unitType != null and params.unitType !=''">
+    		and	unit = #{params.unitType}
+    	</if>
+  </select>
+  
+  <!--从room_no表获取没有插入过qr_code_room表的记录，把该小区所有单元都插入即将生成二维码表里  -->
+  <insert id="insertQRcodeRoomFromRoom_noTable" parameterType="long" >
+	    INSERT into qr_code_room(community_id,building, unit, qr_code_name)
+		SELECT * from (
+		SELECT r.community_id,r.building,r.unit ,CONCAT(community_id,'-',building,'-',unit) qrCodeName
+		FROM room_no r WHERE r.community_id=#{communityId}
+		GROUP BY qrCodeName 
+		) a
+		WHERE a.qrCodeName not in (SELECT qr_code_name from qr_code_room) 
+  </insert>
+  
+  <select id="getAllNoCreateQRcodeRoom" resultMap="BaseResultMap" parameterType="long">
+		select
+		<include refid="Base_Column_List" />
+		FROM qr_code_room WHERE (fileName is null OR fileName='') and community_id=#{communityId}
+  </select>
+ 
+   <select id="getAllCreateQRcodeRoom" resultMap="BaseResultMap" parameterType="long">
+		select
+		<include refid="Base_Column_List" />
+		FROM qr_code_room WHERE  fileName is NOT null and fileName!='' and community_id=#{communityId}
+  </select>
+</mapper>

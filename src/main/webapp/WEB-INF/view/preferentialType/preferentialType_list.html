@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>优惠类型管理</title>
+<meta name="content-type" content="text/html; charset=UTF-8">
+<#include '/common/resources.html'>
+<link rel="stylesheet" media="screen and (min-width: 1580px)" href="${base}/resources/css/sys/jquery.tableui.css" />
+<link rel="stylesheet" media="screen and (max-width: 1580px)" href="${base}/resources/css/sys/tableui-resolving.css" />
+<script src="${base}/resources/js/respond.js" type="text/javascript" async="async"></script>
+</head>
+<body>
+<div class="whole">
+	<ol class="breadcrumb">
+		<li><a href="javascript:void(0)">优惠类型管理</a></li>
+		<li class="active">类型列表</li>
+	<span style="float: right"><button type="button"
+			class="btn-default" style="float: right;">新增类型</button></span>
+	</ol>
+	
+		<div class="tab_box">
+	<table class="table_solid" border="0" cellspacing="0">
+		<tbody>
+			<tr class="evenRow">
+				<th>序号</th>
+				<th>优惠名称</th>
+				<th>优惠类型</th>
+				<th>描述</th>
+				<th>状态</th>
+				<th>创建时间</th>
+<!-- 				<td>操作</td> -->
+			</tr>
+			<#if (pagelist.results)?exists && pagelist.results?size gt 0> <#list
+			pagelist.results as preferentialType>
+			<tr>
+				<td>${(preferentialType_index+1)+(pagelist.pageNo-1)*pagelist.pageSize}</td>
+				<td>${preferentialType.name!!}</td>
+				<td>${preferentialType.type!!}</td>
+				<td>${preferentialType.description}</td>
+				<td>
+					<#if preferentialType.status==0>
+						启用
+						<#else>
+						禁用
+					</#if>
+				</td>
+				<td>${preferentialType.createDate?string('yyyy/MM/dd HH:mm:ss')}</td>
+<!-- 				<td><span><a class="cz-a btn-default" href="" value="">操作</a></span></td> -->
+			</tr>
+			</#list>
+		</tbody>
+	</table>
+	<form action="${base}/preferentialType/list" id="pagerForm"><#include
+		'/common/pagination.html'></form>
+	<#else>
+	<div class="no-data">暂无数据~</div>
+	</#if>
+	</div>
+	</div>
+</body>
+<script type="text/javascript">
+	$(function() {
+		$("button").click(function() {
+			window.location.href = "${base}/preferentialType/add";
+		});
+// 		$(".delRole").click(function() {
+// 			return false;
+// 			var roleid = $(this).attr("roleid");
+// 			$.post("${base}/sys/delRole/" + roleid, function(result) {
+// 				if (result.code == 0) {
+// 					location.reload();
+// 					;
+// 				}
+// 				;
+// 			}, 'json');
+// 		});
+	});
+</script>
+
+</html>

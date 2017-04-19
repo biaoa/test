@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:jee="http://www.springframework.org/schema/jee"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:task="http://www.springframework.org/schema/task"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:websocket="http://www.springframework.org/schema/websocket"
+	xsi:schemaLocation="http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-3.2.xsd
+		http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.2.xsd
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.2.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.2.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.2.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.2.xsd
+		http://www.springframework.org/schema/websocket http://www.springframework.org/schema/websocket/spring-websocket.xsd
+		">
+		
+	
+		<tx:annotation-driven/>
+	    <mvc:annotation-driven conversion-service="conversionService">
+        <mvc:message-converters register-defaults="true">
+            <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+                <property name="prefixJson" value="false"/>
+                <property name="supportedMediaTypes">
+                    <list>
+                        <value>application/json</value>
+                        <value>text/json</value>
+                    </list>
+                </property>
+            </bean>
+        </mvc:message-converters>
+    </mvc:annotation-driven>
+    
+	<task:annotation-driven executor="executor" scheduler="scheduler" /> 
+	<task:executor id="executor" pool-size="5" /> 
+	<task:scheduler id="scheduler" pool-size="10" /> 
+	
+	
+	<bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>classpath*:jdbc.properties</value>
+				<value>classpath*:otherConfig.properties</value>
+			</list>
+		</property>
+	</bean>
+	
+	
+	<context:component-scan base-package="com.linle"/>
+	<aop:aspectj-autoproxy />
+	
+	<!-- 以下是dataSource的配置 采用tomcat jdbc的连接池 不再使用c3p0了 -->
+	<bean id="dataSource" class="org.apache.tomcat.jdbc.pool.DataSource" destroy-method="close">    
+        <property name="poolProperties">  
+            <bean class="org.apache.tomcat.jdbc.pool.PoolProperties">    
+                <property name="driverClassName" value="com.mysql.jdbc.Driver"/>  
+                <property name="url" value="${jdbc.url}"/>    
+                <property name="username" value="${jdbc.username}"/>    
+                <property name="password" value="${jdbc.password}"/>  
+                <property name="jmxEnabled" value="true"/>  
+                <property name="testWhileIdle" value="true"/>  
+                <property name="testOnBorrow" value="true"/>    
+                <property name="testOnReturn" value="false"/>    
+                <property name="validationInterval" value="30000"/>   
+                <property name="validationQuery" value="SELECT 1"/>    
+                <property name="timeBetweenEvictionRunsMillis" value="30000"/>    
+                <property name="maxActive" value="100"/>    
+                <property name="initialSize" value="10"/>    
+                <property name="maxWait" value="10000"/>    
+                <property name="minEvictableIdleTimeMillis" value="30000"/>    
+                <property name="minIdle" value="10"/>    
+                <property name="logAbandoned" value="false"/>    
+                <property name="removeAbandoned" value="true"/>    
+                <property name="removeAbandonedTimeout" value="60"/>  
+                <property name="jdbcInterceptors" value="org.apache.tomcat.jdbc.pool.interceptor.ConnectionState;org.apache.tomcat.jdbc.pool.interceptor.StatementFinalizer"/>    
+            </bean>    
+        </property>    
+    </bean>   
+
+	<!-- 以下是mybatis的配置 -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="configLocation">
+			<value>classpath:/mybatisMapperConfig.xml</value>
+		</property>
+		<property name="mapperLocations">
+			<list>				
+				<value>classpath*:com/linle/**/mapper/*.xml</value>
+			</list>
+		</property>
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="com.linle.**.mapper" />
+		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
+	</bean>
+	
+	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg index="0" ref="sqlSessionFactory" />
+	</bean>
+	
+	
+	<!-- 邮件 -->
+	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+		<property name="host" value="mail.shtourong.com" />
+		<property name="username" value="aliserver@shtourong.com" />
+		<property name="password" value="ykzh7090" />
+		<property name="port" value="25" />
+		<property name="javaMailProperties">
+			<props>
+				<prop key="mail.smtp.auth">true</prop>
+				<prop key="mail.smtp.timeout">25000</prop>
+				<prop key="mail.smtp.starttls.enable">true</prop>
+				<prop key="mail.smtp.socketFactory.fallback">true</prop>
+			</props>
+		</property>
+	</bean>
+	
+	<!-- (事务管理)transaction manager, use JtaTransactionManager for global tx -->
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	<!-- <context:annotation-config /> -->
+	<import resource="spring-shiro.xml" />
+	<import resource="spring-redis.xml" />
+<!-- 	<import resource="spring-cache.xml" /> -->
+	
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">  
+        <property name="defaultEncoding" value="utf-8"></property>   
+        <property name="maxUploadSize" value="10485760000"></property>  
+        <property name="maxInMemorySize" value="40960"></property>  
+   </bean>
+
+	<bean id="conversionService" class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
+		<property name="registerDefaultFormatters" value="false" />
+		<property name="formatterRegistrars">
+			<set>
+				<bean class="org.springframework.format.datetime.DateFormatterRegistrar">
+					<property name="formatter" ref="dateFormatter" />
+				</bean>
+			</set>
+		</property>
+	</bean>
+
+	<bean id="dateFormatter" class="org.springframework.format.datetime.DateFormatter">
+		<property name="pattern" value="yyyy-MM-dd" />
+	</bean>
+</beans>

@@ -1,0 +1,158 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta name="renderer" content="webkit|ie-comp|ie-stand">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<title>邻乐速报管理</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<#include '/common/resources.html'>
+	<link rel="stylesheet" href="${base}/resources/css/sys/add-new.css"/>
+    <link rel="stylesheet" type="text/css" href="${base }/resources/uploadify/uploadify.css">
+    <script src="${base}/resources/js/respond.js" type="text/javascript" async="async"></script>
+    <script src="${base }/resources/uploadify/jquery.uploadify.min.js" type="text/javascript"></script>
+    <script type="text/javascript" charset="utf-8" src="${base}/resources/ueditor1_4_3_1/ueditor.config.js"></script>
+    <script type="text/javascript" charset="utf-8" src="${base}/resources/ueditor1_4_3_1/ueditor.all.min.js"></script>
+    <script type="text/javascript" charset="utf-8" src="${base}/resources/ueditor1_4_3_1/lang/zh-cn/zh-cn.js"></script>
+</head>
+<body>
+	<div class="whole">
+		<div class="a-plus">
+			<div class="head">
+				<span>邻乐速报管理</span>
+			</div>
+				<form action="${base}/littleKnowledge/add" method="post" id="form1"> 
+			
+			<div class="Sheet">
+				<div class="content">
+					<span class="choice">title：</span>
+					<div class="inp">
+						<input maxlength="40" type="text" name="title" id="title" value="${knowledge.title!!}"/>
+					</div>
+				</div>
+			</div>	
+			
+			<div class="Sheet">
+				<div class="content">
+					<span class="choice">描述：</span>
+					<div class="inp">
+						<input maxlength="80" type="text" name="description" id="description" value="${knowledge.description!!}"/>
+					</div>
+				</div>
+			</div>
+			<div class="Sheet">
+				<div class="content">
+					<span class="choice">背景图片：</span>
+					 <div id="url" style="text-align:left;float: left;">
+                        <input type="file" name="file" id="file_upload">
+                        <input type="hidden" name="imgUrl" id="logo" value="${knowledge.imgUrl!!}"/>
+                   </div>
+				</div>
+			</div>
+			
+			<div class="Sheet">
+				<div class="content">
+					<span class="choice">排序：</span>
+					<div class="inp" style="width: 20%;">
+						<input maxlength="10" type="text" name="orderNo" id="orderNo" value="${knowledge.orderNo!!}"/>
+					</div>
+				</div>
+			</div>
+			<div class="Sheet">
+				<div class="content">
+					<span class="choice">内容：</span>
+				</div>
+                <div>
+                       <div style="width: 60%;"><textarea name="content" id="editor" style="width: 100%;height: 200px;"></textarea></div>
+                       <script type="text/javascript"> var ue = UE.getEditor('editor');</script>
+                 </div>
+			</div>
+			<div class="a-address">
+				<input type="hidden" id="id" name="id" value="${knowledge.id!!}">
+				<button data-reveal-id="sav" data-animation="fade" class="s-btn">确认</button>
+
+			</div>
+			<div id="sav" class="reveal-modal"
+				style="opacity: 1; visibility: hidden; top: 150px;">
+				<h3>保存成功</h3>
+				<a class="close-reveal-modal">×</a>
+			</div>
+			</form>
+			<div class="reveal-modal-bg" style="display: none; cursor: pointer;">
+			</div>
+		</div>
+	</div>
+
+	<script type="text/javascript">
+    $(function () {
+        $('#file_upload').uploadify({
+            'swf': '${base }/resources/uploadify/uploadify.swf', //指定上传控件的主体文件，默认‘uploader.swf’
+            'uploader': '${base}/sys/file/uploadFile', //指定服务器端上传处理文件
+            'auto': true, //手动上传
+            'buttonImage': '${base }/resources/uploadify/uploadify-browse.png', //浏览按钮背景图片
+            'multi': false, //单文件上传
+            'fileTypeExts': '*.gif; *.jpg; *.png;', //允许上传的文件后缀
+            'fileSizeLimit': '1MB', //上传文件的大小限制，单位为B, KB, MB, 或 GB
+            'successTimeout': 30, //成功等待时间
+            'queueSizeLimit': 1,
+            'fileObjName': 'file',
+            'onUploadStart': function (file) {  
+                $("#file_upload").uploadify("settings", "formData", {'type': 'littleKnowledge'});  
+            },
+            'onUploadSuccess': function (file, data) {//每成功完成一次文件上传时触发一次
+                data = eval("(" + data + ")");
+                $(".uploadimg").remove();
+                $('#url').append("<div id=" + data.value + " class='uploadimg'> <img width=50 height=50 src='${base}/" + data.value + "' /> " +
+                        "<a href=javascript:delimg('" + data.value + "','logo')>删除</a> </div>");
+                $("#logo").val(data.value);
+            },
+            'onUploadError': function (file, data) {//当上传返回错误时触发
+                $('#url').append("<li>" + data + "</li>");
+
+            }
+        });
+
+    });
+    <!--删除图片-->
+    function delimg(obj, tval) {
+        var url = "${base}/sys/file/delimg";
+        $.post(url, {'imgpath': obj}, function (data) {
+                document.getElementById(obj).remove();
+                document.getElementById(tval).value = "";
+        });
+    }
+    $("#form1").submit(function() {
+    	
+    	if($("#title").val()==''){
+    		layer.msg("title不能为空");
+    		return false;
+    	}
+    	if($("#description").val()==''){
+    		layer.msg("描述不能为空");
+    		return false;
+    	}
+		var ajax_url = $(this).attr("action"); //表单目标 
+		var ajax_type = $(this).attr('method'); //提交方法 
+		var ajax_data = $(this).serialize(); //表单数据 
+		$.ajax({
+			type : ajax_type, //表单提交类型 
+			url : ajax_url, //表单提交目标 
+			data : ajax_data, //表单数据
+			success : function(data) {
+				 layer.msg(data.msg,{
+				     	shift: 0
+				     }, function(){
+				    	 window.location.href="${base}/littleKnowledge/list";
+				     }); 
+			}
+		});
+		return false; //阻止表单的默认提交事件 
+	});
+    
+    <#if knowledge.id??>
+   	 	$('#url').append("<div id='${knowledge.imgUrl}' class='uploadimg'> <img width=50 height=50 src='${base}/${knowledge.imgUrl}'/><a href=javascript:delimg('${knowledge.imgUrl}','')>删除</a> </div>");
+   	 	$("#editor").html('${knowledge.content!!}'); 
+    </#if>
+	</script>
+</body>
+</html>

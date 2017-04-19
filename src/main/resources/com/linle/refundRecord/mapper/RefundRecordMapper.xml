@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.linle.refundRecord.mapper.RefundRecordMapper" >
+  <resultMap id="BaseResultMap" type="com.linle.entity.sys.RefundRecord" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="order_no" property="orderNo" jdbcType="VARCHAR" />
+    <result column="refund_status" property="refundStatus" jdbcType="VARCHAR" />
+    <result column="amount" property="amount" jdbcType="INTEGER" />
+    <result column="charge_id" property="chargeId" jdbcType="VARCHAR" />
+    <result column="refund_id" property="refundId" jdbcType="VARCHAR" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+    <result column="success_date" property="successDate" jdbcType="TIMESTAMP" />
+    <result column="refund_json" property="refundJson" jdbcType="VARCHAR" />
+    <result column="channel" property="channel"/>
+    <result column="reason" property="reason"/>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, order_no, refund_status, amount, charge_id, refund_id, create_date, success_date, 
+    refund_json,update_date,channel,reason
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from refund_record
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from refund_record
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.linle.entity.sys.RefundRecord" >
+    insert into refund_record (id, order_no, refund_status, 
+      amount, charge_id, refund_id, 
+      create_date, success_date, refund_json,update_date,channel,reason
+      )
+    values (#{id,jdbcType=BIGINT}, #{orderNo,jdbcType=VARCHAR}, #{refundStatus,jdbcType=VARCHAR}, 
+      #{amount,jdbcType=INTEGER}, #{chargeId,jdbcType=VARCHAR}, #{refundId,jdbcType=VARCHAR}, 
+      #{createDate,jdbcType=TIMESTAMP}, #{successDate,jdbcType=TIMESTAMP}, #{refundJson,jdbcType=VARCHAR}
+      ,#{updateDate},#{channel},#{reason}}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.linle.entity.sys.RefundRecord" >
+    insert into refund_record
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="orderNo != null" >
+        order_no,
+      </if>
+      <if test="refundStatus != null" >
+        refund_status,
+      </if>
+      <if test="amount != null" >
+        amount,
+      </if>
+      <if test="chargeId != null" >
+        charge_id,
+      </if>
+      <if test="refundId != null" >
+        refund_id,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="successDate != null" >
+        success_date,
+      </if>
+      <if test="refundJson != null" >
+        refund_json,
+      </if>
+      <if test="updateDate !=null">
+      	update_date,
+      </if>
+      <if test="channel !=null">
+      	channel,
+      </if>
+      <if test="reason !=null">
+      	reason,
+      </if>	
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="orderNo != null" >
+        #{orderNo,jdbcType=VARCHAR},
+      </if>
+      <if test="refundStatus != null" >
+        #{refundStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="amount != null" >
+        #{amount,jdbcType=INTEGER},
+      </if>
+      <if test="chargeId != null" >
+        #{chargeId,jdbcType=VARCHAR},
+      </if>
+      <if test="refundId != null" >
+        #{refundId,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="successDate != null" >
+        #{successDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="refundJson != null" >
+        #{refundJson,jdbcType=VARCHAR},
+      </if>
+      <if test="updateDate !=null">
+      	#{updateDate},
+      </if>
+      <if test="channel !=null">
+      	#{channel},
+      </if>
+      <if test="reason !=null">
+      	#{reason},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.linle.entity.sys.RefundRecord" >
+    update refund_record
+    <set >
+      <if test="orderNo != null" >
+        order_no = #{orderNo,jdbcType=VARCHAR},
+      </if>
+      <if test="refundStatus != null" >
+        refund_status = #{refundStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="amount != null" >
+        amount = #{amount,jdbcType=INTEGER},
+      </if>
+      <if test="chargeId != null" >
+        charge_id = #{chargeId,jdbcType=VARCHAR},
+      </if>
+      <if test="refundId != null" >
+        refund_id = #{refundId,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="successDate != null" >
+        success_date = #{successDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="refundJson != null" >
+        refund_json = #{refundJson,jdbcType=VARCHAR},
+      </if>
+      <if test="updateDate !=null">
+      	update_date = #{updateDate},
+      </if>
+      <if test="channel !=null">
+      	channel = #{channel},
+      </if>
+      <if test="reason !=null">
+      	reason = #{reason},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.linle.entity.sys.RefundRecord" >
+    update refund_record
+    set order_no = #{orderNo,jdbcType=VARCHAR},
+      refund_status = #{refundStatus,jdbcType=VARCHAR},
+      amount = #{amount,jdbcType=INTEGER},
+      charge_id = #{chargeId,jdbcType=VARCHAR},
+      refund_id = #{refundId,jdbcType=VARCHAR},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      success_date = #{successDate,jdbcType=TIMESTAMP},
+      refund_json = #{refundJson,jdbcType=VARCHAR},
+      update_date = #{updateDate},
+      channel = #{channel},
+      reason = #{reason}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  <select id="getAllData" parameterType="page" resultMap="BaseResultMap">
+  	   select 
+    <include refid="Base_Column_List" />
+    from refund_record
+    where channel = "alipay"
+    <if test="params.orderNo!='' and  params.orderNo!=null">
+    	and order_no = #{params.orderNo}
+    </if>
+    <if test="params.status!='' and  params.status!=null">
+    	and refund_status = #{params.status}
+    </if>
+    order by create_date desc
+  </select>
+  
+  <select id="selectByOrderNo" parameterType="string" resultMap="BaseResultMap">
+  		   select 
+    <include refid="Base_Column_List" />
+    from refund_record
+    where order_no = #{orderNo}
+  </select>
+  
+</mapper>

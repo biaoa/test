@@ -1,0 +1,67 @@
+<#include '/common/base.html'>
+<#if sysFiles?exists&&sysFiles?size gt 0>
+	<#list sysFiles as file>
+		<div class="imglists" id="img${file.id}">
+		<img src="${base}/${file.path}" width="250" height="250">
+		<a href="javascript:;" class="delImg" val="${file.id}" path="${file.path}" folderId="${file.folderId}" title="点击删除">
+			<i class="icon-ban"></i>
+		</a>
+		</div>
+	</#list>
+</#if>
+<script language="javascript">
+$(function(){
+//鍥剧墖鍒犻櫎鎿嶄綔
+	$(".thumbnails").delegate(".delImg","click",function(){
+		var t = $(this);
+		var id = t.attr("val");
+		var path=t.attr("path");
+		var folderId=t.attr("folderId");
+		//鑾峰彇鐩稿簲鐨勫弬鏁拌繘琛屽垹闄�
+		ui.ajax({
+ 			async:false,
+            url:'${base}/noteTopic/delFile/'+id,
+            data:{'path':path,'folderId':folderId},
+            type:'POST',
+            success:function(q){
+             //   q=ui.json(q);
+		       	if(q.code==0){
+					$("#folderId").val(q.msg);
+					alert("鍒犻櫎鎴愬姛");
+					t.parent().remove();
+					//灏嗛噸鏂板垪闃熺殑鍥剧墖瀛樺偍鍊硷紝浠ヤ究绋嬪簭灏嗗浘鐗囧姞鍏ュ搴旂殑鍥炲涓�
+				};
+            }
+        });
+	}).find("img").hover(function(){
+		$(this).find(".delImg").show();
+	},function(){
+		$(this).find(".delImg").hide();
+	});
+})
+$(".icon-ban").click(function(){
+		var fileId = $(this).parent().attr("val");
+		var path = $(this).parent().attr("path");
+		var folderId = $(this).parent().attr("folderId");
+		if (confirm('删除后无法恢复,确定要删除吗')) {
+			$.ajax({
+			        url: '${base}/sys/deletePlanning',
+			        data: {
+			            "folderId": folderId,
+			            "fileId": fileId,
+			            "path": path
+			        },
+			        type: 'post',
+			        dataType: 'json',
+			        success: function(data) {
+						 $("#img"+fileId).remove();
+			        	 layer.msg(data.msg);
+			        },
+			        error: function() {
+			            layer.msg("异常！");
+			        }
+			    });
+		}
+});
+</script>
+	

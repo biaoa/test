@@ -1,0 +1,381 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta name="renderer" content="webkit|ie-comp|ie-stand">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<title>物业信息</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<#include '/common/resources.html'>
+	<link rel="stylesheet" href="${base}/resources/css/sys/add-new.css"/>
+    <link rel="stylesheet" type="text/css" href="${base }/resources/uploadify/uploadify.css">
+    <script src="${base}/resources/js/respond.js" type="text/javascript" async="async"></script>
+    <script src="${base }/resources/uploadify/jquery.uploadify.min.js" type="text/javascript"></script>
+    <script type="text/javascript" charset="utf-8" src="${base}/resources/ueditor1_4_3_1/ueditor.config.js"></script>
+    <script type="text/javascript" charset="utf-8" src="${base}/resources/ueditor1_4_3_1/ueditor.all.min.js"></script>
+    <script type="text/javascript" charset="utf-8" src="${base}/resources/ueditor1_4_3_1/lang/zh-cn/zh-cn.js"></script>
+    <script type="text/javascript" src="${base}/resources/js/linle_common.js"></script>
+</head>
+<body>
+	<div class="whole">
+		<div class="a-plus">
+			<div class="head">
+				<span>物业编辑</span>
+			</div>
+				<form action="${base}/propertyCompany/addPropertyCompany"
+				method="post" id="propertyCompanyform"> 
+				<input type="hidden" name="id" id="id" value="${propertyCompany.id!!}">
+			<div class="Sheet">
+				<div class="a-title">
+					<span class="choice">物业名称：</span>
+					<div class="inp">
+						<input maxlength="20" type="text"
+							onkeyup="javascript:setShowLength(this, 20, 'cost_tpl_title_length');" name="name" id="name" value="${propertyCompany.name!!}"
+							<#if propertyCompany.name??>
+								disabled="disabled"
+							</#if>
+							/>
+						<span class="cue" id="cost_tpl_title_length">0/20</span>
+					</div>
+				</div>
+
+				<div class="a-name">
+					<span class="choice">背景图片：</span>
+					   <div id="url" style="text-align:left;float:left;margin-left:20px;">
+                                            <input type="file" name="file" id="file_upload">
+                                            <input type="hidden" name="logo" id="logo"/>
+                        </div>
+				</div>
+
+				<div class="a-area">
+					<span class="choice">物业地段：</span>
+					<div class="province">
+						<select class="sele-pa" id="wy_provice"  class="form-control">
+							<#list provinceList as province>
+		                   		<option value="${province.id}" 
+		                   		<#if propertyCompany.id??>
+		                   			<#if province.id==propertyCompany.sysRegion.parent.parent.id>
+		                   				selected="selected"
+		                   			</#if>
+		                   		</#if>
+		                   		
+		                   		>${province.name}</option>
+		                	</#list>
+						</select>
+					</div>
+					<div class="city">
+						<select class="sele-pa" id="wy_citys" name="cityReginId">
+							 <#list cityList as city>
+	                   			<option value="${city.id}" 
+	                   			<#if propertyCompany.id??>
+		                   			<#if city.id==propertyCompany.sysRegion.parent.id>
+		                   				selected="selected"
+		                   			</#if>
+		                   		</#if>
+	                   			>${city.name}</option>
+	                    	</#list>
+						</select>
+					</div>
+					<div class="region">
+						<select class="sele-pa" name="sysRegion.id" id="wy_blocks">
+	                        <#list countyList as county>
+		                      <option value="${county.id}"  
+		                      	<#if propertyCompany.id??>
+		                   			<#if county.id==propertyCompany.sysRegion.id>
+		                   				selected="selected"
+		                   			</#if>
+		                   		</#if>
+		                      >${county.name}</option>
+		                    </#list>
+						</select>
+					</div>
+				</div>
+
+				<div class="a-address">
+					<span class="choice">详细地址：</span>
+
+					<div class="ads">
+						<input type="text" placeholder="请输入详细地址" name="addressDetails" id="addressDetails" value="${propertyCompany.addressDetails!!}"/>
+					</div>
+
+				</div>
+				<div class="a-phone">
+					<span class="choice">联系电话：</span>
+					<div class="phone-num">
+						<div class="p-num">
+							<input type="text" name="phone1" value="${propertyCompany.phone1!!}"/>
+						</div>
+						<span>---</span>
+						<div class="s-num">
+							<input type="text" name="phone2" value="${propertyCompany.phone2!!}"/>
+						</div>
+					</div>
+				</div>
+
+				<div class="a-area">
+					<span class="choice">工作时间：</span>
+					<div class="province">
+						<select class="sele-time" name="work1" id="work1">
+							<option value="8:00">8:00</option>
+							<option value="9:00">9:00</option>
+							<option value="10:00">10:00</option>
+							<option value="11:00">11:00</option>
+							<option value="12:00">12:00</option>
+						</select>
+					</div>
+					<div class="gz" style="color: gainsboro;float: left;margin-top: 5px;">
+						<span>---</span>
+					</div>
+					<div class="city" style="margin-left:0">
+						<select class="sele-time" name="work2" id="work2">
+							<option value="16:00">16:00</option>
+							<option value="17:00">17:00</option>
+							<option value="18:00">18:00</option>
+							<option value="19:00">19:00</option>
+							<option value="20:00">20:00</option>
+						</select>
+					</div>
+				</div>
+				<div class="a-address">
+					<span class="choice">物业负责人：</span>
+
+					<div class="ads">
+						<input type="text" placeholder="请输入物业负责人" name="principalName" id="principalName" value="${propertyCompany.principalName!!}"/>
+					</div>
+
+				</div>
+				<div class="a-address">
+					<span class="choice">负责人电话：</span>
+
+					<div class="ads">
+						<input type="text" placeholder="请输入负责人电话" name="principalPhone" id="principalPhone" value="${propertyCompany.principalPhone!!}"/>
+					</div>
+
+				</div>
+				<div class="a-address">
+					<span class="choice">负责人地址：</span>
+
+					<div class="ads">
+						<input type="text" placeholder="请输入负责人地址" name="principalAddress" value="${propertyCompany.principalAddress!!}"/>
+					</div>
+
+				</div>
+				<div class="a-textarea">
+					<span class="choice">物业简介：</span>
+					 <div style="float:left;margin-left:20px;width:80%"><textarea name="synopsis" id="synopsis" style="width: 100%;height: 200px;float:right">${propertyCompany.synopsis!!}</textarea></div>
+<!--                      <script type="text/javascript"> var ue = UE.getEditor('editor');</script> -->
+				</div>
+<!-- 				<div class="a-textarea"> -->
+<!-- 					<span class="choice">业主须知：</span> -->
+<!-- 					 <div style="float:left;margin-left:20px;width:80%"><textarea name="ownerNotice" id="ownerNotice" style="width: 100%;height: 200px;float:right"></textarea></div> -->
+<!--                      <script type="text/javascript"> var ue = UE.getEditor('editor');</script> -->
+<!-- 				</div> -->
+			</div>
+			<div class="a-address">
+
+				<button data-reveal-id="sav" data-animation="fade" class="s-btn">确认</button>
+
+			</div>
+			<div id="sav" class="reveal-modal"
+				style="opacity: 1; visibility: hidden; top: 150px;">
+				<h3>保存成功</h3>
+				<a class="close-reveal-modal">×</a>
+			</div>
+			</form>
+			<div class="reveal-modal-bg" style="display: none; cursor: pointer;">
+			</div>
+		</div>
+	</div>
+
+	<!--style给定宽度可以影响编辑器的最终宽度-->
+
+	<script type="text/javascript" src="${base}/resources/js/jquery.reveal.js"></script>
+	<script>
+		function setShowLength(obj, maxlength, id) {
+			var rem = maxlength - obj.value.length;
+			var wid = id;
+			if (rem < 0) {
+				rem = 0;
+			}
+			document.getElementById(wid).innerHTML = rem + "/" + "20";
+		}
+		
+	    $(function () {
+            $('#file_upload').uploadify({
+                'swf': '${base }/resources/uploadify/uploadify.swf', //指定上传控件的主体文件，默认‘uploader.swf’
+                'uploader': '${base}/sys/file/uploadFile', //指定服务器端上传处理文件
+                'auto': true, //手动上传
+                'buttonImage': '${base }/resources/uploadify/uploadify-browse.png', //浏览按钮背景图片
+                'multi': false, //单文件上传
+                'fileTypeExts': '*.gif; *.jpg; *.png;', //允许上传的文件后缀
+                'fileSizeLimit': '300MB', //上传文件的大小限制，单位为B, KB, MB, 或 GB
+                'successTimeout': 30, //成功等待时间
+                'queueSizeLimit': 1,
+                'fileObjName': 'file',
+                'onUploadStart': function (file) {  
+                    $("#file_upload").uploadify("settings", "formData", {'type': 'propertyCompany'});  
+                },
+                'onUploadSuccess': function (file, data) {//每成功完成一次文件上传时触发一次
+                    data = eval("(" + data + ")");
+                    $(".uploadimg").remove();
+                    $('#url').append("<div id=" + data.value + " class='uploadimg'> <img width=50 height=50 src='${base}/" + data.value + "' /> " +
+                            "<a href=javascript:delimg('" + data.value + "','logo')>删除</a> </div>");
+                    $("#logo").val(data.value);
+                    console.log(data.value);
+                    console.log($("#logo").val());
+                },
+                'onUploadError': function (file, data) {//当上传返回错误时触发
+                    $('#url').append("<li>" + data + "</li>");
+
+                }
+            });
+
+        });
+        <!--删除图片-->
+        function delimg(obj, tval) {
+            var url = "${base}/sys/file/delimg";
+            $.post(url, {'imgpath': obj}, function (data) {
+                if (data.code == 0) {
+                    document.getElementById(obj).remove();
+                    document.getElementById(tval).value = "";
+                }
+            });
+        }
+        
+      //动态选择省级数据，刷新市级县级数据
+        $("#wy_provice").change(function(){
+        	var parentId = $(this).val();
+        	$.ajax({
+                async: false,
+                type : "POST",
+                url : '${base}/sys/getCityList/'+parentId,
+                dataType : 'json',
+                success : function(q) {
+                    $("#wy_citys").text("");
+                    $("#wy_blocks").text("");
+                    //刷新市级数据		
+                	$.each(q, function(entryIndex, entry) {
+        				var html = "<option value='" + entry.id + "'>"
+        						+ entry.name + "</option>";
+        				$("#wy_citys").append(html);
+        			});
+        			var cityId = $("#wy_citys").val();
+        			//刷新县级数据
+        			$.ajax({
+        		            async: false,
+        		            type : "POST",	
+        		            url : '${base}/sys/getAreaList/'+cityId,
+        		            dataType : 'json',
+        		            success : function(q) {
+        		            	$.each(q, function(entryIndex, entry) {
+        							var html = "<option value='" + entry.id + "'>"
+        									+ entry.name + "</option>";
+        							$("#wy_blocks").append(html);
+        						});
+        		            }
+        	         	});
+                }
+         	});
+        });
+        //动态选择市级数据，刷新县级数据
+        $("#wy_citys").change(function(){
+        	var parentId = $(this).val();
+        	$.ajax({
+                async: false,
+                type : "POST",
+                url : '${base}/sys/getAreaList/'+parentId,
+                dataType : 'json',
+                success : function(q) {
+                    $("#wy_blocks").text("");
+                    //刷新市级数据		
+                	$.each(q, function(entryIndex, entry) {
+        				var html = "<option value='" + entry.id + "'>"
+        						+ entry.name + "</option>";
+        				$("#wy_blocks").append(html);
+        			});
+                }
+         	});
+        });
+		
+    	$("#propertyCompanyform").submit(function() {
+    		var name = $("#name").val();
+    		var logo = $("#logo").val();
+    		var addressDetails = $("#addressDetails").val();
+    		var principalName = $("#principalName").val();
+    		var principalPhone = $("#principalPhone").val();
+    		if(name==''){
+    			layer.msg("物业名称不能为空");
+    			return false;
+    		}
+    		if(logo==''){
+    			layer.msg("物业logo不能为空");
+    			return false;
+    		}
+    		if(addressDetails==''){
+    			layer.msg("物业地址不能为空");
+    			return false;
+    		}
+    		if(principalName==''){
+    			layer.msg("负责人不能为空");
+    			return false;
+    		}
+    		if(principalPhone==''){
+    			layer.msg("负责人电话不能为空");
+    			return false;
+    		}
+    		
+    		if(!checkTwoPhone(principalPhone)){
+    			layer.msg("负责人电话有误");
+    			return false;
+    		}
+    		
+    		if($("#synopsis").val()==''){
+    			layer.msg("物业简介不能为空");
+    			return false;
+    		}
+    		
+//     		if($("#ownerNotice").val()==''){
+//     			layer.msg("业主须知不能为空");
+//     			return false;
+//     		}
+    		
+    		if($("#id").val()==""){
+    			if(checkUserExsit(name,'${base}')){
+    				return false;
+    			}
+    		}
+			var ajax_url = $(this).attr("action"); //表单目标 
+			var ajax_type = $(this).attr('method'); //提交方法 
+			var ajax_data = $(this).serialize(); //表单数据 
+			ajax_data.name = name;
+			$.ajax({
+				type : ajax_type, //表单提交类型 
+				url : ajax_url, //表单提交目标 
+				data : ajax_data, //表单数据
+				success : function(data) {
+					 layer.msg(data.msg,{
+ 				     	shift: 0
+ 				     }, function(){
+					 	 <#if type??>
+				    		window.location.reload();
+				    	 	<#else>
+				    		window.location.href="${base}/propertyCompany/list";
+				    	 </#if>
+ 				     });
+				}
+			});
+			return false; //阻止表单的默认提交事件 
+		});
+    	
+    	<#if propertyCompany.id??>
+    		$("#work1").val('${propertyCompany.work1}');
+    		$("#work2").val('${propertyCompany.work2}');
+    		<#if (propertyCompany.logo)??>
+    		$("#logo").val('${propertyCompany.logo}');
+			$('#url').append("<div id='${propertyCompany.logo}' class='uploadimgs'> <img width=50 height=50 src='${base}/${propertyCompany.logo}'/> " +
+	            "<a href=javascript:delimg('${propertyCompany.logo}','')>删除</a> </div>");
+		</#if>
+    	</#if>
+	</script>
+</body>
+</html>

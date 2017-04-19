@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+	<#include '/common/base.html'>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+		<title>车位续费</title>
+		<meta name="keywords" content="j" />
+		<meta name="description" content="" />
+		<link rel="stylesheet" href="${base}/resources/css/app/youcar.css" />
+		<link rel="stylesheet" href="${base}/resources/css/app/swiper.min.css">
+	</head>
+
+	<body>
+		<div class="swiper-container swiper-container-horizontal">
+			<div class="swiper-wrapper">
+				<#list spaceList as space>
+					<div class="swiper-slide">
+					<input type="hidden" value='${space.parkingSpace}' id="space${space_index}"/>
+					<input type="hidden" value="${space.spaceNo}" id="spaceNo${space_index}">
+					<input type="hidden" value='${space}' id="spaceRecord${space_index}"> 
+					<div class="car-order">
+						<div class="<#if (space_index+1)%3==1>
+								first-site
+								<#elseif (space_index+1)%3==2>
+								second-site
+								<#else>
+								thrid-site
+							</#if>">
+							<span class="you-site <#if (space_index+1)%3==1>
+								bb
+								<#elseif (space_index+1)%3==2>
+									cc
+								<#else>
+								zz
+							</#if>">您的停车位</span>
+							<div class="xxdz">
+								<p>${space.spaceInfo}</p>
+								<p>${space.endDate?string('yyyy-MM-dd')}</p>
+							</div>
+							<div class="day-sit">
+								<p>${space.surplusDays}天</p>
+							</div>
+						</div>										
+					</div>
+					</div>
+				</#list>
+			</div>
+		<div class="car-footer">
+			<div class="time-qx"><span>有效期</span></div>
+			<div class="time-choice">
+				<span class="date-car">${spaceRecode.beginDate?string('yyyy-MM-dd')}~${spaceRecode.endDate?string('yyyy-MM-dd')}</span><span class="sy-day" style="color: #ff5000 ;">${spaceRecode.surplusDays}天</span>
+			</div>
+			<div class="time-qx"><span>时间期限</span></div>
+			<div class="time-choice">
+			<ul>
+				<li class="cl click" t="0" v="一月"><span>一个月</span></li>
+				<li class="cl" t="1" v="一季度"><span>一季度</span></li>
+				<li class="cl" t="2" v="一年"><span>一年</span></li>
+			</ul>
+			</div>
+			<div class="car-price">
+				<span>费用：<p class="money-jy"></p></span><a class="car-btn">立即续费</a>
+				<input type="hidden" id="total"/>
+				<input type="hidden" id="sid" value="${spaceRecode.parkingSpace.id}"/>
+				<input type="hidden" id="gid" value="${spaceRecode.grageId}">
+			</div>
+		</div>
+		</div>
+		<script src="${base}/resources/js/swiper.min.js"></script>
+		<script>
+		var date_type=0;//日期下标
+		var date_type_val="一月";//日期类型
+		var price_list = '${spaceRecode.parkingSpace.price}';
+		price_list = eval("(" + price_list + ")"); //车位信息
+		var parking_no = '${spaceRecode.spaceNo}';
+		var temp = parking_no.split("_"); //当前车位编号
+		var price_array = price_list[temp[0]-1][temp[1]-1]; //当前车位价格
+		sum_total();
+		var _index = 0
+		$(document).ready(function() {
+			$(".cl").each(function(index) {
+				$(this).click(function() {
+					$(".cl").removeClass("click");
+					$(".cl").eq(index).addClass("click");
+					date_type = $(this).attr("t");
+					date_type_val = $(this).attr("v");
+					sum_total();
+				});
+			});
+			$(".div_select").click(function() {
+				$(".ul_select1").show();
+			});
+			$(".ul_select1").click(function() {
+				$(".ul_select1").css("display", "none");
+				$(".text1").html(($(this).text()));
+			});
+		});
+		
+		function sum_total(){
+			$(".money-jy").html("￥"+price_array[date_type]);
+			$("#total").val(price_array[date_type]);
+		}
+		
+		function getString(obj){
+			return JSON.stringify(obj);
+			}
+		//点击确定
+		$(".car-btn").click(function(){
+			//获得选中车位,获得总价格
+			var total =  $("#total").val();//总价
+			var sid =  $("#sid").val(); //车库
+			var parking_array = new Array();
+			parking_array.push(parking_no);
+			var price_temp  = new Array();
+			price_temp.push(price_array[date_type]);
+			saveorder(sid,parking_array,getString(price_temp),total);
+			
+		});
+		
+		/**
+			spaceid:车位ID
+			select_space ： 选中的车位
+			price_list ： 选中车位单价
+			total ： 总价
+		*/
+		function saveorder(spaceid,select_space,price_list,total){
+// 				console.log(date_type);
+// 				console.log(date_type_val);
+// 				console.log($("#gid").val());
+// 				console.log(spaceid);
+				console.log(getString(select_space));
+// 				console.log(price_list);
+// 				console.log(total);
+			try{
+				window.space.status("create");
+			}catch(e){
+				orderStatus("create");
+			}
+			$.ajax({
+				type : "post",
+				data :{
+						"orderType" : "spaceRenew", 
+						"dateType":date_type,
+						"type" : date_type_val,
+						"gid" : $("#gid").val(),
+						"spaceid" : spaceid,
+						"select_space" :getString(select_space),
+						"price_list" : price_list,
+						"total" : total
+					  },
+				url : "${base}/api/1/saveSpaceOrder",
+				success : function(data) {
+					if(data.code==0){
+						console.log(data);
+						try{
+							window.space.payOrder(data.result.orderNo);
+						}catch(e){
+							payOrder(data.result.orderNo);
+						}
+					
+					}else{
+						try{
+							window.space.status("fail");
+						}catch(e){
+							orderStatus("fail");
+						}
+					}
+				},
+				error: function(XMLHttpRequest, textStatus, errorThrown) {
+					try{
+						window.space.status("connectError");
+					}catch(e){
+						orderStatus("connectError");
+					}
+					}
+			});
+		}
+		
+		
+		var swiper = new Swiper('.swiper-container', {
+			pagination: '.swiper-pagination',
+			slidesPerView: 'auto',
+		    centeredSlides: true,
+		    paginationClickable: true,
+		    spaceBetween: 0,
+			onSlideChangeEnd: function(swiper){
+					_index = swiper.snapIndex;
+					var record_info  = $("#spaceRecord"+_index).val();
+					var record = eval("(" + record_info + ")");
+					
+					$(".date-car").html(DateConvert(record.createDate)+"~"+DateConvert(record.endDate));
+					$(".sy-day").html(record.surplusDays+"天");
+					
+					var temp_space_info = $('#space'+_index).val();
+					var space_info = eval("(" + temp_space_info + ")");
+   					price_list = eval("(" + space_info.price + ")");  //价格集合
+   					parking_no =$("#spaceNo"+_index).val();//车位编号
+   					var temp_weizhi= parking_no.split("_");
+   					price_array = price_list[temp_weizhi[0]-1][temp_weizhi[1]-1];
+   					sum_total();
+  				}
+		});
+		
+		function DateConvert(stamp){
+			return	new Date(parseInt(stamp)).toLocaleString().substr(0,10);
+		}
+			</script>
+	</body>
+
+</html>

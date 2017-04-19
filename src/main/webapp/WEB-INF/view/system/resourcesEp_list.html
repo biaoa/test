@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>角色管理</title>
+    <meta name="content-type" content="text/html; charset=UTF-8">
+    <#include '/common/resources.html'>
+  </head>
+  <body>
+        <div class="fh_right_box">
+           <h3><span class="iconfont" style="font-size:20px;color:#d65b5a">&#xe621;</span>&nbsp;中介资源企业管理<font style="margin-left:10px">企业数量：${(pagelist.totalRecord)!'0'}</font>家
+           <a href="${base}/sys/addHatchOrResourcePage?type=ZJZY" class="button button-action button-rounded dialogs" style="margin-left:5px;line-height:36px">添加中介机构</a>
+           <a href="${base}/category/list" class="button button-action button-rounded" style="line-height:35px">服务类目管理</a>
+          	  <span style="width:200px;position:absolute;right:270px;top: 21px;">
+            	<div class="input-group">
+    						<input type="text" class="form-control" placeholder="按名称,地址搜索" name="searchval1" title="按名称,地址搜索">
+      				<span class="input-group-btn">
+       			  		 <button class="btn btn-default sousuo" type="button" id="search">搜索</button>
+     				</span>
+ 				 </div>
+	          </span>
+           </h3>
+           <img src="${base}/resources/images/hr.jpg" class="xian"/>
+        </div>
+	    <table class="table table-striped" style="text-align:center">
+	       <tr>
+	       	 <th>序号</th>
+	         <th width="10%">名称</th>
+	         <th width="10%">地址</th>
+	         <th>服务名目</th>
+	         <th>加入时间</th>
+	         <th>达成服务次数</th>
+	         <th width="250px;">操作</th>
+	      </tr>
+	      <#if (pagelist.results)?exists && pagelist.results?size gt 0>
+	      <#list pagelist.results as resource>
+		      <tr>
+		         <td>${(resource_index+1)+(pagelist.pageNo-1)*pagelist.pageSize}</td>
+		         <td class="space" title="${(resource.name)!''}">${(resource.name)!''}</td>
+		         <td class="space" title="${(resource.address)!''}">${(resource.address)!''}</td>
+		         <td>${(resource.serviceNum)!''}</td>
+		         <td class="space" title="${resource.createDate?string('yyyy/MM/dd HH:mm:ss')}">${resource.createDate?string('yyyy/MM/dd HH:mm:ss')}</td>
+		         <td>${(resource.serviceOrderNum)!''}</td>
+		         <td>
+		         	<a class="btn btn-default dialogs" href="javascript:;" role="button" data-toggle="click" data-target="#zjjg${resource.id}" name="zjjg${resource.id}" data-mask="1" >修改</a>
+		         	<a class="btn btn-default dialogs" href="javascript:;" role="button" data-toggle="click" data-target="#fwmx${resource.id}" data-mask="1" >查看服务</a>
+		         	<a class="btn btn-default dialogs" href="javascript:;" onclick="resetPass(${resource.id})">重置密码</a>
+ 		         </td>
+ 		         <td style="display: none;">
+ 		         	<!-- 修改中介机构 -->
+					  <div id="zjjg${resource.id}">
+					  <div class="dialog">
+					    <div class="dialog-head">
+					      <span class="close rotate-hover" ></span>
+					      <strong>修改中介机构</strong>
+					    </div>
+					    <div class="dialog-body">
+					    <form action="${base}/sys/updateResource" method="post" id="resoucefrom${resource.id}">
+					    <table class="table">
+					          <tr>
+					            <td>基本信息</td>
+					            <td colspan="3" style="padding-top:15px"><hr></td>
+					          </tr>
+					          <tr>
+					          <input type="hidden" name="id" value="${resource.id}">
+					          <td style="width:100px;">企业名称：</td>  
+					          <td align="left"><input type="text" value="${(resource.name)!''}" name="name"/></td>
+					          <td>联系地址：</td>
+					          <td><input type="text" value="${(resource.address)!''}" name="address"/></td>
+					          </tr>
+					          <tr>
+					            <td>联系人：</td>
+					            <td><input type="text" value="${(resource.contactPerson)!''}" name="contactPerson"/></td>
+					            <td>联系电话：</td>
+					            <td><input type="text" value="${(resource.contactPhone)!''}" name="contactPhone"/></td>
+					          </tr>
+					          <tr>
+					            <td>企业基本介绍：</td>
+					            <td colspan="3"><textarea style="width:90%"  name="introduction">${(resource.introduction)!''}</textarea> </td>
+					          </tr>
+<!-- 					          <tr> -->
+<!-- 					            <td>服务类型：</td> -->
+<!-- 					            <td colspan="3"> -->
+<!-- 					              <select name="" id="" style="width:100px"> -->
+<!-- 					                <option value="">123456</option> -->
+<!-- 					              </select> -->
+<!-- 					            </td> -->
+<!-- 					          </tr> -->
+					           <tr>
+					            <td>会员信息</td>
+					            <td colspan="3" style="padding-top:15px"><hr></td>
+					          </tr>
+					           <tr>
+					          <td>用户名：</td>  
+					          <td><input type="text" value="${(resource.user.userName)!''}" readonly="readonly"/></td>
+<!-- 					          <td>密码：</td> -->
+<!-- 					          <td><input type="text" /></td> -->
+					          </tr>
+					        </table>
+					        </form>
+					      <button class="button bg-main qdyx" onclick="submitform(this)">确定</button>
+					      <button class="button bg-main qdyx" onclick="resetupdateform(${resource.id})">重填</button>
+					    </div>
+					    <a style="display: none;" class="button bg-main zjjg${resource.id} dialog-close"  name="reset${resource.id}" id="reset${resource.id}"/>
+					    <a style="display: none;" class="btn btn-default" href="javascript:;" role="button" data-toggle="click" data-target="#zjjg${resource.id}" name="zjjg${resource.id}" data-mask="1" >修改</a>
+					  </div>
+					</div>
+					<!-- 添加中介机构结束 -->
+ 		         	<!-- 服务项目详细 -->
+					  <div id="fwmx${resource.id}">
+					  <div class="dialog">
+					    <div class="dialog-head">
+					      <span class="close rotate-hover"></span>
+					      <strong>服务明细</strong>
+					    </div>
+					    <div class="dialog-body">
+					       <table class="table table-bordered">
+					           <tr class="text-center">
+					             <td>服务名称</td>
+					             <td>服务内容</td>
+					             <td>价格</td>
+					             <td>添加时间</td>
+					           </tr>
+					          <#if (resource.services)?exists && resource.services?size gt 0>
+						      <#list resource.services as service>
+					          <tr class="text-center">
+					               <td>${(service.name)!!}</td>
+					               <td width="50%" >
+					                    ${(service.content)!!}
+					               </td>
+					               <td>${(service.charge)!!}</td>
+					               <td>${(service.createDate?string('yyyy-MM-dd'))}</td>
+					           </tr>
+					           </#list> 
+						       </#if>
+					       </table>
+					    </div>
+					  </div>
+					</div>
+					<!-- 服务项目详细 -->
+ 		         </td>
+		      </tr>
+		   </#list> 
+	      </#if>
+		</table>
+		<form action="${base}/sys/resourcesEpList" id="pagerForm" method="post" name="pagerForm">
+		 <#include '/common/pagination.html'>
+		  <input type="hidden" id="searchval" name="searchval"  />
+		</form>  
+		
+</body>
+<script type="text/javascript">
+    $(function () {
+        $("dialogs").click(function () {
+        	window.location.href="${base}/sys/addHatchOrResourcePage?type=ZJZY";
+        });
+        
+    });
+    
+    function resetupdateform(id){
+    	nid="zjjg"+id;
+    	id="reset"+id;
+//     	$("#"+id).click();
+    	$("a[name="+id+"]").click();
+		a();    	
+    }
+    function a(){
+    	var a=setInterval (function(){$("a[name="+nid+"]").click();clearInterval(a);}, 100);
+    }
+    function submitform(v){
+    	var id=$(v).parent().find("input[name=id]").val();
+    	var address = $(v).parent().find("input[name=address]").val();
+    	var name=$(v).parent().find("input[name=name]").val();
+    	var contactPerson=$(v).parent().find("input[name=contactPerson]").val();
+    	var contactPhone=$(v).parent().find("input[name=contactPhone]").val();
+    	var introduction=$(v).parent().find("textarea[name=introduction]").val();
+   		 $.ajax({
+         url: '${base}/sys/updateResource',
+         data: {
+             "id": id,
+             "address": address,
+             "name": name,
+             "contactPerson": contactPerson,
+             "contactPhone": contactPhone,
+             "introduction": introduction
+         },
+         type: 'post',
+         dataType: 'json',
+         success: function(data) {
+                 layer.msg(data.msg);
+                 window.location.reload();
+         },
+         error: function() {
+             layer.msg("异常！");
+         }
+     });
+    	
+//         var $form = $("#resoucefrom"+id);
+// 	    $.post($form.attr('action'), $form.serialize(), function(result) {
+// 	  	  layer.msg(result.msg)
+// 	   	/* $.gritter.add({  
+// 	   	    title: '',  
+// 	   	    text: result.msg,  
+// 	   	    sticky: false,  
+// 	   	    time: 2000,  
+// 	   	    speed:500,  
+// 	   	    class_name: 'gritter-success'//gritter-center   
+// 	   	});   */
+// 	   }, 'json');
+    }
+    $("#search").click(function(){
+		var searchval=$("input[name=searchval1]").val();
+		if (searchval=="") {
+			return false;
+		}
+		$("#searchval").val(searchval);
+		$("form[name='pagerForm']").submit();
+});
+    function resetPass(id){
+    	if(!confirm('确认要重置密码么?')){
+			return;
+		}
+      	 $.ajax({
+            url: '${base}/sys/resetPass',
+            data: {
+                "id": id,
+                "type": "ZJ"
+            },
+            type: 'post',
+            dataType: 'json',
+            success: function(data) {
+           	 layer.msg(data.msg,{
+   	            	shift: 0
+   	            }, function(){
+   	            	 window.location.reload();
+   	            }); 
+            },
+            error: function() {
+                layer.msg("异常！");
+            }
+        });
+       }
+</script>
+
+</html>

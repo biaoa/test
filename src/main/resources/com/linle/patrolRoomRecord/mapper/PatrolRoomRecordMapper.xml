@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.linle.patrolRoomRecord.mapper.PatrolRoomRecordMapper" >
+  <resultMap id="BaseResultMap" type="com.linle.patrolRoomRecord.model.PatrolRoomRecord" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="u_id" property="uId" jdbcType="BIGINT" />
+    <result column="check_address" property="checkAddress" jdbcType="VARCHAR" />
+    <result column="scan_address" property="scanAddress" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="images" property="images" jdbcType="VARCHAR" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  
+   <resultMap id="BaseResultMapJoin" type="com.linle.patrolRoomRecord.model.PatrolRoomRecord" extends="BaseResultMap">
+   	 <result column="deptName" property="deptName" jdbcType="VARCHAR" />
+     <association property="user" column="u_id" select="com.linle.user.mapper.UserMapper.getById" />
+  </resultMap>
+   
+   <resultMap id="BaseResultMapApi" type="com.linle.mobileapi.property.model.PatrolRoomRecordListVo" extends="BaseResultMap">
+   	 <result column="nickName" property="nickName" jdbcType="VARCHAR" />
+   	  <result column="userImg" property="userImg" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    id, u_id, check_address, scan_address, status, remark, images, create_date
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from patrol_room_record
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from patrol_room_record
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.linle.patrolRoomRecord.model.PatrolRoomRecord" >
+    insert into patrol_room_record (id, u_id, check_address, 
+      scan_address, status, remark, 
+      images, create_date)
+    values (#{id,jdbcType=BIGINT}, #{uId,jdbcType=BIGINT}, #{checkAddress,jdbcType=VARCHAR}, 
+      #{scanAddress,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, #{remark,jdbcType=VARCHAR}, 
+      #{images,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.linle.patrolRoomRecord.model.PatrolRoomRecord" >
+    insert into patrol_room_record
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="uId != null" >
+        u_id,
+      </if>
+      <if test="checkAddress != null" >
+        check_address,
+      </if>
+      <if test="scanAddress != null" >
+        scan_address,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="images != null" >
+        images,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="uId != null" >
+        #{uId,jdbcType=BIGINT},
+      </if>
+      <if test="checkAddress != null" >
+        #{checkAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="scanAddress != null" >
+        #{scanAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="images != null" >
+        #{images,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.linle.patrolRoomRecord.model.PatrolRoomRecord" >
+    update patrol_room_record
+    <set >
+      <if test="uId != null" >
+        u_id = #{uId,jdbcType=BIGINT},
+      </if>
+      <if test="checkAddress != null" >
+        check_address = #{checkAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="scanAddress != null" >
+        scan_address = #{scanAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="images != null" >
+        images = #{images,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.linle.patrolRoomRecord.model.PatrolRoomRecord" >
+    update patrol_room_record
+    set u_id = #{uId,jdbcType=BIGINT},
+      check_address = #{checkAddress,jdbcType=VARCHAR},
+      scan_address = #{scanAddress,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
+      remark = #{remark,jdbcType=VARCHAR},
+      images = #{images,jdbcType=VARCHAR},
+      create_date = #{createDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+   <!-- 获取小区所有巡更记录 -->
+    <select id="getAllData" resultMap="BaseResultMapJoin" parameterType="Page">
+		SELECT record.*,dept.`name` deptName
+		FROM patrol_room_record record
+		LEFT JOIN community_employee emp on record.u_id=emp.u_id
+		LEFT JOIN community_department dept ON dept.id=emp.department_id
+		WHERE emp.community_id=#{params.communityId}
+		<if test="params.beginDate!=null and params.endDate==null">
+  			and <![CDATA[  record.create_date>=#{params.beginDate} ]]>
+  		</if>
+  		<if test="params.beginDate==null and params.endDate!=null">
+  			and <![CDATA[ record.create_date<=#{params.endDate} ]]>
+  		</if>
+  		<if test="params.beginDate!=null and params.endDate!=null">
+  			and <![CDATA[ (record.create_date >=#{params.beginDate} and record.create_date<=#{params.endDate}) ]]>
+  		</if>
+  		<if test="params.departmentId!=null and params.departmentId!=null">
+  			and emp.department_id=#{params.departmentId}
+  		</if>
+  		<if test="params.empName!=null and params.empName!=null">
+  			and emp.name=#{params.empName}
+  		</if>
+  		ORDER BY record.create_date desc
+  </select>
+  
+  <!-- 获取当前用户所有巡更记录 -->
+  <select id="getPatrolRoomRecordListForApi" resultMap="BaseResultMapApi" parameterType="map">
+	SELECT record.*,emp.`name` nickName,emp.logo userImg
+		FROM patrol_room_record record
+		LEFT JOIN community_employee emp on record.u_id=emp.u_id
+		<where>
+			<!--普通员工  -->
+			<if test="identity=='10' and u_id !=null">
+				record.u_id=#{u_id}
+			</if>
+			<!--部门负责人  -->
+			<if test="identity=='11' and departmentId !=null">
+				emp.department_id=#{departmentId}
+			</if>
+			<!--小区  -->
+			<if test="identity=='3' and communityId !=null">
+				emp.community_id=#{communityId}
+			</if>
+			<if test="searchValue !=null and searchValue !=''">
+				and (	emp.`name` like CONCAT('%','${searchValue}','%')  
+					)
+			</if>
+			
+		</where>
+  		ORDER BY record.create_date desc
+  		limit #{begin},#{end}
+  </select>
+  
+</mapper>

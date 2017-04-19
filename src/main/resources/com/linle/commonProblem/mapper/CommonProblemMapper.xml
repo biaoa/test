@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.linle.commonProblem.mapper.CommonProblemMapper" >
+  <resultMap id="BaseResultMap" type="com.linle.commonProblem.model.CommonProblem" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="type_id" property="typeId" jdbcType="BIGINT" />
+    <result column="sort" property="sort" jdbcType="INTEGER" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.linle.commonProblem.model.CommonProblem" extends="BaseResultMap" >
+    <result column="content" property="content" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  
+  <resultMap id="ResultMapWithBLOBsJoin" type="com.linle.commonProblem.model.CommonProblem" extends="ResultMapWithBLOBs" >
+    <result column="type_name" property="typeName" jdbcType="VARCHAR" />
+    <result column="belong_to" property="belongTo" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    id, title, type_id, sort
+  </sql>
+  <sql id="Blob_Column_List" >
+    content
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from common_problem
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from common_problem
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.linle.commonProblem.model.CommonProblem" >
+    insert into common_problem (id, title, type_id, 
+      sort, content)
+    values (#{id,jdbcType=BIGINT}, #{title,jdbcType=VARCHAR}, #{typeId,jdbcType=BIGINT}, 
+      #{sort,jdbcType=INTEGER}, #{content,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.linle.commonProblem.model.CommonProblem" >
+    insert into common_problem
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="title != null" >
+        title,
+      </if>
+      <if test="typeId != null" >
+        type_id,
+      </if>
+      <if test="sort != null" >
+        sort,
+      </if>
+      <if test="content != null" >
+        content,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="title != null" >
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="typeId != null" >
+        #{typeId,jdbcType=BIGINT},
+      </if>
+      <if test="sort != null" >
+        #{sort,jdbcType=INTEGER},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.linle.commonProblem.model.CommonProblem" >
+    update common_problem
+    <set >
+      <if test="title != null" >
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="typeId != null" >
+        type_id = #{typeId,jdbcType=BIGINT},
+      </if>
+      <if test="sort != null" >
+        sort = #{sort,jdbcType=INTEGER},
+      </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.linle.commonProblem.model.CommonProblem" >
+    update common_problem
+    set title = #{title,jdbcType=VARCHAR},
+      type_id = #{typeId,jdbcType=BIGINT},
+      sort = #{sort,jdbcType=INTEGER},
+      content = #{content,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.linle.commonProblem.model.CommonProblem" >
+    update common_problem
+    set title = #{title,jdbcType=VARCHAR},
+      type_id = #{typeId,jdbcType=BIGINT},
+      sort = #{sort,jdbcType=INTEGER}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  <select id="selectByTypeId" resultMap="ResultMapWithBLOBs" parameterType="long">
+	select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from common_problem
+    where type_id = #{value}
+    order by sort
+  </select>
+
+  <select id="getAllData" resultMap="ResultMapWithBLOBsJoin" parameterType="Page">
+		select
+		comm.id, comm.title, comm.type_id, comm.sort,type.type_name,type.belong_to
+		from common_problem comm
+		left join problem_type type on comm.type_id=type.id
+		<where>
+			<if test="params.typeId!=null and params.typeId!=-1">
+				and comm.type_id=#{params.typeId}
+			</if>
+			<if test="params.belongTo!=null and params.belongTo!=-1">
+				and type.belong_to=#{params.belongTo}
+			</if>
+		</where>
+	    order by type.belong_to,comm.sort
+  </select>
+</mapper>

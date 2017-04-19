@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>小区用户管理</title>
+<meta name="content-type" content="text/html; charset=UTF-8">
+<#include '/common/resources.html'>
+<link rel="stylesheet" media="screen and (min-width: 1580px)" href="${base}/resources/css/sys/jquery.tableui.css" />
+<link rel="stylesheet" media="screen and (max-width: 1580px)" href="${base}/resources/css/sys/tableui-resolving.css" />
+<script src="${base}/resources/js/respond.js" type="text/javascript" async="async"></script>
+<link rel="stylesheet" type="text/css" href="${base}/resources/datetimepicker/jquery.datetimepicker.css"/>
+<script src="${base}/resources/datetimepicker/jquery.datetimepicker.js" ></script>
+
+</head>
+<body>
+<div class="whole">
+	<ol class="breadcrumb">
+		<li><a href="javascript:void(0)">小区管理</a></li>
+		<li class="active">小区用户列表</li>
+	</ol>
+				<div class="o-order">
+				<form action="${base}/community/communityUsers" id="pagerForm" method="get">
+				<div class="o-first">
+					<span class="o-span">用户昵称：</span>
+					<div class="o-input" style="width: 201px;"><input class="my-price" type="text" name="searchValue" value="${searchValue!!}" placeholder="请输入用户昵称/手机号"/></div>
+				
+				<span class="o-span">性别：</span>
+				<div class="o-div">
+					<select class="o-select" name="sex" id="sex">
+						<option value="" selected="selected">全部</option>
+						<option value="男">男</option>
+						<option value="女">女</option>
+					</select>
+				</div>
+					<span class="o-span">创建时间：</span>
+			<div class="o-input">
+				<input class="my-times" type="text" id="datepicker2" readonly="readonly" name="beginDate" value="${beginDate!!}"/>
+			</div>
+			<span class="o-span">--</span>
+			<div class="o-input">
+				<input class="my-times" type="text" id="datepicker3" readonly="readonly" name="endDate" value="${endDate!!}"/>
+			</div>
+				</div>	
+				<div class="o-second">
+				<span class="o-span" style="margin-left: 49px;">幢：</span>
+				<div class="o-div">
+					<select class="o-select" id="buildingType" name="buildingType">
+						<option value="">全部</option>
+						<#list buildingList as baseEntity>
+							<option value="${baseEntity.name}">${baseEntity.name}</option>
+						</#list>
+					</select>
+				</div>
+				<span class="o-span">单元：</span>
+				<div class="o-div">
+					<select class="o-select" name="unitType" id="unitType">
+						<option value="" selected="selected">全部</option>
+					</select>
+				</div>
+				
+				<span class="o-span">房号：</span>
+				<div class="o-input">
+					<input class="my-price" type="text" name="roomSearch" value="${roomSearch!!}"/>
+				</div>
+			</div>		
+				<div class="o-thrid role-search1">
+					<a class="o-btn search1">搜索</a>
+				</div>
+			</div>
+	
+	<div class="tab_box">
+	<table class="table_solid" border="0" cellspacing="0">
+		<tbody>
+		       
+			<tr class="evenRow">
+				<th>序号</th>
+				<th>用户昵称</th>
+				<th>手机号</th>
+				<th>性别</th>
+				<th>状态</th>
+				<th>幢</th>
+				<th>单元</th>
+				<th>房号</th>
+				<th>注册时间</th>
+<!-- 				<th>操作</th> -->
+			</tr>
+			<#if (pagelist.results)?exists && pagelist.results?size gt 0> <#list
+			pagelist.results as user>
+			<tr>
+				<td>${(user_index+1)+(pagelist.pageNo-1)*pagelist.pageSize}</td>
+				<td>${user.name}</td>
+				<td>${user.mobilePhone!!}</td>
+				<td>${user.sex!!}</td>
+				<td>${user.status.getName()!!}</td>
+				<#if user.addressDetails??>
+					<td>${user.addressDetails.building!!}</td>
+					<td>${user.addressDetails.unit!!}</td>
+					<td>${user.addressDetails.room!!}</td>
+					<#else>
+					<td></td><td></td><td></td>
+				</#if>
+				<td>${user.createDate?string('yyyy/MM/dd HH:mm:ss')}</td>
+<!-- 				<td> -->
+<!-- 				<a class="td-btn btn-default common-btn-cz" href="#">查看详情 </a> -->
+<!-- 				</td> -->
+			</tr>
+			</#list>
+		</tbody>
+	</table>
+	
+	<#include '/common/pagination.html'></form>
+	</#if>
+	</div>
+	</div>
+</body>
+<script type="text/javascript">
+	$(function() {
+		
+		$('#datepicker2,#datepicker3').datetimepicker({
+			lang: 'ch',
+			timepicker: false,
+			format: 'Y-m-d',
+			formatDate: 'Y-m-d'
+		
+		});
+		
+		$(".search1").click(function(){
+			$("#pagerForm").submit();
+		});
+		
+		var buildingType ="";
+		var unitType ="";
+		<#if buildingType??>
+			 buildingType ='${buildingType}';
+			$("#buildingType").val(buildingType);
+		</#if>
+		
+		<#if unitType??>
+			 unitType ='${unitType}';
+			$("#unitType").val(unitType);
+		</#if>
+		var sex="";
+		<#if sex??>
+			$("#sex").val('${sex}');
+		</#if>
+		
+		//改变幢加载单元
+		$("#buildingType").change(function(){
+			var building=$(this).val();
+			$.ajax({
+				type : "post", //表单提交类型 
+				url :"${base}/community/loadUnitName", //表单提交目标 
+				data : {building:building}, //表单数据
+				success : function(data) {
+						var lists=data.list;
+						var tbody='<option value="" selected="selected">全部</option>';
+						$.each(data.list,function(n,obj) {   
+			            	var str="";
+			            	str+='<option value="'+obj.name+'">'+obj.name+'</option>'
+			            	tbody+=str;	
+						 }); 
+						$("#unitType").html(tbody);
+		            	
+				}
+				
+			})
+		});
+		
+		if(buildingType!=''){
+			$.ajax({
+				type : "post", //表单提交类型 
+				url :"${base}/community/loadUnitName", //表单提交目标 
+				data : {building:buildingType}, //表单数据
+				success : function(data) {
+						var lists=data.list;
+						var tbody='<option value="" selected="selected">全部</option>';
+						$.each(data.list,function(n,obj) {   
+							var selected = "";
+			            	var str="";
+			            	if(obj.name==unitType){
+			            		selected="selected='selected'";
+			            	}
+			            	str+='<option value="'+obj.name+'" '+selected+'>'+obj.name+'</option>'
+			            	tbody+=str;	
+						 }); 
+						$("#unitType").html(tbody);
+		            	
+				}
+				
+			})
+		}
+	});
+	
+	
+</script>
+<script>
+$(function(){
+        document.onkeydown = function(e){ 
+        var ev = document.all ? window.event : e;
+        if(ev.keyCode==13) {
+            $("#pagerForm").submit();
+            }
+        }
+    });  
+</script>     
+</html>

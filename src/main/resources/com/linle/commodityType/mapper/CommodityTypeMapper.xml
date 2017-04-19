@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.linle.commodityType.mapper.CommodityTypeMapper" >
+  <resultMap id="BaseResultMap" type="com.linle.entity.sys.CommodityType" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="type_name" property="typeName" jdbcType="VARCHAR" />
+    <result column="shop_id" property="shopId" jdbcType="BIGINT" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+    <result column="sort" property="sort" jdbcType="INTEGER" />
+  </resultMap>
+  
+  <resultMap id="getAllTypeForAPI" type="com.linle.mobileapi.v1.model.GoodsSort" >
+  	<result column="id" property="id"/>
+  	<result column="type_name" property="sort"/>
+  	<collection column="{id=id,userId=userId,shopId=shopId}" property="goodsList" select="com.linle.commodity.mapper.CommodityMapper.GoodsForAPIResult"/>
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    id, type_name, shop_id, status, create_date, update_date, sort
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from commodity_type
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from commodity_type
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.linle.entity.sys.CommodityType" >
+    insert into commodity_type (id, type_name, shop_id, 
+      status, create_date, update_date, 
+      sort)
+    values (#{id,jdbcType=BIGINT}, #{typeName,jdbcType=VARCHAR}, #{shopId,jdbcType=BIGINT}, 
+      #{status,jdbcType=INTEGER}, #{createDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP}, 
+      #{sort,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.linle.entity.sys.CommodityType" >
+    insert into commodity_type
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="typeName != null" >
+        type_name,
+      </if>
+      <if test="shopId != null" >
+        shop_id,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="updateDate != null" >
+        update_date,
+      </if>
+      <if test="sort != null" >
+        sort,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="typeName != null" >
+        #{typeName,jdbcType=VARCHAR},
+      </if>
+      <if test="shopId != null" >
+        #{shopId,jdbcType=BIGINT},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sort != null" >
+        #{sort,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.linle.entity.sys.CommodityType" >
+    update commodity_type
+    <set >
+      <if test="typeName != null" >
+        type_name = #{typeName,jdbcType=VARCHAR},
+      </if>
+      <if test="shopId != null" >
+        shop_id = #{shopId,jdbcType=BIGINT},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sort != null" >
+        sort = #{sort,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.linle.entity.sys.CommodityType" >
+    update commodity_type
+    set type_name = #{typeName,jdbcType=VARCHAR},
+      shop_id = #{shopId,jdbcType=BIGINT},
+      status = #{status,jdbcType=INTEGER},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP},
+      sort = #{sort,jdbcType=INTEGER}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+    <update id="update" parameterType="map" >
+    update commodity_type
+    set 
+      status = #{status}
+    where id = #{id}
+  </update>
+  
+  <!-- 判断该商家该分类下面有商品没 -->
+  <select id="selectChildCommodityCount" parameterType="map" resultType="long">
+  	select count(id) from commodity
+  	where shop_id = #{shopId} and status = 0 and type_id=#{typeId}
+  </select>
+  
+  <select id="getAllData" parameterType="page" resultMap="BaseResultMap">
+  	 select 
+    <include refid="Base_Column_List" />
+    from commodity_type
+    where shop_id  = #{params.shopID} and status = 0
+    order by sort
+  </select>
+  
+  <select id="getAllTypeByShopID" parameterType="Long" resultMap="BaseResultMap">
+  	select 
+    <include refid="Base_Column_List" />
+    from commodity_type
+    where shop_id  = #{params.shopID}  and status = 0
+  </select>
+  
+  <select id="getAllTypeForAPI" parameterType="map" resultMap="getAllTypeForAPI">
+  	select id,type_name ,#{userId} as userId,#{id} as shopId
+  	from commodity_type
+  	where shop_id = #{id} and status = 0
+  	 order by sort
+  </select>
+</mapper>

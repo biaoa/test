@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.linle.orderEvaluate.mapper.OrderEvaluateMapper" >
+  <resultMap id="BaseResultMap" type="com.linle.entity.sys.OrderEvaluate" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="user_id" property="userId" jdbcType="BIGINT" />
+    <result column="shop_id" property="shopId" jdbcType="BIGINT" />
+    <result column="order_no" property="orderNo" jdbcType="VARCHAR" />
+    <result column="commodity_star" property="commodityStar" jdbcType="INTEGER" />
+    <result column="service_star" property="serviceStar" jdbcType="INTEGER" />
+    <result column="send_star" property="sendStar" jdbcType="INTEGER" />
+    <result column="complex_star" property="complexStar" jdbcType="REAL" />
+    <result column="content" property="content" jdbcType="VARCHAR" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  
+  <resultMap id="ShopEvaluateResult" type="com.linle.mobileapi.v1.model.EvaluateInfo">
+  	<result column="name" property="name"/>
+  	<result column="logo" property="logo"/>
+  	<result column="content" property="content"/>
+  	<result column="create_date" property="evaluateDate"/>
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    id, user_id, shop_id, order_no, commodity_star, service_star, send_star, complex_star, 
+    content, create_date, update_date
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from order_evaluate
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from order_evaluate
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.linle.entity.sys.OrderEvaluate" >
+    insert into order_evaluate (id, user_id, shop_id, 
+      order_no, commodity_star, service_star, 
+      send_star, complex_star, content, 
+      create_date, update_date)
+    values (#{id,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{shopId,jdbcType=BIGINT}, 
+      #{orderNo,jdbcType=VARCHAR}, #{commodityStar,jdbcType=INTEGER}, #{serviceStar,jdbcType=INTEGER}, 
+      #{sendStar,jdbcType=INTEGER}, #{complexStar,jdbcType=REAL}, #{content,jdbcType=VARCHAR}, 
+      #{createDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.linle.entity.sys.OrderEvaluate" >
+    insert into order_evaluate
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="shopId != null" >
+        shop_id,
+      </if>
+      <if test="orderNo != null" >
+        order_no,
+      </if>
+      <if test="commodityStar != null" >
+        commodity_star,
+      </if>
+      <if test="serviceStar != null" >
+        service_star,
+      </if>
+      <if test="sendStar != null" >
+        send_star,
+      </if>
+      <if test="complexStar != null" >
+        complex_star,
+      </if>
+      <if test="content != null" >
+        content,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="updateDate != null" >
+        update_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="shopId != null" >
+        #{shopId,jdbcType=BIGINT},
+      </if>
+      <if test="orderNo != null" >
+        #{orderNo,jdbcType=VARCHAR},
+      </if>
+      <if test="commodityStar != null" >
+        #{commodityStar,jdbcType=INTEGER},
+      </if>
+      <if test="serviceStar != null" >
+        #{serviceStar,jdbcType=INTEGER},
+      </if>
+      <if test="sendStar != null" >
+        #{sendStar,jdbcType=INTEGER},
+      </if>
+      <if test="complexStar != null" >
+        #{complexStar,jdbcType=REAL},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.linle.entity.sys.OrderEvaluate" >
+    update order_evaluate
+    <set >
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="shopId != null" >
+        shop_id = #{shopId,jdbcType=BIGINT},
+      </if>
+      <if test="orderNo != null" >
+        order_no = #{orderNo,jdbcType=VARCHAR},
+      </if>
+      <if test="commodityStar != null" >
+        commodity_star = #{commodityStar,jdbcType=INTEGER},
+      </if>
+      <if test="serviceStar != null" >
+        service_star = #{serviceStar,jdbcType=INTEGER},
+      </if>
+      <if test="sendStar != null" >
+        send_star = #{sendStar,jdbcType=INTEGER},
+      </if>
+      <if test="complexStar != null" >
+        complex_star = #{complexStar,jdbcType=REAL},
+      </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.linle.entity.sys.OrderEvaluate" >
+    update order_evaluate
+    set user_id = #{userId,jdbcType=BIGINT},
+      shop_id = #{shopId,jdbcType=BIGINT},
+      order_no = #{orderNo,jdbcType=VARCHAR},
+      commodity_star = #{commodityStar,jdbcType=INTEGER},
+      service_star = #{serviceStar,jdbcType=INTEGER},
+      send_star = #{sendStar,jdbcType=INTEGER},
+      complex_star = #{complexStar,jdbcType=REAL},
+      content = #{content,jdbcType=VARCHAR},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  <!-- 判断订单是否评价 -->
+  <select id="selectIsEvaluate" parameterType="map" resultMap="BaseResultMap">
+  	select id from order_evaluate
+  	where order_no = #{orderNo} and user_id = #{uid}
+  </select>
+  <!-- 获得店铺 商品评价评分-->
+  <select id="getCommodityStarByShopId" parameterType="Long" resultType="float">
+  	select IFNULL(TRUNCATE(SUM(commodity_star)/COUNT(id),1),0) from order_evaluate
+	where shop_id =#{shopId}
+  </select>
+  <!-- 获得店铺服务评价评分 -->
+  <select id="getServiceStarByShopId" parameterType="Long" resultType="float">
+  	select IFNULL(TRUNCATE(SUM(service_star)/COUNT(id),1),0) from order_evaluate
+	where shop_id =#{shopId}
+  </select>
+  <!-- 获得店铺配送评价评分 -->
+  <select id="getSendStarByShopId" parameterType="Long" resultType="float">
+  	select IFNULL(TRUNCATE(SUM(send_star)/COUNT(id),1),0) from order_evaluate
+	where shop_id =#{shopId}
+  </select>
+  
+  <!-- 获得店铺综合评价评分 -->
+  <select id="getShopComplexStar" parameterType="Long" resultType="float">
+  		select IFNULL(TRUNCATE(SUM(complex_star)/COUNT(id),1),0) from order_evaluate
+	where shop_id =#{shopId}
+  </select>
+  
+  <select id="getEvaluateList" parameterType="map" resultMap="ShopEvaluateResult">
+  	select content,create_date,users.logo,users.`name` from order_evaluate
+	LEFT JOIN (select id,name,logo from users) users
+	on order_evaluate.user_id=users.id
+	where shop_id = #{shopId}
+	ORDER BY create_date DESC
+	LIMIT #{begin},#{end}
+  </select>
+  
+  <!-- 根据商品ID,订单编号 获得订单评价 -->
+  <select id="getOrderEvaluate" parameterType="map" resultMap="BaseResultMap"> 
+  	  select 
+    <include refid="Base_Column_List" />
+    from order_evaluate
+    where shop_id = #{shopId} and order_no = #{orderNo}
+  </select>
+</mapper>

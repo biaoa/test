@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.2.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.1.xsd"> 
+		
+	<!-- 静态资源 访问的URL不会被DispatcherServlet所拦截，可以直接访问-->
+	<mvc:resources location="/resources/" mapping="/resources/**" />
+	<mvc:resources mapping="/upload/**" location="/upload/" />
+	<mvc:resources mapping="/ueditor/**" location="/ueditor/" />
+	<mvc:resources mapping="/app/**" location="/app/" />
+	<mvc:interceptors>
+		
+		<mvc:interceptor>
+			<mvc:mapping path="/**" />
+			<ref bean="isLoginValidateInterceptor" />
+		</mvc:interceptor>
+		
+		<mvc:interceptor>
+			<mvc:mapping path="/**" />
+			<mvc:exclude-mapping path="resources/**"/>
+			<mvc:exclude-mapping path="/js/**"/>
+			<mvc:exclude-mapping path="/style/**"/>
+			<mvc:exclude-mapping path="/css/**"/>
+			<mvc:exclude-mapping path="/images/**"/>
+			<ref bean="timeCostInterceptor" />
+		</mvc:interceptor>
+	</mvc:interceptors>
+	
+	<bean id="freemarkerConfigurer" class="com.linle.shiro.ShiroTagFreeMarkerConfigurer">
+		<property name="templateLoaderPath" value="/WEB-INF/view/" />
+		<property name="defaultEncoding" value="UTF-8" />
+		<property name="freemarkerSettings">
+			<props>
+				<prop key="template_update_delay">10</prop>
+				<prop key="locale">zh_CN</prop>
+				<prop key="datetime_format">yyyy-MM-dd HH:mm:ss</prop>
+				<prop key="date_format">yyyy-MM-dd</prop>
+				<prop key="number_format">#.###</prop>
+			</props>
+		</property>
+	</bean>
+
+	<bean id="viewResolver" class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">
+		<property name="viewClass" value="org.springframework.web.servlet.view.freemarker.FreeMarkerView" />
+		<property name="suffix" value=".html" />
+		<property name="contentType" value="text/html;charset=UTF-8" />
+		<property name="exposeRequestAttributes" value="true" />
+		<property name="exposeSessionAttributes" value="true" />
+		<property name="exposeSpringMacroHelpers" value="true" />
+		<property name="requestContextAttribute" value="rc"/>
+	</bean>
+	
+	
+	<bean
+		class="com.linle.common.util.LinleSimpleMappingExceptionResolver">
+		<property name="defaultErrorView" value="error/500"/>
+		<property name="exceptionAttribute" value="exception"/>
+		<property name="exceptionMappings">
+			<props>
+				<prop key="org.apache.shiro.authz.AuthorizationException">redirect:/403</prop>
+				<prop key="org.apache.shiro.authz.UnauthenticatedException">redirect:/login</prop>
+			</props>
+		</property>
+	</bean>
+	
+	<!-- 下面两行是使用aop进行注解的权限控制，得配在springmvc中，否则会造成事务不生效 -->
+	
+</beans>

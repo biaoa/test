@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>工作台</title>
+		<#include '/common/resources.html'>
+		<link rel="stylesheet" media="screen and (min-width: 1580px)" href="${base}/resources/css/sys/my-shops.css" />
+		<link rel="stylesheet" media="screen and (max-width: 1580px)" href="${base}/resources/css/sys/my-shops-resolving.css" />
+		<script src="${base}/resources/js/respond.js" type="text/javascript" async="async"></script>
+		<script type="text/javascript">
+$(function () {
+    $('#container').highcharts({
+        title: {
+            text: '最近交易	',
+            align:'left' ,//center
+            style:{color: '#3E576F',fontSize: '18px',padding: '20px',fontWeight:'bold'}          
+        },
+        subtitle: {
+//          text: 'Source: WorldClimate.com',
+            align:'left' 
+        },
+        colors: ['#f15822','#18a862'] ,	
+        xAxis: {
+        	
+            categories: [${sales.date}]
+        },
+        plotOptions: {
+        	
+                    series: {
+                        marker: {
+                            radius: 4,  //曲线点半径，默认是4
+                            symbol: 'circle'//曲线点类型："circle", "square", "diamond", "triangle","triangle-down"，默认是"circle"
+                        },
+                          states:{
+                hover:{
+                    radius:8,
+                    fillColor:'red',
+//                  lineColor:'black', // 黑圈 试试修改为空值 或者将states整个注释掉
+                    lineWidth:2,
+                    border:1
+                    }
+                }
+                    }
+                },
+        yAxis: {
+        	gridLineDashStyle:'Dot',
+        	gridLineWidth: 1,
+            title: {
+                text:false
+            },
+            plotLines: [{
+                value: 0,
+                width: 1,
+                color: '#808080'
+            }]
+        },
+        tooltip: {
+            backgroundColor:'rgba(255 255,  255, 0.15)',
+            style: {color:'white',fontSize: '10pt',padding: '5px'}
+        },
+        credits: {
+            	text: false
+//          	href: 'http://www.example.com'
+        },
+        legend: {
+            layout: 'horizontal',
+            align: 'center',
+            verticalAlign: 'top',
+            borderWidth: 0
+        },
+        series: [ {
+            name: '成交量',
+            data: [${sales.sales}],
+             tooltip: {
+            valueSuffix: '件'
+        }
+        }, {
+            name: '营业额',
+            tooltip: {
+            valuePrefix: '￥'
+        },
+            data: [${sales.turnover}]
+        }]
+    });
+});
+		</script>
+	</head>
+	<body>
+		<div class="top-bg">
+		<div class="shop-top">
+			<img src="${base}/resources/images/clork.png" /><span></span>
+		</div>
+		<div class="clearfix"></div>
+		<div class="shop">
+			<div class="shop-logo" style="position: relative;">
+			<img class="shop-logo-img" src="${base}/${shopInfo.shopLogo!!}" />
+				<img class="shop-logo-img2" style="position: absolute;bottom: 0;right: 0;" src="
+				<#if shopInfo.operateStatus==0>
+						${base}/resources/images/zcyy.png
+						<#else>
+						${base}/resources/images/xy.png
+					</#if>" />
+			</div>
+			<div class="shop-message">
+				<p>${shopInfo.shopName!!}</p>
+				<p class="shop-state">
+					<#if shopInfo.operateStatus==0>
+						营业中
+						<#else>
+						歇业
+					</#if>
+				</p>
+			</div>
+		</div>
+		
+		<div class="today-order">
+			<div class="effective">
+				<p class="efnum">${validOrderCount!0}</p>
+				<p class="eftit">今日有效订单</p>
+			</div>
+			<div class="effective">
+				<p class="efnum">${turnover?string.currency}</p>
+				<p class="eftit">今日营业额（元）</p>
+			</div>
+			<div class="effective">
+				<p class="efnum">${commodityCount!0}</p>
+				<p class="eftit">商品类目</p>
+			</div>
+		</div>
+		</div>
+		<div class="goods">
+		<div class="hjghtchart">	
+		<div id="container"></div>	
+			<div class="bg-right">
+				<div class="sum">
+					<p class="sum-p">${allTurnover?string("currency")}</p>
+					<p>总营业额</p>
+				</div>
+				
+			</div>
+			<div class="week-money">
+				<div class="money-p">
+					<p>${monthTurnover?string("currency")}</p>
+					<img style="width: 100%;" src="${base}/resources/images/bolan.png" />
+					<p>月营业量</p>
+				</div>
+				
+			</div>
+			<div class="week-money">
+				<div class="money-p">
+					<p>${weekTurnover?string("currency")}</p>
+					<img style="width: 100%;" src="${base}/resources/images/bolan.png" />
+					<p>周营业量</p>
+				</div>
+				
+			</div>
+			<div class="look-more">
+				<div class="look-more-next">
+					<a href="资金管理.html" style="color: white;">查看更多</a>
+				</div>
+				
+			</div>
+			<div></div>
+		</div>	
+		<div class="goods-list">
+			<div class="wares-title"><p style="font-weight: bold;">热销商品</p></div>
+			<#if hotCommodityList?exists && hotCommodityList?size gt 0>
+				<#list hotCommodityList as commodity>
+					<div class="items-list">
+					<#if commodity.logo??>
+						<img src="${base}/${commodity.logo}"/>
+					</#if>
+						<div class="details">
+							<p class="details-one">${commodity.name}</p>
+							<p class="details-price">价格:￥${commodity.price}</p>
+							<p>销量：<span class="volume">${commodity.sales}</span></p>
+						</div>
+					</div>
+				</#list>
+			<#else>
+				<div class="no-data">暂无数据~</div>
+			</#if>
+		</div>
+		</div>
+		<script src="${base}/resources/heighchart/highcharts.js"></script>
+<!-- 		<script src="${base}/resources/heighchart/exporting.js"></script> -->
+	</body>
+</html>

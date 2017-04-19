@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.linle.sysBaseType.mapper.SysBaseTypeMapper" >
+  <resultMap id="BaseResultMap" type="com.linle.sysBaseType.model.SysBaseType" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="type_flag" property="typeFlag" jdbcType="VARCHAR" />
+    <result column="type_name" property="typeName" jdbcType="VARCHAR" />
+    <result column="module" property="module" jdbcType="VARCHAR" />
+    <result column="describe" property="describe" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, type_flag, type_name, module, describe, status
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from sys_base_type
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from sys_base_type
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.linle.sysBaseType.model.SysBaseType" >
+    insert into sys_base_type (id, type_flag, type_name, 
+      module, describe, status
+      )
+    values (#{id,jdbcType=BIGINT}, #{typeFlag,jdbcType=VARCHAR}, #{typeName,jdbcType=VARCHAR}, 
+      #{module,jdbcType=VARCHAR}, #{describe,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.linle.sysBaseType.model.SysBaseType" >
+    insert into sys_base_type
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="typeFlag != null" >
+        type_flag,
+      </if>
+      <if test="typeName != null" >
+        type_name,
+      </if>
+      <if test="module != null" >
+        module,
+      </if>
+      <if test="describe != null" >
+        describe,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="typeFlag != null" >
+        #{typeFlag,jdbcType=VARCHAR},
+      </if>
+      <if test="typeName != null" >
+        #{typeName,jdbcType=VARCHAR},
+      </if>
+      <if test="module != null" >
+        #{module,jdbcType=VARCHAR},
+      </if>
+      <if test="describe != null" >
+        #{describe,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.linle.sysBaseType.model.SysBaseType" >
+    update sys_base_type
+    <set >
+      <if test="typeFlag != null" >
+        type_flag = #{typeFlag,jdbcType=VARCHAR},
+      </if>
+      <if test="typeName != null" >
+        type_name = #{typeName,jdbcType=VARCHAR},
+      </if>
+      <if test="module != null" >
+        module = #{module,jdbcType=VARCHAR},
+      </if>
+      <if test="describe != null" >
+        describe = #{describe,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.linle.sysBaseType.model.SysBaseType" >
+    update sys_base_type
+    set type_flag = #{typeFlag,jdbcType=VARCHAR},
+      type_name = #{typeName,jdbcType=VARCHAR},
+      module = #{module,jdbcType=VARCHAR},
+      describe = #{describe,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  <select id="getTypeNameByModule" resultType="string" parameterType="map">
+  	select GROUP_CONCAT(type_name) from
+  	 sys_base_type where module=#{module} and type_flag in
+  	   <foreach collection="list" index="index" item="item" open="(" separator="," close=")"> 
+            #{item} 
+       </foreach> 
+  </select>
+</mapper>

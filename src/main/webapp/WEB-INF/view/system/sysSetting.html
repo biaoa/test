@@ -1,0 +1,108 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>管理中心</title>
+<#include '/common/resources.html'>
+<script src="${base}/resources/js/uploadify/jquery.form.js" type="text/javascript"></script>
+<style >
+.dialog .dialog-body .qdyx{width:150px;margin-left: 100px;margin-top: 20px;font-size: 16px}
+</style>
+</head>
+<body> 
+<div id="center_content">
+	 <div class="fh_right_box">
+     <h3 style="margin-left:-30px;">
+     <div class="btn-group" style="margin-left:30px" role="group" aria-label="...">
+         <span class="iconfont" style="font-size:20px;color:#d65b5a">&#xe621;</span>网站功能体验
+	 </div>
+	 <a href="javascript:;"  class="button button-action button-rounded dialogs" data-toggle="click" data-target="#tjzy" data-mask="1" data-width="40%" style="line-height:40px">添加功能说明</a>
+     </h3>
+     <img src="${base}/resources/images/hr.jpg" class="xian"/>
+     </div>
+     	<table class="table table-striped" style="text-align:center">
+	       <tr>
+	         <td>序号</td>
+	         <td width="20%">问题</td>
+	         <td width="30%">回答</td>
+	         <td>创建时间</td>
+	         <td>操作</td>
+	      </tr>
+	      <#if (pagelist.results)?exists && pagelist.results?size gt 0>
+	      <#list pagelist.results as help>
+		      <tr>
+		         <td>${help.id}</td>
+		         <td>${(help.title)!''}</td>
+		         <td>${(help.content)!''}</td>
+		         <td>${help.createDate?string('yyyy/MM/dd HH:mm:ss')}</td>
+		         <td>
+		         <span><a href="javascript:;" helpid="${help.id}"  class="updateRole">修改</a></span>
+		         <span><a href="javascript:;" helpid="${help.id}"  class="delHelp">删除</a></span>
+		         </td>
+		      </tr>
+		   </#list> 
+	      </#if>
+		</table>
+		<form action="${base}/set/settingPage" id="pagerForm" >
+		 <#include '/common/pagination.html'>
+		</form>  
+</div>
+</body>
+<div id="tjzy">
+  <div class="dialog">
+    <div class="dialog-head">
+      <span class="close rotate-hover"></span>
+      <strong>添加</strong>
+    </div>
+     <div class="dialog-body" style="width:90%">
+       <form id="helpForm" method="post" action="${base}/sys/addHelpInfo">
+       <table class="table">
+          <tr>
+            <td>
+                               标题：<textarea name="title" rows="5" style="width:70%;height:100px;margin-left:10px"></textarea>
+            </td>
+          </tr>
+          <tr>
+          <td>
+                            内容：<textarea name="content" rows="5" style="width:70%;height:100px;margin-left:10px"></textarea>
+           </td>
+          </tr>
+      </table>
+      <button id="help_submit" class="button bg-main qdyx dialog-close">添加</button>
+      </form>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+$(document).ready(function() {
+    $('#help_submit').on('click', function(e) {
+          var $form = $("#helpForm");
+          $.post($form.attr('action'), $form.serialize(), function(result) {
+        	  layer.msg(result.msg);
+        	  history.go(0);
+         /* 	$.gritter.add({  
+         	    title: '',  
+         	    text: result.msg,  
+         	    sticky: false,  
+         	    time: 2000,  
+         	    speed:500,  
+         	    class_name: 'gritter-success'//gritter-center   
+         	});   */
+         }, 'json');
+          
+    });
+    $(".delHelp").click(function () {
+    	if(!confirm('删除后无法恢复,确定要删除吗')){
+			return;
+		}
+    	var helpid = $(this).attr("helpid");
+    		$.post(
+    			"${base}/sys/delHelp/"+helpid,
+    			function(result) {
+    				layer.msg(result.msg);
+    				
+        }, 'json');
+    });
+});
+</script>
+</html>

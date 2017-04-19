@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>申请合作列表</title>
+<meta name="content-type" content="text/html; charset=UTF-8">
+<#include '/common/resources.html'>
+<link rel="stylesheet" media="screen and (min-width: 1580px)" href="${base}/resources/css/sys/jquery.tableui.css" />
+<link rel="stylesheet" media="screen and (max-width: 1580px)" href="${base}/resources/css/sys/tableui-resolving.css" />
+<script src="${base}/resources/js/respond.js" type="text/javascript" async="async"></script>
+	<style>
+	.cz-a{color:white;}
+	.message-tip{float: left;width: 100%;text-align: center;color: #C4C4C4;font-size: 13px;}
+	</style>
+</head>
+<body>
+<div class="whole">
+	<ol class="breadcrumb">
+		<li><a href="javascript:void(0)">申请合作</a></li>
+		<li class="active">申请列表</li>
+	</ol>
+
+	<div class="tab_box">
+	<table class="table_solid" border="0" cellspacing="0">
+		<tbody>
+			<tr class="evenRow">
+				<th>序号</th>
+				<th>城市</th>
+				<th>姓名</th>
+				<th>电话</th>
+				<th>QQ</th>	
+				<th>备注</th>
+				<th>创建时间</th>
+			</tr>
+			<#if (pagelist.results)?exists && pagelist.results?size gt 0> 
+			<#list pagelist.results as applyCooperae>
+			<tr>
+				<td>${(applyCooperae_index+1)+(pagelist.pageNo-1)*pagelist.pageSize}</td>
+				<td>${applyCooperae.city!!}</td>
+				<td>${applyCooperae.name!!}</td>
+				<td>${applyCooperae.phone!!}</td>
+				<td>${applyCooperae.qq!!}</td>
+				<td>${applyCooperae.remark!!}</td>
+				<td>${applyCooperae.createDate?string('yyyy/MM/dd HH:mm:ss')}</td>
+			</tr>
+			</#list>
+		</tbody>
+	</table>
+
+	<form action="${base}/applyCooperae/list" id="pagerForm"><#include
+		'/common/pagination.html'></form>
+	</#if>
+</div>
+	</div>
+</body>
+
+</html>

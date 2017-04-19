@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<#include '/common/resources.html'>
+		<style>
+			.change-password{width: 100%;height: auto;overflow: hidden;padding: 20px 15px;border-bottom: 1px solid gainsboro;}
+			.password-change{width: 98%;margin: 0 auto;height: auto;overflow: hidden;border-bottom: 1px solid gainsboro;padding: 20px 0;}
+			.phone-number,.new-password{width: 100%;padding: 5px;float: left;}
+			.phone-first{width: 100px;float: left;margin-top: 8px;text-align: right;}
+			.phone-next{float: left;width: 200px;border: 1px solid gainsboro;}
+			.phone-next input{border: 0;width: 100%;font-size: 16px;padding: 8px;}		
+			.all-tx a{cursor: pointer;float: left;font-size: 16px;padding: 8px;margin-left: 20px;border-radius: 4px;color:black;}
+			.new-password-title{width: 100px;float: left;margin-top: 8px;text-align: right;}
+			.new-password-text{float: left;width: 300px;border: 1px solid gainsboro;}
+			.new-password-text2{float: left;width: 300px;}
+			.new-password-text input{border: 0;width:100%;font-size: 16px;padding: 8px;}
+			.submit{float: left;margin-left: 50px;height: auto;margin-top: 20px;}
+			.submit a{font-size:14px;padding: 3px 8px;background: #f15822;border-radius: 3px;color: white;cursor: pointer;margin-right: 10px;}
+			.submit a:last-child{background: black;}
+		</style>
+		<script src="${base}/resources/js/respond.js" type="text/javascript" async="async"></script>
+		<script type="text/javascript" src="${base}/resources/js/linle_common.js"></script>
+	</head>
+	<body>
+		<div class="whole" style="padding-bottom:20px;">
+			<ol class="breadcrumb">
+				<li><a href="javascript:void(0)">社长信息</a></li>
+				<li class="active">信息编辑</li>
+			</ol>
+			<div class="change-password">
+				<span>社长信息编辑</span>
+			</div>
+			<form action="${base}/sys/communityPresident/add" method="post" id="form1">
+			<div class="password-change">
+				<div class="phone-number">
+					<div class="phone-first">
+						<span>姓名：</span>
+					</div>
+					<div class="phone-next">
+						<input type="text" placeholder="请输入姓名" name="name" id="name" value="${communityPresident.name!!}"
+						<#if communityPresident.name??>
+							disabled="disabled"
+						</#if>
+						/>
+					</div>
+				</div>
+
+				<div class="new-password">
+					<div class="new-password-title">
+						<span>联系电话：</span>
+					</div>
+					<div class="new-password-text">
+						<input  type="text" placeholder="请输入联系电话" name="phone" id="phone" value="${communityPresident.phone!!}"/>
+					</div>			
+				</div>
+					<div class="new-password">
+					<div class="new-password-title">
+						<span>联系地址：</span>
+					</div>
+					<div class="new-password-text">
+						<input type="text" placeholder="请输入联系地址" name="address" id="address" value="${communityPresident.address!!}"/>
+					</div>			
+				</div>
+				
+				<#if communityList?exists && communityList?size gt 0>
+				<div class="new-password">
+					<div class="new-password-title">
+						<span>已合作小区：
+							
+						</span>
+					</div>
+					<div class="new-password-text" style="border:0;">
+						<#list communityList as community>
+							<span class="xq-name">${community.name}</span>
+							</#list>
+					</div>			
+				</div>
+				</#if>
+				<div class="new-password">
+					<div class="new-password-title">
+						<span>备注：</span>
+					</div>
+					<div class="new-password-text2">
+						<textarea style="border: 1px solid gainsboro;width:100%;height: 150px;padding: 10px;" name="other" id="other">
+							
+						</textarea>
+					</div>			
+				</div>
+			</div>
+			<input type="hidden" name="id" value="${communityPresident.id!!}" id="id">
+			<div class="submit">
+				<a class="comfire commit">确认</a><a class="comfire cancel">取消</a>
+			</div>
+			</form>
+		</div>
+	</body>
+	
+	<script type="text/javascript">
+	
+	$(".commit").click(function(){
+		$("#form1").submit();
+	})
+	
+	$(".cancel").click(function(){
+		 window.location.href="${base}/sys/communityPresident/list";
+	})
+	
+	
+    $("#form1").submit(function() {
+    	if($("#name").val()==''){
+    		layer.msg("社长名称不能为空");
+    		return false;
+    	}
+    	
+    	if($("#id").val()==""){
+			if(checkUserExsit($("#name").val(),'${base}')){
+				return false;
+			}
+		}
+    	
+    	if($("#phone").val()==''){
+    		layer.msg("联系电话不能为空");
+    		return false;
+    	}
+    	
+    	if(!checkPhone($("#phone").val())){
+    		return false;
+    	}
+    	
+    	if($("#address").val()==''){
+    		layer.msg("联系地址不能为空");
+    		return false;
+    	}
+		var ajax_url = $(this).attr("action"); 
+		var ajax_type = $(this).attr('method'); 
+		var ajax_data = $(this).serialize();
+		ajax_data.name = $("#name").val();
+		$.ajax({
+			type : ajax_type, 
+			url : ajax_url, 
+			data : ajax_data, 
+			success : function(data) {
+				 layer.msg(data.msg,{
+				     	shift: 0
+				     }, function(){
+				    	 window.location.href="${base}/sys/communityPresident/list";
+				     });
+			}
+		});
+		return false; //阻止表单的默认提交事件 
+	});
+    <#if communityPresident.id??>
+    	$("#other").html('${communityPresident.other!!}');
+    </#if>
+    
+	</script>
+</html>

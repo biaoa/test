@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.linle.system.mapper.SysFileMapper" >
+  <resultMap id="BaseResultMap" type="SysFile" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="folder_id" property="folderId" jdbcType="BIGINT" />
+    <result column="path" property="path" jdbcType="VARCHAR" />
+    <result column="file_name" property="fileName" jdbcType="VARCHAR" />
+    <result column="thum_path" property="thumPath" jdbcType="VARCHAR" />
+    <result column="thum_name" property="thumName" jdbcType="VARCHAR" />
+    <result column="original_name" property="originalName" jdbcType="VARCHAR" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, folder_id, path, file_name,thum_path,thum_name, original_name, create_date, update_date
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from sys_file
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="findFilesByFolderId" parameterType="long"
+		resultMap="BaseResultMap">
+		select * from sys_file where folder_id = #{value}
+	</select>
+  <delete id="delFileById" parameterType="java.lang.Long" >
+    delete from sys_file
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  
+  <delete id="delFileByPath" parameterType="string" >
+    delete from sys_file
+    where path = #{path}
+  </delete>
+  
+  <insert id="add" parameterType="SysFile" >
+    insert into sys_file (id, folder_id, path, 
+      file_name,thum_path,thum_name, original_name, create_date, 
+      update_date)
+    values (#{id,jdbcType=BIGINT}, #{folderId,jdbcType=BIGINT}, #{path,jdbcType=VARCHAR}, 
+      #{fileName,jdbcType=VARCHAR}, #{thumPath,jdbcType=VARCHAR}, 
+      #{thumName,jdbcType=VARCHAR}, #{originalName,jdbcType=VARCHAR},now(),now())
+  </insert>
+  <insert id="insertSelective" parameterType="SysFile"  useGeneratedKeys="true" keyProperty="id">
+    insert into sys_file
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="folderId != null" >
+        folder_id,
+      </if>
+      <if test="path != null" >
+        path,
+      </if>
+      <if test="fileName != null" >
+        file_name,
+      </if>
+        <if test="thumPath != null" >
+        thum_path,
+      </if>
+      <if test="thumName != null" >
+        thum_name,
+      </if>
+      <if test="originalName != null" >
+        original_name,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="updateDate != null" >
+        update_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="folderId != null" >
+        #{folderId,jdbcType=BIGINT},
+      </if>
+      <if test="path != null" >
+        #{path,jdbcType=VARCHAR},
+      </if>
+      <if test="fileName != null" >
+        #{fileName,jdbcType=VARCHAR},
+      </if>
+      <if test="thumPath != null" >
+        #{thumPath,jdbcType=VARCHAR},
+      </if>
+      <if test="thumName != null" >
+        #{thumName,jdbcType=VARCHAR},
+      </if>
+      <if test="originalName != null" >
+        #{originalName,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="SysFile" >
+    update sys_file
+    <set >
+      <if test="folderId != null" >
+        folder_id = #{folderId,jdbcType=BIGINT},
+      </if>
+      <if test="path != null" >
+        path = #{path,jdbcType=VARCHAR},
+      </if>
+      <if test="fileName != null" >
+        file_name = #{fileName,jdbcType=VARCHAR},
+      </if>
+         <if test="thumPath != null" >
+        thum_path = #{thumPath,jdbcType=VARCHAR},
+      </if>
+         <if test="thumName != null" >
+        thum_name = #{thumName,jdbcType=VARCHAR},
+      </if>
+      <if test="originalName != null" >
+        original_name = #{originalName,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="SysFile" >
+    update sys_file
+    set folder_id = #{folderId,jdbcType=BIGINT},
+      path = #{path,jdbcType=VARCHAR},
+      file_name = #{fileName,jdbcType=VARCHAR},
+       thum_path = #{thumPath,jdbcType=VARCHAR},
+        thum_name = #{thumName,jdbcType=VARCHAR},
+      original_name = #{originalName,jdbcType=VARCHAR},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  	<!-- 获取原图集合- -->
+    <select id="findFilesUrlByFolderId" parameterType="long" resultType="String">
+		select path from sys_file where folder_id = #{value}
+	</select>
+	
+	<!-- 获取缩略图集合- -->
+	<select id="findThumFilesUrlByFolderId" parameterType="long" resultType="String">
+		select IFNULL(thum_path,path) thum_path from sys_file where folder_id = #{value}
+	</select>
+	
+	<!-- 获取第一张图片- -->
+	 <select id="findOneFilesUrlByFolderId" parameterType="long"
+		resultType="String">
+		select path from sys_file where folder_id = #{value} limit 0,1
+	</select>
+	
+	<!-- 获取一张缩略图图片- -->
+	 <select id="findOneThumFilesUrlByFolderId" parameterType="long"
+		resultType="String">
+		select IFNULL(thum_path,path) thum_path from sys_file where folder_id = #{value} limit 0,1
+	</select>
+</mapper>

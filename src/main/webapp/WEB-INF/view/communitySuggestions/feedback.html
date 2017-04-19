@@ -1,0 +1,279 @@
+ <!doctype>
+<html lang="en">
+ <head>
+  <title>投诉建议</title>
+  <#include '/common/base.html'>
+  <meta charset="UTF-8">
+  <metahttp-equiv="X-UA-Compatible"content="IE=9; IE=8; IE=7; IE=EDGE">
+  <meta name="renderer" content="webkit">
+  <link rel="stylesheet" type="text/css" href="${base}/resources/datetimepicker/jquery.datetimepicker.css"/>
+  <link href="${base}/resources/bootstrap-3.3.5-dist/css/bootstrap.min.css" rel='stylesheet' type='text/css' /> 
+  <link type='text/css' rel='stylesheet' href='${base}/resources/css/sys/jquery-ui.min.css'/> 
+  <link rel="stylesheet" href="${base}/resources/css/sys/viewer.min.css">
+  <link type='text/css' rel='stylesheet'   href="${base}/resources/css/sys/communitySuggestions.css"/>  
+  <script src='${base}/resources/js/jquery-ui.min.js'></script>
+  <script type="text/javascript" src="${base}/resources/js/dateFormat.js"></script>
+  <script src="${base}/resources/bootstrap-3.3.5-dist/js/bootstrap.min.js" ></script> 
+  <script src="${base}/resources/datetimepicker/jquery.datetimepicker.js" ></script>
+  <style>
+  .da_btn{
+  	display: inline-block;
+    background:#FF6600;
+    width:auto;
+    margin-left: 2%;
+    cursor: pointer;
+    height:29px;
+    line-height:29px;
+    color:#fff;
+    font-size:14px;
+    border-radius:6px;
+    padding: 0px 12px;
+    text-indent:0px;
+  }
+  .feedback #s_btn{
+  border-radius:6px;
+  background:#FF6600;
+  }
+  .noRecord{
+  width:111%;
+  margin-left:0px;
+  }
+  </style>
+ </head>
+  <body>
+        <div class="feedback">
+               
+            	         <p class="feed">投诉建议</p>
+
+                    
+            <form action="${base}/communitySuggestions/list" id="pagerForm">
+             
+            	         <div class="Form_bar center">
+                  		                <lable  for='Owner'>业主：</lable><input type="text" name="owner" value="${owner!!}"   class="inputDiv"/>
+                  		                <lable  for='room_number'>房号：</lable><input type="text" name="roomno" value="${roomno!!}"  class="inputDiv"/>
+                  		                <lable  for='Complaints_time'>投诉时间：</lable>
+                  		                <input type="text" class="inputDiv" id="datepicker2" readonly="readonly" name="beginDate" value="${beginDate!!}"/>--&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                  		                <input type="text" class="inputDiv" id="datepicker3" readonly="readonly" name="endDate" value="${endDate!!}" />
+                  		                <span id="s_btn">搜索</span>
+            	         </div>
+            		 
+        	<#if (pagelist.results)?exists && pagelist.results?size gt 0>
+			<#list pagelist.results as communitySuggestions>
+	          <div class="">
+	                <div class="row">
+	                    <div class="col-md-12">
+	                       <div class="proposal">
+                                <lable>投诉时间:</lable><span>${communitySuggestions.createDate?string('yyyy/MM/dd HH:mm')}</span>
+                                <span class="da_btn" id="del" v="${communitySuggestions.id}">删除</span>
+                                <#if communitySuggestions.status==0 || communitySuggestions.status==1>
+                                	<span class="da_btn" id="updateStatus" v="${communitySuggestions.id}">标记已完成</span>
+                                </#if>
+	                      </div>
+		           		</div>
+		            </div>
+		       </div>
+               
+                 
+                     
+                      	<div class="detailed">
+                            <div class="Odeta ">
+                                      <p class='Owner_n pp' style="margin-top:20px;"><lable for="">业主名:</lable> &nbsp; <span class='miss_l'>${communitySuggestions.userName!!}</span></p>
+                                      <p class='room_np  pp'> <lable for="">房号: </lable> &nbsp; &nbsp;<span class='room_tow'>${communitySuggestions.overall!!}</span></p>
+                                      <p class='l_phone pp'><lable for="">联系电话:</lable>  <span class='t_phone '>${communitySuggestions.mobilePhone!!}</span></p> 
+                                      <p class='Comp_pro pp'><lable for="">投诉建议:</lable> <span class='Com_p jy'>${communitySuggestions.advice!!}</span></p> 
+                            </div>
+                            <div class="Pic_upload " >
+                               <ul class="pup" id="jq22">
+                               <#if communitySuggestions.folder??>
+									<#list communitySuggestions.folder.files as file>
+										 <li class='li_mlr tk-img '><img src='${base}/${file.path!!}' width='105px' height='80px' class="img-responsive"/></li>
+									</#list>
+									<#else>
+								</#if>
+                                </ul>
+                           </div>
+		          		 </div>
+		        	 
+              
+                  	 
+                        <div class="Property"> 
+                           <#if communitySuggestions.commentList?exists&& communitySuggestions.commentList?size gt 0>
+                            <div class="See_a" suggestionsId="${communitySuggestions.id!!}">更多聊天记录>></div>
+                            <div class="text_s">
+                                  <#list communitySuggestions.commentList as comment>
+                                  	<#if comment.userId==communitySuggestions.userId>
+                                  		 <p class='Receive'>${comment.content!!}</p>
+                                  		 <#else>
+                                  		 <p class='Receive_r'>${comment.content!!}</p>
+                                 	</#if>
+                                  </#list>
+                             </div>
+                             <#else>
+                               <p class="noRecord">暂无聊天记录</p>
+                               <div class="text_s">
+                               </div>
+                             </#if>
+                             <div>
+                                <input type="text"  class='text_l'> 
+                                <lable  for='text' suggestionsId="${communitySuggestions.id!!}" class='send_out'>发送</lable>
+                             </div>
+                       </div>   
+                    
+                      	
+                    
+          		 
+                 	</#list>
+				<#else>
+				<div class="no-data">暂无数据~</div>
+			</#if>                  
+                </div>
+                
+				<div class="tab_box">
+					<#include '/common/pagination.html'></form>
+				</div>
+      </div>
+ 
+ 
+ 
+<script src="${base}/resources/js/viewer-jquery.min.js"></script>
+<script>
+$(function() {
+	$('#jq22,#jq33').viewer({
+		url: 'data-original'
+	});
+	
+	$('#datepicker2,#datepicker3').datetimepicker({
+		lang: 'ch',
+		timepicker: false,
+		format: 'Y-m-d',
+		formatDate: 'Y-m-d'
+	
+	});
+});
+</script>   
+<script> 
+		$('#s_btn').on('click',function(){
+			$("#pagerForm").submit();
+		});
+		//查看更多聊天记录
+		$('.See_a').on('click',function(){
+		  var id=$(this).attr('suggestionsId');
+		  var content="";
+		  $.ajax({
+				type : "post", //表单提交类型 
+				url : "${base}/communitySuggestions/selectCommentListById", //表单提交目标 
+				data : {suggestionsId:id}, //表单数据
+				async:false,
+				success : function(data) {
+					 var commentlist=data.paramsMap.commentlist;
+			    	 var str='';
+			    	 $.each(commentlist,function(i,obj){
+			    		  str+='<p class="Bomb_box">'
+	    			      str+='<lable style="color:#71b8ff;">'+obj.userName+'</lable>:'
+	    			      str+='<span>'+obj.content+'</span></br></br>'
+	    			      str+='<span style="position:relative;left:420px;">'
+	    			               str+='<lable>回复时间</lable>:<span>'+formatDate(obj.createTime, "yyyy-MM-dd HH:mm")+'</span>'
+	    			      str+='</span>'
+	    			      str+='</p>'
+			    	 })
+			    	 content=str; 
+				}
+			});
+			
+      layer.open({
+			  type: 1, //page层
+			  area: ['650px', '375px'],
+			  title: '回复详情',
+			  shade: 0.6, //遮罩透明度
+			  moveType: 1, //拖拽风格，0是默认，1是传统拖动
+			  shift: -1, //0-6的动画形式，-1不开启
+			  content:content
+		});        
+  
+}); 
+</script>
+<script>
+$(function(){
+	//发送
+   $('.send_out').click(function(){
+	  var thisobj=$(this);
+      var val=$(this).parent().find('.text_l').val();
+      var id=$(this).attr('suggestionsId');
+	  if(val==""){
+		 layer.msg("输入发送内容", {icon: 5});
+		 return ;
+	  }
+      $.ajax({
+			type : "post", //表单提交类型 
+			url : "${base}/communitySuggestions/commentSuggestions", //表单提交目标 
+			data : {suggestionsId:id,content:val}, //表单数据
+			success : function(data) {
+				layer.msg('留言成功');
+			}
+		});
+      var noRecord=  thisobj.parent().parent().find('.noRecord').text();
+      thisobj.parent().find('.text_l').val('');
+      if(noRecord.length>0){
+    	  thisobj.parent().parent().find('.noRecord').text('');
+    	  thisobj.parent().parent().find(".text_s")
+	      .html('<p class="Receive_r">'+val+'</p>');
+      }else{
+    	  thisobj.parent().parent().find(".text_s").find('>p:last')
+    	      .after('<p class="Receive_r">'+val+'</p>');
+      }
+     
+  	})
+  
+  
+})
+
+
+</script> 
+<script>
+	$(function(){
+        document.onkeydown = function(e){ 
+        	var ev = document.all ? window.event : e;
+        		if(ev.keyCode==13) {
+            		$("#pagerForm").submit();
+            }
+        }
+    });  
+    
+	//删除事件
+	$("#del").click(function(){
+		var id = $(this).attr("v");
+		layer.confirm('确定删除?', function(index){
+			$.post('${base}/communitySuggestions/del',{id:id},
+				function (data, status) {
+				 layer.msg(data.msg,{
+				     	shift: 0
+				     }, function(){
+				    	 window.location.reload();
+				     });
+			 });
+			  layer.close(index);
+		});
+	})
+	//标记已完成事件
+	$("#updateStatus").click(function(){
+	var rid = $(this).attr("v");
+	$.ajax({
+		type : "post",
+		data :{
+			 "rid": rid,
+             "status": 2
+		},
+		url : "${base}/communitySuggestions/updateStatus",
+		success : function(data) {
+			 layer.msg(data.msg,{
+	            	shift: 0
+	            }, function(){
+	            	 window.location.reload();
+	            }); 
+		}
+	});
+})
+    </script>               
+</body>
+</html>
+ 

@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.linle.withdrawBank.mapper.WithdrawBankMapper" >
+  <resultMap id="BaseResultMap" type="com.linle.withdrawBank.model.WithdrawBank" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="account_name" property="accountName" jdbcType="VARCHAR" />
+    <result column="account_number" property="accountNumber" jdbcType="VARCHAR" />
+    <result column="account_bank" property="accountBank" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="u_id" property="uId" jdbcType="BIGINT" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+    <result column="del_flag" property="delFlag"/>
+    <association column="u_id" property="user" select="com.linle.user.mapper.UserMapper.selectByPrimaryKey" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, account_name, account_number, account_bank, remark, u_id, create_date, update_date,del_flag
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from withdraw_bank
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from withdraw_bank
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.linle.withdrawBank.model.WithdrawBank" >
+    insert into withdraw_bank (id, account_name, account_number, 
+      account_bank, remark, u_id, 
+      create_date, update_date,del_flag)
+    values (#{id,jdbcType=BIGINT}, #{accountName,jdbcType=VARCHAR}, #{accountNumber,jdbcType=VARCHAR}, 
+      #{accountBank,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{uId,jdbcType=BIGINT}, 
+      #{createDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP},#{delFlag})
+  </insert>
+  <insert id="insertSelective" parameterType="com.linle.withdrawBank.model.WithdrawBank" >
+    insert into withdraw_bank
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="accountName != null" >
+        account_name,
+      </if>
+      <if test="accountNumber != null" >
+        account_number,
+      </if>
+      <if test="accountBank != null" >
+        account_bank,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="uId != null" >
+        u_id,
+      </if>
+      <if test="updateDate != null" >
+        update_date,
+      </if>
+      <if test="delFlag !=null">
+      	del_flag,
+      </if>
+      create_date
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="accountName != null" >
+        #{accountName,jdbcType=VARCHAR},
+      </if>
+      <if test="accountNumber != null" >
+        #{accountNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="accountBank != null" >
+        #{accountBank,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="uId != null" >
+        #{uId,jdbcType=BIGINT},
+      </if>
+      <if test="updateDate != null" >
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="delFlag !=null">
+      	#{delFlag},
+      </if>
+       now()
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.linle.withdrawBank.model.WithdrawBank" >
+    update withdraw_bank
+    <set >
+      <if test="accountName != null" >
+        account_name = #{accountName,jdbcType=VARCHAR},
+      </if>
+      <if test="accountNumber != null" >
+        account_number = #{accountNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="accountBank != null" >
+        account_bank = #{accountBank,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="uId != null" >
+        u_id = #{uId,jdbcType=BIGINT},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="delFlag !=null">
+        del_flag = #{delFlag},
+      </if>
+   	 	update_date = now()
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.linle.withdrawBank.model.WithdrawBank" >
+    update withdraw_bank
+    set account_name = #{accountName,jdbcType=VARCHAR},
+      account_number = #{accountNumber,jdbcType=VARCHAR},
+      account_bank = #{accountBank,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      u_id = #{uId,jdbcType=BIGINT},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP},
+      del_flag = #{delFlag}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  <select id="getAllData" parameterType="page" resultMap="BaseResultMap">
+  	select 
+    <include refid="Base_Column_List" />
+    from withdraw_bank
+    left join (select id uid,user_name,identity from users) as users
+    on users.uid = withdraw_bank.u_id
+    where del_flag = 0
+    	<if test="params !=null and params.userType != null and params.userType !=-1">
+			and identity =#{params.userType}
+		</if>
+		<if test="params !=null and params.userName != null and params.userName !=''">
+			and (user_name like CONCAT('%','${params.userName}','%')  or account_name like CONCAT('%','${params.userName}','%'))
+		</if>
+  </select>
+  
+  <!-- 根据userid 查询银行卡列表 -->
+  <select id="getBanksByUid" parameterType="Long" resultMap="BaseResultMap">
+  		select 
+    <include refid="Base_Column_List" />
+    from withdraw_bank
+    where u_id = #{uid}
+  </select>
+</mapper>

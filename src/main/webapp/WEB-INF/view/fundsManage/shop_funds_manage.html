@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<#include '/common/resources.html'>
+		<link rel="stylesheet" media="screen and (min-width: 1580px)" href="${base}/resources/css/sys/jquery.tableui.css" />
+		<link rel="stylesheet" media="screen and (max-width: 1580px)" href="${base}/resources/css/sys/tableui-resolving.css" />
+		<link rel="stylesheet" href="${base}/resources/css/sys/jquery-ui.min.css" />
+		<link rel="stylesheet" href="${base}/resources/css/sys/sys-tip.css" />
+		<script type="text/javascript" src="${base}/resources/js/jquery-ui.min.js"></script>
+		<script src="${base}/resources/js/respond.js" type="text/javascript" async="async"></script>
+		<link rel="stylesheet" type="text/css" href="${base}/resources/datetimepicker/jquery.datetimepicker.css"/>
+		<script src="${base}/resources/datetimepicker/jquery.datetimepicker.js" ></script>
+		<script type="text/javascript" src="${base}/resources/js/linle_common.js"></script>
+		<style type="text/css">
+			.message-tip{float: left;width: 100%;text-align: center;color: #C4C4C4;font-size: 13px;}
+			.h_radius{width:17px;margin-left:1%;cursor:pointer;float:left;height:17px;text-align:center;line-height:17px;background: #fff;border-radius:50%;color:#c4522b;}
+			.h_radius2{width:17px;margin-left:1%;cursor:pointer;float:left;height:17px;text-align:center;line-height:17px;background: #fff;border-radius:50%;color:#c4522b;}
+			.h_font{width:400px;padding-left:10px;padding-right:10px;margin-top:15px;margin-bottom:15px;line-height: 23px;}
+		</style>
+	</head>
+	<body>
+		<div class="whole">
+			<ol class="breadcrumb">
+				<li><a href="javascript:void(0)">资金管理</a></li>
+			</ol>
+			<div class="assets">
+				<div class="assets-first">
+					<div style="width:100%;height:20px;">
+					   <div style="float:left;">总资产</div>
+					   <div class="h_radius">?</div>
+					</div>
+					<p>${shopTotalIncome!0}</p>
+				</div>
+				<div class="assets-first">
+					<p>待结算金额（元）</p>
+					<p>${shopWaitIncome!0}</p>
+				</div>
+				<div class="assets-first">
+					<div style="float: left;">
+						<div style="width:100%;height:20px;">可提现金额（元）</div>
+						<p>${shopBalance!0}</p>
+					</div>
+					<a class="withdraw" href="javascript:void(0)">提现</a>
+					<div class="h_radius2">?</div>
+				</div>
+			</div>
+			<form action="${base}/sys/funds/shopfund" id="pagerForm">
+			<div class="o-order">
+				<div class="o-second">
+					<span class="o-span">订单号：</span>
+					<div class="o-input"><input class="my-price" type="text" name="orderNo" value="${orderNo!!}"/></div>
+					<span class="o-span">交易时间：</span>
+					<div class="o-input"><input class="my-times" type="text" id="datepicker2" name="beginDate" value="${beginDate!!}" readonly="readonly"/></div><span class="o-span">--</span>
+					<div class="o-input"><input class="my-times" type="text" id="datepicker3" name="endDate" value="${endDate!!}" readonly="readonly"/></div>
+				</div>
+				<div class="o-thrid">
+					<a class="o-btn search1">搜索</a>
+				</div>
+			</div>
+			<div class="clearfix"></div>
+			<div class="tab-order">
+				<div class="box tab2">
+					<div class="tab_box">
+						<div class="">
+							<table class="table_solid" border="0" cellspacing="0">
+								<tbody>
+									<tr class="evenRow">
+										<th>订单号</th>
+										<th>订单时间</th>
+										<th>支付时间</th>
+										<th>交易类型</th>
+										<th>流水金额</th>
+										<th>交易状态</th>
+										<th>操作</th>
+									</tr>
+									<#if (pagelist.results)?exists && pagelist.results?size gt 0>
+										<#list pagelist.results as incomedetail>
+											<tr class="oddRow">
+												<td>${incomedetail.orderNo}</td>
+												<td>${incomedetail.createDate?string('yyyy/MM/dd HH:mm:ss')}</td>
+												<td>${incomedetail.payDate?string('yyyy/MM/dd HH:mm:ss')}</td>
+												<td>家园购物</td>
+												<td>${incomedetail.totalMoney}</td>
+												<td>
+													<#if incomedetail.status==3>
+														待评价
+														<#else>
+														已完成
+													</#if>
+												</td>
+												<td>
+													<a class="td-b common-btn-cz" href="${base}/sysorder/commodityOrderDetail/${incomedetail.orderNo}" target="_blank">查看</a>
+												</td>
+											</tr>
+										</#list>
+									</#if>
+								</tbody>
+							</table>
+						<#if (pagelist.results)?exists && pagelist.results?size gt 0>
+							<#include '/common/pagination.html'>
+							<#else>
+							<div class="no-data">暂无数据~</div>
+						</#if>
+						</div>
+					</div>
+				</div>
+			</div>
+			</form>
+		</div>
+			<div id="bg"></div>
+		<div class="box2" style="display: none;">
+			<p class="tip-tk">提现</p>
+			<br />
+			<div style="width:100%;height:40px;">
+			   <span class="tip-nr">提现金额：</span>
+			   <input class="input-yourtext" type="text" id="withdraw" placeholder="可提现:${shopBalance!0}"/>
+			</div>
+			<!-- <div class="message-tip"><p><span style="color: red;">*</span>提现规则:T+1到账</p></div> -->
+			<div style="width:100%;height:20px;margin-top:10px;">
+			   <span style="margin:10px;">手续费:(${withdrawalFee*100}%)</span>
+			   <span id="poundage">0.00</span>
+			</div>
+			<div style="width:100%;height:20px;margin-top:10px;">
+			   <span style="margin:10px;">抽成:(${cut!0}%)</span>
+			   <span id="cut">0.00</span>
+			</div>
+			<div style="width:100%;height:20px;margin-top:10px;">
+			   <span style="margin:10px;">实际到账金额：</span>
+			   <span id="actual_money">0.00</span>
+			</div>	
+<!-- 			<div class="clearfix" style=""></div> -->
+				<div class="clearfix" style="width:100%;height:20px;margin-top:10px;">
+					<span style="margin:10px;">选择卡号:</span>
+					<#if bankList?exists && bankList?size gt 0>
+						<#list bankList as bank>
+							<label class="checkbox-inline" style="position:relative;left:-17px;"><input type="radio" name="optionsR" <#if bank_index==0>checked="checked"</#if>  value="${bank.id}" number="${bank.accountNumber!!}" style="position:relative;left:${bank_index*60+105}px;">${bank.remark!!}</label>&nbsp;
+						</#list>
+					</#if>
+			    </div>
+			<a class="close">取消</a><a href="javascript:void(0)" class="tk-btn" id="tk-btn-sure">确定</a>
+		</div>
+			
+			<div id="bg3" style="background-color: #666;position: absolute;z-index: 99;left: 0;top: 0;display: none;width: 100%;height: 100%;opacity: 0.5;filter: alpha(opacity=50);-moz-opacity: 0.5;"></div>
+		<div class="box3" style="display: none;">
+			<p class="tip-tk">总资产</p>
+			<div class="h_font">
+			  总资产为实际流水金额总和(包含未提现、提现中、已提现金额),不含第三方支付扣除的支付手续费。支付手续费将在提现时一次性收取。
+			</div>
+			<div class="clearfix" style=""></div>
+			<a class="close">知道了</a>
+		</div>
+		
+		<div id="bg4" style="background-color: #666;position: absolute;z-index: 99;left: 0;top: 0;display: none;width: 100%;height: 100%;opacity: 0.5;filter: alpha(opacity=50);-moz-opacity: 0.5;"></div>
+		<div class="box4" style="display: none;">
+			<p class="tip-tk">可提现金额</p>
+			<div class="h_font">
+			 可提现金额为总资产减去提现中、提现成功之后的金额。可提现金额不等于实际到账金额(将在提现时扣除第三方支付的手续费)
+			 提现规则:当日16:00时之前的提现，当日处理。当日16:00之后的提现，次日处理。节假日顺延(当日处理不代表当日到账，具体到账时间已银行到账时间为准)
+			</div>
+			<div class="clearfix" style=""></div>
+			<a class="close">知道了</a>
+		</div>
+		
+		<script src="${base}/resources/js/jquery.tabs.js"></script>
+		<script type="text/javascript">
+			$(function() {
+				$('.tab2').Tabs({
+					event: 'click'
+				});
+			});
+		</script>
+		<script type="text/javascript" src="${base}/resources/js/placeholder.js"></script>
+		<script>
+		var cut = ${cut};
+		var cut_amount=0;
+		var withdrawal_fee = ${withdrawalFee!0};
+		var surplusPreferential = ${surplusPreferential};
+		$(function() {
+			$('#datepicker2,#datepicker3').datetimepicker({
+				lang: 'ch',
+				timepicker: false,
+				format: 'Y-m-d',
+				formatDate: 'Y-m-d'
+			
+			});
+			
+			$('#withdraw').bind('input propertychange', function() {
+				this.value = this.value.replace(/[^\-\d\.]/g,"").replace(/(^|\D)\.+/g,"$1").replace(/^(\-?\d*\.?\d*).*$/,"$1").replace(/^(\-?(\d\.?){0,10}).*$/,"$1");
+				if(this.value > ${shopBalance!0}) {
+					this.value = ${shopBalance!0};
+				}else if(this.value <=0){
+					this.value = "";
+				}
+				if(this.value>surplusPreferential){
+					cut_amount = changeToDecimal((this.value-surplusPreferential)*cut/100)
+					$("#cut").html(cut_amount);
+				}else{
+					$("#cut").html("0.00");
+					cut_amount = 0;
+				}
+				$("#poundage").html(changeToDecimal(this.value*withdrawal_fee));
+				$("#actual_money").html(changeToDecimal(this.value*(1-withdrawal_fee))-cut_amount);
+			}); 
+		});
+			
+			$(".search1").click(function(){
+				$("#pagerForm").submit();
+			})
+			
+			$(".withdraw").click(function () {
+				$("#bg").css({
+		        	display: "block", height: $(document).height()
+		    	});
+			
+			var $box = $('.box2');
+				$box.css({
+			    //设置弹出层距离左边的位置
+			    left: ($("body").width() - $box.width()) / 2 - 10 + "px",
+			    //设置弹出层距离上面的位置
+			    top: ($(window).height() - $box.height()) / 3 + $(window).scrollTop() + "px",
+			    display: "block"
+				});
+		});
+			
+			//h_radius
+			$(".h_radius").click(function () {
+				$("#bg3").css({
+		        	display: "block", height: $(document).height()
+		    	});
+			
+				var $box = $('.box3');
+				$box.css({
+				    //设置弹出层距离左边的位置
+				    left: ($("body").width() - $box.width()) / 2 - 10 + "px",
+				    //设置弹出层距离上面的位置
+				    top: ($(window).height() - $box.height()) / 3 + $(window).scrollTop() + "px",
+				    display: "block"
+				});
+			});
+			
+			//h_radius2
+			$(".h_radius2").click(function () {
+				$("#bg4").css({
+		        	display: "block", height: $(document).height()
+		    	});
+			
+				var $box = $('.box4');
+				$box.css({
+				    //设置弹出层距离左边的位置
+				    left: ($("body").width() - $box.width()) / 2 - 10 + "px",
+				    //设置弹出层距离上面的位置
+				    top: ($(window).height() - $box.height()) / 3 + $(window).scrollTop() + "px",
+				    display: "block"
+				});
+			});
+				
+    	  //点击关闭按钮的时候，遮罩层关闭
+        $(".close").click(function () {
+            $("#bg,.box2").css("display", "none");
+            $("#bg3,.box3").css("display", "none");
+            $("#bg4,.box4").css("display", "none");
+            cut_amount =0;
+        });
+    	  
+      //点击确定按钮
+    	$(".tk-btn").click(function(){
+    		var withdraw = $("#withdraw").val();
+    		var actual_money = $("#actual_money").html();
+    		if(isNaN(actual_money) || actual_money<0 || actual_money>${shopBalance!0}){
+    			layer.msg("提现金额有误");
+    			return false;
+    		}
+    		layer.closeAll('tips');
+    		var bank = $('input[name="optionsR"]:checked').val();
+    		if(bank==undefined){
+    			layer.msg("没有选择卡号");
+    			return false;
+    		}
+    		
+    		$.post("${base}/sys/withdraw/income", {'incomeMoney': actual_money,"applyAmount":withdraw,"bank":bank}, function (data) {
+    			 layer.msg(data.msg,{
+    			     	shift: 0
+    			     }, function(){
+    			    	window.location.reload();
+    			     });
+            });
+    	  
+    	});
+      
+    	 $(".checkbox-inline").mouseover(function(){
+       	  var radio = $(this).find("input[name='optionsR']");
+       	  var v = $(this).find("input[name='optionsR']").attr("number");
+       	  layer.tips('卡号:'+v, radio, {
+       		  tips: [1, 'black'],
+       		  time: 4000
+       		});
+         })
+		</script>
+
+	</body>
+
+</html>

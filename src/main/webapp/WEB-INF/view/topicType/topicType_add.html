@@ -1,0 +1,124 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta name="renderer" content="webkit|ie-comp|ie-stand">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<title>圈子类型管理</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<#include '/common/resources.html'>
+	<link rel="stylesheet" href="${base}/resources/css/sys/add-new.css"/>
+    <link rel="stylesheet" type="text/css" href="${base }/resources/uploadify/uploadify.css">
+    <script src="${base}/resources/js/respond.js" type="text/javascript" async="async"></script>
+    <script src="${base }/resources/uploadify/jquery.uploadify.min.js" type="text/javascript"></script>
+    <script type="text/javascript" charset="utf-8" src="${base}/resources/ueditor1_4_3_1/ueditor.config.js"></script>
+    <script type="text/javascript" charset="utf-8" src="${base}/resources/ueditor1_4_3_1/ueditor.all.min.js"></script>
+    <script type="text/javascript" charset="utf-8" src="${base}/resources/ueditor1_4_3_1/lang/zh-cn/zh-cn.js"></script>
+</head>
+<body>
+	<div class="whole">
+		<div class="a-plus">
+			<div class="head">
+				<span>圈子类型编辑</span>
+			</div>
+				<form action="${base}/topicType/addTopicType"
+				method="post" id="form1"> 
+			<div class="Sheet">
+				<div class="a-title">
+					<span class="choice">类型名称：</span>
+					<div class="inp">
+						<input maxlength="20" type="text"
+							onkeyup="javascript:setShowLength(this, 20, 'topicTypeName_tpl_title_length');" name="topicTypeName" value="${topicType.topicTypeName!!}"/>
+						<span class="cue" id="topicTypeName_tpl_title_length">0/20</span>
+					</div>
+				</div>
+			</div>
+			
+			<div class="Sheet">
+				<div class="a-title">
+					<span class="choice" style="margin-left:32px;">顺序：</span>
+					<div class="inp">
+						<input maxlength="10" type="text"
+							onkeyup="javascript:setShowLength(this, 10, 'orderNo_tpl_title_length');" name="orderNo" value="${topicType.orderNo!!}"/>
+						<span class="cue" id="orderNo_tpl_title_length">0/10</span>
+					</div>
+				</div>
+			</div>	
+			
+			<div class="Sheet">
+				<div class="a-title">
+					<span class="choice" style="margin-left:32px;">是否查看全部小区：</span>
+					<div class="ads-choice" >
+					<label for="normal"><input id="normal" type="radio" name="communityPrivg" value="1"  style="margin-top:10px;margin-left:21px;"/><span style="margin-top:8px">是</span></label>
+					<label for="stata"><input id="stata" type="radio" name="communityPrivg" value="0" checked="checked" style="margin-top:10px"/><span style="margin-top:8px">否</span></label>
+					</div>
+				</div>
+			</div>
+			
+			<div class="Sheet">
+				<div class="a-title">
+					<span class="choice" style="margin-left:32px;">备注：</span>
+					<div class="inp">
+						<input maxlength="20" type="text"
+							onkeyup="javascript:setShowLength(this, 20, 'remark_tpl_title_length');" name="remark" value="${topicType.remark!!}"/>
+						<span class="cue" id="cost_tpl_title_length">0/20</span>
+					</div>
+				</div>
+			</div>
+			
+			<div class="a-address">
+
+				<button data-reveal-id="sav" data-animation="fade" class="s-btn">确认</button>
+
+			</div>
+			<div id="sav" class="reveal-modal"
+				style="opacity: 1; visibility: hidden; top: 150px;">
+				<h3>保存成功</h3>
+				<a class="close-reveal-modal">×</a>
+			</div>
+			<input type="hidden" name="topicTypeId" value="${topicType.topicTypeId!!}" />
+			</form>
+			<div class="reveal-modal-bg" style="display: none; cursor: pointer;">
+			</div>
+		</div>
+	</div>
+
+	<!--style给定宽度可以影响编辑器的最终宽度-->
+
+	<script type="text/javascript" src="${base}/resources/js/jquery.reveal.js"></script>
+	<script>
+		function setShowLength(obj, maxlength, id) {
+			var rem = maxlength - obj.value.length;
+			var wid = id;
+			if (rem < 0) {
+				rem = 0;
+			}
+			document.getElementById(wid).innerHTML = rem + "/" + "20";
+		}
+		
+    	$("#form1").submit(function() {
+			var ajax_url = $(this).attr("action"); //表单目标 
+			var ajax_type = $(this).attr('method'); //提交方法 
+			var ajax_data = $(this).serialize(); //表单数据 
+			$.ajax({
+				type : ajax_type, //表单提交类型 
+				url : ajax_url, //表单提交目标 
+				data : ajax_data, //表单数据
+				success : function(data) {
+					 layer.msg(data.msg,{
+					     	shift: 0
+					     }, function(){
+					    	 window.location.href="${base}/topicType/list";
+					     }); 
+				}
+			});
+			return false; //阻止表单的默认提交事件 
+		});
+    	
+    	<#if topicType.topicTypeId??>
+    		$("input[name='communityPrivg'][value=${topicType.communityPrivg}]").attr("checked",true);
+    	</#if>
+    	
+	</script>
+</body>
+</html>

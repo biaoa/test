@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>角色管理</title>
+<meta name="content-type" content="text/html; charset=UTF-8">
+<#include '/common/resources.html'>
+<link rel="stylesheet" media="screen and (min-width: 1580px)" href="${base}/resources/css/sys/jquery.tableui.css" />
+<link rel="stylesheet" media="screen and (max-width: 1580px)" href="${base}/resources/css/sys/tableui-resolving.css" />
+<script src="${base}/resources/js/respond.js" type="text/javascript" async="async"></script>
+</head>
+<body>
+<div class="whole">
+	<!--         <div class="fh_right_box"> -->
+	<!--            <h3><span class="iconfont" style="font-size:20px;color:#d65b5a">&#xe621;</span>&nbsp;角色管理 -->
+	
+	<!--            </h3> -->
+	<!--            <img src="${base}/resources/images/hr.jpg" class="xian"/> -->
+	<!--         </div> -->
+	<ol class="breadcrumb">
+		<li><a href="javascript:void(0)">系统管理</a></li>
+		<li class="active">角色管理</li>		
+	           <span style="float:right"><button type="button" class="btn-default" style="float: right;">新增角色</button></span>
+	</ol>
+	
+	<div class="tab_box">
+	<table class="table_solid" border="0" cellspacing="0">
+		<tbody>
+			<tr class="evenRow">
+				<th>序号</th>
+				<th>角色名</th>
+				<th>角色字符</th>
+				<th>创建时间</th>
+				<th>操作</th>
+			</tr>
+			<#if (pagelist.results)?exists && pagelist.results?size gt 0> <#list
+			pagelist.results as role>
+			<tr>
+				<td>${(role_index+1)+(pagelist.pageNo-1)*pagelist.pageSize}</td>
+				<td>${role.cname}</td>
+				<td>${role.ename}</td>
+				<td>${role.createDate?string('yyyy/MM/dd HH:mm:ss')}</td>
+				<td><a class="cz-a btn-default common-btn-cz"
+						href="${base}/sys/permisssion?roleId=${role.id}"
+						value="${role.id}">配置</a></td>
+			</tr>
+			</#list> </#if>
+		</tbody>
+	</table>
+	<form action="${base}/sys/rolelist" id="pagerForm"><#include
+		'/common/pagination.html'></form>
+		</div>
+		</div>
+</body>
+<script type="text/javascript">
+	$(function() {
+		$("button").click(function() {
+			window.location.href = "${base}/sys/addRolePage";
+		});
+
+		$(".delRole").click(function() {
+			var roleid = $(this).attr("roleid");
+			$.post("${base}/sys/delRole/" + roleid, function(result) {
+				if (result.code == 0) {
+					location.reload();
+					;
+				}
+				;
+			}, 'json');
+		});
+	});
+</script>
+
+</html>

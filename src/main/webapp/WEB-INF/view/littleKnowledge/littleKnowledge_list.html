@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>医疗小常识管理</title>
+<meta name="content-type" content="text/html; charset=UTF-8">
+<#include '/common/resources.html'>
+<link rel="stylesheet" media="screen and (min-width: 1580px)" href="${base}/resources/css/sys/jquery.tableui.css" />
+<link rel="stylesheet" media="screen and (max-width: 1580px)" href="${base}/resources/css/sys/tableui-resolving.css" />
+<script src="${base}/resources/js/respond.js" type="text/javascript" async="async"></script>
+<style>
+.td_ellipsis {
+     white-space:nowrap;overflow:hidden;text-overflow: ellipsis;
+}
+</style>  
+</head>
+<body>
+<div class="whole">
+
+	<ol class="breadcrumb">
+		<li><a href="javascript:void(0)">邻乐速报管理</a></li>
+		<li class="active">邻乐速报列表</li>
+	<span style="float: right"><button type="button"
+			class="btn-default" style="float: right;">新增邻乐速报</button></span>
+	</ol>
+	
+	<div class="o-order">
+		<form action="${base}/littleKnowledge/list" id="pagerForm">
+		<div class="o-first">
+			<span class="o-span">title/描述：</span>
+			<div class="o-input">
+				<input type="text" name="title" value="${title!!}" />
+			</div>
+			
+			<span class="o-span">状态：</span>
+			<div class="o-div">
+				<select class="o-select" name="flag" id="flag">
+					<option value="">全部</option>
+					<option value="0">显示</option>
+					<option value="1">隐藏</option>
+				</select>
+			</div>
+		</div>		
+		<div class="o-thrid role-search-btn role-search1">
+			<a class="o-btn search1">搜索</a>
+		</div>
+	</div>
+	
+	<div class="tab_box">
+	<table class="table_solid" border="0" cellspacing="0" style="table-layout: fixed;">
+		<tbody>
+			<tr class="evenRow">
+				<th>序号</th>
+				<th>title</th>
+				<th>描述</th>
+				<th>状态</th>
+				<th>排序</th>
+				<th title="不区分用户">阅读总数</th>
+				<th title="区分用户">绝对阅读总数</th>
+				<th>点赞数量</th>
+				<th>创建时间</th>
+				<th>操作</th>
+			</tr>
+			<#if (pagelist.results)?exists && pagelist.results?size gt 0> <#list
+			pagelist.results as littleKnowledge>
+			<tr>
+				<td>${(littleKnowledge_index+1)+(pagelist.pageNo-1)*pagelist.pageSize}</td>
+				<td class="td_ellipsis">${littleKnowledge.title!!}</td>
+				<td cl>${littleKnowledge.description!!}</td>
+				<td>
+					<#if littleKnowledge.delFlag==0>
+						显示
+						<#else>
+						隐藏
+					</#if>
+				</td>
+				<td>${littleKnowledge.orderNo!!}</td>
+				<td>${littleKnowledge.readCount!!}</td>
+				<td>${littleKnowledge.distinguishUserCount!!}</td>
+				<td>${littleKnowledge.thumbCount!!}</td>
+				<td>${littleKnowledge.createDate?string('yyyy/MM/dd HH:mm:ss')}</td>
+				<td>
+						<#if littleKnowledge.delFlag==0>
+						<a class="cz-a btn-default common-btn-cz" href="javaScript:void(0);" onclick="isShow('${littleKnowledge.id}',1)">隐藏</a>
+						<#else>
+						<a class="cz-a btn-default common-btn-cz" href="javaScript:void(0);" onclick="isShow('${littleKnowledge.id}',0)">显示</a>
+					</#if>
+					<a class="cz-a btn-default common-btn-cz" href="${base}/littleKnowledge/detail/${littleKnowledge.id}" target="_blank">预览</a>
+					
+					<a class="cz-a btn-default common-btn-cz" href="${base}/littleKnowledge/add?id=${littleKnowledge.id}">编辑</a>
+					
+					<a class="cz-a btn-default del common-btn-cz" val="${littleKnowledge.id}" info="${littleKnowledge.title}"  href="javascript:void(0)">删除</a>
+				</td>
+			</tr>
+			</#list>
+		</tbody>
+	</table>
+	<div style="clear: both;"></div>
+	<form action="${base}/littleKnowledge/list" id="pagerForm"><#include
+		'/common/pagination.html'></form>
+	<#else>
+		<div class="no-data" >暂无数据~</div>
+	</#if>
+	</div>
+	</div>
+</body>
+<script type="text/javascript">
+	$(function() {
+		$("button").click(function() {
+			window.location.href = "${base}/littleKnowledge/add";
+		});
+	});
+	
+	
+	function isShow(id,ishow){
+		$.ajax({
+			type : "post", 
+			url : "${base}/littleKnowledge/setShow",
+			data : {id:id,delFlag:ishow},
+			success : function(data) {
+				 layer.msg(data.msg,{
+				     	shift: 0
+				     }, function(){
+				    	 window.location.href="${base}/littleKnowledge/list";
+				     }); 
+			}
+		});
+	}
+	
+	$(".del").click(function(){
+		var id = $(this).attr("val");
+		var info = $(this).attr("info");
+		layer.confirm('确定删除:'+info+'?', function(index){
+			$.post("${base}/littleKnowledge/del?id=" + id, function(result) {
+				 layer.msg(result.msg,{
+				     	shift: 0
+				     }, function(){
+				    	 window.location.href="${base}/littleKnowledge/list";
+				     }); 
+			}, 'json');
+			  layer.close(index);
+			}); 
+	})
+	<#if flag??>
+		$("#flag").val(${flag});
+	</#if>
+	
+	$(".search1").click(function(){
+		$("#pagerForm").submit();
+	})
+</script>
+
+</html>

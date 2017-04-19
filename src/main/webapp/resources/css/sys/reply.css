@@ -1,0 +1,208 @@
+	* {
+		margin: 0;
+		padding: 0;
+		box-sizing: content-box;
+	}
+	
+	body {
+
+		color: #333;
+		line-height: 22px;
+	}	
+	#bg {
+		background-color: #666;
+		position: absolute;
+		z-index: 99;
+		left: 0;
+		top: 0;
+		display: none;
+		width: 100%;
+		height: 100%;
+		opacity: 0.5;
+		filter: alpha(opacity=50);
+		-moz-opacity: 0.5;
+	}
+	
+	.all-reply {
+		width: 700px;
+		margin: 0 auto;
+		background: #f7f8fa;
+		height: auto;
+		overflow: auto;
+		border: 1px solid gainsboro;
+		border-radius: 5px;
+		position: absolute;
+		display: none;
+		z-index: 100;
+				font-size: 12px;
+		font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	}
+	
+	.vote-reply {
+		width: 100%;
+		margin: 0 auto;
+		background: #f7f8fa;
+		height: auto;
+		overflow: auto;
+		overflow-x: hidden;
+	}
+	
+	.reply-body {
+		width: 100%;
+		margin: 0 auto;
+	}
+	
+	.reply-title {
+		width: 100%;
+		background: white;
+		height: auto;
+		overflow: hidden;
+	}
+	
+	.reply-title span {
+		padding: 15px;
+	}
+	
+	.reply-title span:first-child {
+		float: left;
+		font-weight: bold;
+	}
+	
+	.reply-title span:last-child {
+		float: right;
+		cursor: pointer;
+		color: #0000FF;
+		font-weight: bold;
+	}
+	
+	.reply-list {
+		width: 96%;
+		margin: 0 auto;
+		padding: 4px 14px 14px;
+		height: auto;
+		max-height: 500px;
+	}
+	
+	.person-img {
+		float: left;
+		width: 32px;
+		height: 32px;
+		border: 1px #ccc solid;
+		padding: 1px;
+	}
+	
+	.person-img img {
+		width: 32px;
+		height: 32px;
+	}
+	
+	.reply-ul,
+	.reply-ul li {
+		list-style: none;
+	}
+	
+	.reply-ul li {
+		padding-top: 10px;
+	}
+	
+	.reply-name {
+		margin-left: 45px;
+		zoom: 1;
+		word-wrap: break-word;
+		word-break: break-all;
+	}
+	
+	.person-name {
+		color: #2d64b3;
+	}
+	
+	.reply-time {
+		text-align: right;
+	}
+	
+	.d_tail,
+	.p_tail,
+	.lzl_time {
+		color: #999;
+	}
+	
+	.lzl_s_r {
+		color: #666;
+		padding-left: 5px;
+		text-decoration: none;
+	}
+	
+	.reply-ul li.first_no_border {
+		margin-top: 0;
+		border-top: 0;
+	}
+	
+	.reply-ul li {
+		margin-top: 6px;
+		padding-top: 10px;
+		border-top: 1px #d7d7d7 dotted;
+	}
+	
+	.reply-speak {
+		border-top: 1px #d7d7d7 dotted;
+		width: 96%;
+		margin: 0 auto;
+		padding: 10px 14px 14px;
+		height: auto;
+		overflow: hidden;
+	}
+	
+	.reply-speak a {
+		float: right;
+		padding: 2px 7px;
+		background-color: #fff;
+		color: #333;
+		border: 1px solid #ccc;
+		cursor: pointer;
+		border-radius: 5px;
+	}
+	
+	.reply-input {
+		width: 95%;
+		margin: 0 auto;
+		padding-top: 13px;
+		height: auto;
+		overflow: hidden;
+		padding-bottom: 10px;
+	}
+	
+	.editui {
+		width: 100%;
+		position: relative;
+		background: white;
+	}
+	
+	.my-reply {
+		width: 100%;
+		height: 50px;
+		overflow: auto;
+		border: 0;
+		outline: none;
+		word-break: break-word;
+	}
+	
+	.fabiao {
+		line-height: 24px;
+		zoom: 1;
+		padding-top: 10px;
+	}
+	
+	.fabiao span {
+		cursor: pointer;
+		float: right;
+		width: 51px;
+		height: 24px;
+		color: #FFF;
+		text-align: center;
+		background: blue;
+		border-radius: 5px;
+	}
+	
+	.choice-name {
+		display: none;
+	}

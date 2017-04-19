@@ -1,0 +1,81 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-3.2.xsd 	
+	http://www.springframework.org/schema/context 
+	http://www.springframework.org/schema/context/spring-context-3.2.xsd
+	">
+	<!-- 配置权限管理器 -->
+	<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+		<!-- ref对应我们写的realm MyShiro -->
+		<property name="realm" ref="userLoginRealm" />
+		<!-- 使用下面配置的缓存管理器 -->
+		<property name="cacheManager" ref="shiroCacheManager" />
+		<property name="sessionManager" ref="defaultWebSessionManager" />
+	</bean>
+
+	<!-- 配置shiro的过滤器工厂类，id- shiroFilter要和我们在web.xml中配置的过滤器一致 -->
+	<bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+		<!-- 调用我们配置的权限管理器 -->
+		<property name="securityManager" ref="securityManager" />
+		<!-- 配置我们的登录请求地址 -->
+		<property name="loginUrl" value="/login" />
+		<!-- 配置我们在登录页登录成功后的跳转地址，如果你访问的是非/login地址，则跳到您访问的地址 -->
+		<property name="successUrl" value="/user" />
+		<!-- 如果您请求的资源不再您的权限范围，则跳转到/403请求地址 -->
+		<property name="unauthorizedUrl" value="/403" />
+		    <property name="filterChainDefinitions">
+            <value>
+                /web = anon
+                /web/ = anon
+                /web/sendSms = anon
+                /web/index = anon
+                /web/login = anon
+                /web/regis = anon
+                /web/oderPage = authc
+                /landlords/index = authc
+                
+                /app = anon
+                /app/app_login = anon
+                /app/app_home = authc
+                /app/order/** =authc
+                
+
+                /sys/login = anon
+                /sys/logout = anon
+
+                /sys =anon
+                /sys/ =anon
+                /sys/index =anon
+                /api/ =anon
+            </value>
+        </property>
+	</bean>
+
+
+	<!-- <bean id="defaultWebSessionManager"
+		class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager">
+		<property name="globalSessionTimeout" value="1200000" />
+	</bean>
+	-->
+	<bean id="shiroCacheManager" class="org.apache.shiro.cache.MemoryConstrainedCacheManager" />
+
+	
+	<bean id="defaultWebSessionManager"
+		class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager">
+		<property name="globalSessionTimeout" value="5400000" /> <!-- session默认的有效期改为3小时 -->
+		<property name="sessionDAO" ref="customShiroSessionDAO" />
+	</bean>
+
+	<bean id="customShiroSessionDAO" class="com.linle.shiro.session.CustomShiroSessionDAO">
+		<property name="shiroSessionRepository" ref="redisShiroSessionRepository" />
+	</bean>
+
+
+	<bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor" />
+<!--与<aop:aspectj-autoproxy />冲突
+ 	<bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator" depends-on="lifecycleBeanPostProcessor"/>
+ -->	<bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
+		<property name="securityManager" ref="securityManager" />
+	</bean>
+</beans>

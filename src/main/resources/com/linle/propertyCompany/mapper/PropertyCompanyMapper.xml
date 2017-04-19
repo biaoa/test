@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.linle.propertyCompany.mapper.PropertyCompanyMapper">
+	<resultMap id="BaseResultMap" type="com.linle.entity.sys.PropertyCompany">
+		<id column="id" property="id" jdbcType="BIGINT" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="state" property="state" jdbcType="TINYINT" />
+		<result column="logo" property="logo" />
+		<result column="address_details" property="addressDetails" />
+		<result column="phone" property="phone" />
+		<result column="work_time" property="workTime" />
+		<result column="synopsis" property="synopsis" />
+		<result column="create_date" property="createDate" />
+		<result column="update_date" property="updateDate" />
+		<result column="create_user_id" property="createUserId"/>
+		<result column="principal_name" property="principalName"/>
+		<result column="principal_phone" property="principalPhone"/>
+		<result column="principal_address" property="principalAddress"/>
+		<result column="owner_notice" property="ownerNotice"/>
+		<association column="region_id" property="sysRegion" select="com.linle.system.mapper.RegionMapper.getById" />
+		<association property="user" column="u_id" select="com.linle.user.mapper.UserMapper.getById" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, name, state,
+		region_id,logo,address_details,phone,work_time,synopsis,u_id,create_date,update_date,
+		principal_name,principal_phone,principal_address,owner_notice
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from property_company
+		where id = #{id,jdbcType=BIGINT}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		delete from
+		property_company
+		where id = #{id,jdbcType=BIGINT}
+	</delete>
+	<insert id="insert" parameterType="com.linle.entity.sys.PropertyCompany">
+		insert into property_company
+		(id, name, state,logo,address_details,phone,work_time,synopsis,
+		region_id,create_date,u_id,create_user_id,principal_phone,principal_address,owner_notice)
+		values
+		(#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR},
+		#{state,jdbcType=TINYINT},#{logo},#{addressDetails},#{phone},#{workTime},#{synopsis},
+		#{sysRegion.id,jdbcType=BIGINT},now(),#{user.id},#{createUserId},#{principalName},#{principalPhone},#{principalAddress}
+		,#{ownerNotice})
+	</insert>
+	<insert id="insertSelective" parameterType="com.linle.entity.sys.PropertyCompany" useGeneratedKeys="true" keyProperty="id">
+		insert into property_company
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="name != null">
+				name,
+			</if>
+			<if test="state != null">
+				state,
+			</if>
+			<if test="sysRegion != null">
+				region_id,
+			</if>
+			<if test="logo !=null">
+				logo,
+			</if>
+			<if test="addressDetails !=null">
+				address_details,
+			</if>
+			<if test="phone !=null">
+				phone,
+			</if>
+			<if test="workTime !=null">
+				work_time,
+			</if>
+			<if test="synopsis !=null">
+				synopsis,
+			</if>
+			<if test="user !=null">
+				u_id,
+			</if>
+			<if test="createUserId !=null">
+				create_user_id,
+			</if>
+			<if test="principalName !=null">
+				principal_name,
+			</if>
+			<if test="principalPhone !=null">
+				principal_phone,
+			</if>
+			<if test="principalAddress !=null">
+				principal_address,
+			</if>
+			<if test="ownerNotice !=null">
+				owner_notice,
+			</if>
+			create_date
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=BIGINT},
+			</if>
+			<if test="name != null">
+				#{name,jdbcType=VARCHAR},
+			</if>
+			<if test="state != null">
+				#{state,jdbcType=TINYINT},
+			</if>
+			<if test="sysRegion != null">
+				#{sysRegion.id,jdbcType=BIGINT},
+			</if>
+			<if test="logo !=null">
+				#{logo},
+			</if>
+			<if test="addressDetails !=null">
+				#{addressDetails},
+			</if>
+			<if test="phone !=null">
+				#{phone},
+			</if>
+			<if test="workTime !=null">
+				#{workTime},
+			</if>
+			<if test="synopsis !=null">
+				#{synopsis},
+			</if>
+			<if test="user !=null">
+				#{user.id},
+			</if>
+			<if test="createUserId !=null">
+				#{createUserId},
+			</if>
+			<if test="principalName !=null">
+				#{principalName},
+			</if>
+			<if test="principalPhone !=null">
+				#{principalPhone},
+			</if>
+			<if test="principalAddress !=null">
+				#{principalAddress},
+			</if>
+			<if test="ownerNotice !=null">
+				 #{ownerNotice},
+			</if>
+			now()
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.linle.entity.sys.PropertyCompany">
+		update property_company
+		<set>
+			<if test="name != null">
+				name = #{name,jdbcType=VARCHAR},
+			</if>
+			<if test="state != null">
+				state = #{state,jdbcType=TINYINT},
+			</if>
+			<if test="sysRegion != null">
+				region_id = #{sysRegion.id,jdbcType=BIGINT},
+			</if>
+			<if test="logo !=null">
+				logo = #{logo},
+			</if>
+			<if test="addressDetails !=null">
+				address_details= #{addressDetails},
+			</if>
+			<if test="phone !=null">
+				phone = #{phone},
+			</if>
+			<if test="workTime!=null">
+				work_time = #{workTime},
+			</if>
+			<if test="synopsis !=null">
+				synopsis = #{synopsis},
+			</if>
+			<if test="user !=null">
+				u_id = #{user.id},
+			</if>
+			<if test="createUserId !=null">
+				create_user_id = #{createUserId},
+			</if>
+			<if test="principalName !=null">
+				principal_name = #{principalName},
+			</if>
+			<if test="principalPhone !=null">
+				principal_phone = #{principalPhone},
+			</if>
+			<if test="principalAddress !=null">
+				principal_address = #{principalAddress},
+			</if>
+			<if test="ownerNotice !=null">
+				owner_notice = #{ownerNotice},
+			</if>
+			update_date = now()
+		</set>
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.linle.entity.sys.PropertyCompany">
+		update
+		property_company
+		set name = #{name,jdbcType=VARCHAR},
+		state = #{state,jdbcType=TINYINT},
+		region_id = #{sysRegion.id,jdbcType=BIGINT},
+		update_date = now(),
+		logo = #{logo},
+		address_details = #{addressDetails},
+		phone =#{phone},
+		work_time = #{workTime},
+		synopsis = #{synopsis},
+		u_id = #{user.id},
+		createUserId = #{createUserId},
+		principal_name = #{principalName},
+		principal_phone = #{principalPhone},
+		principal_address = #{principalAddress},
+		owner_notice = #{ownerNotice}
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+
+	<select id="getAllData" resultMap="BaseResultMap" parameterType="Page">
+		select
+		<include refid="Base_Column_List" />
+		from property_company
+		<where>
+			<if test="params.createUserId !=null">
+				and create_user_id = #{params.createUserId}
+			</if>
+			<if test="params.uid !=null">
+				and u_id = #{params.uid}
+			</if>
+		</where>
+	</select>
+	
+	<select id="getPopertyCompanyByuserID" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from property_company
+		where u_id = #{id}
+	</select>
+	
+	<select id="getAllPropertyCompany" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from property_company
+	</select>
+	
+	<!-- 统计物业总数 -->
+	<select id="getPropertyCompanyCountByDate" resultType="Integer" parameterType="map">
+		select count(id) from property_company record
+		where state=0
+			<if test="dateType !=null and dateType=='today' ">
+				and TO_DAYS(record.create_date)=TO_DAYS(NOW())
+			</if>
+			<if test="beginDate!=null and endDate==null">
+	  			and <![CDATA[  record.create_date>=#{beginDate} ]]>
+	  		</if>
+	  		<if test="beginDate==null and endDate!=null">
+	  			and <![CDATA[ record.create_date<=#{endDate} ]]>
+	  		</if>
+	  		<if test="beginDate!=null and endDate!=null">
+	  			and <![CDATA[ (record.create_date >=#{beginDate} and record.create_date<=#{endDate}) ]]>
+	  		</if>
+	</select>
+	
+	 <!-- 统计物业列表 -->
+	<select id="getPropertyListByDate" resultType="com.linle.entity.statistics.UserStatistics" parameterType="map">
+		select record.name ,COUNT(*) count from property_company record
+		<where>
+		<if test="dateType !=null and dateType=='today' ">
+			and TO_DAYS(record.create_date)=TO_DAYS(NOW())
+		</if>
+		<if test="beginDate!=null and endDate==null">
+  			and <![CDATA[  record.create_date>=#{beginDate} ]]>
+  		</if>
+  		<if test="beginDate==null and endDate!=null">
+  			and <![CDATA[ record.create_date<=#{endDate} ]]>
+  		</if>
+  		<if test="beginDate!=null and endDate!=null">
+  			and <![CDATA[ (record.create_date >=#{beginDate} and record.create_date<=#{endDate}) ]]>
+  		</if>
+  		</where>
+  		GROUP BY record.id
+	</select>
+</mapper>

@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.linle.attendanceTemplate.mapper.AttendanceTemplateMapper">
+	<resultMap id="BaseResultMap"
+		type="com.linle.attendanceTemplate.model.AttendanceTemplate">
+		<id column="id" property="id" jdbcType="BIGINT" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="uids" property="uids" jdbcType="VARCHAR" />
+		<result column="work_days" property="workDays" jdbcType="VARCHAR" />
+		<result column="on_duty" property="onDuty" jdbcType="VARCHAR" />
+		<result column="off_duty" property="offDuty" jdbcType="VARCHAR" />
+		<result column="remind" property="remind" jdbcType="INTEGER" />
+		<result column="address" property="address" jdbcType="VARCHAR" />
+		<result column="community_id" property="communityId" jdbcType="BIGINT" />
+		<result column="create_user" property="createUser" jdbcType="BIGINT" />
+		<result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+		<result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+		<result column="del_flg" property="delFlg" />
+		<result column="show_date" property="showDate"/>
+		<result column="type" property="type"/>
+		<result column="distance" property="distance"/>
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, name, ifnull(uids,"") as uids, work_days, on_duty, off_duty, remind, address,
+		community_id, create_user,
+		create_date, update_date,del_flg,show_date,type,distance
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from attendance_template
+		where id = #{id,jdbcType=BIGINT}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		delete from attendance_template
+		where id = #{id,jdbcType=BIGINT}
+	</delete>
+	<insert id="insert"
+		parameterType="com.linle.attendanceTemplate.model.AttendanceTemplate">
+		insert into attendance_template (id, name, uids,
+		work_days, on_duty, off_duty,
+		remind, address, community_id,
+		create_user, create_date, update_date,del_flg,show_date,type,distance
+		)
+		values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR},
+		#{uids,jdbcType=VARCHAR},
+		#{workDays,jdbcType=VARCHAR}, #{onDuty,jdbcType=VARCHAR}, #{offDuty,jdbcType=VARCHAR},
+		#{remind,jdbcType=INTEGER}, #{address,jdbcType=VARCHAR},
+		#{communityId,jdbcType=BIGINT},
+		#{createUser,jdbcType=BIGINT}, #{createDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP}
+		,#{delFlg},#{showDate},#{type},#{distance})
+	</insert>
+	<insert id="insertSelective"
+		parameterType="com.linle.attendanceTemplate.model.AttendanceTemplate" useGeneratedKeys="true" keyProperty="id">
+		insert into attendance_template
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="name != null">
+				name,
+			</if>
+			<if test="uids != null">
+				uids,
+			</if>
+			<if test="workDays != null">
+				work_days,
+			</if>
+			<if test="onDuty != null">
+				on_duty,
+			</if>
+			<if test="offDuty != null">
+				off_duty,
+			</if>
+			<if test="remind != null">
+				remind,
+			</if>
+			<if test="address != null">
+				address,
+			</if>
+			<if test="communityId != null">
+				community_id,
+			</if>
+			<if test="createUser != null">
+				create_user,
+			</if>
+			<if test="createDate != null">
+				create_date,
+			</if>
+			<if test="updateDate != null">
+				update_date,
+			</if>
+			<if test="delFlg !=null">
+				del_flg,
+			</if>
+			<if test="showDate !=null">
+				show_date,
+			</if>
+			<if test="type !=null">
+				type,
+			</if>
+			<if test="distance !=null">
+				distance,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=BIGINT},
+			</if>
+			<if test="name != null">
+				#{name,jdbcType=VARCHAR},
+			</if>
+			<if test="uids != null">
+				#{uids,jdbcType=VARCHAR},
+			</if>
+			<if test="workDays != null">
+				#{workDays,jdbcType=VARCHAR},
+			</if>
+			<if test="onDuty != null">
+				#{onDuty,jdbcType=VARCHAR},
+			</if>
+			<if test="offDuty != null">
+				#{offDuty,jdbcType=VARCHAR},
+			</if>
+			<if test="remind != null">
+				#{remind,jdbcType=INTEGER},
+			</if>
+			<if test="address != null">
+				#{address,jdbcType=VARCHAR},
+			</if>
+			<if test="communityId != null">
+				#{communityId,jdbcType=BIGINT},
+			</if>
+			<if test="createUser != null">
+				#{createUser,jdbcType=BIGINT},
+			</if>
+			<if test="createDate != null">
+				#{createDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateDate != null">
+				#{updateDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="delFlg !=null">
+				#{delFlg},
+			</if>
+			<if test="showDate !=null">
+				#{showDate},
+			</if>
+			<if test="type !=null">
+				#{type},
+			</if>
+			<if test="distance !=null">
+				#{distance},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective"
+		parameterType="com.linle.attendanceTemplate.model.AttendanceTemplate">
+		update attendance_template
+		<set>
+			<if test="name != null">
+				name = #{name,jdbcType=VARCHAR},
+			</if>
+			<if test="uids != null">
+				uids = #{uids,jdbcType=VARCHAR},
+			</if>
+			<if test="workDays != null">
+				work_days = #{workDays,jdbcType=VARCHAR},
+			</if>
+			<if test="onDuty != null">
+				on_duty = #{onDuty,jdbcType=VARCHAR},
+			</if>
+			<if test="offDuty != null">
+				off_duty = #{offDuty,jdbcType=VARCHAR},
+			</if>
+			<if test="remind != null">
+				remind = #{remind,jdbcType=INTEGER},
+			</if>
+			<if test="address != null">
+				address = #{address,jdbcType=VARCHAR},
+			</if>
+			<if test="communityId != null">
+				community_id = #{communityId,jdbcType=BIGINT},
+			</if>
+			<if test="createUser != null">
+				create_user = #{createUser,jdbcType=BIGINT},
+			</if>
+			<if test="createDate != null">
+				create_date = #{createDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateDate != null">
+				update_date = #{updateDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="delFlg !=null">
+				del_flg = #{delFlg},
+			</if>
+			<if test="showDate !=null">
+				show_date = #{showDate},
+			</if>
+			<if test="type !=null">
+				type = #{type},
+			</if>
+			<if test="distance !=null">
+				distance = #{distance},
+			</if>
+		</set>
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+	<update id="updateByPrimaryKey"
+		parameterType="com.linle.attendanceTemplate.model.AttendanceTemplate">
+		update attendance_template
+		set name = #{name,jdbcType=VARCHAR},
+		uids = #{uids,jdbcType=VARCHAR},
+		work_days = #{workDays,jdbcType=VARCHAR},
+		on_duty = #{onDuty,jdbcType=VARCHAR},
+		off_duty = #{offDuty,jdbcType=VARCHAR},
+		remind = #{remind,jdbcType=INTEGER},
+		address = #{address,jdbcType=VARCHAR},
+		community_id = #{communityId,jdbcType=BIGINT},
+		create_user = #{createUser,jdbcType=BIGINT},
+		create_date = #{createDate,jdbcType=TIMESTAMP},
+		update_date = #{updateDate,jdbcType=TIMESTAMP},
+		del_flg = #{delFlg},
+		show_date = #{showDate},
+		type = #{type},
+		distance = #{distance}
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+
+	<select id="getAllData" parameterType="page" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from attendance_template
+		where community_id = #{params.communityId} and del_flg = 0
+	</select>
+	<!-- 根据小区 -->
+	<select id="getAllTemplateUser" parameterType="map" resultType="string">
+		select GROUP_CONCAT(uids) from attendance_template where community_id =#{communityId} and del_flg = 0
+	</select>
+	
+	<select id="selectTemplateByUserId" parameterType="users" resultMap="BaseResultMap">
+		SELECT <include refid="Base_Column_List" />
+		FROM attendance_template WHERE find_in_set(#{id}, uids);
+	</select>
+	
+	<select id="selectDefaultTemplate" parameterType="users" resultMap="BaseResultMap">
+		SELECT <include refid="Base_Column_List" />
+		FROM attendance_template
+		where community_id = #{community.id} and type = 0
+	</select>
+	
+	<select id="selectNeedRemindTemplate" resultMap="BaseResultMap">
+		SELECT <include refid="Base_Column_List" />
+		FROM attendance_template
+		where remind !=0 and del_flg !=1
+	</select>
+</mapper>

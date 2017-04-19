@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.linle.repairRecord.mapper.RepairRecordMapper" >
+  <resultMap id="BaseResultMap" type="com.linle.entity.sys.RepairRecord" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="single" property="single" jdbcType="VARCHAR" />
+    <result column="community_id" property="communityId" jdbcType="BIGINT" />
+    <result column="content" property="content" jdbcType="VARCHAR" />
+    <result column="begin_date" property="beginDate" jdbcType="TIMESTAMP" />
+    <result column="end_date" property="endDate" jdbcType="TIMESTAMP" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+    <result column="parent_type_id" property="parentTypeId" jdbcType="INTEGER" />
+  	<result column="repair_pattern" property="repairPattern" jdbcType="INTEGER" />
+    <association property="folder" column="folder_id" select="com.linle.system.mapper.SysFolderMapper.getByFolderId"/>
+    <association property="repairType" column="repair_type_id" select="com.linle.repairType.mapper.RepairTypeMapper.selectByPrimaryKey"/>
+    <association property="user" column="user_id" select="com.linle.user.mapper.UserMapper.getById"/>
+  </resultMap>
+   
+   <resultMap id="statisticsResultMap" type="com.linle.entity.sys.RepairRecord" extends="BaseResultMap">
+     <result column="userName" property="userName" jdbcType="VARCHAR" />
+     <result column="mobile_Phone" property="mobilePhone" jdbcType="VARCHAR" />
+     <result column="overall" property="overall" jdbcType="VARCHAR" />
+   </resultMap>
+   
+  <resultMap  id="RepairListForAPIResult" type="RepairVo">
+  	<id column="id" property="id" jdbcType="BIGINT" />
+  	<result column="content" property="content" jdbcType="VARCHAR" />
+  	<result column="type_name" property="typeName"/>
+  	<result column="begin_date" property="beginDate"/>
+  	<result column="end_date" property="endDate"/>
+  	<result column="status" property="status"/>
+  	<result column="create_date" property="createDate"/>
+  	<collection property="images" column="folder_id" select="com.linle.system.mapper.SysFileMapper.findFilesUrlByFolderId" />
+  	<collection property="thumImages" column="folder_id" select="com.linle.system.mapper.SysFileMapper.findThumFilesUrlByFolderId" />
+  </resultMap>
+  			
+  <sql id="Base_Column_List" >
+    id, single, community_id, user_id, content, repair_type_id,parent_type_id,repair_pattern, begin_date, end_date, 
+    status, folder_id, create_date, update_date
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from repair_record
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from repair_record
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.linle.entity.sys.RepairRecord" >
+    insert into repair_record (id, single, community_id, 
+      user_id, content, repair_type_id, parent_type_id,repair_pattern,
+      begin_date, end_date, status, 
+      folder_id, create_date, update_date
+      )
+    values (#{id,jdbcType=BIGINT}, #{single,jdbcType=VARCHAR}, #{communityId,jdbcType=BIGINT}, 
+      #{user.id,jdbcType=BIGINT}, #{content,jdbcType=VARCHAR}, #{repairType.id,jdbcType=BIGINT}, #{parentTypeId,jdbcType=INTEGER},
+      #{repairPattern,jdbcType=INTEGER},#{beginDate,jdbcType=TIMESTAMP}, #{endDate,jdbcType=TIMESTAMP}, #{status,jdbcType=INTEGER}, 
+      #{folder.id,jdbcType=BIGINT}, #{createDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.linle.entity.sys.RepairRecord" >
+    insert into repair_record
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="single != null" >
+        single,
+      </if>
+      <if test="communityId != null" >
+        community_id,
+      </if>
+      <if test="user != null" >
+        user_id,
+      </if>
+      <if test="content != null" >
+        content,
+      </if>
+      <if test="repairType != null" >
+        repair_type_id,
+      </if>
+      <if test="parentTypeId != null" >
+        parent_type_id,
+      </if>
+      <if test="repairPattern != null" >
+        repair_pattern,
+      </if>
+      <if test="beginDate != null" >
+        begin_date,
+      </if>
+      <if test="endDate != null" >
+        end_date,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="folder != null" >
+        folder_id,
+      </if>
+        create_date,
+        update_date,
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="single != null" >
+        #{single,jdbcType=VARCHAR},
+      </if>
+      <if test="communityId != null" >
+        #{communityId,jdbcType=BIGINT},
+      </if>
+      <if test="user != null" >
+        #{user.id,jdbcType=BIGINT},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="repairType != null" >
+        #{repairType.id,jdbcType=BIGINT},
+      </if>
+      <if test="parentTypeId != null" >
+        #{parentTypeId,jdbcType=INTEGER},
+      </if>
+      <if test="repairPattern != null" >
+         #{repairPattern,jdbcType=INTEGER},
+      </if>
+      <if test="beginDate != null" >
+        #{beginDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endDate != null" >
+        #{endDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="folder != null" >
+        #{folder.id,jdbcType=BIGINT},
+      </if>
+        now(),
+        now(),
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.linle.entity.sys.RepairRecord" >
+    update repair_record
+    <set >
+      <if test="single != null" >
+        single = #{single,jdbcType=VARCHAR},
+      </if>
+      <if test="communityId != null" >
+        community_id = #{communityId,jdbcType=BIGINT},
+      </if>
+      <if test="user != null" >
+        user_id = #{user.id,jdbcType=BIGINT},
+      </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=VARCHAR},
+      </if>
+       <if test="repairType != null" >
+        repair_type_id = #{repairType.id,jdbcType=BIGINT},
+      </if>
+      <if test="parentTypeId != null" >
+        parent_type_id = #{parentTypeId,jdbcType=INTEGER},
+      </if>
+      <if test="repairPattern != null" >
+        repair_pattern = #{repairPattern,jdbcType=INTEGER},
+      </if>
+      <if test="beginDate != null" >
+        begin_date = #{beginDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endDate != null" >
+        end_date = #{endDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="folder != null" >
+        folder_id = #{folder.id,jdbcType=BIGINT},
+      </if>
+      <if test="updateDate != null" >
+        update_date = now(),
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.linle.entity.sys.RepairRecord" >
+    update repair_record
+    set single = #{single,jdbcType=VARCHAR},
+      community_id = #{communityId,jdbcType=BIGINT},
+      user_id = #{user.id,jdbcType=BIGINT},
+      content = #{content,jdbcType=VARCHAR},
+      repair_type_id = #{repairType.id,jdbcType=BIGINT},
+      parent_type_id = #{parentTypeId,jdbcType=INTEGER},
+      repair_pattern = #{repairPattern,jdbcType=INTEGER},
+      begin_date = #{beginDate,jdbcType=TIMESTAMP},
+      end_date = #{endDate,jdbcType=TIMESTAMP},
+      status = #{status,jdbcType=INTEGER},
+      folder_id = #{folder.id,jdbcType=BIGINT},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  <select id="getAllData" resultMap="BaseResultMap" parameterType="page">
+    select 
+    <include refid="Base_Column_List" />
+    from repair_record
+    left join (select id as uid, name,mobile_Phone from users) as tb1
+    on repair_record.user_id = tb1.uid
+  	where community_id  = #{params.communityId}
+  	<if test="params !=null">
+  		<if test="params.status != null and params.status !='' and params.status !='-1' ">
+  			and status = #{params.status}
+  		</if>
+  		<if test="params.parentTypeId != null and params.parentTypeId==0">
+			and (parent_type_id=#{params.parentTypeId}  or parent_type_id is null)
+		</if>
+		<if test="params.parentTypeId != null and params.parentTypeId==1">
+			and parent_type_id=1
+		</if>
+  		<if test="params.single != null and params.single !=''">
+  			and single = #{params.single}
+  		</if>
+  		<if test="params.typeId != null and params.typeId !='' and params.typeId !='-1'">
+  			and repair_type_id = #{params.typeId}
+  		</if>
+  		<if test="params.phone != null and params.phone !=''">
+  			and (tb1.name=#{params.phone} or tb1.mobile_Phone=#{params.phone})
+  		</if>
+  		<if test="params.createDate != null">
+  			and TO_DAYS(create_date)= TO_DAYS(#{params.createDate})
+  		</if>
+  		
+  		<if test="params.beginDate != null and params.endDate == null">
+  		 <![CDATA[ and TO_DAYS(begin_date) >= TO_DAYS(#{params.beginDate}) ]]> 
+  		</if>
+  		<if test="params.beginDate == null and params.endDate != null">
+  		 <![CDATA[	and TO_DAYS(ifnull(end_date,begin_date)) <= TO_DAYS(#{params.endDate}) ]]> 
+  		</if>
+  		<if test="params.beginDate != null and params.endDate != null">
+  		<![CDATA[	and TO_DAYS(begin_date) >= TO_DAYS(#{params.beginDate}) and TO_DAYS(ifnull(end_date,begin_date)) <= TO_DAYS(#{params.endDate}) ]]> 
+  		</if>
+  	</if>
+  	order by repair_record.create_date desc
+  </select>
+  <!-- 操作报修状态 -->
+  <update id="operate" parameterType="map">
+  	update repair_record
+  	set status = #{status}
+  	where id = #{id}
+  </update>
+  
+  <!-- 获得报修记录 -->
+  <select id="getRepairList" parameterType="map" resultMap="RepairListForAPIResult">
+  		select repair_record.create_date as create_date,repair_record.id as id ,content,`status`,folder_id,date_format(begin_date,'%Y-%c-%d %H:%i:%s') as begin_date,ifnull(date_format(end_date,'%Y-%c-%d %H:%i:%s'),"") as end_date,repair_type.type_name
+		from repair_record
+		left join repair_type on repair_record.repair_type_id=repair_type.id
+		where user_id = #{uid} 
+		<if test="parentTypeId != null and parentTypeId==0">
+			and (parent_type_id=#{parentTypeId}  or parent_type_id is null)
+		</if>
+		<if test="parentTypeId != null and parentTypeId==1">
+			and parent_type_id=1
+		</if>
+		order by `status`,repair_record.create_date desc
+  </select>
+  
+  <update id="operateForAPI" parameterType="map">
+  	update repair_record
+  		set status = #{status}
+  	where id = #{rid} and user_id = #{uid}
+  </update>
+  
+  <!-- 获得待处理报修总数 -->
+  <select id="getCountUnRepair" parameterType="long" resultType="long">
+  		SELECT COUNT(*) FROM repair_record WHERE community_id=#{community_id} and `status`=0
+  </select>
+  
+  <!-- 获得最新一条待处理报修记录-->
+  <select id="getNewUnRepairRecord" parameterType="long" resultMap="statisticsResultMap">
+  		SELECT record.*,`user`.`name` userName,`user`.mobile_Phone,room.overall 
+  		FROM repair_record  record
+		LEFT JOIN users user on record.user_id=`user`.id 
+		LEFT JOIN room_no room on room.id=user.address_details
+		WHERE record.community_id=#{community_id} and record.`status`=0
+		order by record.create_date asc 
+		limit 0,1
+  </select>
+  
+</mapper>

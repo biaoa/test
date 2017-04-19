@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.linle.bindBankCard.mapper.BindBankCardMapper" >
+  <resultMap id="BaseResultMap" type="com.linle.entity.sys.BindBankCard" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="card_no" property="cardNo" jdbcType="VARCHAR" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+    <result column="u_id" property="uId" jdbcType="BIGINT" />
+    <result column="bank_name" property="bankName"/>
+    <result column="card_type" property="cardType"/>
+    <result column="logo" property="logo"/>
+  </resultMap>
+  
+  <resultMap id="CardListAPIResult" type="com.linle.mobileapi.v1.model.BankRes" >
+      <result column="bank_name" property="bankName"/>
+      <result column="card_type" property="cardType"/>
+  	  <result column="card_no" property="cardNo" jdbcType="VARCHAR" />
+  	  <result column="logo" property="logo"/>
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    id, card_no, create_date, update_date, u_id,bank_name,card_type,logo
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from bind_bank_card
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from bind_bank_card
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.linle.entity.sys.BindBankCard" >
+    insert into bind_bank_card (id, card_no, create_date, 
+      update_date, u_id ,bank_name,card_type,logo)
+    values (#{id,jdbcType=BIGINT}, #{cardNo,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, 
+      #{updateDate,jdbcType=TIMESTAMP}, #{uId,jdbcType=BIGINT},#{bankName},#{cardType},#{logo})
+  </insert>
+  <insert id="insertSelective" parameterType="com.linle.entity.sys.BindBankCard" >
+    insert into bind_bank_card
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="cardNo != null" >
+        card_no,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="updateDate != null" >
+        update_date,
+      </if>
+      <if test="uId != null" >
+        u_id,
+      </if>
+      <if test="bankName !=null">
+      	bank_name,
+      </if>
+      <if test="cardType !=null">
+      	card_type,
+      </if>
+      <if test="logo !=null">
+      	logo,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="cardNo != null" >
+        #{cardNo,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="uId != null" >
+        #{uId,jdbcType=BIGINT},
+      </if>
+        <if test="bankName !=null">
+      	#{bankName},
+      </if>
+      <if test="cardType !=null">
+      	#{cardType},
+      </if>
+      <if test="logo !=null">
+      	#{logo},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.linle.entity.sys.BindBankCard" >
+    update bind_bank_card
+    <set >
+      <if test="cardNo != null" >
+        card_no = #{cardNo,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="uId != null" >
+        u_id = #{uId,jdbcType=BIGINT},
+      </if>
+      <if test="bankName !=null">
+      	bank_name = #{bankName},
+      </if>
+      <if test="cardType !=null">
+      	card_type = #{cardType},
+      </if>
+      <if test="logo !=null">
+      	logo =#{logo},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.linle.entity.sys.BindBankCard" >
+    update bind_bank_card
+    set card_no = #{cardNo,jdbcType=VARCHAR},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP},
+      u_id = #{uId,jdbcType=BIGINT},
+      bank_name = #{bankName},
+      card_type = #{cardType},
+      logo = #{logo}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <!-- 银行卡解绑 -->
+  <delete id="deleteCardNo" parameterType="map">
+  	 delete from bind_bank_card
+    where card_no = #{cardNo} and u_id = #{uid}
+  </delete>
+  <!-- 根据用户ID 获得银行卡列表 -->
+  <select id="getCardList" parameterType="map" resultMap="CardListAPIResult">
+	select bank_name,card_type,card_no,logo
+	from bind_bank_card
+	where u_id = #{uid}
+  </select>
+  
+  <select id="getByCardNo" parameterType="String" resultMap="BaseResultMap">
+	  select 
+    <include refid="Base_Column_List" />
+    from bind_bank_card
+    where card_no =#{cardNo}
+  </select>
+</mapper>

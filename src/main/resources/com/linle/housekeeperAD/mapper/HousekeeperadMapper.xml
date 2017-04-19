@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.linle.housekeeperAD.mapper.HousekeeperadMapper" >
+  <resultMap id="BaseResultMap" type="com.linle.entity.sys.Housekeeperad" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="description" property="description" jdbcType="VARCHAR" />
+    <result column="img" property="img" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+    <result column="community_list" property="communityList" jdbcType="VARCHAR" />
+    <result column="show_flag" property="showFlag" jdbcType="INTEGER" />
+    <result column="create_user" property="createUser" jdbcType="BIGINT" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+    <result column="hasH5" property="hasH5"/>
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.linle.entity.sys.Housekeeperad" extends="BaseResultMap" >
+    <result column="content" property="content" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  
+   <resultMap type="com.linle.mobileapi.v1.model.BannerVO" id="BannerForAPIResult">
+  	<id column="id" property="id"/>
+  	<result column="img" property="img"/>
+  	<result column="hasH5" property="hasH5"/>
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    id, description, img, type, community_list, show_flag, create_user, create_date, 
+    update_date,hasH5
+  </sql>
+  <sql id="Blob_Column_List" >
+    content
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from housekeeper_ad
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from housekeeper_ad
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.linle.entity.sys.Housekeeperad" >
+    insert into housekeeper_ad (id, description, img, 
+      type, community_list, show_flag, 
+      create_user, create_date, update_date, 
+      content,hasH5)
+    values (#{id,jdbcType=BIGINT}, #{description,jdbcType=VARCHAR}, #{img,jdbcType=VARCHAR}, 
+      #{type,jdbcType=INTEGER}, #{communityList,jdbcType=VARCHAR}, #{showFlag,jdbcType=INTEGER}, 
+      #{createUser,jdbcType=BIGINT}, #{createDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP}, 
+      #{content,jdbcType=LONGVARCHAR},#{hasH5})
+  </insert>
+  <insert id="insertSelective" parameterType="com.linle.entity.sys.Housekeeperad" >
+    insert into housekeeper_ad
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="description != null" >
+        description,
+      </if>
+      <if test="img != null" >
+        img,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="communityList != null" >
+        community_list,
+      </if>
+      <if test="showFlag != null" >
+        show_flag,
+      </if>
+      <if test="createUser != null" >
+        create_user,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="updateDate != null" >
+        update_date,
+      </if>
+      <if test="content != null" >
+        content,
+      </if>
+      <if test="hasH5 !=null">
+      	hasH5,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="description != null" >
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="img != null" >
+        #{img,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=INTEGER},
+      </if>
+      <if test="communityList != null" >
+        #{communityList,jdbcType=VARCHAR},
+      </if>
+      <if test="showFlag != null" >
+        #{showFlag,jdbcType=INTEGER},
+      </if>
+      <if test="createUser != null" >
+        #{createUser,jdbcType=BIGINT},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="hasH5 !=null">
+      	#{hasH5},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.linle.entity.sys.Housekeeperad" >
+    update housekeeper_ad
+    <set >
+      <if test="description != null" >
+        description = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="img != null" >
+        img = #{img,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="communityList != null" >
+        community_list = #{communityList,jdbcType=VARCHAR},
+      </if>
+      <if test="showFlag != null" >
+        show_flag = #{showFlag,jdbcType=INTEGER},
+      </if>
+      <if test="createUser != null" >
+        create_user = #{createUser,jdbcType=BIGINT},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="hasH5 !=null">
+      	hasH5 = #{hasH5},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.linle.entity.sys.Housekeeperad" >
+    update housekeeper_ad
+    set description = #{description,jdbcType=VARCHAR},
+      img = #{img,jdbcType=VARCHAR},
+      type = #{type,jdbcType=INTEGER},
+      community_list = #{communityList,jdbcType=VARCHAR},
+      show_flag = #{showFlag,jdbcType=INTEGER},
+      create_user = #{createUser,jdbcType=BIGINT},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP},
+      content = #{content,jdbcType=LONGVARCHAR},
+      hasH5 = #{hasH5}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.linle.entity.sys.Housekeeperad" >
+    update housekeeper_ad
+    set description = #{description,jdbcType=VARCHAR},
+      img = #{img,jdbcType=VARCHAR},
+      type = #{type,jdbcType=INTEGER},
+      community_list = #{communityList,jdbcType=VARCHAR},
+      show_flag = #{showFlag,jdbcType=INTEGER},
+      create_user = #{createUser,jdbcType=BIGINT},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP},
+      hasH5 = #{hasH5}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  <select id="getAllData" parameterType="page" resultMap="BaseResultMap">
+  		select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from housekeeper_ad
+    order by create_date desc
+  </select>
+  
+  <select id="getHousekeeperadForAPI" parameterType="page" resultMap="BannerForAPIResult">
+  		select id,img,hasH5
+  	from housekeeper_ad
+  	where show_flag = 0 
+  	<if test="communityId ==null">
+  		and type = 0
+  	</if>
+  	<if test="communityId !=null">
+  		and (type = 0 or (type = 1 and find_in_set(#{communityId},community_list)))
+  	</if>
+  </select>
+  
+</mapper>

@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>车位订单管理</title> <#include '/common/resources.html'>
+<link rel="stylesheet" media="screen and (min-width: 1580px)" href="${base}/resources/css/sys/jquery.tableui.css" />
+<link rel="stylesheet" media="screen and (max-width: 1580px)" href="${base}/resources/css/sys/tableui-resolving.css" />
+<script src="${base}/resources/js/respond.js" type="text/javascript" async="async"></script>
+<script type="text/javascript" src="${base}/resources/js/jquery-ui.min.js"></script>
+<script type="text/javascript" src="${base}/resources/js/c.js"></script>
+<!-- <script type="text/javascript" src="${base}/resources/js/tooltips.js"></script> -->
+<style type="text/css">
+</style>
+</head>
+<body>
+	<div class="whole">
+		<ol class="breadcrumb">
+			<li><a href="javascript:void(0)">车位信息</a></li>
+			<li class="active">订单信息维护</li>
+		</ol>
+		<div class="o-order">
+		<form action="${base}/garage/ordeList" id="pagerForm" method="post">
+			<div class="o-first">
+				<span class="o-span">订单号&nbsp;：</span>
+				<div class="o-input">
+					<input class="my-price" type="text" name="orderNo" value="${orderNo!!}"/>
+				</div>
+				<span class="o-span">订单状态：</span>
+				<div class="o-div">
+					<select class="o-select" name="orderStatus" id="orderStatus">
+						<option value="">全部</option>
+						<option value="0">待付款</option>
+						<option value="5">已关闭</option>
+						<option value="4">交易成功</option>
+					</select>
+				</div>
+			</div>
+			<div class="o-second">
+				<span class="o-span">申请用户：</span>
+				<div class="o-input">
+					<input class="my-price" type="text" name="userNmae" value="${userNmae!!}"/>
+				</div>
+				<span class="o-span">申请类型：</span>
+				<div class="o-div">
+					<select class="o-select" id="order_type" name="orderType">
+						<option value="">全部</option>
+						<option value="space">预定</option>
+						<option value="spaceLease">转租</option>
+						<option value="spaceRenew">续费</option>
+					</select>
+				</div>
+				<span class="o-span">所在车库：</span>
+				<div class="o-div">
+					<select class="o-select" name="garageId" id="garageId">
+					<option value="" selected="selected">全部</option>
+					<#list garageList as garage>
+						<option value="${garage.id}" >${garage.name}</option>
+					</#list>
+					</select>
+				</div>
+			</div>
+			<div class="o-thrid o-thrid-margin-left">
+				<button class="o-btn searchForm">搜索</button>
+<!-- 				<button class="o-btn">发送通知</button> -->
+<!-- 				<button class="o-btn">导出数据</button> -->
+			</div>
+		</div>
+		<div class="tab-order">
+			<div class="box tab2">
+				<ul class="tab_menu">
+					<li class="${class1}" val="">全部(0)</li>
+					<li class="${class3}" val="0">待付款(0)</li>
+					<li class="${class4}" val="5">已关闭(0)</li>
+					<li class="${class5}" val="4">交易成功(0)</li>
+				</ul>
+				<div class="tab_box">
+					<div>
+						<table class="table_solid" border="0" cellspacing="0">
+							<tbody>
+								<tr class="evenRow">
+									<th>订单号</th>
+									<th>车位名</th>
+									<th>所在车库</th>
+									<th>申请类型</th>
+									<th>申请套餐</th>
+									<th>有效期</th>
+									<th>申请时间</th>
+									<th>申请用户</th>
+									<th>房号</th>
+									<th>交易状态</th>
+									<th>操作</th>
+								</tr>
+								<#if (pagelist.results)?exists && pagelist.results?size gt 0>
+								<#list pagelist.results as spaceOrder>
+								<tr class="oddRow">
+									<input type="hidden" value="${spaceOrder.userId!!}" />
+									<input type="hidden" value="${spaceOrder.orderId}" />
+									<td>${spaceOrder.orderNo}</td>
+									<td class="ahover" tooltips="${spaceOrder.parkingName!!}">${spaceOrder.parkingName!!}</td>
+									<td>${spaceOrder.grarageName!!}</td>
+									<td>
+										<#if spaceOrder.orderType=='spaceRenew'>
+											续费
+											<#elseif spaceOrder.orderType=='space'>
+											预定
+											<#elseif spaceOrder.orderType=='spaceLease'>
+											转租
+										</#if>
+									</td>
+									<td>
+										<#if spaceOrder.dateType=='0'>
+											一个月
+											<#elseif spaceOrder.dateType=='1'>
+											一季度
+											<#else>
+											一年
+										</#if>
+									</td>
+									<td>
+									<#if spaceOrder.endData??>
+										${spaceOrder.orderCreateDate?string('yyyy/MM/dd HH:mm:ss')}至${spaceOrder.endData?string('yyyy/MM/dd HH:mm:ss')}
+									</#if>
+						
+									</td>
+									<td>${spaceOrder.orderCreateDate?string('yyyy/MM/dd HH')}</td>
+									<td>${spaceOrder.userName!!}</td>
+									<td>${spaceOrder.addressDetail!!}</td>
+									<td>
+										<#if spaceOrder.orderStatus==0>
+											待处理
+											<#elseif spaceOrder.orderStatus==1>
+											待付款
+											<#elseif spaceOrder.orderStatus==5>
+											已关闭
+											<#elseif spaceOrder.orderStatus==4>
+											已付款
+										</#if>
+									</td>
+									<td>
+<!-- 										<a class="td-a">发送通知</a> -->
+<!-- 										<a class="td-b">查看</a> -->
+<!-- 										<a class="td-c">删除</a> -->
+									</td>
+								</tr>
+								</#list>
+							</tbody>
+						</table>
+						<#include '/common/pagination.html'>
+						<#else>
+							</table>
+								<div class="no-data">暂无数据~</div>
+								</#if>
+							
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script src="${base}/resources/js/jquery.tabs.js"></script>
+	<script type="text/javascript">
+	<#if orderStatus??>
+		var  orderStatus =  '${orderStatus}';
+		$("#orderStatus").val(orderStatus);
+	</#if>
+	
+	<#if orderType??>
+		var  orderType =  '${orderType}';
+		$("#order_type").val(orderType);
+	</#if>
+	
+	<#if garageId??>
+		var garageId ='${garageId}';
+		$("#garageId").val(garageId);
+	</#if>
+	
+		$(function() {
+			$('.tab2').Tabs({
+				event : 'click'
+			});
+		});
+		
+		$(".tab_menu li").click(function(){
+			$("#orderStatus").val($(this).attr("val"));
+			$("#pagerForm").submit();
+		});
+		
+		$(".searchForm").clcik(function(){
+			$("#pagerForm").submit();
+		});
+		
+	</script>
+	<script type="text/javascript"
+		src="${base}/resources/js/placeholder.js">
+	</script>
+	<script>
+		$(function(){
+	        document.onkeydown = function(e){ 
+	          var ev = document.all ? window.event : e;
+	            if(ev.keyCode==13) {
+                  $("#pagerForm").submit();
+            }
+        }
+    });  
+         
+    </script>     
+</body>
+</html>

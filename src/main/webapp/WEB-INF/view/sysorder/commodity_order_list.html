@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<#include '/common/resources.html'>
+		<title></title>
+		<link rel="stylesheet" media="screen and (min-width: 1580px)" href="${base}/resources/css/sys/jquery.tableui.css" />
+		<link rel="stylesheet" media="screen and (max-width: 1580px)" href="${base}/resources/css/sys/tableui-resolving.css" />
+		<link rel="stylesheet" href="${base}/resources/css/sys/jquery-ui.min.css" />
+		<link rel="stylesheet" type="text/css" href="${base}/resources/datetimepicker/jquery.datetimepicker.css"/>
+		<script src="${base}/resources/js/respond.js" type="text/javascript" async="async"></script>
+		<script src="${base}/resources/js/refresh.js" type="text/javascript"></script>
+		<script type="text/javascript" src="${base}/resources/js/jquery-ui.min.js"></script>
+		<script src="${base}/resources/datetimepicker/jquery.datetimepicker.js" ></script>
+		
+	</head>
+	<body>
+		<div class="whole">
+			<ol class="breadcrumb">
+				<li><a href="javascript:void(0)">订单中心</a></li>
+				<li class="active">订单列表</li>
+			</ol>
+			<div class="o-order">
+				<form action="${base}/sysorder/commodityOrderList" id="pagerForm">
+				<div class="o-first">
+					<span class="o-span">订&nbsp;单&nbsp;号&nbsp;：</span>
+					<div class="o-input"><input class="my-price" type="text" name="orderNo" value="${orderNo!!}"/></div><span class="o-span">订单状态：</span>
+					<div class="o-div">
+					<select class="o-select" name="status" id="status">
+						<option value="-1">全部</option>
+						<option value="0">待接单</option>
+						<option value="2">待收货</option>
+						<option value="3">待评价</option>
+						<option value="4">已完成</option>
+						<option value="5">已关闭</option>
+						<option value="7">退款</option>
+					</select>
+					</div>
+				</div>
+				<div class="o-second">
+					<span class="o-span">收&nbsp;货&nbsp;人&nbsp;：</span>
+					<div class="o-input"><input class="my-price" type="text" placeholder="姓名或手机号" name="buyer" value="${buyer!!}"/></div><span class="o-span">申请时间：</span>
+					<div class="o-input"><input class="my-times" type="text" id="datepicker2" name="beginDate" value="${beginDate!!}" readonly="readonly"/></div><span class="o-span">--</span>
+					<div class="o-input"><input class="my-times" type="text" id="datepicker3" name="endDate" value="${endDate!!}" readonly="readonly"/></div>
+				</div>
+				<div class="o-thrid o-thrid-margin-left3">
+					<a class="o-btn search1">搜索</a>
+<!-- 					<a class="o-btn">导出订单</a> -->
+				</div>
+			</div>
+			<div class="tab-order">
+				<div class="box tab2">
+					<ul class="tab_menu">
+						<li class="${status_}" val="-1">全部(0)</li>
+						<li class="${status0}" val="0">待接单(0)</li>
+						<li class="${status2}" val="2">待收货(0)</li>
+						<li class="${status3}" val="3">待评价(0)</li>
+						<li class="${status4}" val="4">交易成功(0)</li>
+						<li class="${status5}" val="5">已关闭(0)</li>
+						<li class="${status7}" val="7">退款(0)</li>
+					</ul>
+					<div class="tab_box">
+						<div class="">
+							<table class="table_solid" border="0" cellspacing="0">
+								<tbody>
+									<tr class="evenRow">
+										<th>订单号</th>
+										<th>购买内容</th>
+										<th>下单时间</th>
+										<th>预约时间</th>
+										<th>商品数量</th>
+										<th>订单总额</th>
+										<th>收货人</th>
+										<th>交易状态</th>
+										<th>操作</th>
+									</tr>
+									<#if (pagelist.results)?exists && pagelist.results?size gt 0>
+								<#list pagelist.results as commodityOrder>
+									<tr class="oddRow">
+										<td>${commodityOrder.orderNo}</td>
+										<td>
+											<div class="reimg"><img class="rep-img" src="${base}/resources/images/bb_03.png" /></div>
+											<div class="resp"><span class="rep-sp demoStyle5">
+												<#if commodityOrder.detailList??>
+												<#assign detailInfo="" />
+												<#assign quantity=0 />
+													<#list commodityOrder.detailList as detail>
+														<#assign quantity=quantity+(detail.productQuantity)/>
+														<#assign detailInfo=detailInfo+detail.productName+detail.productQuantity+"份/" />
+													</#list>
+													${detailInfo?substring(0,detailInfo?length-1)}
+												</#if>
+											
+											</span></div>
+										</td>
+										<td>${commodityOrder.createDate?string('yyyy/MM/dd HH:mm')}</td>
+										<td><#if (commodityOrder.endDate)?? && (commodityOrder.beginDate)??>
+												${commodityOrder.beginDate?string('yyyy-MM-dd HH:mm:ss')}至${(commodityOrder.endDate?string('yyyy-MM-dd HH:mm:ss'))?substring(11,19)} 
+												<#else> 尽快 
+											</#if>
+										</td>
+										<td>${quantity}</td>
+										<td>${commodityOrder.totalMoney}</td>
+										<td>${commodityOrder.buyer}</td>
+										<td>
+											<#if commodityOrder.orderStatus==0>
+												待接单
+												<#elseif commodityOrder.orderStatus==1>
+												待付款
+												<#elseif commodityOrder.orderStatus==2>
+												待收货
+												<#elseif commodityOrder.orderStatus==3>
+												待评价
+												<#elseif commodityOrder.orderStatus==4>
+												已完成
+												<#elseif commodityOrder.orderStatus==5>
+												已关闭
+												<#elseif commodityOrder.orderStatus==7>
+												退款中
+												<#elseif commodityOrder.orderStatus==8>
+												退款成功
+												<#elseif commodityOrder.orderStatus==9>
+												退款失败
+											</#if>
+										</td>
+										<td>
+											<#if commodityOrder.orderStatus ==0>
+												<a class="td-b operate common-btn-cz" val="2" no="${commodityOrder.orderNo}">接单</a>
+												<a class="td-b operate common-btn-cz" val="5" no="${commodityOrder.orderNo}">拒绝</a>
+											</#if>
+											<#if commodityOrder.orderStatus==2>
+												<a class="td-b needPresident common-btn-cz"  no="${commodityOrder.orderNo}">需要社长配送</a>
+											</#if>
+											<a class="td-b common-btn-cz" href="${base}/sysorder/commodityOrderDetail/${commodityOrder.orderNo}">查看</a>
+										</td>
+									</tr>
+								</#list>
+								</table>
+								<#include '/common/pagination.html'>
+								<#else>
+								</table>
+								</div>
+								<div class="no-data">暂无数据~</div>
+								</#if>
+								</tbody>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script src="${base}/resources/js/jquery.tabs.js"></script>
+		<script type="text/javascript">
+			$(function() {
+				$('.tab2').Tabs({
+					event: 'click'
+				});
+			});
+		</script>
+		<script type="text/javascript" src="${base}/resources/js/placeholder.js"></script>
+		<script>
+			$(function() {
+				$('#datepicker2,#datepicker3').datetimepicker({
+					lang: 'ch',
+					timepicker: false,
+					format: 'Y-m-d',
+					formatDate: 'Y-m-d'
+				
+				});
+			});
+		</script>
+		<script type="text/javascript">
+			$(".search1").click(function(){
+				$("#pagerForm").submit();
+			});
+		<#if status??>
+			$("#status").val(${status});
+		</#if>
+		
+		$(".tab_menu li").click(function(){
+			$("#status").val($(this).attr("val"));
+			$("#pagerForm").submit();
+		})
+		
+		$(".operate").click(function(){
+			var val = $(this).attr("val");
+			var no  = $(this).attr("no");
+			$.ajax({
+    			type : "post", //表单提交类型 
+    			url : "${base}/sysorder/shoperOperateOrder", //表单提交目标 
+    			data : {
+    				orderNo: no,
+    				status : val
+    			}, //表单数据
+    			success : function(data) {
+    				 layer.msg(data.msg,{
+    				     	shift: 0
+    				     }, function(){
+    				    	 window.location.reload();
+    				     });
+    			}
+    		});
+		});
+		
+		
+		$(".needPresident").click(function(){
+			var no  = $(this).attr("no");
+			$.ajax({
+    			type : "post", //表单提交类型 
+    			url : "${base}/sysorder/needPresident", 
+    			data : {
+    				orderNo: no
+    			}, //表单数据
+    			success : function(data) {
+    				 layer.msg(data.msg,{
+    				     	shift: 0
+    				     }, function(){
+    				    	 window.location.reload();
+    				     });
+    			}
+    		});
+		})
+			$(function() {
+	$("body").moveStopEvent(function() {
+		run(); //加载页面时启动定时器  
+		var interval;
+		function run() {
+			
+			interval = setInterval(refresh, "60000");			
+		}
+		function refresh() {
+               window.location.reload();
+		}	
+		$("body").mousemove(function (e) {
+                //清除setInterval
+                clearInterval(interval);
+            });
+	});
+});
+		</script>
+	</body>
+
+</html>

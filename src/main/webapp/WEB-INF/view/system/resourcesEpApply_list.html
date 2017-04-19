@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>角色管理</title>
+    <meta name="content-type" content="text/html; charset=UTF-8">
+    <#include '/common/resources.html'>
+  </head>
+  <body>
+        <div class="fh_right_box">
+           <h3><span class="iconfont" style="font-size:20px;color:#d65b5a">&#xe621;</span>&nbsp;中介资源注册管理
+           			 <span style="float:right;width:270px;position:absolute;right:0px;top: 21px;">
+	               			 <div class="input-group">
+	      						<input type="text" class="form-control" placeholder="按公司名称，地址，联系人等搜索" name="searchval1" title="按订单编号，公司名称，服务内容等搜索">
+			      				<span class="input-group-btn">
+			       			  		 <button class="btn btn-default sousuo" type="button" id="search">搜索</button>
+			     				</span>
+	   						 </div>
+	             	 </span>
+           </h3>
+           <img src="${base}/resources/images/hr.jpg" class="xian"/>
+        </div>
+	    <table class="table table-striped" style="text-align:center">
+	       <tr>
+	       	 <td>序号</td>
+	         <td>中介名称</td>
+	         <td>营业执照</td>
+	         <td>联系人</td>
+	         <td>地址</td>
+	         <td>申请时间</td>
+	         <td>操作</td>
+	      </tr>
+	      <#if (pagelist.results)?exists && pagelist.results?size gt 0>
+	      <#list pagelist.results as resource>
+		      <tr>
+		         <td>${(resource_index+1)+(pagelist.pageNo-1)*pagelist.pageSize}</td>
+		         <td width="15%">${(resource.name)!''}</td>
+		         <td width="15%">${(resource.license)!''}</td>
+		         <td width="15%">${(resource.contactPerson)!''}</td>
+		         <td width="15%">${(resource.address)!''}</td>
+		         <td class="space">${resource.createDate?string('yyyy/MM/dd HH:mm:ss')}</td>
+		         <td>
+		         	 <input type="hidden" value="${resource.id}" name="resourceId" />
+		         	<select name="status">
+						<option selected="selected" value="locked">未处理</option>
+						<option value="normal">通过</option>
+						<option value="refuse">拒绝</option>
+					</select>
+ 		         </td>
+		      </tr>
+		   </#list> 
+	      </#if>
+		</table>
+		<form action="${base}/sys/resourcesEpApplyList" id="pagerForm" method="post" name="pagerForm">
+		 <#include '/common/pagination.html'>
+		 <input type="hidden" name="searchval1" id="searchval1">
+		</form>  
+		
+</body>
+<script type="text/javascript">
+    $(function () {
+    	$("select[name='status']").change(
+    			function() {
+    				var statuts = $(this).val();
+    				var resourceId = $(this).parent().find(
+    						"input[name='resourceId']").val();
+    				console.log(statuts)
+    				$.ajax({
+    					url : '${base}/sys/applyResource',
+    					data : {
+    						"statuts" : statuts,
+    						"resourceId" : resourceId
+    					},
+    					type : 'post',
+    					dataType : 'json',
+    					success : function(data) {
+    						alert(data.msg);
+    						window.location.reload();
+    					},
+    					error : function() {
+    						alert("异常！");
+    					}
+    				});
+    			});
+    	
+    });
+    $("#search").click(function(){
+		var searchval=$("input[name=searchval1]").val();
+		if (searchval=="") {
+			return false;
+		}
+		$("#searchval").val(searchval);
+		$("form[name='pagerForm']").submit();
+});
+</script>
+</html>

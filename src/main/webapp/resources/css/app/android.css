@@ -1,0 +1,124 @@
+*{margin: 0;padding: 0;font-family: "微软雅黑";}
+html,body{
+	width: 100%;height: auto;min-height: 100%;position: relative;background-color: #EFEFEF;overflow: auto;
+}
+header{
+	width: 100%;height: 80px;background-color:white;border-bottom: 1px solid #DDDDDD;
+}
+header .btn{
+	width: 30%;float: left;height: 100%;
+}
+header .btn img{
+	width: 30px;margin-top: 20px;margin-left: 15px;
+}
+header .title{
+	width: 70%;float: left;
+}
+.title span{
+	margin-left: 15%;font-size:30px;margin-top: 15px;float: left;
+}
+.problem{
+	width: 100%;height: 43px;background-color: white;margin-top: 16px;border-bottom: 1px solid #DDDDDD;position: relative;
+}
+.problems{
+	width: 100%;height: 43px;background-color: white;border-bottom: 1px solid #DDDDDD;position: relative;
+}
+.question{
+	color: #333333;font-size: 16px;float: left;margin-left: 32px;margin-top: 12px;
+	
+}
+.test1{
+	display: none;width: 95%;float: right;height: auto;overflow: hidden;border-bottom: 1px solid #DDDDDD;padding-bottom: 32px;
+	background-color: #EFEFEF;
+}
+.demo{
+	width: 100%;height: auto;overflow: hidden;padding-bottom: 5px;border-bottom:1px solid #B9B9B9;padding-top: 16px;
+}
+.demo:last-child{
+	border: none;
+}
+.clearfix{
+	clear: both;
+}
+.ques{
+	font-size: 15px;color: #333333;
+}
+.answer{
+	float: left;font-size: 12px;margin-top: 16px;color:#898989;padding-bottom: 16px;
+}
+
+
+.problems> a::before,.problems> a::after,.problem> a::before,.problem> a::after {
+    right: 20px;
+    -webkit-transform-origin: 9px 50%;
+    -moz-transform-origin: 9px 50%;
+    -ms-transform-origin: 9px 50%;
+    -o-transform-origin: 9px 50%;
+    transform-origin: 9px 50%;}
+    
+    .problems > a::before, .problems > a::after, .problem > a::before, .problem > a::after{
+    content: '';
+    position: absolute;
+    top: 50%;
+    margin-top: -1px;
+    display: inline-block;
+    height: 2px;
+    width: 10px;
+    background: #a6b6c8;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+}
+.problems > a::before,.problem > a::before{
+    -webkit-transform: rotate(-225deg);
+    -moz-transform: rotate(-225deg);
+    -ms-transform: rotate(-225deg);
+    -o-transform: rotate(-225deg);
+    transform: rotate(-225deg);
+}
+.problems a::after,.problem a::after {
+    -webkit-transform: rotate(45deg);
+    -moz-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    -o-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
+
+/*服务协议*/
+.body{
+	width: 100%;height: auto;min-height: 100%;overflow: auto;background-color: white;
+}
+.top-title{
+	width: 80%;margin: 0 auto;height: 48px;border-bottom: 1px dashed #eeeeee;text-align: center;padding-top: 16px;
+}
+.top-title span{
+	font-size: 15px;color: #333333;margin-top: 32px;
+}
+.text{
+	margin-top: 30px;width: 100%;height: auto;overflow: auto;border-bottom: 1px dashed #DDDDDD;
+}
+.rectangle span{
+	color: white;font-size: 22px;float: left;margin-left: 16px;margin-top: 10px;
+}
+.arrow1{
+	margin-left: -50px;
+	float: left;
+  	width: 0px;
+  	height:0px;
+  	line-height: 0px;
+  	border-width: 25px 25px 25px 25px;
+  	border-style: solid dashed dashed dashed;
+  	border-left-color: transparent;
+  	border-right-color: white;
+  	border-top-color: transparent;
+  	border-bottom-color:transparent;
+}
+.content{
+	clear: both;width: 80%;margin: 0 auto;padding-top: 27px;padding-bottom: 33px;
+}
+.number{
+	width: 11%;float: left;font-size: 15px;margin-bottom: 34px;color: #333333;
+}
+.xy{width: 80%;float: left;	font-size: 14px;margin-bottom: 34px;}
+.xy span{
+	color: #333333;
+}

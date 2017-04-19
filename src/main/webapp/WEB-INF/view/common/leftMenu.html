@@ -1,0 +1,114 @@
+<meta charset="UTF-8">
+<div id="main_left">
+   	<a href="javascript:;"><img src="${base}/resources/images/user_img.jpg"/></a>
+   	<#if uType = 'KCZX'>
+   	<div id="list"><span class="bj iconfont">&#xe60d;</span>&nbsp;<a href="${base}/sys/index" target="myiframe">首页</a></div>
+   	</#if>
+   	<#if uType = 'ZJZY'>
+   	<div id="list"><span class="bj iconfont">&#xe60d;</span>&nbsp;<a href="${base}/sys/resIndex" target="myiframe">中介首页</a></div>
+   	</#if>
+   	<@shiro.hasPermission name="hatch_manage">
+       	<div id="list"><span class="bj iconfont">&#xe60d;</span>&nbsp;<a href="${base}/inapply/index" target="myiframe">孵化功能</a></div>
+   	</@shiro.hasPermission>
+   	<@shiro.hasPermission name="fhq_res_mangere">
+   		<div id="list" class="men">
+   		<span class="bj iconfont">&#xe621;</span>&nbsp;<a href="javascript:;" target="myiframe">账号管理</a>
+   		</div>
+   		<ul class="hider" style="display: none;">
+	        <@shiro.hasPermission name="res_list_manager">
+   			<li><a href="${base}/sys/resourcesEpList" target="myiframe">中介企业列表</a></li>
+   			</@shiro.hasPermission>
+   			<li><a href="${base}/sys/resourcesEpApplyList" target="myiframe">中介申请列表</a></li>
+   			<li><a href="${base}/allhatch/list" target="myiframe" >企业列表</a></li>
+   			<li style="display: none;"><a href="${base}/allhatch/importexcel" target="myiframe">导入企业信息</a></li>
+	    </ul>
+   	</@shiro.hasPermission>
+    <@shiro.hasPermission name="plan_manage">
+    	<div id="list" class="men"> 
+    	<span class="bj iconfont">&#xe626;</span>&nbsp;<a href="javascript:;">任务管理</a>
+	    </div>
+	    <ul class="hider" style="display: none;">
+	        <li><a href="${base}/plan?type=FIX" target="myiframe">固定任务</a></li>
+	        <li><a href="${base}/plan?type=REPEATABLE" target="myiframe">重复任务</a></li>
+	        <li><a href="${base}/plan?type=TEMPORARY" target="myiframe">临时任务</a></li>
+	    </ul>
+   	</@shiro.hasPermission>
+   	<@shiro.hasPermission name="msg_search_manage">
+	   	<div id="list">
+	        <span class="bj iconfont">&#xe60a;</span>&nbsp;<a href="${base}/statistics/index"  target="myiframe">信息检索</a>
+	    </div>
+   	</@shiro.hasPermission>
+    <@shiro.hasPermission name="service">
+   	 	<div id="list" class="men"> 
+    	<span class="bj iconfont">&#xe626;</span>&nbsp;<a href="javascript:;" target="myiframe">淘服务管理</a>
+    	</div>
+    	<ul class="hider" style="display: none;">
+    	<@shiro.hasPermission name="service_order">
+			 <li><a href="${base}/serviceOrder/index" target="myiframe">服务订单</a></li>    	
+    	</@shiro.hasPermission>
+    	<@shiro.hasPermission name="resources_manager">
+			 <li><a href="${base}/service/index" target="myiframe">我的服务</a></li>    	
+    	</@shiro.hasPermission>
+    	</ul>
+    </@shiro.hasPermission>
+    
+      <@shiro.hasPermission name="enterprises">
+    	<div id="list" class="men">
+    	<span class="bj iconfont">&#xe60c;</span>&nbsp;<a href="javascript:;" target="myiframe">淘企业管理</a></div>
+    	<ul class="hider" style="display: none;">
+	    	<@shiro.hasPermission name="enterprises_list">
+	    		<li><a href="${base}/chooseBusiness/index" target="myiframe">企业需求服务</a></li>
+	    	</@shiro.hasPermission>
+	    	<@shiro.hasPermission name="me_enterprises_list">
+	    		<li><a href="${base}/chooseBusiness/participateBusiness" target="myiframe">我应标的服务</a></li>
+	    	</@shiro.hasPermission>
+    	</ul>
+   	</@shiro.hasPermission>
+    
+    
+    
+    
+    <@shiro.hasPermission name="consultation">
+    	<div id="list" class="men">
+    	<span class="bj iconfont">&#xe60c;</span>&nbsp;<a href="javascript:;" target="myiframe">创业咨询</a></div>
+    	<ul class="hider" style="display: none;">
+	    	<@shiro.hasPermission name="me_consultation_list">
+	    		<li><a href="${base}/consultation/index?type=me" target="myiframe">我的咨询</a></li>
+	    	</@shiro.hasPermission>
+	    		<li><a href="${base}/consultation/index?type=all" target="myiframe">咨询大厅</a></li>
+    	</ul>
+   	</@shiro.hasPermission>
+   	
+   	 <@shiro.hasPermission name="patent_manage">
+    	<div id="list" class="men">
+    	<span class="bj iconfont">&#xe60c;</span>&nbsp;<a href="javascript:;" target="myiframe">专利管理</a></div>
+    	<ul class="hider" style="display: none;">
+	    	<@shiro.hasPermission name="patent_manage_list">
+	    		<li><a href="${base}/patent/index" target="myiframe">专利列表</a></li>
+	    	</@shiro.hasPermission>
+    	</ul>
+   	</@shiro.hasPermission>
+   	
+   	
+    <@shiro.hasPermission name="talk_online">
+	   <div id="list" class="men">
+        <span class="bj iconfont">&#xe60f;</span>&nbsp;<a href="javascript:;">在线互动</a>
+    	</div>
+    	<ul class="hider" style="display: none;">
+        <li><a href="${base}/onlineInteraction/list?type=QQ" target="myiframe">QQ群管理</a></li>
+        <li><a href="${base}/onlineInteraction/list?type=WEIXIN" target="myiframe">微信群管理</a></li>
+    </ul>
+   	</@shiro.hasPermission>
+   <@shiro.hasPermission name="system_manage">
+        <div id="list" class="men"> 
+    	<span class="bj iconfont">&#xe626;</span>&nbsp;<a href="javascript:;">系统管理</a>
+	    </div>
+	    <ul class="hider" style="display: none;">
+	    	<@shiro.hasPermission name="system_accountManage"><li><a href="${base}/sys/userlist" target="myiframe">账号管理</a></li></@shiro.hasPermission>
+	    	<@shiro.hasPermission name="system_childAccount_Set"><li><a href="${base}/sys/childAccountlist" target="myiframe">子帐号管理</a></li></@shiro.hasPermission>
+	    	<@shiro.hasPermission name="system_userRoleManage"><li><a href="${base}/sys/rolelist" target="myiframe">角色管理</a></li></@shiro.hasPermission>
+	    	<@shiro.hasPermission name="system_logManage"><li><a href="${base}/sys/loglist" target="myiframe">日志管理</a></li></@shiro.hasPermission>
+	    	<@shiro.hasPermission name="system_passwordSet"><li><a href="${base}/sys/updatePasswdPage" target="myiframe">密码设置</a></li></@shiro.hasPermission>
+	    </ul>
+   	</@shiro.hasPermission>
+</div>

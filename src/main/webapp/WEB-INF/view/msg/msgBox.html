@@ -1,0 +1,44 @@
+<div id="dv">
+	<div id="popHead">
+		<a href="javascript:void(0);" id="popClose" title="关闭">关闭</a>
+		<h2>温馨提示</h2>
+	</div>
+	<div id="popContent">
+		<h5 id="popTitle" style="text-align: center;"></h5>
+		<div id="popIntro" title="点击查看"></div>
+	</div>
+	<p id="popMore">
+		<a href="javascript:void(0);" class="btn-a">下一条 »</a>
+	</p>
+</div>
+<script>
+	$("#popClose").click(function() {
+		closeMsgBox();
+	});
+
+	function show(data) {
+		var body = data.body;
+		if (body.length > 90) {
+			body = body.substring(0, 10) + "...";
+		}
+		$("#popTitle").html(data.tilte != '' ? data.tilte : "新消息");
+		$("#popIntro").html(data.body != '' ? body : "");
+		$("#dv").animate({
+			top : "80%"
+		});
+		if (data.url != '') {
+			open_url = data.url;
+		}
+		$("#popContent").attr("msgId", data.msgId);
+		$("#dv").fadeIn();
+	}
+
+	function closeMsgBox() {
+		$("#dv").fadeOut();
+		stop_flash_title();
+		message_count--;
+	}
+
+	// 	var data = '{"tilte":"意见反馈提醒","body":"用户:1-1-101提交了新的意见反馈，请及时查看。1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111222222222222222222222222222222222222222222222222222222222222333333333333333333333333333333333333333333333333333333333333","url":"/communitySuggestions/list","jsonStr":null}';
+</script>
+</html>

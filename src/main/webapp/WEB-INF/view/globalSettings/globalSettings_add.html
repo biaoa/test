@@ -1,0 +1,207 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta name="renderer" content="webkit|ie-comp|ie-stand">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<title>参数配置管理</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<#include '/common/resources.html'>
+	<link rel="stylesheet" href="${base}/resources/css/sys/add-new.css"/>
+    <link rel="stylesheet" type="text/css" href="${base }/resources/uploadify/uploadify.css">
+    <script src="${base}/resources/js/respond.js" type="text/javascript" async="async"></script>
+    <style>
+    .ads-choice input {
+	float: left;
+	margin-top: 10px;
+}
+
+.ads-choice span {
+	float: left;
+	margin-top: 8px;
+	margin-left: 5px;
+}
+
+.ads-choice label {
+	float: left;
+	margin-left: 10px;
+}
+    
+    </style>
+       <style>
+
+.allxq{
+	float: left;width: auto;max-width:800px;		
+}
+.onexq{
+	width:100%;float: left;max-width: 600px;border-bottom: 1px solid gainsboro;padding-bottom: 10px;padding-top: 5px;
+}
+.onexq-name{min-width: 70px;float: left;}
+.nextxq-name{
+	float: left;max-width: 500px;width: auto;
+}
+.single-name,.single-name input,.single-name span{
+	float: left;
+}
+.single-name input,.single-name span{
+	float: left;margin-bottom: 5px;
+}
+.allxq .float{
+	float: left;
+}
+.allxq .margin{
+width:100%;
+	margin-top: 5px;
+	padding-bottom: 10px;
+}
+</style> 
+</head>
+<body>
+	<div class="whole">
+		<div class="a-plus">
+			<div class="head">
+				<span>参数配置编辑</span>
+			</div>
+				<form action="${base}/globalSettings/doOperate"
+				method="post" id="form1"> 
+<!-- 			<div class="Sheet"> -->
+<!-- 				<div class="content"> -->
+<!-- 					<span class="choice" style="margin-left:38px;">标识：</span> -->
+<!-- 					<div class="inp"  style="width: 22%;"> -->
+<!-- 						<input  -->
+<!-- 						<#if globalSettings.id??> -->
+<!-- 							disabled="disabled" -->
+<!-- 						</#if> -->
+<!-- 						 maxlength="20" type="text" -->
+<!-- 							name="settingKey" id="settingKey" value="${globalSettings.settingKey!!}"/> -->
+<!-- 					</div> -->
+<!-- 				</div> -->
+<!-- 			</div> -->
+		 <div class="Sheet">
+					<span class="choice" style="margin-left:15px;">缴费类型：</span>
+					<div class="province">
+							<select name="settingKey" id="settingKey"  style="width: 146px;">
+							<option value="water">水费</option>
+							<option value="electricity">电费</option>
+							<option value="gas">燃气费</option>
+<!-- 							<option value="propertyFee">物业费</option> -->
+<!-- 							<option value="cableTelevision">有线电视费</option> -->
+<!-- 							<option value="broadband">宽带费</option> -->
+						</select>
+					</div>
+			</div>
+			
+			<div class="s-address">
+					<div>
+						<span class="choice" style="margin-left: 40px;">是否启用：</span>
+					</div>
+					<div class="ads-choice">
+						<label for="normal"><input id="normal" type="radio" name="settingValue" value="Y"/><span>是</span></label>
+						<label for="stata"><input id="stata" type="radio" name="settingValue" value="N" checked="checked"/><span>否</span></label>
+					</div>
+				</div>
+<!-- 				<#if cUser.identity.getCode()==0> -->
+<!-- 				<div class="s-address" id="activityCommunityDiv" > -->
+<!-- 					<div style="float: left; width: 83px;margin-left: 40px;"> -->
+<!-- 						<span class="choice">选择小区：</span> -->
+<!-- 					</div> -->
+<!-- 					<#if communityList?exists && communityList ? size gt 0> -->
+<!-- 							<div class="allxq"> -->
+<!-- 								<div class="onexq" > -->
+<!-- 										<div class="nextxq-name"> -->
+										
+<!-- 										   <#list communityList as community> -->
+<!-- 											<div class="single-name"> -->
+<!-- 													<label><input id="" type="radio" value="${community.id}" name="communityId"/> 	 -->
+<!-- 													<span>${community.name}</span></label> -->
+<!-- 											</div> -->
+<!-- 											</#list> -->
+<!-- 										</div>	 -->
+<!-- 								</div> -->
+<!-- 							</div> -->
+<!-- 					</#if>		 -->
+<!-- 				</div> -->
+<!-- 				<#else> -->
+<!-- 					<input type="hidden" value="${globalSettings.communityId!!}" name="communityId"/>  -->
+<!-- 				</#if>	 -->
+			<div class="Sheet">
+				<div class="a-title">
+					<span class="choice" style="margin-left:38px;">描述：</span>
+					<div class="province">
+						<textarea class="miaosu" style="width: 453px;height: 150px;"  type="text" name="remark" >${globalSettings.remark!!}</textarea>
+					</div>
+				</div>
+			</div>
+			
+			<div class="a-address">
+				<button data-reveal-id="sav" data-animation="fade" class="s-btn">确认</button>
+			</div>
+			<div id="sav" class="reveal-modal"
+				style="opacity: 1; visibility: hidden; top: 150px;">
+				<h3>保存成功</h3>
+				<a class="close-reveal-modal">×</a>
+			</div>
+			<input type="hidden" name="id" value="${globalSettings.id!!}" />
+			</form>
+			
+			<div style="float: left;margin-top: -67px;margin-left: 513px;">
+					<button data-reveal-id="close" onclick="closeBg()" data-animation="fade" class="s-btn">取消</button>
+			</div>
+				
+			<div class="reveal-modal-bg" style="display: none; cursor: pointer;">
+			</div>
+		</div>
+	</div>
+
+	<!--style给定宽度可以影响编辑器的最终宽度-->
+
+	<script type="text/javascript" src="${base}/resources/js/jquery.reveal.js"></script>
+	<script>
+		function setShowLength(obj, maxlength, id) {
+			var rem = maxlength - obj.value.length;
+			var wid = id;
+			if (rem < 0) {
+				rem = 0;
+			}
+			document.getElementById(wid).innerHTML = rem + "/" + "20";
+		}
+		function closeBg() { 
+			 window.location.href="${base}/globalSettings/list";
+		} 
+    	$("#form1").submit(function() {
+			var ajax_url = $(this).attr("action"); //表单目标 
+			var ajax_type = $(this).attr('method'); //提交方法 
+			var ajax_data = $(this).serialize(); //表单数据 
+			var settingKey=$("#settingKey").val();
+			if(settingKey==''){
+				layer.msg("标识不能为空");
+				return false;
+			}
+			$.ajax({
+				type : ajax_type, //表单提交类型 
+				url : ajax_url, //表单提交目标 
+				data : ajax_data, //表单数据
+				success : function(data) {
+					 layer.msg(data.msg,{
+					     	shift: 0
+					     }, function(){
+					    	 if(data.code==0){
+						    	 window.location.href="${base}/globalSettings/list";
+					    	 }
+					     }); 
+				}
+			});
+			return false; //阻止表单的默认提交事件 
+		});
+    	
+	     
+    	<#if (globalSettings.id)??>
+			$("input[name='settingValue'][value=${globalSettings.settingValue}]").attr("checked",true);
+			$("input[name='communityId'][value=${globalSettings.communityId}]").attr('checked','true');
+			$("#settingKey").val(${globalSettings.settingKey!!});
+		</#if>
+	</script>
+	<script>
+	</script>
+</body>
+</html>

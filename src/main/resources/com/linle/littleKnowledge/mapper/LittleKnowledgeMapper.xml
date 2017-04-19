@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.linle.littleKnowledge.mapper.LittleKnowledgeMapper" >
+  <resultMap id="BaseResultMap" type="com.linle.entity.sys.LittleKnowledge" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="img_url" property="imgUrl" jdbcType="VARCHAR" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="description" property="description" jdbcType="VARCHAR" />
+    <result column="del_flag" property="delFlag" jdbcType="INTEGER" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+    <result column="order_no" property="orderNo" jdbcType="INTEGER" />
+    <result column="user_id" property="userId" jdbcType="BIGINT" />
+  </resultMap>
+  
+  <resultMap id="APIResultMap" type="com.linle.mobileapi.v1.model.LittleKnowledgeVO">
+  	<id column="id" property="id"/>
+  	<result column="img_url" property="img"/>
+  	<result column="title" property="title"/>
+  	<result column="description" property="description"/>
+  	<result column="create_date" property="createDate" />
+  	<result column="read_count" property="readCount" />
+  	<result column="thumb_count" property="thumbCount" />
+  	<result column="thumb_status" property="thumbStatus"/>
+  </resultMap>
+  
+  <resultMap id="ResultMapWithBLOBs" type="com.linle.entity.sys.LittleKnowledge" extends="BaseResultMap" >
+    <result column="content" property="content" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  
+  <resultMap  id="readCountResult" type="com.linle.entity.sys.LittleKnowledge" extends="BaseResultMap">
+  	<result column="read_count" property="readCount"/>
+  	<result column="user_read_count" property="distinguishUserCount"/>
+  	<result column="thumb_count" property="thumbCount"/>
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    id, img_url, title, description, del_flag, create_date, update_date, order_no, user_id
+  </sql>
+  <sql id="Blob_Column_List" >
+    content
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from little_knowledge
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from little_knowledge
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.linle.entity.sys.LittleKnowledge" >
+    insert into little_knowledge (id, img_url, title, 
+      description, del_flag, create_date, 
+      update_date, order_no, user_id, content
+      )
+    values (#{id,jdbcType=BIGINT}, #{imgUrl,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR}, 
+      #{description,jdbcType=VARCHAR}, #{delFlag,jdbcType=INTEGER}, #{createDate,jdbcType=TIMESTAMP}, 
+      #{updateDate,jdbcType=TIMESTAMP}, #{orderNo,jdbcType=INTEGER}, #{userId,jdbcType=BIGINT}, #{content,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.linle.entity.sys.LittleKnowledge" >
+    insert into little_knowledge
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="imgUrl != null" >
+        img_url,
+      </if>
+      <if test="title != null" >
+        title,
+      </if>
+      <if test="description != null" >
+        description,
+      </if>
+      <if test="delFlag != null" >
+        del_flag,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="updateDate != null" >
+        update_date,
+      </if>
+        <if test="orderNo != null" >
+        order_no,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="content != null" >
+        content,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="imgUrl != null" >
+        #{imgUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null" >
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null" >
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="delFlag != null" >
+        #{delFlag,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="orderNo != null" >
+        #{orderNo,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.linle.entity.sys.LittleKnowledge" >
+    update little_knowledge
+    <set >
+      <if test="imgUrl != null" >
+        img_url = #{imgUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null" >
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null" >
+        description = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="delFlag != null" >
+        del_flag = #{delFlag,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="orderNo != null" >
+        order_no = #{orderNo,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.linle.entity.sys.LittleKnowledge" >
+    update little_knowledge
+    set img_url = #{imgUrl,jdbcType=VARCHAR},
+      title = #{title,jdbcType=VARCHAR},
+      description = #{description,jdbcType=VARCHAR},
+      del_flag = #{delFlag,jdbcType=INTEGER},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP},
+      order_no = #{orderNo,jdbcType=INTEGER},
+      user_id = #{userId,jdbcType=BIGINT},
+      content = #{content,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.linle.entity.sys.LittleKnowledge" >
+    update little_knowledge
+    set img_url = #{imgUrl,jdbcType=VARCHAR},
+      title = #{title,jdbcType=VARCHAR},
+      description = #{description,jdbcType=VARCHAR},
+      del_flag = #{delFlag,jdbcType=INTEGER},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP},
+      order_no = #{orderNo,jdbcType=INTEGER},
+      user_id = #{userId,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  <select id="getAllData" parameterType="page" resultMap="readCountResult">
+  		   select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    ,IFNULL(read_count,0) as read_count,IFNULL(thumb_count,0) as thumb_count,IFNULL(user_read_count,0) as user_read_count
+    from little_knowledge
+    left join (select knowledge_id ,COUNT(id) as read_count from knowledge_access_record GROUP BY knowledge_id) as access_record
+	on little_knowledge.id=access_record.knowledge_id
+	left join (select knowledge_id ,COUNT(DISTINCT uid) as user_read_count from knowledge_access_record where uid is not null GROUP BY knowledge_id) as user_access_record
+	on little_knowledge.id=user_access_record.knowledge_id
+	left join (select knowledge_id as t_knowledge_id ,COUNT(id) as thumb_count from knowledge_thumb_record GROUP BY knowledge_id) as thumb_record
+	on little_knowledge.id = thumb_record.t_knowledge_id
+	<where>
+		<if test="params.title !=null and params.title !='' ">
+			and (description like CONCAT('%','${params.title}','%')  or title like CONCAT('%','${params.title}','%'))
+		</if>
+		<if test="params.flag !=null">
+		    and del_flag = #{params.flag}
+		</if>
+	</where>
+    order by order_no, del_flag,create_date desc
+  </select>
+  
+  <select id="getAllForAPI" resultMap="APIResultMap" parameterType="map">
+  	select id,img_url,title,description,create_date,IFNULL(read_count,0) as read_count,IFNULL(thumb_count,0) as thumb_count,IFNULL(status,1) as thumb_status from little_knowledge
+	left join (select COUNT(id) as read_count,knowledge_id from knowledge_access_record GROUP BY knowledge_id ) as knowledge_read
+	on little_knowledge.id = knowledge_read.knowledge_id
+	left join (select COUNT(id) as thumb_count,knowledge_id from knowledge_thumb_record GROUP BY knowledge_id) as knowledge_thumb
+	on little_knowledge.id = knowledge_thumb.knowledge_id
+	left join (select status,knowledge_id from knowledge_thumb_record where uid=#{uid} and status =0) as thumb_record
+	on little_knowledge.id = thumb_record.knowledge_id
+	where del_flag = 0
+	order by order_no,create_date desc
+  	limit #{begin},#{end}
+  </select>
+</mapper>

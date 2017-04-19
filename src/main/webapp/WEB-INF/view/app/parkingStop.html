@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>车位转粗</title>
+    <#include '/common/base.html'>
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+	<link rel="stylesheet" href="${base}/resources/css/app/youcar.css" />
+	<link rel="stylesheet" href="${base}/resources/css/app/swiper.min.css">
+	<style type="text/css">
+		.disable{width: 90%;background:#666;margin: 10px auto;text-align: center;padding: 10px 0;border-radius: 10px;}
+	</style>	
+</head>
+<body>
+    <!-- Swiper -->
+    <div class="swiper-container">
+        <div class="swiper-wrapper">
+			<#list spaceList as space>
+					<div class="swiper-slide">
+					<input type="hidden" value='${space.parkingSpace.id}' id="spaceid${space_index}"/>
+					<input type="hidden" value="${space.spaceNo}" id="spaceNo${space_index}">
+					<input type="hidden" value='${space.type}' id="parkingtype${space_index}"/>
+					<input type="hidden" value="${space.beginDate?date}" id="beginDate${space_index}"/>
+					<input type="hidden" value="${space.endDate?date}" id="endDate${space_index}"/>
+					<input type="hidden" value="${space.id}" id="spaceId${space_index}"/>
+					<input type="hidden" value="${space.grageId}" id="grageId${space_index}"/>
+					<input type="hidden" value="${space.orderNo}" id="orderNo${space_index}"/>
+					<input type="hidden" value="${space.status}" id="status${space_index}">
+					<div class="car-order">
+						<div class="<#if (space_index+1)%3==1>
+								first-site
+								<#elseif (space_index+1)%3==2>
+								second-site
+								<#else>
+								thrid-site
+							</#if>">
+							<span class="you-site <#if (space_index+1)%3==1>
+								bb
+								<#elseif (space_index+1)%3==2>
+									cc
+								<#else>
+								zz
+							</#if>">您的停车位</span>
+							<div class="xxdz">
+								<p>${space.spaceInfo}</p>
+								<p>${space.endDate?string('yyyy-MM-dd')}</p>
+							</div>
+							<div class="day-sit">
+								<p>${space.surplusDays}天</p>
+							</div>
+						</div>										
+					</div>
+					</div>
+				</#list>         
+        </div>
+   
+    </div>
+<div class="car-footer">
+	<div class="your-car">
+		<div class="room">
+			<span style="float: left;">房号</span><span style="float: right;">${overall!!}</span>
+			<input  type="hidden" value="${cUser.name!!}"/>
+		</div>
+		<div class="tc">
+			<span style="float: left;">当前套餐</span><span style="float: right;" id="combo">
+				<#if spaceRecode.type=='0'>
+					一月
+					<#elseif spaceRecode.type=='1'>
+					一季度
+					<#elseif spaceRecode.type=='2'>
+					一年
+				</#if>
+			</span>
+		</div>
+		
+	</div>
+		<div class="color">
+		</div>
+			<div class="time-qx"><span>有效期</span></div>
+			<div class="time-choice">
+			<span class="date-car">${spaceRecode.beginDate?string('yyyy-MM-dd')}~${spaceRecode.endDate?string('yyyy-MM-dd')}</span><span class="sy-day" style="color: #ff5000 ;">${spaceRecode.surplusDays}天</span>
+			</div>
+			<div class="stop">
+				<a class="sub-btn">车位申停</a>
+			</div>
+			<div class="lease">
+				<a class="sub-btn">确定转租</a>
+			</div>
+			<div class="disable">
+				<a class="sub-btn">已转租</a>
+			</div>
+		</div>
+	<input type="hidden" value="${spaceRecode.grageId}" id="grageId" />
+    <!-- Initialize Swiper -->
+    <script src="${base}/resources/js/swiper.min.js"></script>
+    <script>
+	function getString(obj){
+		return JSON.stringify(obj);
+		}
+	
+	var grageId = $("#grageId").val();
+	var spaceid = '${spaceRecode.parkingSpace.id}';
+	var select_space = '${spaceRecode.spaceNo}';
+	var spaceRecordId = '${spaceRecode.id}';
+	var date_type='${spaceRecode.type}';//日期下标
+	var orderNo = '${spaceRecode.orderNo}';
+	var _index = 0;
+	var status = '${spaceRecode.status}';
+	buttonShow(status);
+	//点击确定
+	$(".lease").click(function(){
+		//获得选中车位,获得总价格
+		
+		saveorder(grageId,spaceid,select_space,spaceRecordId,date_type);
+		
+	});
+	
+	/**
+	*/
+	function saveorder(grageId,spaceid,select_space,spaceRecordId,date_type){
+		try{
+			window.space.status("create","lease");
+		}catch(e){
+			orderStatus("create","lease");
+		}
+		$.ajax({
+			type : "post",
+			data :{
+					"grageId":grageId,
+					"spaceid" : spaceid,
+					"select_space" : select_space,
+					"spaceRecordId" : spaceRecordId,
+					"dateType" :date_type,
+					"orderNo" : orderNo
+				  },
+			url : "${base}/api/1/saveParkingStopOrder",
+			success : function(data) {
+				if(data.code==0){
+					status = 3;
+					buttonShow(status);
+					$("#status"+_index).val("3");
+					try{
+						window.space.status("success","lease");
+					}catch(e){
+						orderStatus("success","lease");
+					}
+				
+				}else{
+					try{
+						window.space.status("fail","lease");
+					}catch(e){
+						orderStatus("fail","lease");
+					}
+				}
+			},
+			error: function(XMLHttpRequest, textStatus, errorThrown) {
+				try{
+					window.space.status("connectError","lease");
+				}catch(e){
+					orderStatus("connectError","lease");
+				}
+				}
+		});
+	}
+	
+	
+	var swiper = new Swiper('.swiper-container', {
+		pagination: '.swiper-pagination',
+		slidesPerView: 'auto',
+	    centeredSlides: true,
+	    paginationClickable: true,
+	    spaceBetween: 0,
+		onSlideChangeEnd: function(swiper){
+				_index = swiper.snapIndex;
+				date_type= $("#parkingtype"+_index).val();
+				updateCombo(date_type);
+				var beginDate = $("#beginDate"+_index).val();
+				var endDate = $("#endDate"+_index).val();
+				updateDate(beginDate,endDate);
+				
+				status = $("#status"+_index).val();
+				buttonShow(status);
+				spaceRecordId = $("#spaceId"+_index).val(); //车位购买记录ID
+				grageId = $("#grageId"+_index).val(); //车库ID
+				spaceid = $("#spaceid"+_index).val(); //车库详情ID
+				select_space = $("#spaceNo"+_index).val();//车位号
+				orderNo = $("#orderNo"+_index).val();
+				
+				}
+	});
+	
+	function buttonShow(status){
+		console.log(status);
+		if(status=="0"){
+			$(".stop").show();
+			$(".lease").hide();
+			$(".disable").hide();
+		}else if(status=="2") {
+			$(".stop").hide();
+			$(".disable").hide();
+			$(".lease").show();
+		}else if(status=="3"){
+			$(".stop").hide();
+			$(".lease").hide();
+			$(".disable").show();
+		}
+	}
+	
+	function updateDate(beginDate,endDate){
+		$(".date-car").html(beginDate+"~"+endDate);
+		var d1 = new Date(beginDate);
+		var d2 = new Date(endDate);
+		$(".sy-day").html(d2.diff(d1)+"天");
+	}
+	
+	function updateCombo(type){
+		var info="";
+		if(type=="0"){
+			info="一月";
+		}else if(type=="1"){
+			info="一季度";
+		}else if(type=="2"){
+			info="一年";
+		}
+		$("#combo").html(info);
+	}
+	
+		$(".stop").click(function(){
+			try{
+				window.space.status("create","stop");
+			}catch(e){
+				orderStatus("create","stop");
+			}
+			$.ajax({
+				type : "post",
+				data :{
+						"spaceRecordId" : spaceRecordId
+					  },
+				url : "${base}/api/1/parking_stop",
+				success : function(data) {
+					if(data.code==0){
+						status = 2;
+						buttonShow(status);
+						$("#status"+_index).val("2");
+						try{
+							window.space.status("success","stop");
+						}catch(e){
+							orderStatus("success","stop");
+						}
+					}else{
+						try{
+							window.space.status("fail","stop");
+						}catch(e){
+							orderStatus("fail","stop");
+						}
+					}
+				},
+				error: function(XMLHttpRequest, textStatus, errorThrown) {
+					try{
+						window.space.status("connectError","stop");
+					}catch(e){
+						orderStatus("connectError","stop");
+					}
+					}
+			});
+		});
+	
+	Date.prototype.diff = function(date){
+		  return (this.getTime() - date.getTime())/(24 * 60 * 60 * 1000);
+		}
+    </script>
+</body>
+</html>

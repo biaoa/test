@@ -1,0 +1,10 @@
+.add-inp{width: 300px;height: 100%;border: 1px solid gainsboro;position:relative;}
+.add-inp input,.add-ads input{width: 100%;height: 97%;border: 0;}
+.inp-add{margin-left: 20px;width: 80%;height: 35px;border-radius: 3px;float: left;position: relative;}
+.add-plus{width: 98%;float: left;margin: 15px 1%;height: 100%;background-color: white;overflow: auto;}
+.add-ads{margin-left: 20px;width: 80%;height: 35px;border: 1px solid gainsboro;border-radius: 3px;float: left;position: relative;max-width: 450px;}
+.foot-btn{width:600px;float: left;}
+.foot-btn button{border: 0;padding: 5px 12px;background-color: #ff5505;color: white;font-size: 1rem;float: right;margin-right: 50px;}
+.a-name, .a-title, .a-text, .a-area, .a-address, .a-phone, .a-textarea {width: 43%;padding: 20px 10px;height: auto;overflow: hidden;min-width: 600px;}
+
+.content {width: 43%;padding: 20px 10px;height: auto;overflow: hidden;min-width: 600px;}

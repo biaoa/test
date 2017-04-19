@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="renderer" content="webkit|ie-comp|ie-stand">
+<meta name="renderer" content="webkit">
+<title>小区信息</title> <#include '/common/resources.html'>
+<link rel="stylesheet" media="screen and (min-width: 1580px)" href="${base}/resources/css/sys/jquery.tableui.css" />
+<link rel="stylesheet" media="screen and (max-width: 1580px)" href="${base}/resources/css/sys/tableui-resolving.css" />
+<link rel="stylesheet" href="${base}/resources/css/sys/rom-tip.css" />
+<link rel="stylesheet" type="text/css" href="${base }/resources/uploadify/uploadify.css">
+<script src="${base}/resources/js/jquery1.8.3.js" type="text/javascript"></script>
+<script src="${base}/resources/js/respond.js" type="text/javascript" async="async"></script>
+<script src="${base }/resources/uploadify/jquery.uploadify.min.js" type="text/javascript"></script>
+<script src="${base}/resources/js/system/room_list.js" type="text/javascript"></script>
+<style>
+#bg td input,#bg td {
+    font-size: 20px;
+}
+
+</style>
+</head>
+<body>
+	<div class="whole">
+		<ol class="breadcrumb">
+			<li><a href="javascript:void(0)">房号管理</a></li>
+			<li class="active">数据导入</li>
+		</ol>
+			<div class="o-order">
+		<form action="${base}/community/room" id="pagerForm" method="post">
+			<div class="o-second">
+				<span class="o-span">幢：</span>
+				<div class="o-div">
+					<select class="o-select" id="buildingType" name="buildingType">
+						<option value="">全部</option>
+						<#list buildingList as baseEntity>
+							<option value="${baseEntity.name}">${baseEntity.name}</option>
+						</#list>
+					</select>
+				</div>
+				<span class="o-span">单元：</span>
+				<div class="o-div">
+					<select class="o-select" name="unitType" id="unitType">
+						<option value="" selected="selected">全部</option>
+					</select>
+				</div>
+				
+				<span class="o-span">房号：</span>
+				<div class="o-input">
+					<input class="my-price" type="text" name="roomSearch" value="${roomSearch!!}"/>
+				</div>
+			</div>
+			<div class="o-thrid o-thrid-margin-left">
+				<button class="o-btn searchForm">搜索</button>
+			</div>
+			
+				<div class="o-thrid">
+				    <div style="margin-right:25px;" class="upload-data"><input id="roominfo" type="file" name="file"></div>
+					<a class="o-btn download-btn" style="padding:10px;position:relative;top:7px;" href="${base}/download/template/room">下载模板</a>
+				    <div style="padding:7px;float:left;">
+					<a class="o-btn" style="padding:10px;position:relative;left:-6px;" href="${base}/community/toUpdateRoom">新增</a>
+				
+					<a class="o-btn produceRoomBtn" style='padding:10px'>智能生成房号</a>
+					</div>
+				</div>
+				
+				
+		</div>
+	
+		
+		
+					
+		<div class="tab-order">
+			<div class="box tab2">
+				<div class="tab_box" style="width: 100%;">
+					<div class="table-responsive">
+						<table class="table_solid table" border="0" cellspacing="0">
+							<tbody>
+								<tr class="evenRow">
+									<th>序号</th>
+									<th>幢</th>
+									<th>单元</th>
+									<th>房号</th>
+									<th>操作</th>
+								</tr>
+								<#if (pagelist.results)?exists && pagelist.results?size gt 0>
+								<#list pagelist.results as room>
+								<tr>
+									<td>${(room_index+1)+(pagelist.pageNo-1)*pagelist.pageSize}</td>
+									<td>${room.building!!}</td>
+									<td>${room.unit!!}</td>
+									<td>${room.room!!}</td>
+									<td>
+											<a class="td-b common-btn-cz" href="javascript:toUpdateRoom('${room.id}');">编辑</a>
+											<a class="td-c common-btn-cz" href="javascript:deleteRoom('${room.id}');">删除</a>
+									</td>
+								</tr>
+								</#list>
+							</tbody>
+						</table>
+						<form action="${base}/community/room" id="pagerForm">
+						<#include '/common/pagination.html'>
+						</form>
+						<#else>
+						</table>
+							<div class="no-data">暂无数据~</div>
+						</#if>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<!-- 生成房号层 -->
+	<div id="bg"></div>
+		<div class="box-1" style="display:none">
+			
+			<h2>智能生成房号</h2>
+			<div class="div-select">
+				<span class="select-span">选择场景:</span>
+				<select class="room-select" id="choosePattern">
+					<option value="yes">A:每单元楼层房数相同</option>
+					<option value="no">B:每单元楼层房数不相同</option>
+				</select>
+				<div style="margin-top: 24px;color:#b78585;">(提示：幢或单元不为数字情况选择场景B)</div>
+			</div>
+			<table>
+				<tr>
+					<td>幢(X)</td>
+					<td>单元(Y)</td>
+					<td>楼层(M)</td>
+					<td>每层户数(N)</td>
+				</tr>
+				<tr>
+					<td><input type="text" id="building" placeholder="请输入" /></td>
+					<td><input type="text" id="unit" placeholder="请输入"  /></td>
+					<td><input type="text" id="ceng" placeholder="请输入" /></td>
+					<td><input type="text" id="roomNum" placeholder="请输入" /></td>
+				</tr>
+				
+			</table>
+			<span style="float:left;color:red;margin-top:10px;" id="ruleSpan">生成总房号数规则：X*Y*M*N </span> 
+			<div class="button-area">
+			    
+				<a class="commint">预览</a><a class="close-qx">取消</a>
+			</div>
+		</div>
+		
+		<!-- 预览列表层 -->
+		<div class="box-2" style="display:none">
+			<div class="divbox">
+				<img src="${base}/resources/images/loading.gif"/>
+			</div>
+			<h2>即将生成房号列表</h2>
+			<div style="max-height: 530px;height: auto;overflow: auto;">
+				<table>
+					 <tr id="themeDiv">
+						<td>幢</td>
+						<td>单元</td>
+						<td>房号</td>
+						<td>操作</td>
+					</tr>
+				
+				</table>
+			</div>
+			<div class="button-area2">
+				<a class="commint-2" id="produceRoom_saveBtn">确定</a><a class="close-fh">返回</a>
+			</div>
+			
+		</div>	
+		
+	<script src="${base}/resources/js/jquery.tabs.js"></script>
+	<script type="text/javascript">
+		$(function() {
+			$('.tab2').Tabs({
+				event : 'click'
+			});
+			//部分区域图片延迟加载	
+		});
+		
+		$(".searchForm").click(function(){
+			$("#pagerForm").submit();
+		});
+		
+		var buildingType ="";
+		var unitType ="";
+		<#if buildingType??>
+			 buildingType ='${buildingType}';
+			$("#buildingType").val(buildingType);
+		</#if>
+		
+		<#if unitType??>
+			 unitType ='${unitType}';
+			$("#unitType").val(unitType);
+		</#if>
+	
+		$("#roominfo").uploadify({
+	        height: 37,
+	        swf: '${base}/resources/js/uploadify/uploadify.swf?var=' + (new Date()).getTime(),
+	        width: 90,
+	        uploader: '${base}/community/doexcel?uid=${cUser.id}',
+			buttonText:'上传数据',
+			fileTypeExts : '*.xls; *.xlsx;', //允许上传的文件后缀
+			auto:true,
+			fileObjName:'file',
+			onUploadSuccess : function(file, data,response) {
+				//这是是上传完成之后的操作
+				 data =eval("(" + data + ")")
+				 layer.msg(data.msg,{
+ 				     	shift: 0,
+ 				     	time:3000
+ 				 }, function(){
+ 				    	console.log(data);
+ 						//刷新页面
+ 						window.location.reload();
+ 				});
+				
+				
+			},
+			onUploadError : function(file, data, response) {//当上传返回错误时触发
+				//这是是上传错误的操作
+			}	
+
+	    });
+		
+		//修改
+		function toUpdateRoom(id) {
+			window.location.href = "${base}/community/toUpdateRoom?id="+id;		
+		}	
+		//删除
+		function deleteRoom(id) {
+			if(!confirm("确定删除吗？")){
+				return;
+			}
+			$.ajax({
+				async : false,
+				type : "POST",
+				url : '${base}/community/delRoom',
+				data :{
+					id : id
+				},
+				dataType : 'json',
+				success : function(data) {
+					if(data.code==0){
+						 layer.msg(data.msg,{
+				             	shift: 0,
+				             	time: 1500
+				             }, function(){
+				            	 window.location.reload();
+				             }); 
+					}
+				}
+			});		
+		}
+			
+	</script>
+	<script type="text/javascript">
+	var basePath = '${base}';
+	</script>
+<script>
+	$(function(){
+	document.onkeydown = function(e){ 
+    var ev = document.all ? window.event : e;
+    if(ev.keyCode==13) {
+
+    	$("#pagerForm").submit();//处理事件
+
+     }
+}
+}); 
+</script>
+</body>
+</body>
+</html>

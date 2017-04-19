@@ -1,0 +1,392 @@
+body {
+	height: auto;
+	overflow: auto;
+	min-height: 100%;
+}
+
+.body {
+	min-height: 100%;
+	width: 100%;
+	overflow: auto;
+	display: block;
+}
+
+.o-thrid-car {
+	width: 100%;
+	margin: 15px auto;
+	float: left;
+	padding-left: 62px;
+}
+
+#main {
+	height: 1800px;
+	padding-top: 90px;
+	text-align: center;
+}
+
+#fullbg {
+	background-color: rgba(204, 204, 204, 0.5);
+	left: 0;
+	opacity: 0.5;
+	position: fixed;
+	top: 0;
+	z-index: 3;
+	filter: alpha(opacity=50);
+	-moz-opacity: 0.5;
+	-khtml-opacity: 0.5;
+}
+
+#dialog {
+	margin: 0 30% 0 30%;
+	background-color: #fff;
+	border: 0;
+	min-height: 400px;
+	height: auto;
+	overflow: hidden;
+	top: 15%;
+	margin: 0 auto padding: 1px;
+	position: absolute;
+	min-width: 500px;
+	width: auto;
+	z-index: 5;
+	border-radius: 5px;
+	display: none;
+	padding-bottom: 30px;
+}
+
+#dialog p {
+	padding: 10px 0 10px 10px;
+	font-size: 14px;
+	border-bottom: 1px solid gainsboro;
+}
+
+#dialog p.car-tit {
+	text-align: left;
+	padding-left: 20px;
+}
+
+#dialog p.car-tit a {
+	color: black;
+	text-decoration: none;
+}
+
+.car-one {
+	width: 90%;
+	margin: 10px auto;
+	padding: 10px 0;
+	height: auto;
+	overflow: hidden;
+}
+
+.car-one span {
+	font-size: 14px;
+}
+
+.car-one input {
+	float: left;
+    margin-left: 10px;
+    font-size: 14px;
+    padding: 5px;
+}
+
+.car-sp {
+	width: 82px;
+	float: left;
+	text-align: right;
+	margin-top: 8px;
+	margin-bottom: 5px;
+}
+
+.ck-name {
+	width: 250px;
+}
+
+.num {
+	width: 180px;
+}
+
+.car-btn {
+	float: right;
+	margin-top: 20px;
+	margin-right: 20px;
+}
+
+.car-btn a {
+	padding: 5px 15px;
+	border: 0;
+	color: white;
+	margin-right: 10px;
+	cursor: pointer;
+}
+
+.car-next {
+	background: #ff4401;
+}
+
+.car-close {
+	background: black;
+}
+
+.car-second {
+	display: none;
+}
+
+* {
+	outline: none;
+	font-family: "微软雅黑";
+}
+
+.front {
+	color: #666;
+	text-align: center;
+	padding: 10px;
+}
+
+.booking_area {
+	float: right;
+	position: relative;
+	width: 100%;
+	height: auto;
+	overflow: auto;
+	margin-left: 20px;
+}
+
+.booking_area h3 {
+	margin: 5px 5px 0 0;
+	font-size: 16px;
+}
+
+.booking_area p {
+	line-height: 26px;
+	font-size: 16px;
+	color: #999
+}
+
+.booking_area p span {
+	color: #666
+}
+
+div.seatCharts-cell {
+	color: #182C4E;
+	height: 25px;
+	width: 25px;
+	line-height: 25px;
+	margin: 3px;
+	float: left;
+	text-align: center;
+	outline: none;
+	font-size: 13px;
+}
+
+div.seatCharts-seat {
+	color: transparent;
+	cursor: pointer;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+}
+
+div.seatCharts-row {
+	height: 35px;
+}
+
+div.seatCharts-seat.available {
+	background: url(../../images/park.png)no-repeat;
+	background-size: 100% 100%;
+}
+
+div.seatCharts-seat.focused {
+	background: url(../../images/park-action.png)no-repeat;
+	background-size: 100% 100%;
+	border: none;
+}
+
+div.seatCharts-seat.selected {
+	background: url(../../images/park-off.png)no-repeat;
+	background-size: 100% 100%;
+}
+
+div.seatCharts-seat.unavailable {
+	background: url(../../images/park-ing.png)no-repeat;
+	background-size: 100% 100%;
+	cursor: not-allowed;
+}
+
+div.seatCharts-container {
+	min-width: 500px;
+	padding: 20px;
+	float: left;
+	border-bottom: 1px dashed gainsboro;
+}
+
+div.seatCharts-legend {
+	padding-left: 0px;
+	position: absolute;
+	bottom: 16px;
+}
+
+ul.seatCharts-legendList {
+	padding-left: 0px;
+}
+
+.seatCharts-legendItem {
+	float: left;
+	width: 90px;
+	margin-top: 10px;
+	line-height: 2;
+}
+
+span.seatCharts-legendDescription {
+	margin-left: 5px;
+	line-height: 30px;
+}
+
+.checkout-button {
+	display: block;
+	width: 80px;
+	height: 24px;
+	line-height: 20px;
+	margin: 10px auto;
+	border: 1px solid #999;
+	font-size: 14px;
+	cursor: pointer
+}
+
+#seats_chose {
+	max-height: 150px;
+	overflow-y: auto;
+	overflow-x: none;
+	width: 200px;
+}
+
+.black {
+	background-color: black;
+}
+
+#seats_chose li {
+	float: left;
+	width: 72px;
+	height: 26px;
+	line-height: 26px;
+	border: 1px solid #d3d3d3;
+	background: #f7f7f7;
+	margin: 6px;
+	font-size: 14px;
+	font-weight: bold;
+	text-align: center
+}
+
+#bg {
+	background-color: #666;
+	position: absolute;
+	z-index: 99;
+	left: 0;
+	top: 0;
+	display: none;
+	width: 100%;
+	height: 100%;
+	opacity: 0.5;
+	filter: alpha(opacity=50);
+	-moz-opacity: 0.5;
+}
+
+.price {
+	width: 100%;
+	text-align: center;
+	height: auto;
+	overflow: hidden;
+	margin-bottom: 20px;
+}
+
+.price input {
+	font-size: 15px;
+	padding: 5px;
+	float: right;
+	margin-right: 20px;
+}
+
+.p-btn {
+	float: right;
+	margin-right: 20px;
+	width: auto;
+	height: auto;
+	overflow: hidden;
+	border-radius: 5px;
+	background: #ff5505;
+	margin-bottom-bottom: 20px;
+}
+
+.p-btn input {
+	border: 0;
+	padding: 5px 10px;
+	background: transparent;
+	color: white;
+	font-size: 14px;
+	font-family: "微软雅黑";
+}
+
+.box1 {
+	border-radius: 10px;
+	position: absolute;
+	width: 280px;
+	left: 50%;
+	height: auto;
+	z-index: 100;
+	background-color: #fff;
+	border: 1px #ddd solid;
+	padding-bottom: 20px;
+	font-family: "微软雅黑";
+	overflow: hidden;
+}
+
+.box1 h2 {
+	height: 25px;
+	font-size: 14px;
+	position: relative;
+	padding-left: 10px;
+	line-height: 25px;
+	color: black;
+}
+
+.box1 h2 a {
+	position: absolute;
+	right: 5px;
+	font-size: 14px;
+	color: black;
+	text-decoration: none;
+	right: 10px;
+}
+
+.box1 .list {
+	padding: 10px;
+}
+
+.box1 .list li {
+	height: 24px;
+	line-height: 24px;
+}
+
+.box1 .list li span {
+	margin: 0 5px 0 0;
+	font-family: "宋体";
+	font-size: 12px;
+	font-weight: 400;
+	color: #ddd;
+}
+
+.car-edit {
+	margin-left: 20px;
+	display: none;
+}
+
+.money-btn {
+	padding: 4px 10px;
+	background: gray;
+	color: white;
+	font-size: 13px;
+	border: 0;
+	float: right;
+	margin-right: 35px;
+	cursor: pointer;
+}
+.btn-margin-left{margin-left:4px;}

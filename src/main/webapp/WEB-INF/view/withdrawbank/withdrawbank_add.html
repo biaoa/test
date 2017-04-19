@@ -1,0 +1,147 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<title>新增银行卡信息</title> <#include '/common/resources.html'>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" href="${base}/resources/css/sys/add-new.css" />
+<script src="${base}/resources/js/respond.js" type="text/javascript" async="async"></script>
+<style>
+</style>
+</head>
+<body>
+	<div class="whole">
+		<div class="a-plus">
+			<ol class="breadcrumb">
+				<li><a href="javascript:void(0)">提现管理</a></li>
+				<li class="active">提现银行卡编辑</li>
+			</ol>
+			<form action="${base}/sys/withdrawBank/add" method="post"
+				id="withdrawBankform">
+				<div class="Sheet">
+					<div class="a-title">
+						<span class="choice">用户名：&nbsp;</span>
+						<div class="inp">
+							<input  type="text"  id="userName" <#if bank.id??>value="${bank.user.userName}"</#if>  />
+						</div>
+					</div>
+
+					<div class="a-title">
+						<span class="choice">户名：&nbsp;&nbsp;</span>
+						<div class="inp">
+							<input  type="text" name="accountName" id="accountName" value="${bank.accountName!!}" />
+						</div>
+					</div>
+
+					<div class="a-title">
+						<span class="choice">开户银行：</span>
+						<div class="inp">
+							<input type="text" name="accountBank" id="accountBank" value="${bank.accountBank!!}" />
+						</div>
+					</div>
+					
+					<div class="a-title">
+						<span class="choice">卡号：&nbsp;&nbsp;</span>
+						<div class="inp">
+							<input type="text" name="accountNumber" id="accountNumber" value="${bank.accountNumber!!}" />
+						</div>
+					</div>
+					
+					<div class="a-title">
+						<span class="choice">备注：&nbsp;&nbsp;</span>
+						<div class="inp">
+							<input type="text" name="remark" id="remark" value="${bank.remark!!}" />
+						</div>
+					</div>
+
+				</div>
+				<div class="a-address">
+					<input type="hidden" name="uId" id="uid" value="${bank.uId!!}"/>
+					<input type="hidden" name="id" id="id" value="${bank.id!!}" />
+					<button data-reveal-id="sav" data-animation="fade" class="s-btn">确认</button>
+
+				</div>
+			</form>
+			<div id="sav" class="reveal-modal"
+				style="opacity: 1; visibility: hidden; top: 150px;">
+				<h3>保存成功</h3>
+				<a class="close-reveal-modal">×</a>
+			</div>
+			<div class="reveal-modal-bg" style="display: none; cursor: pointer;">
+
+			</div>
+		</div>
+	</div>
+
+	<script type="text/javascript" src="${base}/resources/js/jquery.reveal.js"></script>
+	<script>
+		$("#withdrawBankform").submit(function() {
+			if($("#accountName").val()==""){
+				layer.msg("户名不能为空");
+				$("#accountName").focus();
+				return false;
+			}
+			if($("#accountBank").val()==""){
+				layer.msg("开户银行不能为空");
+				$("#accountBank").focus();
+				return false;
+			}
+			if($("#accountNumber").val()==""){
+				layer.msg("卡号不能为空");
+				$("#accountNumber").focus();
+				return false;
+			}
+			if($("#remark").val()==""){
+				layer.msg("备注不能为空");
+				$("#remark").focus();
+				return false;
+			}
+			if($("#uid").val()==""){
+				layer.msg("用户名为空或无效的用户名");
+				$("#userName").focus();
+				return false;
+			}
+			
+			var ajax_url = $(this).attr("action"); //表单目标 
+			var ajax_type = $(this).attr('method'); //提交方法 
+			var ajax_data = $(this).serialize(); //表单数据 
+			$.ajax({
+				type : ajax_type, //表单提交类型 
+				url : ajax_url, //表单提交目标 
+				data : ajax_data, //表单数据
+				success : function(data) {
+					layer.msg(data.msg,{
+				     	shift: 0
+				     }, function(){
+				    	 window.location.href="${base}/sys/withdrawBank/list";
+				     }); 
+				}
+			});
+			return false; //阻止表单的默认提交事件 
+		});
+		
+		$("#userName").blur(function(){
+			var userName = $(this).val();
+			if(userName!=''){
+				//ajax查询
+			 $.post("${base}/sys/withdrawBank/checkUserExist", {'userName': userName}, function (data) {
+		            if (data.code == 0) {
+		            	layer.tips('输入正确!用户类型是 :'+data.result.userType, $("#userName"), {
+		          		  tips: [1, 'black'],
+		          		  time: 3000
+		          		});
+		               $("#uid").val(data.result.uid);
+		            }else{
+		            	layer.msg(data.msg);
+		            	 $("#uid").val("");
+		            	$("#userName").focus();
+		            }
+		            
+		        });
+			}
+		})
+	</script>
+
+
+</body>
+</html>

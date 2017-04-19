@@ -1,0 +1,42 @@
+/* CSS Document */
+
+body{background-color:#fff;}
+li{list-style-type:none;}
+#cleaner{clear:both;}
+.fl{float:left;}
+.fr{float:right;}
+.eoffice{width:860px; height:450px; margin:50px auto; border:1px solid #d9d9d9;position: absolute;z-index: 111;background: white;}
+.office_tab{width:290px; float:left; height:410px; border-right:1px solid #d9d9d9;}
+.office_tab li{width:60px; min-width:0;}
+.office_tab .nav-tabs .active a{background:#36A9E1; color:#fff;}
+.office_tab .nav-tabs .active a:focus{background:#36A9E1; color:#fff;}
+.eoffice_right{float:right; width:568px;}
+.eoffice_right_bg{background:#f7f7f7; height:33px; line-height:33px; padding-left:10px; border-bottom:1px solid #d9d9d9;}
+.office_tabcontent a{display:inline-block; width:100%; height:25px;}
+.office_tabcontent a:hover{background:#d4d4d4; opacity:0.5;}
+.office_tabcontent ul{margin:0;}
+.office_tabcontent li{width:100%;}
+.office_tabcontent li a{color:#222; font-size:13px; display:inline-block; width:100%;}
+.eoffice_sp{display:inline-block;width:25px; height:17px;}
+.user_list_main{height:200px; border-bottom:1px solid #d9d9d9;}
+.user_list_main ul{margin:0;}
+.user_list_main ul li{float:left; height:30px; line-height:30px; cursor:default; padding:0 10px; font-size:12px}
+.user_list_main ul li:hover{background:#36A9E1; color:#fff;}
+.selected_tip{color:#36A9E1;}
+.selected_tip.hover{color:#fff;}
+.selected_user{height:100px; margin-left:5px;}
+.selected_user li{float:left; height:30px; line-height:30px; cursor:default; padding:0 10px; border:1px solid transparent;}
+.selected_user li:hover{border:1px solid #36A9E1;}
+.selected_user li i {margin-left:5px;}
+.selected_user li .shanchu{color:#36A9E1;}
+.allselect{padding:5px; cursor:pointer; color:#36A9E1;}
+.allclear{padding:5px; cursor:pointer; color:#D9534F;}
+.eoffice_buttonpane{width:860px; height:40px; border-top:1px solid #d9d9d9;}
+.button_position{height:30px; margin-top:3px; margin-right:5px;}
+.button_position a{margin:0 2.5px;}
+.btn-blue{width:50px; height:30px; font-size:12px; padding:7px 12px; background:#3598dc; color:#fff;}
+.btn-blue:hover{color:#fff; background:#357ebd;}
+.btn-blue:focus{color:#fff;}
+.btn-gray{width:50px; height:30px; font-size:12px; padding:7px 12px; background:#888; color:#fff;}
+.btn-gray:hover{color:#fff; background:#747474;}
+.btn-gray:focus{color:#fff;}

@@ -1,0 +1,60 @@
+.photos{width: 100%;
+    height: auto;
+    float: left;
+    margin-top: 20px;
+    /*border: 1px solid gainsboro;*/
+    cursor: pointer;
+    margin-top: 17px;
+   }
+.photos img{
+    width: 130px;
+
+}
+.photos-next{border: 1px solid gainsboro;width: 134px;}
+.phone{margin-left: 10px;
+    width: 70%;
+    height: 25px;
+    border-radius: 3px;
+    float: left;
+    position: relative;
+    }
+.phone-inp{width: 50%;float: left;height: 100%;border: 1px solid gainsboro;}
+.phone-inp input{width: 100%;height: 100%;border: 0;}
+.phone-inps{width: 60%;float: left;height: 100%;border: 1px solid gainsboro;}
+.phone-inps input{width: 100%;height: 100%;border: 0;}
+.phone span{float: left;color: gainsboro;margin-top: 3px;}
+.kdleft{
+	width: 48%;float:left;margin: 10px 1%;min-height: 100%;background-color: white;overflow: auto;height: auto;position: absolute;
+}
+.kdrignt,.kdrignt2,.kdrignt3{
+	width: 48%;right: 0;margin: 10px 1%;min-height: 100%;background-color: white;overflow: auto;height: auto;position: absolute;display: none;
+}
+.kdwhole{    width: 100%;
+    min-height: 100%;
+    height: auto;
+    overflow: auto;
+}
+.avatar-kd{width: 90px;height: 90px;float: left;
+    padding: 10px;}
+.avatar-kd img{width: 100%;height: 100%;}
+.people{width: 98%;margin: 0 auto;height: auto;overflow: hidden;padding: 15px 0;border-bottom: 1px solid gainsboro;}
+.peo-photo{width: 30%;height: 60px;float: left;margin-top: 5px;}
+.peo-photo img{width: 60px;height: 60px;border-radius: 60px;float: left;}
+.peo-photo span{float: left;margin-left: 10px;margin-top: 20px;font-size: 14px;}
+.idcard{float: left;text-align: center;width: 15%;margin-top: 25px;font-size: 14px;}
+.peo-phone{width: 15%;float: left;text-align: center;margin-top: 25px;font-size: 14px;}
+.manager{padding: 5px;border: 1px solid gainsboro;background: #fafafa;cursor: pointer;border-radius: 3px;color: #999999;}
+.cz-img{padding: 5px;border: 1px solid gainsboro;background: #fafafa;border-radius: 3px;}
+.id-photo{float: left;
+margin-left: 20px;
+margin-top: 8px;}
+.id-photo img{width: 100px;height: 100px;border-radius: 100px;float: left;}
+.id-photo span{float: left;margin-left: 50px;color: gainsboro;font-size: 15px;}
+.click{cursor: pointer;}
+.wyjj{width: 70%;float: left;margin-left: 10px;border: 1px solid gainsboro;height: auto;overflow: hidden;}
+.wyjj textarea{width: 100%;height: 200px;border: 0;}
+.s-address2{width: 100%;
+    margin: 0 auto;
+    padding: 20px 5px;
+    height: auto;
+}

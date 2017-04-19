@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.linle.roomno.mapper.RoomNoMapper" >
+  <resultMap id="BaseResultMap" type="com.linle.entity.sys.RoomNo" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="building" property="building" jdbcType="VARCHAR" />
+    <result column="unit" property="unit" jdbcType="VARCHAR" />
+    <result column="room" property="room" jdbcType="VARCHAR" />
+    <result column="community_id" property="communityId" jdbcType="BIGINT" />
+    <result column="overall" property="overall"/>
+  </resultMap>
+  
+  
+  <resultMap id="RomeForAPIResult" type="com.linle.mobileapi.v1.response.BuildResponse">
+  	<result column="building" property="buildName"/>
+  	<collection property="unitList" column="{building=building,community_id =community_id}" select="selectUnit" />
+  </resultMap>
+  
+  <resultMap id="RomeForAPIUnitResult" type="com.linle.mobileapi.v1.response.UnitResponse" >
+  	<result column="unit" property="unit"/>
+  	<collection  column="{building=building,community_id =community_id}"  property="roomList"  select="selectRome"/>
+  </resultMap>
+  
+  <resultMap id="RomeForAPIRomeResult" type="com.linle.mobileapi.v1.response.RoomResponse" >
+  	<id column="id" property="id"/>
+  	<result column="room" property="roomNo"/>
+  </resultMap>
+  
+  
+  
+  <resultMap id="BuildForAPIResult" type="com.linle.mobileapi.v1.model.BaseEntity">
+  	<result column="building" property="name"/>
+  </resultMap>
+  
+  <resultMap id="UnitForAPIResult" type="com.linle.mobileapi.v1.model.BaseEntity">
+  	<result column="unit" property="name"/>
+  </resultMap>
+  
+   <resultMap id="RomesForAPIResult" type="com.linle.mobileapi.v1.model.BaseEntity" >
+  	<id column="id" property="id"/>
+  	<result column="room" property="name"/>
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    id, building, unit, room, community_id,overall
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from room_no
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from room_no
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.linle.entity.sys.RoomNo" >
+    insert into room_no (id, building, unit, 
+      room, community_id,overall)
+    values (#{id,jdbcType=BIGINT}, #{building,jdbcType=VARCHAR}, #{unit,jdbcType=VARCHAR}, 
+      #{room,jdbcType=VARCHAR}, #{communityId,jdbcType=BIGINT},#{overall})
+  </insert>
+  <insert id="insertSelective" parameterType="com.linle.entity.sys.RoomNo" >
+    insert into room_no
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="building != null" >
+        building,
+      </if>
+      <if test="unit != null" >
+        unit,
+      </if>
+      <if test="room != null" >
+        room,
+      </if>
+      <if test="communityId != null" >
+        community_id,
+      </if>
+      <if test="overall !=null">
+      	overall,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="building != null" >
+        #{building,jdbcType=VARCHAR},
+      </if>
+      <if test="unit != null" >
+        #{unit,jdbcType=VARCHAR},
+      </if>
+      <if test="room != null" >
+        #{room,jdbcType=VARCHAR},
+      </if>
+      <if test="communityId != null" >
+        #{communityId,jdbcType=BIGINT},
+      </if>
+      <if test="overall !=null">
+      	#{overall},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.linle.entity.sys.RoomNo" >
+    update room_no
+    <set >
+      <if test="building != null" >
+        building = #{building,jdbcType=VARCHAR},
+      </if>
+      <if test="unit != null" >
+        unit = #{unit,jdbcType=VARCHAR},
+      </if>
+      <if test="room != null" >
+        room = #{room,jdbcType=VARCHAR},
+      </if>
+      <if test="communityId != null" >
+        community_id = #{communityId,jdbcType=BIGINT},
+      </if>
+      <if test="overall !=null">
+      	overall = #{overall},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.linle.entity.sys.RoomNo" >
+    update room_no
+    set building = #{building,jdbcType=VARCHAR},
+      unit = #{unit,jdbcType=VARCHAR},
+      room = #{room,jdbcType=VARCHAR},
+      community_id = #{communityId,jdbcType=BIGINT},
+      overall = #{overall}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  <select id="getAllData" resultMap="BaseResultMap" parameterType="page">
+  	 select 
+    <include refid="Base_Column_List" />
+    from room_no
+    <where>
+    	<if test="params !=null and params.community_id != null and params.community_id !=''">
+    		and	community_id = #{params.community_id}
+    	</if>
+    	<if test="params !=null and params.buildingType != null and params.buildingType !=''">
+    		and	building = #{params.buildingType}
+    	</if>
+    	<if test="params !=null and params.unitType != null and params.unitType !=''">
+    		and	unit = #{params.unitType}
+    	</if>
+    	<if test="params !=null and params.roomSearch != null and params.roomSearch !=''">
+    		and	room = #{params.roomSearch}
+    	</if>
+    </where>
+  </select>
+  
+  <select id="getRomeForAPI" resultMap="RomeForAPIResult" parameterType="Long">
+  	 select 
+    <include refid="Base_Column_List" />
+    from room_no
+    where community_id = #{community_id}
+  </select>
+  
+  <!--加载某小区所有幢  -->
+  <select id="getBuildForAPI" resultMap="BuildForAPIResult" parameterType="Long">
+  	select building
+    from room_no
+    where community_id = #{community_id}
+    GROUP BY building+0
+  </select>
+  
+   <!--加载小区某幢所有单元  -->
+  <select id="getUnitForAPI" resultMap="UnitForAPIResult" parameterType="map">
+  	select  unit
+    from room_no
+    where community_id = #{community_id} and building=#{building}
+    GROUP BY unit
+  </select>
+  
+   <!--加载小区某幢某单元下所有房号  -->
+  <select id="getRoomForAPI" resultMap="RomesForAPIResult" parameterType="map">
+  	select id, room
+    from room_no
+    where community_id = #{community_id} and building=#{building} and unit=#{unit}
+  </select>
+  
+  
+  <select id="selectUnit" resultMap="RomeForAPIUnitResult" parameterType="map">
+  	select 
+  	<include refid="Base_Column_List" />
+    from room_no
+    where building =#{building} and community_id = #{community_id}
+	GROUP BY unit
+  </select>
+  
+  <select id="selectRome" resultMap="RomeForAPIRomeResult" parameterType="map">
+  	select 
+    <include refid="Base_Column_List" />
+    from room_no
+    where building  = #{building} and community_id = #{community_id}
+  </select>
+  
+  <select id="countRomeByOverall" resultType="int" parameterType="map">
+  	select count(*) 
+    from room_no 
+    where overall  = #{overall} and community_id = #{id}
+  </select>
+  
+</mapper>

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>子帐号管理</title>
+<#include '/common/resources.html'>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+</head>
+<body>
+	<div class="fh_right_box">
+		<h3>
+			<span class="iconfont" style="font-size: 20px; color: #d65b5a">&#xe621;</span>&nbsp;子帐号管理
+			<span style="float:right"><button type="button" class="btn btn-default active" style="float: right;">新增子帐号</button></span>
+		</h3>
+		<img src="${base}/resources/images/hr.jpg" class="xian" />
+	</div>
+
+	<table class="table table-striped" style="text-align: center">
+		<tr>
+			<td>序号</td>
+			<td>姓名</td>
+			<td>联系电话</td>
+			<td>职务</td>
+			<td>服务订单数</td>
+			<td>资源采纳数</td>
+			<td>操作</td>
+		</tr>
+		<#if (pagelist.results)?exists && pagelist.results?size gt 0> <#list
+		pagelist.results as user>
+		<tr>
+			<td>${(user_index+1)+(pagelist.pageNo-1)*pagelist.pageSize}</td>
+			<td>${(user.userName)!''}</td>
+			<td>${user.phone}</td>
+			<td>${user.position}</td>
+			<td></td>
+			<td></td>
+			<td><span><a class="btn btn-default dialogs" href="javascript:;" role="button" data-toggle="click" data-target="#rysq${user_index}" data-mask="1" data-width="50%">查看</a></span><span><a href="javascript:;"
+					uid="${user.id}" class="btn btn-default delUser">删除</a></span></td>
+			<td style="display:none">
+			   <div id="rysq${user_index}">
+				  <div class="dialog">
+				    <div class="dialog-head">
+				      <span class="close rotate-hover"></span>
+				      <strong>用户信息修改</strong>
+				    </div>
+				    <div class="dialog-body">
+				        <table class="table">
+				          <tr>
+				            <td>姓名：</td>
+				            <td>${(user.userName)!''}</td>
+				          </tr>
+				          <tr>
+				            <td>职务：</td>
+				            <td>${user.position}</td>
+				          </tr>
+				          <tr>
+				            <td>联系电话：</td>
+				            <td>${(user.phone)!''}</td>
+				          </tr>
+				          <tr>
+				            <td>联系电话：</td>
+				            <td>${(user.roleType.getName())!''}</td>
+				          </tr>
+				        </table>
+				        <button class="button bg-main qdyx dialog-close">确定</button>
+				    </div>
+				  </div>
+				</div>	
+			</td>
+		</tr>
+		</#list> </#if>
+	</table>
+	<form action="" id="pagerForm"><#include
+		'/common/pagination.html'></form>
+</body>
+
+<script type="text/javascript">
+	$(function() {
+		$("button").click(function() {
+			window.location.href = "${base}/sys/createChildAccountPage";
+		});
+
+		$(".delUser").click(function() {
+			if(!confirm('删除后无法恢复,确定要删除吗')){
+				return;
+			}
+			var uid = $(this).attr("uid");
+			$.post("${base}/sys/delUser/" + uid, function(result) {
+				if (result.code == 0) {
+					layer.msg(result.msg);
+    				location.reload();
+				}
+				;
+			}, 'json');
+		});
+	});
+</script>
+</html>

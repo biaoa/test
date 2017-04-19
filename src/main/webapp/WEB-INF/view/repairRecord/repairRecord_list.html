@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>报修管理</title>
+<meta name="content-type" content="text/html; charset=UTF-8">
+<#include '/common/resources.html'>
+<link rel="stylesheet" media="screen and (min-width: 1580px)" href="${base}/resources/css/sys/jquery.tableui.css" />
+<link rel="stylesheet" media="screen and (max-width: 1580px)" href="${base}/resources/css/sys/tableui-resolving.css" />
+	<link rel="stylesheet" href="${base}/resources/css/sys/jquery-ui.min.css" />
+	<link rel="stylesheet" href="${base}/resources/css/sys/tip.css" />
+	<link rel="stylesheet" href="${base}/resources/css/sys/component.css" />
+	<link rel="stylesheet" href="${base}/resources/css/sys/default.css" />
+	<link rel="stylesheet" type="text/css" href="${base}/resources/css/sys/kqadd.css" />
+	<link rel="stylesheet" type="text/css" href="${base}/resources/datetimepicker/jquery.datetimepicker.css"/>
+	<script src="${base}/resources/js/respond.js" type="text/javascript" async="async"></script>
+	<script type="text/javascript" src="${base}/resources/js/jquery-ui.min.js"></script>
+	<script type="text/javascript" src="${base}/resources/js/modernizr.custom.js"></script>
+	<script src="${base}/resources/datetimepicker/jquery.datetimepicker.js" ></script>
+</head>
+<style>
+
+
+</style>
+<body>
+	<div class="whole">
+		<ol class="breadcrumb">
+			<li><a href="javascript:void(0)">服务中心</a></li>
+			<li class="active">报修服务</li>
+		</ol>
+		<form action="${base}/repairRecord/list" id="pagerForm">
+			<div class="o-order">
+				<div class="o-first">
+					<span class="o-span">服务号&nbsp;：</span>
+					<div class="o-input">
+						<input type="text" name="single" value="${single!!}" />
+					</div>
+					<span class="o-span">报修项目：</span>
+					<div class="o-div">
+						<select class="o-select" name="typeId">
+							<option value="-1" selected="selected">全部</option> <#list
+							repairType as type>
+							<option value="${type.id}"<#if typeId??> <#if
+								(type.id+"")==typeId> selected="selected" </#if> </#if>
+								>${type.typeName}</option> </#list>
+						</select>
+					</div>
+				</div>
+				<div class="o-second">
+					<span class="o-span">报修用户：</span>
+					<div class="o-input">
+						<input type="text" placeholder="姓名或手机号" name="phone"
+							value="${phone!!}" />
+					</div>
+					<span class="o-span">预约时间：</span>
+					<div class="o-input">
+						<input class="my-time" type="text" id="datepicker"
+							name="createDate" value="${createDate!!}" />
+					</div>
+					<span class="o-span">申请时间：</span>
+					<div class="o-input">
+						<input class="my-times" type="text" id="datepicker2"
+							name="beginDate" value="${beginDate!!}" />
+					</div>
+					<span class="o-span">--</span>
+					<div class="o-input">
+						<input class="my-times" type="text" id="datepicker3"
+							name="endDate" value="${endDate!!}" />
+					</div>
+				</div>
+				<div class="o-thrid o-thrid-margin-left">
+					<button class="o-btn">搜索</button>
+<!-- 					<button class="o-btn">发送通知</button> -->
+<!-- 					<button class="o-btn">导出数据</button> -->
+				</div>
+			</div>
+			<div class="kq-tab">
+					<div class="kq-daily <#if parentTypeId=='0'>kq-active</#if>" val="0">
+						<a href="javascript:void(0)"><span>私人家居</span></a>
+					</div>
+					<div class="kq-daily <#if parentTypeId=='1'>kq-active</#if>" val="1">
+						<a href="javascript:void(0)"><span>公共区域</span></a>
+					</div>
+			</div>
+				
+			<input type="hidden" id="status" name="status" value="${status}">
+			<input type="hidden" id="parentTypeId" name="parentTypeId" value="${parentTypeId!!}">
+			<div class="tab-order">
+				<div class="box tab2">
+					<ul class="tab_menu">
+						<li class="<#if status=='-1'>current</#if>" val="-1">全部(0)</li>
+						<li class="<#if status=='0'>current</#if>" val="0">未处理(0)</li>
+						<li class="<#if status=='1'>current</#if>" val="1">处理中(0)</li>
+						<li class="<#if status=='2'>current</#if>" val="2">已处理(0)</li>
+						<li class="<#if status=='3'>current</#if>" val="3">不处理(0)</li>
+						<li class="<#if status=='4'>current</#if>" val="4">用户取消(0)</li>
+					</ul>
+					<div class="tab_box">
+						<div>
+							<table class="table_solid" border="0" cellspacing="0">
+								<tbody>
+									<tr class="evenRow">
+										<th>服务号</th>
+										<th>报修内容</th>
+										<th>报修项目</th>
+										<th>预约时间</th>
+										<th>申请时间</th>
+										<th>报修用户</th>
+										<th>房号</th>
+										<th>报修状态</th>
+										<th>操作</th>
+									</tr>
+									<#if (pagelist.results)?exists && pagelist.results?size gt 0>
+									<#list pagelist.results as repairRecord>
+									<tr class="oddRow">
+										<td>${repairRecord.single}</td>
+										<td>${repairRecord.content!!}</td>
+										<td>
+										<#if repairRecord.repairType??>
+										${repairRecord.repairType.typeName}
+										</#if>
+										</td>
+										<td><p><#if (repairRecord.endDate)??>
+												${repairRecord.beginDate?string('yyyy-MM-dd
+												HH:mm:ss')}至${(repairRecord.endDate?string('yyyy-MM-dd HH:mm:ss'))?substring(11,19)} <#else> 尽快 </#if></p></td>
+										<td>${repairRecord.createDate?string('yyyy-MM-dd
+											HH:mm:ss')}</td>
+										<td><#if (repairRecord.user)??>${repairRecord.user.name}</#if></td>
+										<td>
+										<#if (repairRecord.user)?exists && repairRecord.user.addressDetails??>
+											${repairRecord.user.addressDetails.overall}
+										</#if>
+										</td>
+										<td>
+											<#if repairRecord.status==0>
+												待处理
+												<#elseif repairRecord.status==1>
+												处理中
+												<#elseif repairRecord.status==2>
+												处理完成
+												<#elseif repairRecord.status==3>
+												不处理
+												<#elseif repairRecord.status==4>
+												用户取消
+											</#if>
+										</td>
+										<td>
+										<#if (repairRecord.folder.id)??>
+											<a class="zxc common-btn-cz" val="${repairRecord_index+1}">预览图片</a>
+											<div class="container${repairRecord_index+1}" style="right:0;display: none;position: fixed;left: 0;top: 0;z-index: 333;height: 100%;">
+												<a class="close-btn">关闭</a>
+												<div class="cbp-fwslider">
+													<ul>
+													<#list (repairRecord.folder.files) as file>
+														<li><a href="javascript:void(0)"><img src="${base}/${file.path}"/></a></li>
+													</#list>
+													</ul>
+												</div>
+											</div>
+										</#if>
+										
+										<#if repairRecord.status==0>
+											<a class="td-a common-btn-cz" rid="${repairRecord.id}" val="1">立即处理</a> 
+											<a class="td-a common-btn-cz" rid="${repairRecord.id}" val="3">不处理</a>
+										</#if>
+										</td>
+									</tr>
+									</#list>
+								</tbody>
+							</table>
+							<div id="bg"></div>
+					
+							<#include '/common/pagination.html'>
+		</form>
+		<#else>
+		</table>
+		<div class="no-data">暂无数据~</div>
+		</#if>
+	</div>
+	</div>
+
+	</div>
+	</div>
+	</div>
+	<script src="${base}/resources/js/jquery.tabs.js"></script>
+	 <script src="${base}/resources/bootstrap-3.3.5-dist/js/bootstrap.min.js"></script>
+	 <script src="${base}/resources/js/jquery.cbpFWSlider.min.js"></script>
+	<script type="text/javascript">
+		$(function() {
+			$('.tab2').Tabs({
+				event : 'click'
+			});
+		});
+	</script>
+	<script>
+		$(function() {
+			$('#datepicker,#datepicker2,#datepicker3').datetimepicker({
+				lang: 'ch',
+				timepicker: false,
+				format: 'Y-m-d',
+				formatDate: 'Y-m-d'
+			
+			});
+		});
+		
+		$(".tab_menu li").click(function(){
+			$("#status").val($(this).attr("val"));
+			$("#pagerForm").submit();
+		});
+		  
+		$(".kq-daily").click(function(){
+			$("#parentTypeId").val($(this).attr("val"));
+			$(this).siblings().removeClass("kq-active");
+			$(this).addClass("kq-active");
+			$("#pagerForm").submit();
+		});
+		
+		$(".td-a").click(function(){
+			var rid = $(this).attr("rid");
+			var val = $(this).attr("val");
+			$.ajax({
+				type : "post",
+				data :{
+					 "rid": rid,
+		             "val": val
+				},
+				url : "${base}/repairRecord/operate",
+				success : function(data) {
+					 layer.msg(data.msg,{
+			            	shift: 0
+			            }, function(){
+			            	 window.location.reload();
+			            }); 
+				}
+			});
+		})
+		
+		$(function () {
+			var val;
+			$(".rep-sp").tooltip({html : true });
+			
+			$('.cbp-fwslider').cbpFWSlider();
+			$(".zxc").click(function() {
+				 val = $(this).attr("val");
+				$("#bg").css({
+					display: "block",
+					height: $(document).height()
+				});
+				$(".container"+val).css({
+					display: "block"						
+				});
+			});
+			//点击关闭按钮的时候，遮罩层关闭
+			$(".close-btn").click(function() {
+				$(".container"+val+",#bg").css("display", "none");
+			});
+		});
+	</script>
+</body>
+</html>

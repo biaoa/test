@@ -1,0 +1,169 @@
+<html>
+<head>
+<title>商家活动</title>
+<#include '/common/base.html'>
+<meta charset="UTF-8">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Cache-Control" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="${base}/resources/jquery.mobile-1.4.5/css/jquery.mobile-1.4.5.min.css">
+<script src="${base}/resources/jquery.mobile-1.4.5/js/jquery.mobile-1.4.5.min.js"></script>
+   
+<style>
+*{  
+	margin:0;
+	padding:0;
+	font-size:14px;
+	font-family:'Microsoft YaHei';
+
+}
+
+.n_list{
+ 	width:100%;
+ 	height:130px;
+ 	border-bottom:1px solid #e8e8e8;
+ 	margin-bottom:8px;
+}
+.n_lism{
+ 	width:100%;
+ 	height:140px;
+ }
+.w_img{
+	width:25%;
+	height:110px;
+	float:left;
+	margin-right:3%; 
+
+}
+.sj_t{
+ 	border-radius:8px;
+ 	width:100%;
+ 	height:87.74;
+ 	margin-top:18px;
+}
+.w_t{
+ 	width:70%;
+ 	height:70px;
+ 	float:left;
+ 	margin-top:15px;
+ 	margin-left:2%;
+}
+.e_valuate{
+	width:57%;
+	height:24px;
+	margin:10px 0px 20px 0px;
+	overflow:hidden;
+}
+.e_valuate .e_img{
+	width:100%;
+	height:24px;
+	border:0;
+
+}
+.P_buying{
+	float:right;
+    background:#ff5000;
+    display:inherit;
+    width:17%;
+    height:19%;
+    text-align:center;
+    line-height:24.5px;
+    color:#fff;
+    border-radius:4px;
+    cursor:pointer;
+    font-size: 75%;
+}
+.a_ctivity{
+	margin:10px auto;
+ 	width:90%;
+	height:800px;
+	color:#fff;
+	font-size:1.25em;
+	display: block;
+	color:#333;
+	line-height:200%;
+    font-weight:500;
+
+}
+.bu_siness{
+	font-size:1.25em;
+}
+ </style>
+ <style>
+.clearfix::after{ display:block; content:''; height:0; overflow:hidden; clear:both;} 
+/*星星样式*/
+.atar_Show{background:url(${base}/resources/images/starky.png); width:110px; height:21px;  position:relative; float:left; }
+.atar_Show p{ background:url(${base}/resources/images/starsy.png);left:0; height:21px; width:100px;}
+
+</style>
+</head>
+<body>
+
+<div data-role="page">
+  <div data-role="header">
+    		  <div class="wrap_img">
+			  		<img src="${base}/resources/images/h5_banner.png" art="活动内容" title="活动内容" width="100%" height="35%"/> 
+		 	  </div>
+  </div>
+  <div data-role="main"  class="ui-content">
+ 			 <div class="Me_list">
+ 			      <#if shoplist?exists && shoplist?size gt 0> 
+ 			      <#list shoplist as shop>
+				    <div class="n_list" shopId="${shop.id!!}">
+					    	<div class="w_img">
+					    		<img class="sj_t" src="${base}/${shop.shopLogo!!}" alt="商家">
+					    	</div>
+					    	<div class="w_t">
+								<p class="bu_siness">${shop.shopName!!}</p>
+					    		<div class="e_valuate">
+									<div class="atar_Show show_number clearfix">
+							          <p tip="${shop.grade!0}"></p>
+							        </div>
+ 								</div>
+								<p style="margin:10px 0px;">起送价<lable style="color:#ff5000;font-size:75%">￥</lable><span style="color:#ff5000;font-size:75%">${shop.sendPrice!0}</span>
+								<lable style="color:#e0e0e0;">|</lable>&nbsp;配送费<lable style="color:#ff5000;font-size:75%">￥</lable><span style="color:#ff5000;font-size:75%">${shop.deliveryFee!0}</span></p>
+							</div>
+							<span class="P_buying" style="font-size:75%">立即抢购</span>
+				    </div>
+				     </#list> 
+				     <#else>
+				   		  暂无活动商家
+				   </#if> 
+				   
+             </div>
+        
+  </div>
+  		<div data-role="footer">
+    			<article class="a_ctivity">
+    				活动规则:</br>
+					1.活动时间：2016年11月24日14:00-18:00</br>
+					2.活动如遇下雨等天气因素使活动无法正常进行，时间顺延</br>
+					3.活动地点：欣景苑小区广场（活动体验均在欣景苑小区广场进行）</br>
+					4.活动期间，同一ID、同一设备、同一手机号、同一地址视为同一用户，每一用户针对某一产品最多有三次体验机会</br>
+					5.因可能存在系统缓存、页面更新导致价格变动异常等不确定情况出现，如有发现异常，请您立即联系我们，以便我们及时更正</br>
+					6.本次活动均为体验活动，不支持退款</br>
+					7.本次活动的解释权归邻乐社区所有 
+				</article>
+  		</div>
+</div> 
+
+</body>
+<script type="text/javascript">
+	$(".n_list").click(function(){
+		var shopId=$(this).attr("shopId");
+		try {
+			window.online.activity("0","commodityActivity",shopId);
+		} catch (e) {
+			onlineActivity("0","commodityActivity",shopId);
+		}
+	})
+</script>
+<script>
+$(".show_number p").each(function(index, element) {
+    var num=$(this).attr("tip");
+    var www=num*2*11;//
+    $(this).css("width",www);
+});
+</script>
+</html>

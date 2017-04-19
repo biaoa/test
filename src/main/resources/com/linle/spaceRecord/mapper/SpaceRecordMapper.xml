@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.linle.spaceRecord.mapper.SpaceRecordMapper" >
+  <resultMap id="BaseResultMap" type="com.linle.entity.sys.SpaceRecord" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="user_id" property="userId" jdbcType="BIGINT" />
+    <result column="order_no" property="orderNo" jdbcType="VARCHAR" />
+    <result column="community_id" property="communityId" jdbcType="BIGINT" />
+    <result column="type" property="type" jdbcType="VARCHAR" />
+    <result column="begin_date" property="beginDate" jdbcType="TIMESTAMP" />
+    <result column="end_date" property="endDate" jdbcType="TIMESTAMP" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+    <result column="grage_id" property="grageId" jdbcType="BIGINT" />
+    <result column="space_no" property="spaceNo" jdbcType="VARCHAR" />
+    <result column="space_info" property="spaceInfo" jdbcType="VARCHAR" />
+  </resultMap>
+  <!-- 车位续费 -->
+  <resultMap  id="RenewResult" type="com.linle.entity.sys.SpaceRecord" extends="BaseResultMap">
+  	<result column="surplusDays" property="surplusDays"/>
+  	<association column="grage_id" property="parkingSpace" select="com.linle.parkingspace.mapper.ParkingSpaceMapper.selectByGarageId" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    id, user_id, order_no, community_id, type, begin_date, end_date, status, create_date, 
+    update_date, grage_id, space_no, space_info
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from space_record
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from space_record
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.linle.entity.sys.SpaceRecord" >
+    insert into space_record (id, user_id, order_no, 
+      community_id, type, begin_date, 
+      end_date, status, create_date, 
+      update_date, grage_id, space_no, 
+      space_info)
+    values (#{id,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{orderNo,jdbcType=VARCHAR}, 
+      #{communityId,jdbcType=BIGINT}, #{type,jdbcType=VARCHAR}, #{beginDate,jdbcType=TIMESTAMP}, 
+      #{endDate,jdbcType=TIMESTAMP}, #{status,jdbcType=INTEGER}, #{createDate,jdbcType=TIMESTAMP}, 
+      #{updateDate,jdbcType=TIMESTAMP}, #{grageId,jdbcType=BIGINT}, #{spaceNo,jdbcType=VARCHAR}, 
+      #{spaceInfo,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.linle.entity.sys.SpaceRecord" >
+    insert into space_record
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="orderNo != null" >
+        order_no,
+      </if>
+      <if test="communityId != null" >
+        community_id,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="beginDate != null" >
+        begin_date,
+      </if>
+      <if test="endDate != null" >
+        end_date,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="updateDate != null" >
+        update_date,
+      </if>
+      <if test="grageId != null" >
+        grage_id,
+      </if>
+      <if test="spaceNo != null" >
+        space_no,
+      </if>
+      <if test="spaceInfo != null" >
+        space_info,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="orderNo != null" >
+        #{orderNo,jdbcType=VARCHAR},
+      </if>
+      <if test="communityId != null" >
+        #{communityId,jdbcType=BIGINT},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="beginDate != null" >
+        #{beginDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endDate != null" >
+        #{endDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="grageId != null" >
+        #{grageId,jdbcType=BIGINT},
+      </if>
+      <if test="spaceNo != null" >
+        #{spaceNo,jdbcType=VARCHAR},
+      </if>
+      <if test="spaceInfo != null" >
+        #{spaceInfo,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.linle.entity.sys.SpaceRecord" >
+    update space_record
+    <set >
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="orderNo != null" >
+        order_no = #{orderNo,jdbcType=VARCHAR},
+      </if>
+      <if test="communityId != null" >
+        community_id = #{communityId,jdbcType=BIGINT},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="beginDate != null" >
+        begin_date = #{beginDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endDate != null" >
+        end_date = #{endDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="grageId != null" >
+        grage_id = #{grageId,jdbcType=BIGINT},
+      </if>
+      <if test="spaceNo != null" >
+        space_no = #{spaceNo,jdbcType=VARCHAR},
+      </if>
+      <if test="spaceInfo != null" >
+        space_info = #{spaceInfo,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.linle.entity.sys.SpaceRecord" >
+    update space_record
+    set user_id = #{userId,jdbcType=BIGINT},
+      order_no = #{orderNo,jdbcType=VARCHAR},
+      community_id = #{communityId,jdbcType=BIGINT},
+      type = #{type,jdbcType=VARCHAR},
+      begin_date = #{beginDate,jdbcType=TIMESTAMP},
+      end_date = #{endDate,jdbcType=TIMESTAMP},
+      status = #{status,jdbcType=INTEGER},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP},
+      grage_id = #{grageId,jdbcType=BIGINT},
+      space_no = #{spaceNo,jdbcType=VARCHAR},
+      space_info = #{spaceInfo,jdbcType=VARCHAR},
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  <select id="getSpaceList" parameterType="Long" resultMap="RenewResult">
+  	 select 
+    <include refid="Base_Column_List" />,DATEDIFF(end_date,now()) as surplusDays
+    from space_record
+    where user_id = #{id} and end_date > now() and (status=0)
+  </select>
+  <!-- 根据订单编号查询车位购买记录 -->
+  <select id="selectByOrderNo" parameterType="String" resultMap="BaseResultMap">
+  		 select 
+    <include refid="Base_Column_List" />
+    from space_record
+    where order_no = #{orderNo}
+  </select>
+  <!-- 续费后 更新车位的截至时间 -->
+  <update id="updateEndDate" parameterType="map">
+  	 update space_record
+  	 <set>
+  	 	<if test='type =="0"'>
+  	 		end_date = date_add(#{endDate}, interval 1 month),
+  	 	</if>
+  	 	<if test='type =="1"'>
+  	 		end_date = date_add(#{endDate}, interval 1 quarter),
+  	 	</if>
+  	 	<if test='type =="2"'>
+  	 		end_date = date_add(#{endDate}, interval 1 year),
+  	 	</if>
+  	 </set>
+  	  where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  <select id="selectSpaceInfo" parameterType="map" resultMap="BaseResultMap">
+  		 select 
+    <include refid="Base_Column_List" />
+    from space_record
+    where grage_id = #{grageid} and space_no = #{space} and status = 0
+  </select>
+  
+  <!-- 车位申停 -->
+  <update id="parkingStop" parameterType="Long">
+  	 update space_record
+  	 set status =2 
+  	 where id = #{spaceRecordId}
+  </update>
+  <!-- 车位转租 -->
+  <update id="parkingLease" parameterType="Long">
+  	 update space_record
+  	 set status =3 
+  	 where id = #{spaceRecordId}
+  </update>
+  
+  <select id="getSpaceListforStop" parameterType="Long" resultMap="RenewResult">
+  		 select 
+    <include refid="Base_Column_List" />,DATEDIFF(end_date,now()) as surplusDays
+    from space_record
+    where user_id = #{id} and end_date > now() and (status=0 or status=2 or status=3)
+  </select>
+  
+</mapper>

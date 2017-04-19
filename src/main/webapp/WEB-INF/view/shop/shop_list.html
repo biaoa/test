@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>商家管理</title>
+<meta name="content-type" content="text/html; charset=UTF-8">
+<#include '/common/resources.html'>
+<link rel="stylesheet" media="screen and (min-width: 1580px)" href="${base}/resources/css/sys/jquery.tableui.css" />
+<link rel="stylesheet" media="screen and (max-width: 1580px)" href="${base}/resources/css/sys/tableui-resolving.css" />
+<link rel="stylesheet" href="${base}/resources/css/sys/sys-tip.css" />
+<script src="${base}/resources/js/respond.js" type="text/javascript" async="async"></script>
+	<style>
+	.cz-a{color:white;}
+	.message-tip{float: left;width: 100%;text-align: center;color: #C4C4C4;font-size: 13px;}
+	</style>
+</head>
+<body>
+<div class="whole">
+	<ol class="breadcrumb">
+		<li><a href="javascript:void(0)">商家管理</a></li>
+		<li class="active">商家列表</li>
+	<@shiro.hasPermission name="shop_list">
+		<span style="float: right"><button type="button"
+			class="btn-default add" style="float: right;">新增商铺</button></span>
+	</@shiro.hasPermission>
+	</ol>
+		<div class="o-order">
+				<form action="${base}/sys/shop/list" id="pagerForm">
+				<div class="o-first">
+					<span class="o-span">商铺名称：</span>
+					<div class="o-input" style="width: 250px;"><input class="my-price" type="text" id="searchValue" name="searchValue" value="${searchValue!!}" placeholder="请输入商铺名称/商铺联系电话"/></div>
+					
+					<span class="o-span">商家类型：</span>
+					<div class="o-div">
+						<select class="o-select" name="typeId" id="type">
+							<option value="0">全部</option>
+							<#if typelist?exists && typelist?size gt 0>
+								<#list typelist as main>
+									<option value="${main.id}">${main.typeName}</option>
+								</#list>
+							</#if>
+						</select> 
+					</div>
+					
+					<span class="o-span">状态：</span>
+					<div class="o-div">
+						<select class="o-select" name="shopStatus" id="shopStatus">
+							<option value="">全部</option>
+							<option value="0">正常</option>
+							<option value="1">禁用</option>
+						</select> 
+					</div>
+					
+				</div>
+				<div class="o-thrid role-search1">
+					<a class="o-btn search1">搜索</a>
+				</div>
+			</div>
+	<div class="tab_box">
+	<table class="table_solid" border="0" cellspacing="0">
+		<tbody>
+			<tr class="evenRow">
+				<th>序号</th>
+				<th>商铺名称</th>
+				<th>联系电话</th>
+				<th>分类</th>
+				<th>是否营业</th>	
+				<th>商家状态</th>
+				<th>是否参与优惠活动</th>
+				<th>创建时间</th>
+				<@shiro.hasPermission name="shop_cut">
+					<th>抽成(%)</th>
+				</@shiro.hasPermission>
+				<@shiro.hasPermission name="shop_preferential_cut">
+					<th>抽成优惠金额</th>
+				</@shiro.hasPermission>
+				<@shiro.hasPermission name="shop_withdrawalFee_setting">
+					<th>提现手续费(%)</th>
+				</@shiro.hasPermission>
+				<th>操作</th>
+			</tr>
+			<#if (pagelist.results)?exists && pagelist.results?size gt 0> <#list
+			pagelist.results as shop>
+			<tr>
+				<td>${(shop_index+1)+(pagelist.pageNo-1)*pagelist.pageSize}</td>
+				<td>${shop.shopName!!}</td>
+				<td>${shop.shopPhone}</td>
+				<td>
+					<#if shop.childType??>
+						${shop.childType.typeName}
+						<#else>
+						${shop.mainType.typeName}
+					</#if>
+				</td>
+				<td>
+					<#if shop.operateStatus==0>
+						营业
+						<#elseif shop.operateStatus==1>
+						歇业
+					</#if>
+				</td>
+				<td>
+					<#if shop.shopStatus==0>
+						正常
+						<#elseif shop.shopStatus==1>
+						禁用
+					</#if>
+				</td>
+				<td>
+					<#if shop.activityFlag??&&shop.activityFlag==1>
+						是
+						<#else>
+						否
+					</#if>
+				</td>
+				<td>${shop.createDate?string('yyyy/MM/dd HH:mm:ss')}</td>
+				<@shiro.hasPermission name="shop_cut">
+					<td>${shop.cut!0}</td>
+				</@shiro.hasPermission>
+				<@shiro.hasPermission name="shop_preferential_cut">
+					<td>${shop.preferentialCutAmount!0}</td>
+				</@shiro.hasPermission>
+				<@shiro.hasPermission name="shop_withdrawalFee_setting">
+					<td>${shop.withdrawalFee*100}</td>
+				</@shiro.hasPermission>
+				<td>
+				<@shiro.lacksPermission name="shop_cut">
+					<a class="cz-a btn-default common-btn-cz" href="${base}/sys/shop/add?id=${shop.id}">修改</a>
+				</@shiro.lacksPermission>
+				<@shiro.hasPermission name="shop_cut">
+					<a class="cz-a btn-default common-btn-cz setting" href="javaScript:void(0);" val="${shop.cut!0}" sid="${shop.id}">设置抽成</a>
+				</@shiro.hasPermission>
+				<@shiro.hasPermission name="shop_preferential_cut">
+					<a class="cz-a btn-default common-btn-cz preferentialsetting" href="javaScript:void(0);" val="${shop.preferentialCutAmount!0}" sid="${shop.id}">设置抽成优惠金额</a>
+				</@shiro.hasPermission>
+				<@shiro.hasPermission name="shop_withdrawalFee_setting">
+					<a class="cz-a btn-default common-btn-cz withdrawalFeesetting" href="javaScript:void(0);" val="${shop.withdrawalFee!0}" sid="${shop.id}">设置提现手续费</a>
+				</@shiro.hasPermission>
+				</td>
+			</tr>
+			</#list>
+			</#if>
+		</tbody>
+	</table>
+		<#include '/common/pagination.html'>
+	</form>
+</div>
+	</div>
+	<div id="bg"></div>
+		<div class="box2" style="display: none;">
+			<p class="tip-tk">设置商家抽成比例</p>
+			<br />
+			<span class="tip-nr">抽成比例：</span><input class="input-yourtext" type="text" id="cut"/>
+			<div class="message-tip"><p><span style="color: red;">*</span>如抽成1%,请输入1</p></div>	
+			<div class="clearfix" style=""></div>
+			<a class="close">取消</a><a href="javascript:void(0)" class="tk-btn">确定</a>
+		</div>
+</body>
+<script type="text/javascript">
+	var sid;
+	$(function() {
+		$(".add").click(function() {
+			window.location.href = "${base}/sys/shop/add";
+		});
+		
+		$(".setting").click(function () {
+			$("#cut").val($(this).attr("val"));
+			sid = $(this).attr("sid");
+			$("#bg").css({
+	        	display: "block", height: $(document).height()
+	    	});
+			
+		var $box = $('.box2');
+			$box.css({
+		    //设置弹出层距离左边的位置
+		    left: ($("body").width() - $box.width()) / 2 - 10 + "px",
+		    //设置弹出层距离上面的位置
+		    top: ($(window).height() - $box.height()) / 3 + $(window).scrollTop() + "px",
+		    display: "block"
+			});
+			
+		});
+	    
+    	  //点击关闭按钮的时候，遮罩层关闭
+        $(".close").click(function () {
+            $("#bg,.box2").css("display", "none");
+        });
+    	  
+        $(".search1").click(function(){
+			$("#pagerForm").submit();
+		})
+	});
+	//点击确定按钮
+	$(".tk-btn").click(function(){
+		var cut = $("#cut").val();
+		if(isNaN(cut) || cut<0 || cut>=100){
+			layer.msg("抽成比例设置错误");
+			return false;
+		}
+		
+		$.post("${base}/sys/shop/settingcut", {'id': sid,"cut":cut}, function (data) {
+			 layer.msg(data.msg,{
+			     	shift: 0
+			     }, function(){
+			    	window.location.reload();
+			     });
+        });
+	  
+	});
+	<#if typeId??>
+		$("#type").val('${typeId}');
+	</#if>
+	<#if shopStatus??>
+		$("#shopStatus").val('${shopStatus}');
+	</#if>
+	
+	$(".preferentialsetting").click(function(){
+		var money = $(this).attr("val");
+		sid = $(this).attr("sid");
+		layer.prompt({
+			  formType: 0,
+			  value: money,
+			  title: '请输入优惠抽成金额'
+			}, function(value, index, elem){
+				if(isNaN(value) || value<0){
+					layer.msg("金额输入错误");
+					return false;
+				}else{
+					$.post("${base}/sys/shop/setpreferential", {'id': sid,"preferentialCutAmount":value}, function (data) {
+						layer.close(index);
+						layer.msg(data.msg,{
+					     	shift: 0
+					     }, function(){
+					    	 window.location.reload();
+					     }); 
+			        });
+				}
+			});
+	});
+	
+	$(".withdrawalFeesetting").click(function(){
+		var fee = $(this).attr("val");
+		sid = $(this).attr("sid");
+		layer.prompt({
+			  formType: 0,
+			  value: fee,
+			  title: '请输入提现手续费'
+			}, function(value, index, elem){
+				if(isNaN(value) || value<0 || value>1){
+					layer.msg("金额输入错误");
+					return false;
+				}else{
+					$.post("${base}/sys/shop/setwithdrawalFee", {'shopId': sid,"withdrawalFee":value}, function (data) {
+						layer.close(index);
+						layer.msg(data.msg,{
+					     	shift: 0
+					     }, function(){
+					    	 window.location.reload();
+					     }); 
+			        });
+				}
+			});
+	});
+</script>
+ <script>
+$(function(){
+        document.onkeydown = function(e){ 
+        var ev = document.all ? window.event : e;
+        if(ev.keyCode==13) {
+            $("#pagerForm").submit();
+            }
+        }
+    });  
+         
+</script>       
+
+</html>

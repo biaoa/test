@@ -1,0 +1,397 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<permissionConfig>
+
+	
+	<permission cname="首页" ename="system_home_manage"
+		permissionType="1" description="首页" moduleName="首页">
+		<permission cname="首页" ename="system_home"
+			permissionType="0" moduleName="首页" />
+	</permission>
+	
+	<permission cname="统计" ename="system_statistics_manage"
+		permissionType="1" description="统计" moduleName="统计">
+		<permission cname="统计" ename="system_statistics"
+			permissionType="0" moduleName="统计" />
+	</permission>
+	
+<!-- 	<permission cname="缴费参数配置" ename="globalSettings_manager" -->
+<!-- 		permissionType="1" description="缴费参数配置" moduleName="缴费参数配置"> -->
+<!-- 		<permission cname="参数配置列表" ename="globalSettings_list" -->
+<!-- 			permissionType="0" moduleName="参数配置列表" /> -->
+<!-- 				<permission cname="新增参数配置" ename="globalSettings_add" -->
+<!-- 			permissionType="0" moduleName="新增参数配置" /> -->
+<!-- 	</permission> -->
+	
+
+	<permission cname="缴费管理" ename="payment_manage"
+		permissionType="1" description="缴费管理" moduleName="缴费管理">
+		<permission cname="水费" ename="water"
+			permissionType="0" moduleName="水费" />
+		<permission cname="电费" ename="electricity"
+			permissionType="0" description=" " moduleName="电费" />
+		<permission cname="物业费" ename="property_fee"
+			permissionType="0" description=" " moduleName="物业费" />
+		<permission cname="宽带费" ename="broadband_fees1"
+			permissionType="0" description=" " moduleName="宽带费" />
+		<permission cname="有限电视" ename="broadband_fees"
+			permissionType="0" description=" " moduleName="有限电视" />
+		<permission cname="燃气费" ename="gas_fee"
+			permissionType="0" description=" " moduleName="燃气费" />
+		<permission cname="缴费单价设置" ename="price_setting"
+			permissionType="0" description=" " moduleName="缴费单价设置" />	
+	</permission>
+
+	<permission cname="代理商管理" ename="regionalagency_manage"
+		permissionType="1" description="代理商管理" moduleName="代理商管理">
+		<permission cname="代理商列表" ename="regionalagency_list"
+			permissionType="0" moduleName="代理商列表" />
+		<permission cname="新增" ename="add_regionalagency"
+			permissionType="0" description=" " moduleName="代理商新增" />
+		<permission cname="删除" ename="del_regionalagency"
+			permissionType="0" description=" " moduleName="代理商删除" />
+		<permission cname="查询" ename="search_regionalagency"
+			permissionType="0" description=" " moduleName="代理商查询" />
+		<permission cname="修改" ename="edit_regionalagency"
+			permissionType="0" description=" " moduleName="代理商修改" />
+	</permission>
+
+	<permission cname="小区合伙人管理" ename="community_partners_manage" permissionType="1" moduleName="小区合伙人管理">
+		<permission cname="小区合伙人列表" ename="community_partners_list" permissionType="0" moduleName="小区合伙人列表"/>
+	</permission>
+
+	<permission cname="物业管理" ename="propertyCompany_manage"
+		permissionType="1" description="物业管理" moduleName="物业管理">
+		<permission cname="物业列表" ename="propertyCompany_list"
+			permissionType="0" moduleName="物业列表" />
+		<permission cname="新增" ename="add_propertyCompany"
+			permissionType="0" description=" " moduleName="新增物业" />
+		<permission cname="删除" ename="del_propertyCompany"
+			permissionType="0" description=" " moduleName="删除物业" />
+		<permission cname="查询" ename="search_propertyCompany"
+			permissionType="0" description=" " moduleName="查询物业" />
+		<permission cname="修改" ename="edit_propertyCompany"
+			permissionType="0" description=" " moduleName="修改物业" />
+	</permission>
+
+
+	<permission cname="小区管理" ename="community_manage"
+		permissionType="1" description="小区管理" moduleName="小区管理">
+		<permission cname="小区管理" ename="community_list"
+			permissionType="0" moduleName="小区列表" />
+		<permission cname="新增" ename="add_community"
+			permissionType="0" description=" " moduleName="小区新增" />
+		<permission cname="删除" ename="del_community"
+			permissionType="0" description=" " moduleName="小区删除" />
+		<permission cname="查询" ename="search_community"
+			permissionType="0" description=" " moduleName="小区查询" />
+		<permission cname="修改" ename="edit_community"
+			permissionType="0" description=" " moduleName="小区修改" />
+		<permission cname="房号维护" ename="room_no"
+			permissionType="0" description=" " moduleName="房号维护" />
+		<permission cname="首页菜单设置" ename="community_menu_setting"
+			permissionType="0" moduleName="首页菜单设置" />
+		<permission cname="提现手续费设置" ename="community_withdrawalFee_setting"
+			permissionType="0" moduleName="提现手续费设置" />
+		<permission cname="小区用户" ename="community_user"
+			permissionType="0" description=" " moduleName="小区用户" />	
+	</permission>
+	
+	<permission cname="提现管理" ename="income_manage"
+		permissionType="1" description="提现管理" moduleName="提现管理">
+		<permission cname="提现列表" ename="income_list"
+			permissionType="0" moduleName="提现列表" />
+		<permission cname="提现确认" ename="income_confirm"
+			permissionType="0" description=" " moduleName="提现确认" />
+		<permission cname="提现银行卡管理" ename="withdraw_bank_manage"
+			permissionType="0" description=" " moduleName="提现银行卡管理" />
+	</permission>
+	
+	<permission cname="收益管理" ename="earnings_manage"
+		permissionType="1" description="收益管理" moduleName="收益管理">
+		<permission cname="商家收益" ename="shop_earnings"
+			permissionType="0" moduleName="商家收益" />
+		<permission cname="小区收益" ename="community_earnings"
+			permissionType="0" moduleName="小区收益" />
+		<permission cname="提现管理" ename="user_income_list"
+			permissionType="0" moduleName="提现管理" />
+	</permission>
+	
+	
+	<permission cname="退款订单管理" ename="refund_order_manage"
+		permissionType="1" description="退款列表" moduleName="退款列表">
+		<permission cname="退款列表" ename="refund_order_list"
+			permissionType="0" moduleName="退款" />
+	</permission>
+	
+	<permission cname="退款管理" ename="refund_manage"
+		permissionType="1" description="退款列表" moduleName="退款列表">
+		<permission cname="退款列表" ename="refund_list"
+			permissionType="0" moduleName="退款管理" />
+	</permission>
+	
+	<permission cname="抽成设置" ename="cut_setting"
+		permissionType="1" description="抽成设置" moduleName="抽成设置">
+		<permission cname="商家抽成" ename="shop_cut"
+			permissionType="0" moduleName="商家抽成" />
+		<permission cname="商家抽成优惠金额" ename="shop_preferential_cut"
+			permissionType="0" moduleName="商家抽成优惠金额" />
+	</permission>
+	
+	<permission cname="社长信息管理" ename="community_president_manage"
+		permissionType="1" description="社长信息管理" moduleName="社长信息管理">
+		<permission cname="社长列表" ename="community_president_list"
+			permissionType="0" moduleName="社长列表" />
+	</permission>
+	
+	
+	<permission cname="小区信息管理" ename="community_info_manage"
+		permissionType="1" description="小区信息管理" moduleName="小区信息管理">
+		<permission cname="部门管理" ename="community_department_manage"
+			permissionType="0" moduleName="部门管理"/>
+		<permission cname="人员管理" ename="community_person_manage"
+			permissionType="0" description=" " moduleName="人员管理" />
+			<permission cname="人员重置密码" ename="community_person_resetPassword"
+			permissionType="0" description=" " moduleName="人员重置密码" />
+			<permission cname="人员定位监控" ename="community_person_positioning"
+			permissionType="0" description=" " moduleName="员定位监控" />
+	</permission>
+	
+
+	<permission cname="系统管理" ename="system_manage"
+		permissionType="1" moduleName="系统管理">
+		<permission cname="系统用户管理" ename="system_accountManage"
+			permissionType="0" moduleName="账号管理">
+		</permission>
+		<permission cname="角色管理" ename="system_userRoleManage"
+			permissionType="0" moduleName="角色管理">
+		</permission>
+		<permission cname="登录日志" ename="system_logManage"
+			permissionType="0" moduleName="系统日志">
+		</permission>
+		<permission cname="密码设置" ename="system_passwordSet"
+			permissionType="0" moduleName="密码设置">
+		</permission>
+	</permission>
+	
+	<permission cname="账户管理" ename="account_manage"
+		permissionType="1" moduleName="账户管理">
+		<permission cname="修改密码" ename="modify_password"
+			permissionType="0" moduleName="修改密码">
+		</permission>
+		<permission cname="代理信息编辑" ename="_edit_regionalagency"
+			permissionType="0" moduleName="代理信息编辑">
+		</permission>
+		
+		<permission cname="物业信息编辑" ename="_edit_propertyCompany"
+			permissionType="0" moduleName="物业信息编辑">
+		</permission> 
+		
+		<permission cname="社长信息编辑" ename="modify_president"
+			permissionType="0" moduleName="社长信息编辑">
+		</permission>
+		
+		<permission cname="商家信息编辑" ename="_shop_edit"
+			permissionType="0" moduleName="商家信息编辑">
+		</permission>
+	</permission>
+	
+	
+	<permission cname="商家管理" ename="shop_manage"
+		permissionType="1" description="商家管理" moduleName="商家管理">
+		<permission cname="商家管理" ename="shop_list"
+			permissionType="0" moduleName="商家列表" />
+		<permission cname="新增" ename="shop_add"
+			permissionType="0" description=" " moduleName="店铺新增" />
+		<permission cname="删除" ename="shop_del"
+			permissionType="0" description=" " moduleName="店铺删除" />
+		<permission cname="查询" ename="shop_search"
+			permissionType="0" description=" " moduleName="店铺查询" />
+		<permission cname="修改" ename="shop_edit"
+			permissionType="0" description=" " moduleName="店铺修改" />
+		<permission cname="提现手续费设置" ename="shop_withdrawalFee_setting"
+			permissionType="0" moduleName="提现手续费设置" />
+	</permission>
+	
+	<permission cname="商家类型管理" ename="shopType_manage"
+		permissionType="1" description="商家类型管理" moduleName="商家类型管理">
+		<permission cname="主类型管理" ename="shopMainType_list" permissionType="0" moduleName="主类型管理" />
+		<permission cname="子类型管理" ename="shopChildType_list" permissionType="0"  moduleName="子类型管理" />
+	</permission>
+	
+	<permission cname="报修类型管理" ename="repairType_manager"
+		permissionType="1" description="报修类型管理" moduleName="报修类型管理">
+		<permission cname="报修类型管理" ename="repairType_list" permissionType="0" moduleName="报修类型管理" />
+	</permission>
+	
+	<permission cname="优惠类型管理" ename="preferentialType_manage"
+		permissionType="1" description="优惠类型管理" moduleName="优惠类型管理">
+		<permission cname="优惠类型管理" ename="preferentialType_list" permissionType="0" moduleName="优惠类型管理" />
+	</permission>
+	
+	<permission cname="优惠管理" ename="shopPreferential_manage"
+		permissionType="1" description="优惠管理" moduleName="优惠管理">
+		<permission cname="优惠管理" ename="shopPreferential_list" permissionType="0" moduleName="优惠管理" />
+	</permission>
+	
+	
+	<permission cname="商品管理" ename="commodity_manage"
+		permissionType="1" description="商品管理" moduleName="商品管理">
+		<permission cname="商品管理" ename="commodity_list"
+			permissionType="0" moduleName="商家列表" />
+		<permission cname="新增" ename="commodity_add"
+			permissionType="0" description=" " moduleName="商品新增" />
+		<permission cname="删除" ename="commodity_del"
+			permissionType="0" description=" " moduleName="商品删除" />
+		<permission cname="查询" ename="commodity_search"
+			permissionType="0" description=" " moduleName="商品查询" />
+		<permission cname="修改" ename="commodity_edit"
+			permissionType="0" description=" " moduleName="商品修改" />
+	</permission>
+	
+	<permission cname="商品类型管理" ename="commodity_type_manage"
+		permissionType="1" description="商品类型管理" moduleName="商品类型管理">
+		<permission cname="类型管理" ename="commodity_type_list" permissionType="0" moduleName="类型管理" />
+	</permission>
+	
+	<permission cname="家园订单管理" ename="commodity_order_manage"
+		permissionType="1" description="家园订单管理" moduleName="家园订单管理">
+		<permission cname="订单管理" ename="commodity_order_list" permissionType="0" moduleName="订单管理" />
+	</permission>
+	
+	
+	<permission cname="车位管理" ename="garage_manager"
+		permissionType="1" moduleName="车位管理">
+		<permission cname="车位管理" ename="garage_list"
+			permissionType="0" moduleName="车位管理">
+		</permission>
+	</permission>
+	
+<!-- 	<permission cname="快递管理" ename="express_manager" -->
+<!-- 		permissionType="1" moduleName="快递管理"> -->
+<!-- 		<permission cname="快递信息管理" ename="express_list" -->
+<!-- 			permissionType="0" moduleName="快递信息管理"> -->
+<!-- 		</permission> -->
+<!-- 	</permission> -->
+	
+	<permission cname="首页轮播图管理" ename="banner_manager"
+		permissionType="1" moduleName="轮播图管理">
+		<permission cname="首页轮播图管理" ename="banner_list"
+			permissionType="0" moduleName="轮播图管理">
+		</permission>
+		<permission cname="首页轮播图统计" ename="banner_statistical"
+			permissionType="0" moduleName="轮播图统计">
+		</permission>
+	</permission>
+	
+	<permission cname="邻乐速报管理" ename="knowledge_manager"
+		permissionType="1" moduleName="邻乐速报管理">
+		<permission cname="邻乐速报管理" ename="knowledge_list"
+			permissionType="0" moduleName="邻乐速报管理">
+		</permission>
+	</permission>
+	
+	<permission cname="管家广告管理" ename="housekeeperAD_manage"
+		permissionType="1" moduleName="管家广告管理">
+		<permission cname="管家广告管理" ename="housekeeperAD_list"
+			permissionType="0" moduleName="管家广告管理">
+		</permission>
+	</permission>
+	
+	<permission cname="申请合作管理" ename="applyCooperae_manage"
+		permissionType="1" moduleName="管家广告管理">
+		<permission cname="申请合作列表" ename="applyCooperae_list"
+			permissionType="0" moduleName="申请合作列表">
+		</permission>
+	</permission>
+	
+	<permission cname="圈子管理" ename="topic_manage"
+		permissionType="1" moduleName="圈子管理">
+		<permission cname="圈子类型管理" ename="topicType_manage"
+			permissionType="0" moduleName="圈子类型管理">
+		</permission>
+		<permission cname="圈子话题管理" ename="topic_list"
+			permissionType="0" moduleName="圈子话题管理">
+		</permission>
+		<permission cname="圈子用户管理" ename="topicUserManager_list"
+			permissionType="0" moduleName="圈子用户管理">
+		</permission>
+	</permission>
+	
+	<permission cname="意见反馈管理" ename="feedback_manage"
+		permissionType="1" moduleName="意见反馈管理">
+		<permission cname="意见反馈管理" ename="feedback_list"
+			permissionType="0" moduleName="意见反馈管理">
+		</permission>
+	</permission>
+	
+	<permission cname="常见问题管理" ename="commonProblem_manage"
+		permissionType="1" moduleName="常见问题管理">
+		<permission cname="常见问题管理" ename="commonProblem_list"
+			permissionType="0" moduleName="常见问题管理">
+		</permission>
+		<permission cname="问题类型管理" ename="problemType_manage"
+			permissionType="0" description=" " moduleName="问题类型管理">
+		</permission>
+	</permission>
+	
+	<permission cname="服务协议管理" ename="serviceAgreement_manage" permissionType="1" moduleName="服务协议管理">
+		<permission cname="服务协议列表" ename="serviceAgreement_list" permissionType="0" moduleName="服务协议列表"/>
+	</permission>
+	
+	<permission cname="服务管理" ename="community_service_manage" permissionType="1" moduleName="服务管理">
+		<permission cname="报修管理" ename="repair_manager" permissionType="0" moduleName="报修管理"></permission>
+		<permission cname="房屋租售" ename="house_manager" permissionType="0" moduleName="房屋租售"></permission>
+		<permission cname="投诉建议" ename="commodity_feedback_manage" permissionType="0" moduleName="投诉建议"></permission>
+		<permission cname="活动投票" ename="vote_manage" permissionType="0" moduleName="活动投票"></permission>
+	</permission>
+	
+	<permission cname="通知管理" ename="community_notice_manage" permissionType="1" moduleName="通知管理">
+		<permission cname="临时通知管理" ename="notice_manage" permissionType="0" moduleName="临时通知管理"></permission>
+		<permission cname="即时聊天" ename="community_toIM" permissionType="0" moduleName="即时聊天"></permission>
+	</permission>
+	
+	<permission cname="考勤管理" ename="attendance_manage"
+		permissionType="1" moduleName="考勤管理">
+		<permission cname="考勤设置" ename="attendance_setting"
+			permissionType="0" moduleName="考勤设置">
+		</permission>
+		<permission cname="考勤记录" ename="attendance_record"
+			permissionType="0" description=" " moduleName="考勤记录">
+		</permission>
+		<permission cname="考勤统计" ename="attendance_statistical"
+			permissionType="0" description=" " moduleName="考勤统计">
+		</permission>
+	</permission>
+	
+	<permission cname="巡更管理" ename="patrol_manage"
+		permissionType="1" moduleName="巡更管理">
+		<permission cname="巡更二维码管理" ename="qrCodeRoom_manage"
+			permissionType="0" moduleName="巡更二维码管理">
+		</permission>
+		<permission cname="巡更记录" ename="patrolRoomRecord_manage"
+			permissionType="0" description=" " moduleName="巡更记录">
+		</permission>
+	</permission>
+	
+	<permission cname="软件版本管理" ename="versionManager_manage"
+		permissionType="1" moduleName="软件版本管理">
+		<permission cname="软件版本列表" ename="versionManager_list"
+			permissionType="0" moduleName="软件版本列表">
+		</permission>
+	</permission>
+	
+	<permission cname="优惠活动管理" ename="preferentialActivity_manage"
+		permissionType="1" moduleName="优惠活动管理">
+		<permission cname="优惠活动管理" ename="preferentialActivity_list"
+			permissionType="0" moduleName="优惠活动管理">
+		</permission>
+		<permission cname="优惠活动规则" ename="preferentialActivity_list"
+			permissionType="0" description=" " moduleName="优惠活动规则">
+		</permission>
+	</permission>
+	
+	<permission cname="资金管理" ename="capitalFlow_manage" permissionType="1" moduleName="资金管理">
+		<permission cname="资金流水列表" ename="transactionflow_manage" permissionType="0" moduleName="资金流水列表"/>
+	</permission>
+	
+</permissionConfig>

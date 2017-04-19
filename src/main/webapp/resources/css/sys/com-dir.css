@@ -1,0 +1,315 @@
+.change-password {
+	width: 100%;
+	height: auto;
+	overflow: hidden;
+	padding: 20px 15px;
+	border-bottom: 1px solid gainsboro;
+}
+
+.password-change {
+	width: 98%;
+	margin: 0 auto;
+	height: auto;
+	overflow: hidden;
+	border-bottom: 1px solid gainsboro;
+	padding: 20px 0;
+}
+
+.phone-number,
+.new-password {
+	width: 100%;
+	padding: 5px;
+	float: left;
+}
+
+.phone-first {
+	width: 100px;
+	float: left;
+	margin-top: 8px;
+	text-align: right;
+}
+
+.phone-next {
+	float: left;
+	width: 200px;
+	border: 1px solid gainsboro;
+}
+
+.phone-next input {
+	border: 0;
+	width: 100%;
+	font-size: 16px;
+	padding: 8px;
+}
+
+.all-tx a {
+	cursor: pointer;
+	float: left;
+	font-size: 16px;
+	padding: 8px;
+	margin-left: 20px;
+	border-radius: 4px;
+	color: black;
+}
+
+.new-password-title {
+	width: 100px;
+	float: left;
+	margin-top: 8px;
+	text-align: right;
+}
+
+.new-password-text {
+	float: left;
+	width: 300px;
+	border: 1px solid gainsboro;
+}
+
+.new-password-text2 {
+	float: left;
+	width: 300px;
+}
+
+.new-password-text input {
+	border: 0;
+	width: 95%;
+	font-size: 16px;
+	padding: 8px;
+}
+
+.submit {
+	float: right;
+	margin-right: 50px;
+	height: auto;
+	margin-top: 20px;
+}
+
+.submit a {
+	padding: 5px 13px;
+	background: #f15822;
+	border-radius: 3px;
+	color: white;
+	cursor: pointer;
+	margin-right: 10px;
+}
+
+.develop-village {
+	padding: 10px 25px;
+	border: 1px solid red;
+	float: left;
+	margin-right: 10px;
+	position: relative;
+}
+
+.choice-img {
+	position: absolute;
+	right: 0;
+	bottom: 0;
+	width: 30px;
+}
+
+.dialog {
+	background-color: #fff;
+	border: 0;
+	min-height: 400px;
+	height: auto;
+	overflow: hidden;
+	margin: 0 auto;
+	padding: 1px;
+	position: absolute;
+	min-width: 500px;
+	width: auto;
+	z-index: 5;
+	border-radius: 5px;
+	display: none;
+	padding-bottom: 30px;
+	z-index: 100;
+}
+
+.dialog p {
+	padding: 15px 0 15px 15px;
+	font-size: 17px;
+	border-bottom: 1px solid gainsboro;
+}
+
+.sq-select {
+	width: 180px;
+	border: 0;
+	float: left;
+	margin-left: 13px;
+	border: 1px solid darkgrey;
+	height: auto;
+	overflow: hidden;
+}
+
+.o-select2 {
+	padding: 8px 0 8px 5px;
+	width: 100%;
+	border: 0;
+}
+
+.message-nr {
+	max-width: 300px;
+	text-align: left;
+	margin: 0 auto;
+}
+
+.take-orders {
+	padding: 10px 20px;
+	background: #3f4750;
+	float: right;
+	cursor: pointer;
+	border-radius: 3px;
+}
+
+.auto {
+	height: auto;
+	overflow: hidden;
+}
+
+.develop-img {
+	width: 100px;
+	float: left;
+}
+
+.develop-design {
+	padding: 10px 25px;
+	border: 1px solid gainsboro;
+	float: left;
+	margin-right: 10px;
+	position: relative;
+	cursor: pointer;
+	margin-bottom: 15px;
+}
+
+.develop-design2 {
+	border: 1px solid red;
+	background: url(../img/tx.png) no-repeat right;
+	background-size: 30px 20px;
+	background-position-y: bottom;
+}
+
+.xq-message {
+	width: 100%;
+	margin: 0 auto;
+	padding: 20px 10px;
+	height: auto;
+	overflow: hidden;
+	border-top: 1px solid gainsboro;
+}
+
+.xq-design {
+	float: left;
+	width: 50%;
+	margin-bottom: 20px;
+}
+
+.xq-design-span {
+	font-weight: bold;
+	float: left;
+	margin-top: 5px;
+	width: 130px;
+}
+
+.xq-design input {
+	width: 200px;
+	border: 1px solid gainsboro;
+	padding: 5px;
+	float: left;
+}
+
+.select-two {
+	background: gainsboro;
+}
+
+.wuye-in {
+	width: 80%;
+	height: 200px;
+	border: 1px solid gainsboro;
+	margin-left: 20px;
+	padding: 10px;
+}
+
+.overhidden {
+	overflow: hidden;
+	height: auto;
+}
+
+.kdwhole {
+	width: 100%;
+	height: 100%;
+}
+
+.avatar2 {
+	width: 100px;
+	height: 100px;
+	float: left;
+	margin-top: 10px;
+}
+
+.avatar2-img {
+	width: 100%;
+	height: 100%;
+}
+
+.renzhen {
+	width: 20px;
+	position: absolute;
+	right: -5px;
+	bottom: -5px;
+	height: 20px;
+}
+
+.excel {
+	float: left;
+	font-size: 14px;
+}
+
+.for-exam {
+	float: left;
+	width: 100%;
+	padding-top: 20px;
+}
+
+.for-exam img {
+	float: left;
+	margin-left: 100px;
+	margin-right: 10px;
+}
+
+.for-exam p {
+	color: #bebebe;
+	font-size: 14px;
+}
+
+.s-btn {
+	cursor: pointer;
+}
+
+.mes-whs {
+	color: gainsboro;
+	cursor: pointer;
+}
+
+.on {
+	color: black;
+}
+
+.hide {
+	display: none;
+}
+.nr{cursor: pointer;}
+.w-plus{
+	width: 48%;
+    float: left;
+    margin: 15px 1%;
+    height: 100%;
+    background-color: white;
+    overflow: auto;
+}
+.top-tz{
+	float: right;
+	margin-right: 10px;
+}
+.airpont{width: 15px;}
+.tem-notice{width:98%;float:left;margin:5px auto;}

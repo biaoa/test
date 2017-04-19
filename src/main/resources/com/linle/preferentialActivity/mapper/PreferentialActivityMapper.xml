@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.linle.preferentialActivity.mapper.PreferentialActivityMapper" >
+  <resultMap id="BaseResultMap" type="com.linle.preferentialActivity.model.PreferentialActivity" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="activity_name" property="activityName" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+    <result column="activity_community" property="activityCommunity" jdbcType="VARCHAR" />
+    <result column="begin_date" property="beginDate" jdbcType="TIMESTAMP" />
+    <result column="end_date" property="endDate" jdbcType="TIMESTAMP" />
+    <result column="activity_amount" property="activityAmount" jdbcType="DECIMAL" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="scope" property="scope" jdbcType="VARCHAR" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+    <result column="create_user" property="createUser" jdbcType="BIGINT" />
+    <result column="repeat_flag" property="repeatFlag" />
+  </resultMap>
+  
+  
+  <resultMap id="PageResultMap" type="com.linle.preferentialActivity.model.PreferentialActivity" extends="BaseResultMap">
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, activity_name, type, activity_community, begin_date, end_date, activity_amount, 
+    status, scope, create_date, update_date, create_user,repeat_flag
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from preferential_activity
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from preferential_activity
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.linle.preferentialActivity.model.PreferentialActivity" >
+    insert into preferential_activity (id, activity_name, type, 
+      activity_community, begin_date, end_date, 
+      activity_amount, status, scope, 
+      create_date, update_date, create_user,repeat_flag
+      )
+    values (#{id,jdbcType=BIGINT}, #{activityName,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER}, 
+      #{activityCommunity,jdbcType=VARCHAR}, #{beginDate,jdbcType=TIMESTAMP}, #{endDate,jdbcType=TIMESTAMP}, 
+      #{activityAmount,jdbcType=DECIMAL}, #{status,jdbcType=INTEGER}, #{scope,jdbcType=VARCHAR}, 
+      #{createDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP}, #{createUser,jdbcType=BIGINT},
+      #{repeatFlag})
+  </insert>
+  <insert id="insertSelective" parameterType="com.linle.preferentialActivity.model.PreferentialActivity" >
+    insert into preferential_activity
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="activityName != null" >
+        activity_name,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="activityCommunity != null" >
+        activity_community,
+      </if>
+      <if test="beginDate != null" >
+        begin_date,
+      </if>
+      <if test="endDate != null" >
+        end_date,
+      </if>
+      <if test="activityAmount != null" >
+        activity_amount,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="scope != null" >
+        scope,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="updateDate != null" >
+        update_date,
+      </if>
+      <if test="createUser != null" >
+        create_user,
+      </if>
+      <if test="repeatFlag != null">
+      	repeat_flag,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="activityName != null" >
+        #{activityName,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=INTEGER},
+      </if>
+      <if test="activityCommunity != null" >
+        #{activityCommunity,jdbcType=VARCHAR},
+      </if>
+      <if test="beginDate != null" >
+        #{beginDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endDate != null" >
+        #{endDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="activityAmount != null" >
+        #{activityAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="scope != null" >
+        #{scope,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUser != null" >
+        #{createUser,jdbcType=BIGINT},
+      </if>
+      <if test="repeatFlag !=null">
+      	#{repeatFlag},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.linle.preferentialActivity.model.PreferentialActivity" >
+    update preferential_activity
+    <set >
+      <if test="activityName != null" >
+        activity_name = #{activityName,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="activityCommunity != null" >
+        activity_community = #{activityCommunity,jdbcType=VARCHAR},
+      </if>
+      <if test="beginDate != null" >
+        begin_date = #{beginDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endDate != null" >
+        end_date = #{endDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="activityAmount != null" >
+        activity_amount = #{activityAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="scope != null" >
+        scope = #{scope,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUser != null" >
+        create_user = #{createUser,jdbcType=BIGINT},
+      </if>
+      <if test="repeatFlag != null">
+      	repeat_flag = #{repeatFlag},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.linle.preferentialActivity.model.PreferentialActivity" >
+    update preferential_activity
+    set activity_name = #{activityName,jdbcType=VARCHAR},
+      type = #{type,jdbcType=INTEGER},
+      activity_community = #{activityCommunity,jdbcType=VARCHAR},
+      begin_date = #{beginDate,jdbcType=TIMESTAMP},
+      end_date = #{endDate,jdbcType=TIMESTAMP},
+      activity_amount = #{activityAmount,jdbcType=DECIMAL},
+      status = #{status,jdbcType=INTEGER},
+      scope = #{scope,jdbcType=VARCHAR},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP},
+      create_user = #{createUser,jdbcType=BIGINT},
+      repeat_flag = #{repeatFlag}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  <!-- 获得优惠活动 -->
+  <select id="selectHasPreferential" parameterType="map" resultMap="BaseResultMap">
+  	 select 
+  	 <include refid="Base_Column_List" />
+     from preferential_activity
+     where 
+     <![CDATA[
+     (type = 0 and status = 1 and NOW()>=begin_date and NOW()<=end_date and find_in_set(#{type},scope)) or
+      (type = 1 and find_in_set(#{communityId},activity_community) and status =1 and NOW()>=begin_date and NOW()<=end_date and find_in_set(#{type},scope))
+     ]]>  
+  </select>
+  
+   <select id="getAllData" resultMap="PageResultMap" parameterType="page" >
+    select 
+    <include refid="Base_Column_List" />
+    from preferential_activity
+    order by create_date desc 
+  </select>
+</mapper>

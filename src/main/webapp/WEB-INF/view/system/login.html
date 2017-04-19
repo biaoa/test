@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="renderer" content="webkit|ie-comp|ie-stand">
+		<meta name="renderer" content="webkit">
+		<!–[if lt IE 7]>
+			<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<![endif]–>
+		<!–[if lt IE 8]>
+			<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<![endif]–>
+		<title>登录</title>
+		<#include '/common/resources.html'>
+		<script type="text/javascript" src="${base}/resources/js/html5.js" async="async"></script>
+		<script src="${base}/resources/js/respond.js" type="text/javascript" async="async"></script>
+	</head>
+	<body>
+		<div class="log-bg">
+			<div class="logo">
+				<img src="${base}/resources/images/login.png" />
+			</div>
+			<div class="login">
+				<div class="tit"><span class="title">登录</span></div>
+				<div class="message">
+					<input placeholder="请输入账号" type="text" id="userName"/>					
+				</div>
+				<div class="message">
+					<input placeholder="请输入密码" type="password" id="password"/>
+<!-- 					<a href="#">忘记密码</a> -->
+				</div>
+				<button class="btn" style="cursor: pointer;" id="login">登录</button>
+				<!--<p>若你还未注册账号，请点击<a href="register.html"><span class="word">注册</span></a></p>-->
+				<p class="tip">账号或密码错误!请重新输入</p>
+			</div>						
+		<footer>
+			<span>杭州邻乐科技有限公司2016</span><span>浙CP备16049524号</span>
+		</footer>
+		</div>
+	</body>
+<!-- 	<script type="text/javascript" src="${base}/resources/js/action.js" ></script> -->
+	<script type="text/javascript">
+	if(self!=top){top.location=self.location;}  
+	
+	var b = '${base}';
+	$(function () {
+		
+		$("#login").click(function(){
+			login();
+		  });
+		
+		$(document).keyup(function (evnet) {
+			if (evnet.keyCode == '13') {
+				login();
+			}
+			});
+		
+	});
+	function login(){
+		 var userName = $("#userName");
+		 var userPass = $("#password");
+		   if (userName.val() == "") {
+	            userName.focus();
+	            $(".tip").text("请输入账号");
+	            $(".tip").show();
+	            return false;
+	        }
+	        if (userPass.val() == "") {
+	            userPass.focus();
+	            $(".tip").text("请输入密码");
+	            $(".tip").show();
+	            return false;
+	        }
+	        $(".title").text("登陆中...");
+	        $.ajax({
+	            type: "POST", // 用POST方式传输
+	            url: b + '/login',
+	            data: {
+	                "userName": userName.val(),
+	                "password": userPass.val()
+	            },
+	            success: function (data) {
+	                if (data.code == 0) {
+	                    window.location.href = b + "/sys/index";
+	                } else {
+	                	 $(".title").text("登陆");
+	                	 $(".tip").text(data.msg);
+	                	 $(".tip").show();
+	 		            return false;
+	                }
+	            }
+	        });
+	}
+	</script>
+</html>

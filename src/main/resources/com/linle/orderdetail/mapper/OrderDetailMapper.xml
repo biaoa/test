@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.linle.orderdetail.mapper.OrderDetailMapper" >
+  <resultMap id="BaseResultMap" type="com.linle.entity.sys.OrderDetail" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="order_id" property="orderId" jdbcType="BIGINT" />
+    <result column="product_name" property="productName" jdbcType="VARCHAR" />
+    <result column="product_quantity" property="productQuantity" jdbcType="INTEGER" />
+    <result column="product_price" property="productPrice" jdbcType="DECIMAL" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+    <result column="other" property="other"/>
+    <result column="product_id" property="productId"/>
+    <result column="order_type" property="orderType"/>
+    <result column="picture" property="picture"/>
+    <result column="content" property="content"/>
+  </resultMap>
+  
+   <resultMap id="OrderDetailResult" type="com.linle.mobileapi.v1.model.OrderProduct" >
+    <result column="product_name" property="productName" jdbcType="VARCHAR" />
+    <result column="order_type" property="orderType"/>
+    <result column="picture" property="picture"/>
+    <result column="product_price" property="productPrice"/>
+    <result column="product_quantity" property="productQuantity"/>
+    <result column="content" property="content"/>
+  </resultMap>
+  
+  <resultMap id="ShopOrderDetailVo" type="com.linle.mobileapi.shop.model.ShopOrderDetailVO" >
+  	<result column="product_name" property="productName"/>
+  	<result column="product_quantity" property="productQuantity"/>
+  	<result column="product_price" property="productPrice"/>
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    id, order_id, product_name, product_quantity, product_price, remark, create_date, 
+    update_date,other,product_id,order_type,picture,content
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from order_detail
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from order_detail
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.linle.entity.sys.OrderDetail" >
+    insert into order_detail (id, order_id, product_name, 
+      product_quantity, product_price, remark, 
+      create_date, update_date,other,product_id,order_type,picture,content)
+    values (#{id,jdbcType=BIGINT}, #{orderId,jdbcType=BIGINT}, #{productName,jdbcType=VARCHAR}, 
+      #{productQuantity,jdbcType=INTEGER}, #{productPrice,jdbcType=DECIMAL}, #{remark,jdbcType=VARCHAR}, 
+      #{createDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP},#{other},#{productId},#{orderType},#{picture},#{content})
+  </insert>
+  <insert id="insertSelective" parameterType="com.linle.entity.sys.OrderDetail" >
+    insert into order_detail
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="orderId != null" >
+        order_id,
+      </if>
+      <if test="productName != null" >
+        product_name,
+      </if>
+      <if test="productQuantity != null" >
+        product_quantity,
+      </if>
+      <if test="productPrice != null" >
+        product_price,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="updateDate != null" >
+        update_date,
+      </if>
+      <if test="other !=null">
+      	other,
+      </if>
+      <if test="productId !=null">
+      	product_id,
+      </if>
+      <if test="orderType !=null">
+      	order_type,
+      </if>
+      <if test="picture !=null">
+      	picture,
+      </if>
+      <if test="content!=null">
+      	content,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="orderId != null" >
+        #{orderId,jdbcType=BIGINT},
+      </if>
+      <if test="productName != null" >
+        #{productName,jdbcType=VARCHAR},
+      </if>
+      <if test="productQuantity != null" >
+        #{productQuantity,jdbcType=INTEGER},
+      </if>
+      <if test="productPrice != null" >
+        #{productPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="other !=null">
+      	#{other},
+      </if>
+      <if test="productId !=null">
+      	#{productId},
+      </if>
+      <if test="orderType!=null">
+      	#{orderType},
+      </if>
+      <if test="picture !=null">
+        #{picture},
+      </if>
+      <if test="content!=null">
+      	#{content},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.linle.entity.sys.OrderDetail" >
+    update order_detail
+    <set >
+      <if test="orderId != null" >
+        order_id = #{orderId,jdbcType=BIGINT},
+      </if>
+      <if test="productName != null" >
+        product_name = #{productName,jdbcType=VARCHAR},
+      </if>
+      <if test="productQuantity != null" >
+        product_quantity = #{productQuantity,jdbcType=INTEGER},
+      </if>
+      <if test="productPrice != null" >
+        product_price = #{productPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="other !=null">
+      	other = #{other},
+      </if>
+      <if test="productId !=null">
+      	product_id = #{productId},
+      </if>
+      <if test="orderType !=null">
+      	order_type = #{orderType},
+      </if>
+      <if test="picture !=null">
+      	picture = #{picture},
+      </if>
+      <if test="content !=null">
+      	content = #{content},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.linle.entity.sys.OrderDetail" >
+    update order_detail
+    set order_id = #{orderId,jdbcType=BIGINT},
+      product_name = #{productName,jdbcType=VARCHAR},
+      product_quantity = #{productQuantity,jdbcType=INTEGER},
+      product_price = #{productPrice,jdbcType=DECIMAL},
+      remark = #{remark,jdbcType=VARCHAR},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP},
+      other = #{other},
+      product_id = #{productId},
+      order_type = #{orderType},
+      picture = #{picture},
+      content = #{content}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <!-- 根据订单ID 获得订单详情 -->
+  <select id="getDetailList" parameterType="Long" resultMap="BaseResultMap">
+  		   select 
+    <include refid="Base_Column_List" />
+    from order_detail
+    where order_id = #{orderId}
+  </select>
+  
+  <select id="getOrderTypeAndProductName" parameterType="String" resultMap="OrderDetailResult">
+  		select product_name,order_type,picture,ifnull(product_price,"待定") as product_price,SUM(product_quantity) as product_quantity,content
+  		from order_detail
+  		where order_id = #{value}
+  		group by product_id,other
+  </select>
+  
+  <select id="getShopOrderDetail" parameterType="String" resultMap="ShopOrderDetailVo">
+  	select 
+  		product_name,product_price,SUM(product_quantity) as product_quantity
+  	from order_detail
+  	where order_id = #{value}
+  	GROUP BY product_id
+  </select>
+  
+  <update id="updateProductPriceByOrderNo" parameterType="map">
+  	update  order_detail  set product_price = #{productPrice},update_date=now()
+  	WHERE order_id in (SELECT id FROM sys_order WHERE order_no=#{orderNo})
+  </update>
+</mapper>

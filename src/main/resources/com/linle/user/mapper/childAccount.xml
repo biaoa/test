@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.linle.user.mapper.ChildAccountMapper">
+	<resultMap id="childAccountResult" type="ChildAccount">
+		<result property="id" column="id" />
+		<result property="user.id" column="user_id"/>
+		<result property="userName" column="user_name"/>
+		<result property="phone" column="phone"/>
+		<result property="position" column="position"/>
+		<result property="objId" column="obj_id"/>
+		<result property="roleType" column="role_type" typeHandler="IntEnumTypeHandler"/>
+		<result property="status" column="status"  typeHandler="IntEnumTypeHandler" />
+		<result property="delFlag" column="del_flag" typeHandler="IntEnumTypeHandler"/>
+		<result property="createDate" column="create_Date"/>
+		<result property="updateDate" column="update_date"/>
+	</resultMap>
+	
+	
+	<insert id="add" useGeneratedKeys="true" keyProperty="id" parameterType="ChildAccount">
+		INSERT INTO child_account
+		(id,user_name,user_id,phone,position,obj_id,role_type,status,create_date,update_date)
+		VALUES
+		(#{id},#{userName},#{user.id},#{phone},#{position},#{objId},#{roleType, typeHandler=IntEnumTypeHandler},#{status, typeHandler=IntEnumTypeHandler},now(),now())
+	</insert>
+	
+	<update id="update" parameterType="ChildAccount">
+		update child_account 
+		<set>
+			<if test="userName != null">
+				user_name = #{userName},
+			</if>
+			<if test="position != null">
+				position = #{position},
+			</if>
+		</set>
+		where id=#{id}
+	</update>
+	<update id="deleteById" parameterType="ChildAccount">
+		update child_account 
+		<set>
+			<if test="delFlag != null">
+			del_flag = #{delFlag,typeHandler=IntEnumTypeHandler}
+			</if>
+		</set>
+		where id=#{id}
+	</update>
+	<select id="getById" parameterType="long" resultMap="childAccountResult">
+		select * from child_account where id=#{value}
+	</select>
+	<select id="getByUserId" parameterType="long" resultMap="childAccountResult">
+		select * from child_account where user_id=#{value}
+	</select>
+	<select id="getChildAccount" resultMap="childAccountResult" parameterType="Page">
+		select * from child_account
+		<where>
+			(del_flag is null or del_flag = 0)
+			<if test="params !=null and params.objId != null and params.objId !=''">
+				and obj_id=#{params.objId}
+			</if>	
+			<if test="params !=null and params.status != null and params.status !=''">
+				and status=#{params.status,typeHandler=IntEnumTypeHandler}
+			</if>
+			<if test="params !=null and params.roleType != null and params.roleType !=''">
+				and role_type=#{params.roleType,typeHandler=IntEnumTypeHandler}
+			</if>
+		</where>
+	</select>
+</mapper>

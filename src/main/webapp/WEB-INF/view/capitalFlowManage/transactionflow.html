@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="UTF-8">
+<title></title>
+<#include '/common/resources.html'>
+<link rel="stylesheet" media="screen and (min-width: 1580px)" href="${base}/resources/css/sys/jquery.tableui.css" />
+<link rel="stylesheet" media="screen and (max-width: 1580px)" href="${base}/resources/css/sys/tableui-resolving.css" />
+<link rel="stylesheet" href="${base}/resources/css/sys/jquery-ui.min.css" />
+<script type="text/javascript" src="${base}/resources/js/jquery-ui.min.js"></script>
+<link rel="stylesheet" type="text/css" href="${base}/resources/datetimepicker/jquery.datetimepicker.css"/>
+<script src="${base}/resources/datetimepicker/jquery.datetimepicker.js" ></script>
+</head>
+
+<body>
+	<form action="${base}/capitalFlowManage/transactionflow" id="pagerForm">
+	<div class="whole">
+		<ol class="breadcrumb">
+			<li><a href="javascript:void(0)">资金流水管理</a></li>
+		</ol>
+		<div class="o-order">
+			<div class="o-first">
+					<span class="o-span">用户名:</span>
+					<div class="o-input">
+						<input class="my-price" type="text" name="userName" value="${userName!!}"/>
+					</div>
+						<span class="o-span">订单号:</span>
+					<div class="o-input">
+						<input class="my-price" type="text" name="orderNo" value="${orderNo!!}"/>
+					</div>
+					
+					<span class="o-span">支付方式:</span>
+					<div class="o-div">
+						<select class="o-select" name="channel" id="channel">
+							<option value="">全部</option>
+							<option value="alipay">支付宝</option>
+							<option value="wx">微信</option>
+							<option value="upacp">银联</option>
+						</select>
+					</div>
+			</div>
+			<span class="o-span">支付时间:</span>
+			<div class="o-input">
+				<input class="my-times" type="text" id="datepicker2" name="beginDate" value="${beginDate!!}"/>
+			</div>
+			<span class="o-span">--</span>
+			<div class="o-input">
+				<input class="my-times" type="text" id="datepicker3" name="endDate" value="${endDate!!}"/>
+			</div>
+		</div>
+		<div class="o-thrid">
+			<a class="o-btn searche1">搜索</a>
+		</div>
+	</div>
+	<div class="clearfix"></div>
+	<div class="tab-order">
+		<div class="box tab2">
+			<div class="tab_box">
+				<div class="">
+					<table class="table_solid" border="0" cellspacing="0">
+						<tbody>
+							<tr class="evenRow">
+								<th>用户名</th>
+								<th>订单号</th>
+								<th>实际支付金额</th>
+								<th>优惠金额</th>
+								<th>优惠类型</th>
+								<th>支付时间</th>
+								<th>备注</th>
+								<th>支付方式</th>
+							</tr>
+							<#if (pagelist.results)?exists && pagelist.results?size gt 0>
+								<#list pagelist.results as transactionflow>
+									<tr class="oddRow">
+										<td>${transactionflow.userName!!}</td>
+										<td>${transactionflow.orderNo!!}</td>
+										<td>${transactionflow.totalMoney!0}</td>
+										<td>${transactionflow.preferentialAmount!!}</td>
+										<td>
+											<#if transactionflow.preferentialType??>
+												系统优惠
+												<#else>
+												商家优惠
+											</#if>
+										</td>
+										<td>${transactionflow.payDate?string('yyyy/MM/dd HH:mm:ss')}</td>
+										<td>${transactionflow.orderRemark!!}</td>
+										<td>
+											<#if transactionflow.channel??>
+												<#if transactionflow.channel=='wx'>
+													微信
+													<#elseif transactionflow.channel=='alipay'>
+													支付宝
+													<#elseif transactionflow.channel=='upacp'>
+													银联
+													<#else>
+													未知
+												</#if>
+												<#else>
+												未知
+											</#if>
+										</td>
+									</tr>
+								</#list>
+						</tbody>
+					</table>
+					<#include '/common/pagination.html'>
+						<#else>
+						</table>
+						<div class="no-data">暂无数据~</div>
+					</#if>
+				</div>
+			</div>
+		</div>
+	</div>
+	</form>
+	<script src="${base}/resources/js/jquery.tabs.js"></script>
+	<script type="text/javascript">
+		$(function() {
+			$('.tab2').Tabs({
+				event : 'click'
+			});
+		});
+	</script>
+	<script type="text/javascript" src="${base}/resources/js/placeholder.js"></script>
+	<script>
+		$(function() {
+			$('#datepicker2,#datepicker3').datetimepicker({
+				lang: 'ch',
+				timepicker: false,
+				format: 'Y-m-d',
+				formatDate: 'Y-m-d'
+			
+			});
+		});
+		
+		$(".searche1").click(function(){
+			$("#pagerForm").submit();
+		})
+		
+		<#if channel??>
+			$("#channel").val('${channel}');
+		</#if>
+	</script>
+
+</body>
+
+</html>

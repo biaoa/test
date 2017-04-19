@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>车位管理</title> <#include '/common/resources.html'>
+<link rel="stylesheet" media="screen and (min-width: 1580px)" href="${base}/resources/css/sys/jquery.tableui.css" />
+<link rel="stylesheet" media="screen and (max-width: 1580px)" href="${base}/resources/css/sys/tableui-resolving.css" />
+<link rel="stylesheet" media="screen and (min-width: 1580px)" href="${base}/resources/css/sys/car.css" />
+<link rel="stylesheet" media="screen and (max-width: 1580px)" href="${base}/resources/css/sys/car-resolving.css" />
+<script src="${base}/resources/js/respond.js" type="text/javascript" async="async"></script>
+<!-- <script src="${base}/resources/js/jquery.validate.min.js"></script> -->
+<!-- <script src="${base}/resources/js/messages_zh.js"></script> -->
+</head>
+<body>
+	<div class="whole">
+		<ol class="breadcrumb">
+			<li><a href="javascript:void(0)">车位服务</a></li>
+			<li class="active">车位信息维护</li>
+		</ol>
+		<form action="${base}/garage/list" id="pagerForm" method="post">
+		<div class="o-order">
+			<div class="o-first">
+<!-- 				<span class="o-span">序号：</span> -->
+<!-- 				<div class="o-input"> -->
+<!-- 					<input class="my-price" type="text" /> -->
+<!-- 				</div> -->
+				<span class="o-span">车库名称：</span>
+				<div class="o-input">
+					<input class="my-price" type="text" name="garageName" value="${garageName!!}"/>
+				</div>
+			</div>
+			<div class="o-thrid-car btn-margin-left">
+				<a class="o-btn searchForm">搜索</a>
+				<a class="o-btn" onclick="showBg();">添加</a>
+			</div>
+		</div>
+		<div class="tab-order">
+				<div class="tab_box" >
+				<div>
+					<table class="table_solid" border="0" cellspacing="0">
+						<tbody>
+							<tr class="evenRow">
+								<th>序号</th>
+								<th>车库名称</th>
+								<th>车位数</th>
+								<th>已租</th>
+								<th>空余车位</th>
+								<th>操作</th>
+							</tr>
+							<#if (pagelist.results)?exists && pagelist.results?size gt 0>
+								<#list pagelist.results as garage>
+									<tr class="oddRow">
+										<td>${(garage_index+1)+(pagelist.pageNo-1)*pagelist.pageSize}</td>
+										<td>${garage.name!!}</td>
+										<td>${garage.spaceCount!0}</td>
+										<td>${garage.useCount!0}</td>
+										<td>${(garage.spaceCount!0)-(garage.useCount!0)}</td>
+										<td>
+											<a class="td-b common-btn-cz" href="javascript:modifyGarage('${garage.id}','${garage.spaceCount}');">编辑</a>
+											<a class="td-c common-btn-cz" useCount="${garage.useCount}" garageid="${garage.id}">删除</a>
+										</td>
+									</tr>
+								</#list>
+						</tbody>
+						
+					
+					</table>
+						<#include '/common/pagination.html'>
+					<#else>
+					</table>
+						<div class="no-data" style="margin-top:50px;">暂无数据~</div>
+				
+					</#if>
+						</div>
+					</table>
+					
+						</form>
+				</div>
+				<div id="fullbg"></div>
+				<div id="dialog">
+					<p class="car-tit">车位信息编辑</p>
+					<div class="car-first">
+						<div class="car-one">
+							<div class="car-sp">
+								<span>车库名称：</span>
+							</div>
+							<input class="ck-name" type="text" placeholder="请输入车库名称" id="garage_name"/>
+						</div>
+						<div class="car-one">
+							<div class="car-sp">
+								<span>排序：</span>
+							</div>
+							<input class="num" type="text" placeholder="请输入排列顺序" id="sort"/>
+						</div>
+						<div class="car-one">
+							<div class="car-sp">
+								<span>车库长度：</span>
+							</div>
+							<input class="num" type="text" placeholder="请输入车位列数" id="lie"/>
+						</div>
+						<div class="car-one">
+							<div class="car-sp">
+								<span>车库宽度：</span>
+							</div>
+							<input class="num" type="text" placeholder="请输入车位行数" id="hang"/>
+						</div>
+						
+						<div class="car-one">
+							<div class="car-sp">
+								<span>每月/元：</span>
+							</div>
+							<input class="num" type="text" placeholder="请输入每月租金" id="month"/>
+						</div>
+						
+						<div class="car-one">
+							<div class="car-sp">
+								<span>每季度/元：</span>
+							</div>
+							<input class="num" type="text" placeholder="请输入每季度租金" id="quarter"/>
+						</div>
+						
+						
+						<div class="car-one">
+							<div class="car-sp">
+								<span>每年/元：</span>
+							</div>
+							<input class="num" type="text" placeholder="请输入每年租金" id="year"/>
+						</div>
+						
+
+						<div class="car-btn">
+							<a class="car-close" onclick="closeBg()">取消</a><a
+								class="car-next" onclick="nextone()">下一步</a>
+						</div>
+					</div>
+					<div class="car-second">
+						<div id="seat_area">
+							<div class="front">${communityName!!}车位分布图</div>
+						</div>
+						 <div class="car-edit">
+                			<h3>车位价格编辑</h3>
+                			<div class="car-one">
+							<div class="car-sp"><span>车位月费：</span></div><input class="num" type="text" id="month_" placeholder="请输入车位月租金" /></div> 
+							<div class="car-one">
+								<div class="car-sp"><span>车位季费：</span></div><input class="num" id="quarter_" type="text" placeholder="请输入车位季租金" />
+							</div> 
+							<div class="car-one">
+								<div class="car-sp"><span>车位年费：</span></div><input class="num" id="year_" type="text" placeholder="请输入车位年租金" />
+							</div>
+							<input type="button" class="money-btn" value="确定"/>
+               		 </div>
+						
+						<div class="booking_area">
+							<p>
+								车位数：<span id="tickects_num">0</span>
+							</p>
+							<input type="button" class="s-btn" value="取消" onclick="closeBg()"/>
+							<input type="button" class="s-btn" value="确定" id="space_but"/>
+							<div id="legend"></div>
+						</div>
+						<input type="hidden" id="garage_id" />
+						<input type="hidden" id="modify_type" />
+						<input type="hidden" id="parking_id" />
+					</div>
+				</div>
+			</div>
+
+
+			<div id="page3" class="page-flag"></div>
+		</div>
+	</div>
+	</div>
+	<script type="text/javascript" src="${base}/resources/js/jquery.seat-charts.min.js"></script>
+	<script type="text/javascript">
+	var r = /^[0-9]*[1-9][0-9]*$/;
+	var price_reg=/^[0-9]+\.{0,1}[0-9]{0,2}$/
+		function showBg() { 
+			var bh = $("body").height(); 
+			var bw = $("body").width(); 
+				$("#fullbg").css({ 
+					height:bh, 
+					width:bw, 
+					display:"block" 
+				}); 
+				$("#dialog").fadeIn();
+				return;
+			} 
+		  //关闭灰色 jQuery 遮罩 
+			function closeBg() { 
+				$("#fullbg,#dialog").hide();
+				 window.location.reload();
+			} 	
+			function nextone() {
+				var month = $("#month").val();
+				var quarter = $("#quarter").val();
+				var year = $("#year").val();
+				var name = $("#garage_name").val();
+				var sort = $("#sort").val();
+				var lie  = $("#lie").val();
+				var hang = $("#hang").val();
+				if(name==""){
+					layer.msg("车库名称不能为空");
+					return;
+				}
+				if(sort!=""){
+					if(!r.test(sort)){
+						layer.msg("排序字段必须为正整数");
+						return;
+					}
+				}
+				if(lie==""){
+					layer.msg("长度不能为空");
+					return;
+				}else{
+					if(!r.test(lie)){
+						layer.msg("长度必须为正整数");
+						return;
+					}
+				}
+				
+				if(hang==""){
+					layer.msg("宽度不能为空");
+					return;
+				}else{
+					if(!r.test(hang)){
+						layer.msg("宽度必须为正整数");
+						return;
+					}
+				}
+				
+				if(month==""){
+					layer.msg("请输入每月价格");
+					return;
+				}else{
+					if(!price_reg.test(month)){
+						layer.msg("每月价格必须为正整数");
+						return;
+					}
+				}
+				if(quarter==""){
+					layer.msg("请输入每季度价格");
+					return;
+				}else{
+					if(!price_reg.test(quarter)){
+						layer.msg("每季度价格必须为正整数");
+						return;
+					}
+				}
+				if(year==""){
+					layer.msg("请输入每年价格");
+					return;
+				}else{
+					if(!price_reg.test(year)){
+						layer.msg("每年价格必须为正整数");
+						return;
+					}
+				}
+				
+				$.ajax({
+					type : "post",
+					data :{
+						 "name" : name,
+						 "sort" : sort,
+						 "garageLength"  : lie,
+						 "garageWidth" : hang
+					},
+					url : "${base}/garage/add",
+					success : function(data) {
+						
+						$("#garage_id").val(data.paramsMap.id);
+						
+						$("#month_").val(month);
+						$("#quarter_").val(quarter);
+						$("#year_").val(year);
+						
+						 layer.msg(data.msg,{
+				            	shift: 0
+				            }, function(){
+				            	$(".car-first").hide(); 
+				        		var array = new Array();
+				        		var price_arr = new Array();
+				        		for(var i = 0;i<lie;i++){
+				        			var array_b = new Array();
+				        			var str = "";
+				        			for(var j=0;j<hang;j++){
+				        				str+="c";
+				        				var array_a = new Array();
+				        				array_a.push(month);
+				        				array_a.push(quarter);
+				        				array_a.push(year);
+				        				array_b.push(array_a);
+				        			}
+				        			array.push(str);
+				        			price_arr.push(array_b);
+				        		}
+				            	createMap(array,price_arr);
+								$(".car-second").show();
+				            }); 
+					}
+				});				
+			}		
+	
+			
+			function modifyGarage(id,spaceCount) {
+				$.ajax({
+					type : "post",
+					data :{"id" : id},
+					url : "${base}/parkingSpace/getParkingSpace",
+					success : function(data) {
+						
+						if(data.code==0){
+							if(data.result.parkingSpace==null){
+								layer.msg("该车库下没有车位");
+								return false;
+							}
+							$("#modify_type").val("status");
+							$("#parking_id").val(data.result.parkingSpace.id);
+							$("#garage_id").val(id);
+							console.log(spaceCount);
+							$("#tickects_num").text(spaceCount);
+						 	$(".car-first").hide();
+						 	var solded;
+						 	if(data.result.parkingSpace.solded!=null){
+						 		solded  = data.result.parkingSpace.solded.split(",");
+						 	}
+			            	createMap(data.result.parkingSpace.space.split(","),JSON.parse(data.result.parkingSpace.price),"x",solded);
+			            	$("#dialog").fadeIn(); 
+							$(".car-second").show();
+							
+						}else{
+							layer.msg(data.msg);
+							return;
+						}
+					}
+				});				
+			}		
+
+			
+	</script>
+	<script>
+	</script>
+	<script type="text/javascript" src="${base}/resources/js/placeholder.js"></script>
+	
+	<script type="text/javascript">
+		var sc;
+		var map_space;
+		var garage_price;
+		var month_ ;
+		var quarter_;
+		var year_;
+		var select_array; //选中的车位
+		function createMap(map,price_arr,type,solded){
+		
+			var $cart = $('#seats_chose'), //座位区
+			$tickects_num = $('#tickects_num'), //票数
+			$total_price = $('#total_price'); //票价总额
+			sc= $('#seat_area')
+						.seatCharts(
+								{
+									map : map,
+									price : price_arr,
+									naming : {//设置行列等信息
+										top : false, //不显示顶部横坐标（行） 
+										left : false,
+										getLabel : function(
+												character, row,column) { //返回座位信息 
+											return column;
+										}
+									},
+									legend : {//定义图例
+										node : $('#legend'),
+										items : [
+												[ 'c', 'selected','已选' ],
+												[ 'c', 'available','可选' ],
+												['c','unavailable','已售' ]]
+									},
+									click : function() {
+										var obj = this;
+										var rowx = this.settings.row;
+										var labelx = this.settings.label;
+										map = sc.map();
+										garage_price = sc.price();
+									
+										if(type=="x"){
+											$("#month_").val(garage_price[rowx][labelx-1][0]);
+											$("#quarter_").val(garage_price[rowx][labelx-1][1]);
+											$("#year_").val(garage_price[rowx][labelx-1][2]);
+										}
+										var $box = $('.car-edit');
+								       		$box.css({     
+								            display: "block"});
+									    $(".money-btn").click(function (){
+									    	$(".car-edit").css("display", "none");
+									    	month_ = $("#month_").val();
+											quarter_ = $("#quarter_").val();
+											year_ = $("#year_").val();
+									    	//修改价格
+									    	verifyPrice(); //验证价格
+									    	garage_price[rowx][labelx-1][0]=month_;
+									    	garage_price[rowx][labelx-1][1]=quarter_;
+									    	garage_price[rowx][labelx-1][2]=year_;
+									    	updatePrice();
+								   		 });
+										if (this.status() == 'available') { //若为可选座状态，添加座位
+											$('<li>'+ (this.settings.row + 1)+ '排'+ this.settings.label+ '座</li>')
+													.attr('id','cart-item-'+ this.settings.id)
+													.data('seatId',this.settings.id)
+													.appendTo($cart);
+											$tickects_num.text(sc.find('selected').length + 1); //统计选票数量
+										updateMap(map,rowx,labelx,obj.status());
+											return 'selected';
+										} else if (this.status() == 'selected') { //若为选中状态
+											$tickects_num.text(sc.find('selected').length - 1);//更新票数量
+											$('#cart-item-'+ this.settings.id).remove();//删除已预订座位
+											updateMap(map,rowx,labelx,obj.status());
+											return 'available';
+										} else if (this.status() == 'unavailable') { //若为已售出状态
+											return 'unavailable';
+										} else {
+											return this.style();
+										}
+									}
+								});
+							//设置已售出的座位
+							if(solded){
+								sc.get(solded).status('unavailable');
+							}
+
+			}
+		function updateMap(map,rowx,labelx,status){
+			labelx--;
+			var temp=map[rowx].split("");
+			if(status=="available"){
+				temp[labelx]="x"; //选中
+			}else if(status=="selected"){
+				temp[labelx]="_";//没选中
+			}else if(status=="unavailable"){
+				temp[labelx]="_";//售出
+			}
+			temp=temp.join("");
+			map[rowx]=temp;
+			map_space = map;
+			return map;
+		}
+		
+		$("#space_but").click(function(){
+			var modify =  $("#modify_type").val();
+			//设置哪些座位已售出
+			if(modify=="status"){
+				select_array =sc.find('selected').seatIds.join(",");
+				//var id = $("#garage_id").val();
+				$.ajax({
+					async : false,
+					type : "POST",
+					url : '${base}/parkingSpace/setParkingSpace/',
+					data :{
+						id : $("#parking_id").val(),
+						space :  map_space.join(),
+						price :  getString(garage_price),
+						garageId : $("#garage_id").val(),
+						solded : select_array
+					},
+					dataType : 'json',
+					success : function(data) {
+						if(data.code==0){
+// 							var orderNo = data.result.orderNo;
+							 layer.msg(data.msg,{
+					             	shift: 0,
+					             	time: 1500
+					             }, function(){
+					            	 window.location.reload();
+					             }); 
+						}
+						
+						//orderNo
+					}
+				});
+				
+			}else{
+				//设置哪些位置可以做
+				$.ajax({
+					async : false,
+					type : "POST",
+					url : '${base}/parkingSpace/addspace/',
+					data :{
+						space :  map_space.join(),
+						price :  getString(garage_price),
+						garageId : $("#garage_id").val()
+					},
+					dataType : 'json',
+					success : function(data) {
+						 layer.msg(data.msg,{
+				             	shift: 0,
+				             	time: 1500
+				             }, function(){
+				            	 window.location.reload();
+				             }); 
+					}
+				});
+			}
+		})
+		
+	function updatePrice(){
+			$.ajax({
+				async : false,
+				type : "POST",
+				url : '${base}/parkingSpace/setParkingSpace/',
+				data :{
+					id : $("#parking_id").val(),
+					price :  getString(garage_price)
+				},
+				dataType : 'json',
+				success : function(data) {
+					if(data.code==0){
+						 layer.msg(data.msg,{
+				             	shift: 0,
+				             	time: 1500
+				             }, function(){
+				            	 window.location.reload();
+				             }); 
+					}
+				}
+			});
+	}
+		
+	
+	function getString(obj){
+// 			console.log(obj);
+		return JSON.stringify(obj);
+	}
+		
+	function verifyPrice(){
+		if(month_==""){
+			layer.msg("请输入每月价格");
+			return;
+		}else{
+			if(!price_reg.test(month_)){
+				layer.msg("每月价格必须为正数");
+				return;
+			}
+		}
+		if(quarter_==""){
+			layer.msg("请输入每季度价格");
+			return;
+		}else{
+			if(!price_reg.test(quarter_)){
+				layer.msg("每季度价格必须为正数");
+				return;
+			}
+		}
+		if(year_==""){
+			layer.msg("请输入每年价格");
+			return;
+		}else{
+			if(!price_reg.test(year_)){
+				layer.msg("每年价格必须为正数");
+				return;
+			}
+		}
+	}
+	
+	$(".searchForm").click(function(){
+		$("#pagerForm").submit();
+	})
+	//删除车库信息
+	$(".td-c").click(function(){
+		var useCount = $(this).attr("useCount");
+		var garageid = $(this).attr("garageid");
+		if(useCount>0){
+			layer.msg("还有正在使用中的车位，不能删除")
+			return false;
+		}
+		$.ajax({
+			async : false,
+			type : "POST",
+			url : '${base}/garage/del',
+			data :{
+				id : garageid
+			},
+			dataType : 'json',
+			success : function(data) {
+				if(data.code==0){
+					 layer.msg(data.msg,{
+			             	shift: 0,
+			             	time: 1500
+			             }, function(){
+			            	 window.location.reload();
+			             }); 
+				}
+			}
+		});
+		
+		
+	})
+	</script>
+	<script>
+	$(function(){
+        document.onkeydown = function(e){ 
+        var ev = document.all ? window.event : e;
+        if(ev.keyCode==13) {
+            $("#pagerForm").submit();
+            }
+        }
+    });  
+         
+    </script>     
+</body>
+</body>
+</html>

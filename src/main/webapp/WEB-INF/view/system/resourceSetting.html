@@ -1,0 +1,67 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>管理中心</title>
+<#include '/common/resources.html'>
+</head>
+<body> 
+<div id="center_content">
+	 <div class="fh_right_box">
+     <h3 style="margin-left:-30px;">
+     <div class="btn-group" style="margin-left:30px" role="group" aria-label="...">
+         <span type="button" id="on" class="btn btn-default active">企业介绍</span>
+         <span href="javascript:;" type="button" id="on" class="btn btn-default">联系方式</span>
+         <span href="javascript:;" type="button" id="on" class="btn btn-default">服务范围</span>
+         <span href="javascript:;" type="button" id="on" class="btn btn-default">中介特质</span>
+	 </div>
+     </h3>
+     <img src="${base}/resources/images/hr.jpg" class="xian"/>
+     </div>
+     <form id="qyjsForm" method="post" action="${base}/set/resourceSetting">
+     <input name="id" value="${rep.id}" type="hidden"/>
+     <div class="tabmenus">
+	     <textarea rows="5"  name="intro" class="input" placeholder="服务介绍"  style="width:100%;height:600px;border:1px solid #ddd">${(rep.introduction)!''}</textarea>
+         <a href="javascript:;" class="btSubmit button button-action button-rounded pull-right" style="background:#1fbba6;margin-top:10px">修改</a>
+     </div>
+     <div class="tabmenus" style="display:none">
+     	 <textarea rows="5"  name="contactContent" class="input" placeholder="联系方式"  style="width:100%;height:600px;border:1px solid #ddd">${(rep.contactContent)!''}</textarea>
+         <a href="javascript:;" id="editqyjs" class="btSubmit button button-action button-rounded pull-right" style="background:#1fbba6;margin-top:10px">修改</a>
+     </div>
+     <div class="tabmenus" style="display:none">
+	    <textarea rows="5" name="servicRange"  class="input" placeholder="服务范围"  style="width:100%;height:600px;border:none;">${(rep.servicRange)!''}</textarea>
+      <a href="javascript:;"  class="btSubmit button button-action button-rounded pull-right" style="background:#1fbba6;margin-top:10px;border:1px solid #ddd">修改</a>
+     </div>
+     <div class="tabmenus" style="display:none">
+       <textarea rows="5" name="trait"  class="input" placeholder="中介特质"  style="width:100%;height:600px;border:none;">${(rep.trait)!''}</textarea>
+      <a href="javascript:;"  class="btSubmit button button-action button-rounded pull-right" style="background:#1fbba6;margin-top:10px;border:1px solid #ddd">修改</a>
+     </div>
+     </form> 
+</div>
+</body>
+<script type="text/javascript">
+$(document).ready(function() {
+	$('#center_content').find('span').click(function(){
+	      $('#center_content').find('.tabmenus').css('display','none');
+	      $('#center_content').find('.tabmenus').eq($(this).index()).css('display','block')
+
+	});
+	
+    $('.btSubmit').on('click', function(e) {
+          var $form = $("#qyjsForm");
+          $.post($form.attr('action'), $form.serialize(), function(result) {
+        	  layer.msg(result.msg)
+         	/* $.gritter.add({  
+         	    title: '',  
+         	    text: result.msg,  
+         	    sticky: false,  
+         	    time: 2000,  
+         	    speed:500,  
+         	    class_name: 'gritter-success'//gritter-center   
+         	});   */
+         }, 'json');
+          
+    });
+});
+</script>
+</html>

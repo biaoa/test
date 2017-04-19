@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>优惠活动管理</title>
+<meta name="content-type" content="text/html; charset=UTF-8">
+<#include '/common/resources.html'>
+<link rel="stylesheet" media="screen and (min-width: 1580px)" href="${base}/resources/css/sys/jquery.tableui.css" />
+<link rel="stylesheet" media="screen and (max-width: 1580px)" href="${base}/resources/css/sys/tableui-resolving.css" />
+<script src="${base}/resources/js/respond.js" type="text/javascript" async="async"></script>
+<!-- <script type="text/javascript" src="${base}/resources/js/tooltips.js"></script> -->
+</head>
+<body>
+<div class="whole">
+	<ol class="breadcrumb">
+		<li><a href="javascript:void(0)">优惠活动管理</a></li>
+		<li class="active">优惠活动规则</li>
+		<span style="float: right">
+			<button id="addBtn" type="button" class="btn-default" style="float: right;">新增优惠活动</button>
+		</span>
+	</ol>
+			<div class="tab_box">
+	<table class="table_solid" border="0" cellspacing="0">
+		<tbody>
+			<tr class="evenRow">
+				<th>序号</th>
+				<th>活动名称</th>
+				<th>活动类型</th>
+				<th>活动小区</th>
+				<th>活动范围</th>
+				<th>活动金额（元） </th>
+				<th>开始时间</th>
+				<th>结束时间</th>
+				<th>状态</th>
+				<th>是否允许重复</th>
+				<th>创建时间</th>
+				<th>更新时间</th>
+				<th>操作</th>
+			</tr>
+			<#if (pagelist.results)?exists && pagelist.results?size gt 0> <#list
+			pagelist.results as record>
+			<tr>
+				<td>${(record_index+1)+(pagelist.pageNo-1)*pagelist.pageSize}</td>
+				<td>${record.activityName!!}</td>
+				<td>
+					<#if record.type==1>
+						 部分小区
+						<#else>
+						全部小区
+					</#if>
+				</td>
+				<td>${record.activityCommunity!!}</td>
+				<td>${record.typeNames!!}
+				</td>
+				<td>${record.activityAmount!!}</td>
+				<td>${record.beginDate?string('yyyy/MM/dd HH:mm')}</td>
+				<td>${record.endDate?string('yyyy/MM/dd HH:mm')}</td>
+				<td>
+						<#if record.status==0>
+							未开始
+						<#elseif record.status==1>
+						 	进行中
+						<#else>
+						 	已结束
+					</#if>
+				</td>
+				<td>
+					<#if record.repeatFlag==1>
+						 不允许
+						<#else>
+						允许
+					</#if>
+				</td>
+				<td>${record.createDate?string('yyyy/MM/dd HH:mm')}</td>
+				<td>
+				<#if record.updateDate??>
+					${record.updateDate?string('yyyy/MM/dd HH:mm')}
+				</#if>
+				</td>
+				<td>
+					<a class="cz-a btn-default common-btn-cz" href="${base}/preferentialActivity/toAdd?id=${record.id}">编辑</a>
+					<a class="cz-a btn-default del common-btn-cz" info="${record.activityName}"  href="javascript:void(0)" val="${record.id}">删除</a>
+				</td>
+			</tr>
+			</#list>
+		</tbody>
+	</table>
+	<form action="${base}/preferentialActivity/list" id="pagerForm">
+	<#include '/common/pagination.html'>
+	</form>
+	<#else>
+	<div class="no-data">暂无数据~</div>
+	</#if>
+	</div>
+	</div>
+</body>
+<script type="text/javascript">
+	$(function() {
+		$("#addBtn").click(function() {
+			window.location.href = "${base}/preferentialActivity/toAdd";
+		});
+
+		$(".del").click(function() {
+			var info = $(this).attr("info");
+			var id = $(this).attr("val");
+			layer.confirm('确定删除:'+info+'?', function(index){
+				$.post("${base}/preferentialActivity/del/" + id, function(data) {
+					layer.msg(data.msg,{
+				     	shift: 0
+				     }, function(){
+				    	 location.reload();
+				     });
+					;
+				}, 'json');
+				});
+		})
+	});
+	
+</script>
+
+</html>

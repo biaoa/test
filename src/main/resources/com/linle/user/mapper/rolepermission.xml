@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.linle.user.mapper.RolePermissionRelationMapper">
+	<resultMap id="rolePermissionRelationResult" type="RolePermissionRelation">
+		<result property="permissionEname" column="permission_ename"/>
+		<result property="userRole.id" column="role_id"/>
+		<result property="createDate"  column="create_Date"/>
+	</resultMap>
+	
+	<insert id="addRolePermissionRelation"  parameterType="RolePermissionRelation">
+		INSERT INTO role_permission_relation
+		(permission_ename,role_id,create_date)
+		VALUES
+		(#{permissionEname},#{userRole.id},now())
+	</insert>
+	
+	<select id="getByRoleIdAndEname"  resultMap="rolePermissionRelationResult">
+		select * from role_permission_relation where role_id=#{roleId} and permission_ename=#{ename}
+	</select>
+	
+	<delete id="deleteByRoleId">
+		delete from role_permission_relation where role_id=#{roleId}
+	</delete>
+	
+	<select id="loadRolePermissionRelationByRoleId" parameterType="long" resultMap="rolePermissionRelationResult">
+	    select * from role_permission_relation where role_id=#{roleId}
+	</select>
+	
+</mapper>

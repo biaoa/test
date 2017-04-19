@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+		<title>常见问题</title>
+		<#include '/common/base.html'>
+		<link rel="stylesheet" href="${base}/resources/css/app/style.css" />
+	</head>
+	<body>		
+		 <#if problemTypeList?exists&&problemTypeList?size gt 0>
+       		<#list problemTypeList as problemType>
+       			<div class="problems" id="text${(problemType_index+1)}" >
+					<span class="question">${problemType.typeName}</span><a class="arrow" href="#"></a>
+				</div>
+				 <#if problemType.commonProblemList?exists&&problemType.commonProblemList?size gt 0>
+				 	<div style="display:none;" class="text${(problemType_index+1)}" id="p${(problemType_index+1)}" >
+				 		<#list problemType.commonProblemList as commonProblem>
+					 		<div class="demo">
+							<span class="ques"><span>${(commonProblem.sort)}.</span>${commonProblem.title}</span>
+								<span class="answer">
+								${commonProblem.content}</span>
+							</div>
+				 		</#list>
+					</div>
+				 </#if>	  	
+			
+				<div class="clearfix"></div>
+		
+       	 	</#list>
+         </#if>	  		
+	
+		<script type="text/javascript" src="${base}/resources/js/check.js" ></script>
+	</body>
+</html>

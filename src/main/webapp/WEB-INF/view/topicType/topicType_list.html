@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>圈子类型管理</title>
+<meta name="content-type" content="text/html; charset=UTF-8">
+<#include '/common/resources.html'>
+<link rel="stylesheet" media="screen and (min-width: 1580px)" href="${base}/resources/css/sys/jquery.tableui.css" />
+<link rel="stylesheet" media="screen and (max-width: 1580px)" href="${base}/resources/css/sys/tableui-resolving.css" />
+<script src="${base}/resources/js/respond.js" type="text/javascript" async="async"></script>
+</head>
+<body>
+<div class="whole">
+	<ol class="breadcrumb">
+		<li><a href="javascript:void(0)">圈子类型管理</a></li>
+		<li class="active">类型列表</li>
+		<span style="float: right">
+			<button id="addTypeBtn" type="button" class="btn-default" style="float: right;">新增类型</button>
+		</span>
+	</ol>
+			<div class="tab_box">
+	<table class="table_solid" border="0" cellspacing="0">
+		<tbody>
+			<tr class="evenRow">
+				<th>序号</th>
+				<th>类型名称</th>
+				<th>顺序</th>
+				<th>是否查看全部小区</th>
+				<th>备注</th>
+				<th>操作</th>
+			</tr>
+			<#if (pagelist.results)?exists && pagelist.results?size gt 0> <#list
+			pagelist.results as topicType>
+			<tr>
+				<td>${(topicType_index+1)+(pagelist.pageNo-1)*pagelist.pageSize}</td>
+				<td>${topicType.topicTypeName!!}</td>
+				<td>${topicType.orderNo!!}</td>
+				<td>
+					<#if topicType.communityPrivg==0>
+						否
+						<#else>
+						是
+					</#if>
+				</td>
+				<td>${topicType.remark}</td>
+				<td>
+					<a class="cz-a btn-default common-btn-cz" href="${base}/topicType/toAddTopicType?id=${topicType.topicTypeId}">编辑</a>
+					<a class="cz-a btn-default del common-btn-cz" href="javascript:void(0)" val="${topicType.topicTypeId}">删除</a>
+				</td>
+			</tr>
+			</#list>
+		</tbody>
+	</table>
+	<form action="${base}/topicType/list" id="pagerForm">
+	<#include '/common/pagination.html'>
+	</form>
+	<#else>
+	<div class="no-data">暂无数据~</div>
+	</#if>
+	</div>
+	</div>
+</body>
+<script type="text/javascript">
+	$(function() {
+		$("#addTypeBtn").click(function() {
+			window.location.href = "${base}/topicType/toAddTopicType";
+		});
+
+		$(".del").click(function() {
+			if(!confirm("确认要删除吗？")){
+				return false;
+			}
+			var id = $(this).attr("val");
+			$.post("${base}/topicType/delTopicType/" + id, function(data) {
+				layer.msg(data.msg,{
+			     	shift: 0
+			     }, function(){
+			    	 location.reload();
+			     });
+				;
+			}, 'json');
+		});
+	});
+	
+</script>
+
+</html>

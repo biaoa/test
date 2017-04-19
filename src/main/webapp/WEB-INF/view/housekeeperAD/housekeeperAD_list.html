@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>轮播图管理</title>
+<meta name="content-type" content="text/html; charset=UTF-8">
+<#include '/common/resources.html'>
+<link rel="stylesheet" media="screen and (min-width: 1580px)" href="${base}/resources/css/sys/jquery.tableui.css" />
+<link rel="stylesheet" media="screen and (max-width: 1580px)" href="${base}/resources/css/sys/tableui-resolving.css" />
+<script src="${base}/resources/js/respond.js" type="text/javascript" async="async"></script>
+</head>
+<body>
+<div class="whole">
+	<ol class="breadcrumb">
+		<li><a href="javascript:void(0)">管家广告管理</a></li>
+		<li class="active">管家广告列表</li>
+	<span style="float: right"><button type="button"
+			class="btn-default" style="float: right;">新增广告</button></span>
+	</ol>
+	<div class="tab_box">
+	<table class="table_solid" border="0" cellspacing="0">
+		<tbody>
+			<tr class="evenRow">
+				<th>序号</th>
+				<td>描述</td>
+				<td>状态</td>
+				<td>类型</td>
+				<td>创建时间</td>
+				<td>操作</td>
+			</tr>
+			<#if (pagelist.results)?exists && pagelist.results?size gt 0> <#list
+			pagelist.results as Housekeeperad>
+			<tr>
+				<td>${(Housekeeperad_index+1)+(pagelist.pageNo-1)*pagelist.pageSize}</td>
+				<td>${Housekeeperad.description!!}</td>
+				<td>
+					<#if Housekeeperad.showFlag==0>
+						显示
+						<#else>
+						隐藏
+					</#if>
+				</td>
+				<td>
+					<#if Housekeeperad.type==0>
+						全部小区
+						<#else>
+						部分小区
+					</#if>
+				</td>
+				<td>${Housekeeperad.createDate?string('yyyy/MM/dd HH:mm:ss')}</td>
+				<td>
+					<#if Housekeeperad.showFlag==0>
+						<a class="cz-a btn-default common-btn-cz" href="javaScript:void(0);" onclick="isShow('${Housekeeperad.id}',1)">隐藏</a>
+						<#else>
+						<a class="cz-a btn-default common-btn-cz" href="javaScript:void(0);" onclick="isShow('${Housekeeperad.id}',0)">显示</a>
+					</#if>
+					<a class="cz-a btn-default common-btn-cz" href="${base}/housekeeperAD/detail/${Housekeeperad.id}" target="_blank">预览</a>
+					<a class="cz-a btn-default common-btn-cz" href="${base}/housekeeperAD/add?id=${Housekeeperad.id}" >编辑</a>
+					<a class="cz-a btn-default del common-btn-cz" href="javascript:void(0)" val="${Housekeeperad.id}">删除</a>
+				</td>
+			</tr>
+			</#list>
+		</tbody>
+	</table>
+	
+	<form action="${base}/housekeeperAD/list" id="pagerForm"><#include
+		'/common/pagination.html'></form>
+	<#else>
+	
+	<div class="no-data" >暂无数据~</div>
+	</#if>
+	</div>
+	</div>
+</body>
+<script type="text/javascript">
+	$(function() {
+		$("button").click(function() {
+			window.location.href = "${base}/housekeeperAD/add";
+		});
+	});
+	
+	
+	function isShow(id,ishow){
+		$.ajax({
+			type : "post", 
+			url : "${base}/housekeeperAD/setShow",
+			data : {id:id,showFlag:ishow},
+			success : function(data) {
+				 layer.msg(data.msg,{
+				     	shift: 0
+				     }, function(){
+				    	 window.location.href="${base}/housekeeperAD/list";
+				     }); 
+			}
+		});
+	}
+	
+	$(".del").click(function(){
+		var id = $(this).attr("val");
+			$.ajax({
+			type : "post", 
+			url : "${base}/housekeeperAD/del",
+			data : {id:id},
+			success : function(data) {
+				 layer.msg(data.msg,{
+				     	shift: 0
+				     }, function(){
+				    	 window.location.href="${base}/housekeeperAD/list";
+				     }); 
+			}
+		});
+	})
+</script>
+
+</html>

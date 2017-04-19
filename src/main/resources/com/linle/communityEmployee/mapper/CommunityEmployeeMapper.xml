@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.linle.communityEmployee.mapper.CommunityEmployeeMapper" >
+  <resultMap id="BaseResultMap" type="com.linle.entity.sys.CommunityEmployee" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="logo" property="logo" jdbcType="VARCHAR" />
+    <result column="level" property="level" jdbcType="VARCHAR" />
+    <result column="phone" property="phone" jdbcType="VARCHAR" />
+    <result column="community_id" property="communityId" jdbcType="BIGINT" />
+    <result column="department_id" property="departmentId" jdbcType="BIGINT" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+    <result column="status" property="status" typeHandler="IntEnumTypeHandler"/>
+    <association property="user" column="u_id" select="com.linle.user.mapper.UserMapper.getById" />
+    <association column="department_id" property="department"  select="com.linle.communityDepartment.mapper.CommunityDepartmentMapper.selectByPrimaryKey"/>
+  </resultMap>
+  
+  <resultMap type="com.linle.mobileapi.v1.model.CommunityEmployeeVO" id="CommunityEmployeeAPIResult">
+  	<result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="logo" property="logo" jdbcType="VARCHAR" />
+    <result column="phone" property="phone" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <resultMap  id="EmployeeResult" type="com.linle.entity.vo.EmployeeVO">
+  	<result column="u_id" property="uid"/>
+  	<result column="name" property="name"/>
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    id, name, logo, level, phone,u_id,status, community_id, department_id, create_date, update_date
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from community_employee
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from community_employee
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.linle.entity.sys.CommunityEmployee" >
+    insert into community_employee (id, name, logo, 
+      level, phone,u_id,status, community_id, 
+      department_id, create_date, update_date
+      )
+    values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{logo,jdbcType=VARCHAR}, 
+      #{level,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR},#{user.id},#{status, typeHandler=IntEnumTypeHandler}, #{communityId,jdbcType=BIGINT}, 
+      #{departmentId,jdbcType=BIGINT}, #{createDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.linle.entity.sys.CommunityEmployee" >
+    insert into community_employee
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="logo != null" >
+        logo,
+      </if>
+      <if test="level != null" >
+        level,
+      </if>
+      <if test="phone != null" >
+        phone,
+      </if>
+      <if test="user !=null">
+		u_id,
+	  </if>
+	  <if test="status !=null">
+				status,
+			</if>
+      <if test="communityId != null" >
+        community_id,
+      </if>
+      <if test="departmentId != null" >
+        department_id,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="updateDate != null" >
+        update_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="logo != null" >
+        #{logo,jdbcType=VARCHAR},
+      </if>
+      <if test="level != null" >
+        #{level,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="user !=null">
+				#{user.id},
+	  </if>
+	  	<if test="status !=null">
+				#{status, typeHandler=IntEnumTypeHandler},
+			</if> 
+      <if test="communityId != null" >
+        #{communityId,jdbcType=BIGINT},
+      </if>
+      <if test="departmentId != null" >
+        #{departmentId,jdbcType=BIGINT},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.linle.entity.sys.CommunityEmployee" >
+    update community_employee
+    <set >
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="logo != null" >
+        logo = #{logo,jdbcType=VARCHAR},
+      </if>
+      <if test="level != null" >
+        level = #{level,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="user !=null">
+		u_id = #{user.id},
+	  </if>
+	  <if test="status !=null">
+		status  = #{status, typeHandler=IntEnumTypeHandler},
+	 </if>
+      <if test="communityId != null" >
+        community_id = #{communityId,jdbcType=BIGINT},
+      </if>
+      <if test="departmentId != null" >
+        department_id = #{departmentId,jdbcType=BIGINT},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.linle.entity.sys.CommunityEmployee" >
+    update community_employee
+    set name = #{name,jdbcType=VARCHAR},
+      logo = #{logo,jdbcType=VARCHAR},
+      level = #{level,jdbcType=VARCHAR},
+      phone = #{phone,jdbcType=VARCHAR},
+      u_id = #{user.id},
+      status  = #{status, typeHandler=IntEnumTypeHandler},
+      community_id = #{communityId,jdbcType=BIGINT},
+      department_id = #{departmentId,jdbcType=BIGINT},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  <select id="getAllData" parameterType="page" resultMap="BaseResultMap">
+  	 select 
+    <include refid="Base_Column_List" />
+    from community_employee
+    where community_id = #{params.communityId}  and (status!=1 or isnull(status))
+  </select>
+  
+  <select id="selelctEmployeeCount" parameterType="Long" resultType="int">
+  	select count(id) from community_employee
+  	where department_id = #{id} and (status!=1 or isnull(status))
+  </select>
+  
+  <select id="selectEmployeeList" parameterType="map" resultMap="CommunityEmployeeAPIResult">
+  	select name,logo,phone
+  	from community_employee
+  	where department_id = #{departmentId} and level = #{level} and (status!=1 or isnull(status))
+  </select>
+  
+  <update id="updateStatusById" parameterType="long" >
+  	update community_employee set status=1 where id=#{id}
+  </update>
+  
+  <select id="getAllEmployee" parameterType="map" resultMap="EmployeeResult">
+  	select name,u_id from community_employee
+  	where community_id = #{communityId}
+  	<if test="departmentId !=null and departmentId !=0">
+  		and department_id = #{departmentId}
+  	</if>
+  	<if test="uids !=null">
+  		and u_id not in 
+  		 <foreach item="uids" index="index" collection="uids" open="(" separator="," close=")">  
+            #{uids} 
+    	 </foreach>  
+  	</if>
+  </select>
+  
+  <select id="getEmployeeByIds" resultMap="EmployeeResult">
+  	select name,u_id from community_employee
+  	where u_id in
+  	 <foreach item="item" index="index" collection="array" open="(" separator="," close=")">  
+            #{item}  
+     </foreach>  
+  </select>
+  
+    <select id="selectByUid" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from community_employee
+    where u_id = #{uid} limit 0,1
+  </select>
+  
+    <resultMap type="com.linle.communityEmployee.model.CommunityEmployeeListVo" id="CommunityEmployeeListVoResult">
+  	<result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="userId" property="userId" />
+  </resultMap>
+  
+  <!-- 获取当前用户可查看员工 -->
+  <select id="getCommunityEmployeeListPrvlg" resultMap="CommunityEmployeeListVoResult" parameterType="map">
+	SELECT emp.`name` ,emp.u_id userId
+		FROM community_employee emp
+		<where>
+			<!--普通员工  -->
+			<if test="identity=='10' and u_id !=null">
+				emp.u_id=#{u_id}
+			</if>
+			<!--部门负责人  -->
+			<if test="identity=='11' and departmentId !=null">
+				emp.department_id=#{departmentId}
+			</if>
+			<!--小区  -->
+			<if test="identity=='3' and communityId !=null">
+				emp.community_id=#{communityId}
+			</if>
+		</where>
+		<if test="begin!='' and begin !=null">
+				limit #{begin},#{end}
+		</if>
+  </select>
+  <!-- 根据小区ID 查询小区下的员工的用户ID -->
+  <select id="getEmployeeByCommunityId" parameterType="Long" resultType="string">
+  		select u_id from community_employee 
+  		where community_id =#{communityId};
+  </select>
+</mapper>

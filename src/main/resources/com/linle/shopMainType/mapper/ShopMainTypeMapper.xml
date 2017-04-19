@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.linle.shopMainType.mapper.ShopMainTypeMapper" >
+  <resultMap id="BaseResultMap" type="com.linle.entity.sys.ShopMainType" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="type_name" property="typeName" jdbcType="VARCHAR" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+    <result column="sort" property="sort"/>
+  </resultMap>
+  
+  <resultMap id="MainSortListAPIResult"  type="com.linle.mobileapi.v1.model.Sort">
+  	<result column="sortId" property="sortId" /> 
+  	<result column="sortName" property="sortName"/>
+  	<result column="sortNums" property="sortNums"/>
+  	<result column="communityId" property="communityId"/>
+  	<collection property="childSortList" column="{sortId=sortId,communityId=communityId}" select="getChildSortList"/>
+  </resultMap>
+  
+  <resultMap  id="ChildSortListAPIResult" type="com.linle.mobileapi.v1.model.ChildSort">
+  	<result column="childSortId" property="childSortId" /> 
+  	<result column="childSortName" property="childSortName"/>
+  	<result column="childSortNums" property="childSortNums"/>
+  </resultMap>
+  
+  <resultMap id="TypeSalesResultMap" type="com.linle.mobileapi.v1.model.SortSales" >
+  	<result column="mid" property="sortId"/>
+  	<result column="type_name" property="sortname"/>
+  	<result column="sortSales" property="sortSales"/>
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    id, type_name, create_date, update_date,sort
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from shop_main_type
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from shop_main_type
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.linle.entity.sys.ShopMainType" >
+    insert into shop_main_type (id, type_name, create_date, 
+      update_date,sort)
+    values (#{id,jdbcType=BIGINT}, #{typeName,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, 
+      #{updateDate,jdbcType=TIMESTAMP},#{sort})
+  </insert>
+  <insert id="insertSelective" parameterType="com.linle.entity.sys.ShopMainType" >
+    insert into shop_main_type
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="typeName != null" >
+        type_name,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="updateDate != null" >
+        update_date,
+      </if>
+      <if test="sort !=null">
+      	sort,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="typeName != null" >
+        #{typeName,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sort !=null">
+      	#{sort},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.linle.entity.sys.ShopMainType" >
+    update shop_main_type
+    <set >
+      <if test="typeName != null" >
+        type_name = #{typeName,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sort !=null">
+      	sort = #{sort},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.linle.entity.sys.ShopMainType" >
+    update shop_main_type
+    set type_name = #{typeName,jdbcType=VARCHAR},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP},
+      sort = #{sort}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  <select id="getAllData" parameterType="page" resultMap="BaseResultMap">
+  		    select 
+    <include refid="Base_Column_List" />
+    from shop_main_type
+  </select>
+  
+  <select id="findAllMainType" resultMap="BaseResultMap">
+  		    select 
+    <include refid="Base_Column_List" />
+    from shop_main_type
+  </select>
+  <!-- 根据传入的类型 查询商店类型信息 -->
+  <select id="selectShopTypeByType" parameterType="java.util.HashMap" resultMap="BaseResultMap">
+  	select id,type_name
+  	<if test="type=='main'">
+  		from shop_main_type
+  	</if>
+  	<if test="type=='child'">
+  		from shop_child_type
+  	</if>
+  	where id = #{id}
+  </select>
+  
+  <select id="getSortList" parameterType="map" resultMap="MainSortListAPIResult">
+  	select id as sortId,type_name as sortName,IFNULL(tb1.shopCount,0) as sortNums,#{communityId} as communityId from shop_main_type
+	LEFT JOIN
+	(select main_type,COUNT(id) as shopCount from shop where find_in_set(#{communityId},enter_community)    
+	GROUP BY main_type) as tb1
+	on shop_main_type.id = tb1.main_type
+	order by sort
+  </select>
+  
+  <select id="getChildSortList" parameterType="java.util.HashMap" resultMap="ChildSortListAPIResult">
+		select shop_child_type.id AS childSortId,
+			type_name AS childSortName,
+			IFNULL(shopCount, 0) AS childSortNums from 
+		(SELECT id,parent_id,type_name
+		FROM
+			shop_child_type where parent_id =#{sortId}) as shop_child_type
+		LEFT JOIN (
+			SELECT
+				id,
+				child_type,
+				COUNT(id) AS shopCount
+			FROM
+				shop
+			WHERE
+				find_in_set(#{communityId}, enter_community)
+			AND child_type IS NOT NULL
+			GROUP BY
+				child_type
+		) AS tb1 ON shop_child_type.id = tb1.child_type
+  </select>
+  
+  <!-- 获得各大类目下的销量 -->
+  <select id="selectTypeSales" parameterType="map" resultMap="TypeSalesResultMap">
+			select tb1.type_name,tb1.mid,count(tb1.did) as sortSales from 
+		(
+			select shop_main_type.id as mid,type_name,did,sort from shop_main_type
+			left join 
+			(select id as sid,main_type from shop) as shop
+			on shop_main_type.id = shop.main_type
+			left join (select id as cid,shop_id from commodity) as commodity
+			on shop.sid=commodity.shop_id
+			left join
+			(select order_detail.id as did,order_detail.product_id,order_id,order_type from order_detail
+			inner join sys_order on order_detail.order_id = sys_order.id and order_type='commodity'
+			and (order_status=3 or order_status=4)
+			<if test="communityId !=null">
+			 and community_id= #{communityId} 
+			</if>
+			 GROUP BY order_id) as order_detail
+			on commodity.cid=order_detail.product_id
+		) as tb1
+		GROUP BY tb1.mid
+		order by tb1.sort
+  </select>
+  
+  <select id="selectByTypeName" parameterType="string" resultMap="BaseResultMap">
+  	 select 
+    <include refid="Base_Column_List" />
+    from shop_main_type
+    where type_name = #{typeName}
+  </select>
+</mapper>

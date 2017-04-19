@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.linle.vote.mapper.VoteMapper" >
+  <resultMap id="BaseResultMap" type="com.linle.vote.model.Vote" >
+    <id column="theme_id" property="themeId" jdbcType="BIGINT" />
+    <result column="content" property="content" jdbcType="VARCHAR" />
+    <result column="imgUrl" property="imgUrl" jdbcType="VARCHAR" />
+    <result column="pattern" property="pattern" jdbcType="INTEGER" />
+    <result column="pattern_count" property="patternCount" jdbcType="INTEGER" />
+    <result column="user_id" property="userId" jdbcType="BIGINT" />
+    <result column="vote_privacy" property="votePrivacy" jdbcType="INTEGER" />
+    <result column="vote_prvlg" property="votePrvlg" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="community_id" property="communityId" jdbcType="BIGINT" />
+    <result column="remind_time" property="remindTime" jdbcType="FLOAT" />
+    <result column="start_date" property="startDate" jdbcType="VARCHAR" />
+    <result column="end_date" property="endDate" jdbcType="VARCHAR" />
+    <result column="is_del" property="isDel" jdbcType="INTEGER" />
+    <result column="push_flg" property="pushFlg" jdbcType="INTEGER" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <association column="theme_id" property="voteCount" select="com.linle.voteUser.mapper.VoteUserMapper.selectVoteCountByThemeId" />
+    <association column="theme_id" property="voteUserCount" select="com.linle.voteUser.mapper.VoteUserMapper.selectVoteUsersByThemeId" />
+  </resultMap>
+  
+  <resultMap id="VoteResultMap" type="com.linle.vote.model.Vote" extends="BaseResultMap">
+  		 <association column="user_id" property="user" select="com.linle.user.mapper.UserMapper.selectByPrimaryKey"/>
+  		 <collection column="theme_id" property="voteOptionsList" select="com.linle.voteOptions.mapper.VoteOptionsMapper.selectCountByThemeId" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    theme_id, content, imgUrl, pattern, pattern_count, user_id, vote_privacy, 
+    vote_prvlg, status, community_id, remind_time, start_date, end_date,is_del,push_flg, create_date
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from vote
+    where theme_id = #{themeId,jdbcType=BIGINT}
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from vote
+    where theme_id = #{themeId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.linle.vote.model.Vote" useGeneratedKeys="true" keyProperty="themeId">
+    insert into vote (theme_id, content, imgUrl, 
+      pattern, pattern_count, 
+      user_id, vote_privacy, vote_prvlg, 
+      status, community_id, remind_time, start_date, 
+      end_date,is_del,push_flg, create_date)
+    values (#{themeId,jdbcType=BIGINT}, #{content,jdbcType=VARCHAR}, #{imgUrl,jdbcType=VARCHAR}, 
+      #{pattern,jdbcType=INTEGER}, #{patternCount,jdbcType=INTEGER}, 
+      #{userId,jdbcType=BIGINT}, #{votePrivacy,jdbcType=INTEGER}, #{votePrvlg,jdbcType=INTEGER}, 
+      #{status,jdbcType=INTEGER}, #{communityId,jdbcType=BIGINT},  #{remindTime,jdbcType=FLOAT}, #{startDate,jdbcType=VARCHAR}, 
+      #{endDate,jdbcType=VARCHAR}, #{isDel,jdbcType=INTEGER}, #{pushFlg,jdbcType=INTEGER}, #{createDate,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.linle.vote.model.Vote" useGeneratedKeys="true" keyProperty="themeId">
+    insert into vote
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="themeId != null" >
+        theme_id,
+      </if>
+      <if test="content != null" >
+        content,
+      </if>
+      <if test="imgUrl != null" >
+        imgUrl,
+      </if>
+      <if test="pattern != null" >
+        pattern,
+      </if>
+      <if test="patternCount != null" >
+        pattern_count,
+      </if>
+    
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="votePrivacy != null" >
+        vote_privacy,
+      </if>
+      <if test="votePrvlg != null" >
+        vote_prvlg,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+        <if test="communityId != null" >
+        community_id,
+      </if>
+      <if test="remindTime != null" >
+        remind_time,
+      </if>
+      <if test="startDate != null" >
+        start_date,
+      </if>
+      <if test="endDate != null" >
+        end_date,
+      </if>
+       <if test="isDel != null" >
+        is_del,
+      </if>
+       <if test="pushFlg != null" >
+        push_flg,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="themeId != null" >
+        #{themeId,jdbcType=BIGINT},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="imgUrl != null" >
+        #{imgUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="pattern != null" >
+        #{pattern,jdbcType=INTEGER},
+      </if>
+      <if test="patternCount != null" >
+        #{patternCount,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="votePrivacy != null" >
+        #{votePrivacy,jdbcType=INTEGER},
+      </if>
+      <if test="votePrvlg != null" >
+        #{votePrvlg,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+         <if test="communityId != null" >
+        #{communityId,jdbcType=BIGINT},
+      </if>
+      <if test="remindTime != null" >
+        #{remindTime,jdbcType=FLOAT},
+      </if>
+      <if test="startDate != null" >
+        #{startDate,jdbcType=VARCHAR},
+      </if>
+      <if test="endDate != null" >
+        #{endDate,jdbcType=VARCHAR},
+      </if>
+       <if test="isDel != null" >
+         #{isDel,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.linle.vote.model.Vote" >
+    update vote
+    <set >
+      <if test="content != null" >
+        content = #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="imgUrl != null" >
+        imgUrl = #{imgUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="pattern != null" >
+        pattern = #{pattern,jdbcType=INTEGER},
+      </if>
+      <if test="patternCount != null" >
+        pattern_count = #{patternCount,jdbcType=INTEGER},
+      </if>
+    
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="votePrivacy != null" >
+        vote_privacy = #{votePrivacy,jdbcType=INTEGER},
+      </if>
+      <if test="votePrvlg != null" >
+        vote_prvlg = #{votePrvlg,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+          <if test="communityId != null" >
+        community_id = #{communityId,jdbcType=BIGINT},
+      </if>
+      <if test="remindTime != null" >
+        remind_time = #{remindTime,jdbcType=FLOAT},
+      </if>
+      <if test="startDate != null" >
+        start_date = #{startDate,jdbcType=VARCHAR},
+      </if>
+      <if test="endDate != null" >
+        end_date = #{endDate,jdbcType=VARCHAR},
+      </if>
+        <if test="isDel != null" >
+          is_del = #{isDel,jdbcType=INTEGER},
+      </if>
+       <if test="pushFlg != null" >
+         push_flg = #{pushFlg,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where theme_id = #{themeId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.linle.vote.model.Vote" >
+    update vote
+    set content = #{content,jdbcType=VARCHAR},
+      imgUrl = #{imgUrl,jdbcType=VARCHAR},
+      pattern = #{pattern,jdbcType=INTEGER},
+      pattern_count = #{patternCount,jdbcType=INTEGER},
+      user_id = #{userId,jdbcType=BIGINT},
+      vote_privacy = #{votePrivacy,jdbcType=INTEGER},
+      vote_prvlg = #{votePrvlg,jdbcType=INTEGER},
+      status = #{status,jdbcType=INTEGER},
+      community_id = #{communityId,jdbcType=BIGINT},
+      remind_time = #{remindTime,jdbcType=FLOAT},
+      start_date = #{startDate,jdbcType=VARCHAR},
+      end_date = #{endDate,jdbcType=VARCHAR},
+      is_del = #{isDel,jdbcType=INTEGER},
+      push_flg = #{pushFlg,jdbcType=INTEGER},
+      create_date = #{createDate,jdbcType=TIMESTAMP}
+    where theme_id = #{themeId,jdbcType=BIGINT}
+  </update>
+  
+  <select id="getAllData" parameterType="page" resultMap="VoteResultMap">
+  	select 
+    <include refid="Base_Column_List" />
+    from vote
+    where community_id=#{params.communityId}  and (is_del!=1 OR  ISNULL(is_del))
+    order by create_date desc
+  </select>
+  
+  <select id="getAllDataForApi" parameterType="map" resultMap="VoteResultMap">
+  	select 
+    <include refid="Base_Column_List" />
+    from vote
+    where community_id=#{communityId}  and (is_del!=1 OR  ISNULL(is_del)) and status!=0
+  </select>
+  
+   <update id="updateIsDelById" parameterType="long" >
+        update vote
+   		 set is_del=1  where theme_id = #{id}
+   </update>
+   
+    <update id="updateStatusById" parameterType="map" >
+        update vote
+   		 set status=#{status}  where theme_id = #{id}
+   </update>
+   
+   <select id="getVoteById" resultMap="VoteResultMap" parameterType="map" >
+    select 
+    <include refid="Base_Column_List" />
+    from vote
+    where theme_id = #{themeId}
+  </select>
+  <!-- 获得某个小区的投票总数 -->
+  <select id="getVoteCountByCommunityId" parameterType="Long" resultType="int">
+  	select count(theme_id) from vote
+  	where community_id=#{communityId}  and (is_del!=1 OR  ISNULL(is_del)) and status !=0
+  </select>
+  
+  <!-- app展示话题列表 -->
+  <select id="LoadVoteList" parameterType="map" resultMap="VoteResultMap">
+  			select 
+    <include refid="Base_Column_List" />
+    from vote
+    where community_id=#{communityId}  and (is_del!=1 OR  ISNULL(is_del)) and status !=0
+    order by status,create_date desc
+    limit #{begin},#{end}
+  </select>
+  
+  <select id="getAllDataByStatus" resultMap="BaseResultMap" parameterType="map" >
+    select 
+    <include refid="Base_Column_List" />
+    from vote
+    where status!=#{status} and (is_del!=1 OR  ISNULL(is_del))
+  </select>
+  
+  <!-- 状态=进行中 ，设置了提醒时间，当前时间小于结束时间 ,未推送过的-->
+  <select id="getRemindVoteList" resultMap="BaseResultMap" parameterType="map" >
+    select   theme_id,content,remind_time,end_date,community_id
+    from vote
+    where `status`=1 and remind_time!=0  and (is_del!=1 OR  ISNULL(is_del))
+	and now()  &lt; end_date	
+	and (push_flg!=1 OR  ISNULL(push_flg))
+  </select>
+  
+  <update id="updatePushFlgById" parameterType="long" >
+        update vote
+   		 set push_flg=1  where theme_id = #{id}
+  </update>
+</mapper>

@@ -1,0 +1,113 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<title>代理商信息</title> <#include '/common/resources.html'>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" href="${base}/resources/css/sys/add-new.css" />
+<script src="${base}/resources/js/respond.js" type="text/javascript" async="async"></script>
+<script type="text/javascript" charset="utf-8"
+	src="${base}/resources/ueditor1_4_3_1/ueditor.config.js"></script>
+<script type="text/javascript" charset="utf-8"
+	src="${base}/resources/ueditor1_4_3_1/ueditor.all.min.js"></script>
+<script type="text/javascript" charset="utf-8"
+	src="${base}/resources/ueditor1_4_3_1/lang/zh-cn/zh-cn.js"></script>
+<style>
+</style>
+</head>
+<body>
+	<div class="whole">
+		<div class="a-plus">
+				<ol class="breadcrumb">
+		<li><a href="javascript:void(0)">代理商管理</a></li>
+		<li class="active">代理商编辑</li>
+	</ol>
+			<form action="${base}/regionalagency/edit" method="post" id="form1">
+				<div class="Sheet">
+					<div class="a-title">
+						<span class="choice">代理商名称：</span>
+						<div class="inp" style="width:70%">
+							<input maxlength="20" type="text"
+								onkeyup="javascript:setShowLength(this, 20, 'cost_tpl_title_length');"
+								name="name" id="name"  value="${regionalAgency.name!!}"
+								disabled="disabled"/> <span class="cue" id="cost_tpl_title_length">0/20</span>
+						</div>
+					</div>
+					
+									<div class="a-title">
+						<span class="choice">联系电话：</span>
+						<div class="inp">
+							<input maxlength="20" type="text"
+								onkeyup="javascript:setShowLength(this, 20, 'cost_tpl_title_length');"
+								name="phone" id="phone"  value="${regionalAgency.phone!!}"
+								/> <span class="cue" id="cost_tpl_title_length">0/20</span>
+						</div>
+					</div>
+					
+					<div class="a-title">
+						<span class="choice">联系地址：</span>
+						<div class="inp">
+							<input maxlength="20" type="text"
+								onkeyup="javascript:setShowLength(this, 20, 'cost_tpl_title_length');"
+								name="address"  value="${regionalAgency.address!!}"/> <span class="cue" id="cost_tpl_title_length">0/20</span>
+						</div>
+					</div>
+
+				</div>
+				<div class="a-address">
+					<input type="hidden"  name="id" id="id" value="${regionalAgency.id!!}">
+					<button data-reveal-id="sav" data-animation="fade" class="s-btn">确认</button>
+
+				</div>
+			</form>
+			<div id="sav" class="reveal-modal"
+				style="opacity: 1; visibility: hidden; top: 150px;">
+				<h3>保存成功</h3>
+				<a class="close-reveal-modal">×</a>
+			</div>
+			<div class="reveal-modal-bg" style="display: none; cursor: pointer;">
+
+			</div>
+		</div>
+	</div>
+
+	<script>
+		function setShowLength(obj, maxlength, id) {
+			var rem = maxlength - obj.value.length;
+			var wid = id;
+			if (rem < 0) {
+				rem = 0;
+			}
+			document.getElementById(wid).innerHTML = rem + "/" + "20";
+		}
+
+		$("#form1").submit(function() {
+			
+			if($("#phone").val()==''){
+				layer.msg("联系电话不能为空");
+				return false;
+			}
+			
+			var ajax_url = $(this).attr("action"); //表单目标 
+			var ajax_type = $(this).attr('method'); //提交方法 
+			var ajax_data = $(this).serialize(); //表单数据 
+			$.ajax({
+				type : ajax_type, //表单提交类型 
+				url : ajax_url, //表单提交目标 
+				data : ajax_data, //表单数据
+				success : function(data) {
+					console.log(data);
+					layer.msg(data.msg,{
+				     	shift: 0
+				     }, function(){
+				    	 window.location.href="${base}/regionalagency/edit";
+				     }); 
+				}
+			});
+			return false; //阻止表单的默认提交事件 
+		});
+	</script>
+
+</body>
+</html>

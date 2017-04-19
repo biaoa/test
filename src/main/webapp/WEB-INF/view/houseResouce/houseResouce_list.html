@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>报修管理</title>
+<meta name="content-type" content="text/html; charset=UTF-8">
+<#include '/common/resources.html'>
+<link rel="stylesheet" media="screen and (min-width: 1580px)" href="${base}/resources/css/sys/jquery.tableui.css" />
+<link rel="stylesheet" media="screen and (max-width: 1580px)" href="${base}/resources/css/sys/tableui-resolving.css" />
+<link rel="stylesheet" href="${base}/resources/css/sys/jquery-ui.min.css" />
+<link rel="stylesheet" href="${base}/resources/css/sys/tip.css" />
+<link rel="stylesheet" href="${base}/resources/css/sys/component.css" />
+<link rel="stylesheet" href="${base}/resources/css/sys/default.css" />
+<link rel="stylesheet" type="text/css" href="${base}/resources/datetimepicker/jquery.datetimepicker.css"/>
+<script src="${base}/resources/js/respond.js" type="text/javascript" async="async"></script>
+<script type="text/javascript" src="${base}/resources/js/modernizr.custom.js"></script>
+<script type="text/javascript"
+	src="${base}/resources/js/jquery-ui.min.js"></script>
+</head>
+<script src="${base}/resources/datetimepicker/jquery.datetimepicker.js" ></script>
+
+<body>
+	<div class="whole">
+		<ol class="breadcrumb">
+			<li><a href="javascript:void(0)">服务中心</a></li>
+			<li class="active">房屋租售</li>
+		</ol>
+		<form action="${base}/houseResource/list" id="pagerForm">
+			<div class="o-order">
+				<div class="o-first">
+					<span class="o-span" style="text-indent:65px;">服务号:</span> 
+					<div class="o-input">
+						<input type="text" name="single" value="${single!!}" />
+					</div>
+				<span class="o-span">类型：</span>
+					<div class="o-div">
+					<select class="o-select" name="type">
+						<option selected="selected" value="-1">全部</option>
+						<option value="0" <#if type=="0">selected="selected"</#if>>短租</option>
+						<option value="1" <#if type=="1">selected="selected"</#if>>长租</option>
+						<option value="2" <#if type=="2">selected="selected"</#if>>出售</option>
+					</select>
+					</div>
+				</div>
+				
+				<div class="o-second">
+					<span class="o-span">出租/出售用户：</span>
+					<div class="o-input">
+						<input type="text" placeholder="姓名或手机号" name="phone"
+							value="${phone!!}" />
+					</div>
+					<span class="o-span">价格：</span>
+					<div class="o-input">
+						<input class="my-time" type="text"
+							name="price" value="${price!!}" />
+					</div>
+					<span class="o-span">申请时间：</span>
+					<div class="o-input">
+						<input class="my-times" type="text" id="datepicker2"
+							name="createDate" value="${createDate!!}" />
+					</div>
+				</div>
+				<div class="o-thrid">
+					<button class="o-btn">搜索</button>
+<!-- 					<button class="o-btn">发送通知</button> -->
+<!-- 					<button class="o-btn">导出数据</button> -->
+				</div>
+			</div>
+			<div class="tab-order">
+				<div class="box tab2">
+					<div class="tab_box">
+						<div class="">
+							<table class="table_solid" border="0" cellspacing="0">
+								<tbody>
+									<tr class="evenRow">
+										<th>服务号</th>
+										<th>房源内容</th>
+										<th>房源类型</th>
+										<th>房源价格</th>
+										<th>申请时间</th>
+										<th>租售用户</th>
+										<th>房号</th>
+										<th>操作</th>
+									</tr>
+									<#if (pagelist.results)?exists && pagelist.results?size gt 0>
+									<#list pagelist.results as houseResource>
+									<tr class="oddRow">
+										<td>${houseResource.single}</td>
+										<td>
+											<div class="resp">
+												<span class="rep-sp" ${houseResource.content}</span>
+											</div>
+											</td>
+										<td><#if houseResource.type==0>
+											短租
+											<#elseif houseResource.type==1>
+											长租
+											<#elseif houseResource.type==2>
+											出售
+										</#if></td>
+										<td>
+											<#if houseResource.price??>
+												${houseResource.price}
+												<#else>
+												面议
+											</#if>
+										</td>
+										<td>${houseResource.createDate?string('yyyy-MM-dd HH:mm:ss')}</td>
+										<td>${houseResource.user.name}</td>
+										<td>${houseResource.user.addressDetails.overall}</td>
+										<td>
+										<#if (houseResource.folder.id)??>
+											<a class="zxc common-btn-cz" val="${houseResource_index+1}">预览图片</a>
+											<div class="container${houseResource_index+1}" style="right:0;display: none;position: fixed;left: 0;top: 0;z-index: 333;height: 100%;">
+												<a class="close-btn">关闭</a>
+												<div class="cbp-fwslider">
+													<ul>
+													<#list (houseResource.folder.files) as file>
+														<li><a href="javascript:void(0)"><img src="${base}/${file.path}"/></a></li>
+													</#list>
+													</ul>
+												</div>
+											</div>
+										</#if>
+										</td>
+									</tr>
+									</#list>
+								</tbody>
+							</table>
+							</form>
+							<#include '/common/pagination.html'>
+							<#else>
+							</table>
+		<div class="no-data">暂无数据~</div>
+		</#if>
+	</div>
+	</div>
+
+	</div>
+	</div>
+	</div>
+	<script src="${base}/resources/js/jquery.tabs.js"></script>
+	 <script src="${base}/resources/bootstrap-3.3.5-dist/js/bootstrap.min.js"></script>
+	 <script src="${base}/resources/js/jquery.cbpFWSlider.min.js"></script>
+	<script type="text/javascript">
+		$(function() {
+			$('.tab2').Tabs({
+				event : 'click'
+			});
+		});
+	</script>
+	<script>
+		$(function() {
+			$('#datepicker2').datetimepicker({
+				lang: 'ch',
+				timepicker: false,
+				format: 'Y-m-d',
+				formatDate: 'Y-m-d'
+			
+			});
+		});
+		
+		$(function () {
+			$(".rep-sp").tooltip({html : true });
+		});
+		
+		$(function () {
+			var val;
+			$(".rep-sp").tooltip({html : true });
+			
+			$('.cbp-fwslider').cbpFWSlider();
+			$(".zxc").click(function() {
+				 val = $(this).attr("val");
+				$("#bg").css({
+					display: "block",
+					height: $(document).height()
+				});
+				$(".container"+val).css({
+					display: "block"						
+				});
+			});
+			//点击关闭按钮的时候，遮罩层关闭
+			$(".close-btn").click(function() {
+				$(".container"+val+",#bg").css("display", "none");
+			});
+		});
+	</script>
+	<script>
+	$(function(){
+        document.onkeydown = function(e){ 
+        var ev = document.all ? window.event : e;
+        if(ev.keyCode==13) {
+            $("#pagerForm").submit();
+            }
+        }
+    });  
+         
+    </script>     
+</body>
+</html>

@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="UTF-8">
+<meta name="renderer" content="webkit|ie-comp|ie-stand">
+<meta name="renderer" content="webkit">
+<title></title> <#include '/common/resources.html'>
+<link rel="stylesheet" media="screen and (min-width: 1580px)" href="${base}/resources/css/sys/kd.css" />
+<link rel="stylesheet" media="screen and (max-width: 1580px)" href="${base}/resources/css/sys/kd-resolving.css" />
+
+<link rel="stylesheet" href="${base}/resources/css/sys/jquery-ui.min.css" />
+<link rel="stylesheet" href="${base}/resources/css/sys/sys-tip.css" />
+		
+<link rel="stylesheet" type="text/css" href="${base }/resources/uploadify/uploadify.css">
+<link rel="stylesheet" media="screen and (min-width: 1580px)" href="${base}/resources/css/sys/voter.css" />
+<link rel="stylesheet" media="screen and (max-width: 1580px)" href="${base}/resources/css/sys/voter.css" />
+<script src="${base}/resources/js/jquery1.8.3.js" ></script>
+<link rel="stylesheet" type="text/css" href="${base}/resources/datetimepicker/jquery.datetimepicker.css"/>
+<script src="${base}/resources/datetimepicker/jquery.datetimepicker.js" ></script>	
+	
+
+<script src="${base}/resources/js/respond.js" type="text/javascript" async="async"></script>
+<script src="${base }/resources/uploadify/jquery.uploadify.min.js" type="text/javascript"></script>
+
+<link rel="stylesheet" type="text/css" href="${base}/resources/voteFile/css/style.css"/>
+<link rel="stylesheet" type="text/css" href="${base}/resources/voteFile/css/look-vote.css"/>
+<script src="${base}/resources/voteFile/js/voter-jd.js"></script>	
+<script src="${base}/resources/js/vote_list.js" type="text/javascript"></script>
+		
+</head>
+
+<body>
+	<div class="kdwhole">
+		<ol class="breadcrumb">
+			<li><a href="javascript:void(0)">活动投票</a></li>
+			<li class="active">相关投票</li>
+		</ol>
+
+		<div class="kdleft">
+			<div class="head">
+				<span class="mes-wh">相关投票</span>
+				<!-- <span class="rec"  id="add">发起新投票</span>
+				<img src="${base}/resources/images/add_03.png"> -->
+				<div class="layui-layer-btn" style="float:right;">
+					<a class="layui-layer-btn0"  id="add" >发起新投票</a>
+				</div>
+			</div>
+			<form action="${base}/vote/list" id="pagerForm">
+			<#if (pagelist.results)?exists && pagelist.results?size gt 0>
+			<#list pagelist.results as vote> 
+			<div class="nr click">
+				<div class="avatar-kd">
+					<#if vote.imgUrl!="">
+						<img  src="${base}/${vote.imgUrl!!}">
+					</#if>
+				</div>
+				<div class="off-title" onclick="showBg(${vote.themeId})" >
+					<h3>${vote.content!!}</h3>
+					<br>
+						<#if vote.voteCount??>
+							<p style="font-size:15px;">共${vote.voteCount!0}票</p>
+						</#if>
+					<p style="font-size:15px;">
+						<#if vote.status==0>
+						    	未开始
+						    	<#elseif vote.status==1>
+						    	进行中
+						    	<#elseif vote.status==2>
+						    	 已结束
+						    	 
+						</#if>
+					</p>
+					<br>
+					
+					
+				</div>
+				<div class="time-bt">
+					<span>${vote.createDate?string('yyyy/MM/dd HH:mm:ss')}</span>
+					<#if vote.status==0>
+						<img src="${base}/resources/images/xiugai.png" title="点击编辑" class="edit_"  vote='${vote}'>
+					</#if>
+					<img name="delBtn" title="点击删除" info="${vote.content}"  themeId="${vote.themeId}" src="${base}/resources/images/dele.png">
+				</div>
+			</div>
+			</#list>
+				<div class="tab_box">
+						<#include '/common/pagination.html'>
+					
+				</div>
+			<#else>
+			<div class="no-data">暂无数据~</div>
+			</#if>
+			</form>
+		</div>
+
+		<!-- 新增界面 -->
+		<div id="addVoteWin" class="kdrignt3"  style="">
+			<div class="head">
+				<span id="voteWin_title">新增投票信息</span>
+			</div>
+		<form action="${base}/vote/doOpreate" method="post" id="form1">
+		<div class="vote-area">
+			<div class="vote-title">
+				<div class="vote-name">
+					<span>投票主题:</span>
+				</div>
+				<div class="vote-message">
+					<textarea id="content" name="content" type="text" placeholder="请填写投票内容"></textarea>
+				</div>
+			</div>
+			<div class="vote-title">
+				<span class="choice">相关图片：</span>
+					<div id="url" style="text-align:left;float: left;margin-left: 17px;">
+                        <input type="file" name="file" id="file_upload">
+                        <input type="hidden" name="imgUrl" id="imgUrl"/>
+                    </div>
+
+			</div>
+			<div id="optionsDiv" class="vote-title">
+				<div class="vote-name" id="optionsInputDiv">
+					<span>投票选项:</span>
+				</div>
+				<div class="vote-input">
+					<input optionsContent="optionsContent" class="my-choice" type="text" />
+				</div>
+				<div class="vote-input vote-input2">
+					<input optionsContent="optionsContent" class="my-choice" type="text" />
+				</div> 
+				<div class="clearfix"></div>
+				<a onclick="addOptions()" class="add-choice" href="javascript:void(0)">+添加选项</a>
+			</div>
+			<div class="vote-title">
+				<div class="vote-name">
+					<span>选择模式:</span>
+				</div>
+				<div class="checkbox-vote">
+					<label for="one-choice"><input type="radio" id="one-choice" value="1" name="pattern" checked="checked" /><span>单选</span></label>
+					<label for="two-choice"><input type="radio" id="two-choice" value="2" name="pattern" /><span>多选</span></label>
+					<div class="check-num"><span>,最多</span><input id="patternCount"  name="patternCount" class="max-span" type="text" /><span>项</span></div>
+				</div>
+			</div>
+			<div class="vote-title">
+				<div class="vote-name">
+					<span>开始时间:</span>
+				</div>
+				<div class="vote-input">
+					<input id="startDate"  readonly="readonly" name="startDate"  class="star-vote-time" type="text" />
+				</div>
+			</div>
+			<div class="vote-title">
+				<div class="vote-name">
+					<span>结束时间:</span>
+				</div>
+				<div class="vote-input">
+					<input id="endDate" readonly="readonly" name="endDate" class="end-vote-time " type="text" />
+				</div>
+			</div>
+			<div class="vote-title">
+				<div class="vote-name">
+					<span>提醒:</span>
+				</div>
+				<div class="vote-input">
+					<select id="remindTime" name="remindTime">
+						<option value="0.5">提前30分钟</option>
+						<option value="6">提前6小时</option>
+						<option value="12">提前12小时</option>
+						<option value="24">提前24小时</option>
+						<option value="0">不提醒</option>
+					</select>
+				</div>
+			</div>
+			<div class="vote-title">
+				<div class="vote-name">
+					<span>投票隐私:</span>
+				</div>
+				<div class="checkbox-vote">
+					<label for="gk-check"><input type="radio"  value="1" name="votePrivacy" checked="checked" /><span>公开</span></label>
+					<label for="nm-check"><input type="radio"  value="0" name="votePrivacy" /><span>匿名</span></label>
+				</div>
+			</div>
+			
+			<div class="vote-title">
+				<div class="vote-name">
+					<span>投票权限:</span>
+				</div>
+				<div class="checkbox-vote">
+					<label for="gk-check"><input type="radio"  value="1" name="votePrvlg" checked="checked" /><span>全部用户</span></label>
+					<label for="nm-check"><input type="radio"  value="0" name="votePrvlg" /><span>区分居住地址</span></label>
+				</div>
+			</div>
+			<div class="vote-title">
+				<button class="s-btn" style="cursor: pointer;">确认</button>
+				<input type="hidden" id="id" name="themeId"/>
+			</div>
+			
+		</div>
+			</form>
+		</div>
+		
+		<!-- 查看界面 -->
+		<div id="viewVoteWin" style="display:none;" class="kdrignt3" >
+			<div class="head">
+				<span>查看投票详情</span>
+				<input type="hidden" id="v_themedId"/>
+			</div>
+		<form action="" method="post" id="">
+		<div class="vote-area">
+			<div class="voter-tx">
+			<div class="voter-photo-tx">
+				<div class="vote-img-tx">
+					<img id="v_user_logo" src=" ${base}/resources/voteFile/404/01.png" />
+				</div>
+				<div class="vote-mz-tx">
+					<p id="v_userName">姓名</p>
+					<p id="v_createDate" style="width: 120px;">创建时间</p>
+				</div>
+				<div class="vote-zt">
+					<span id="v_status">进行中</span>
+				</div>
+			</div>
+			<div class="clearfix"></div>
+			<div class="cy-people-tx">
+				<p id="v_content" style="font-size:20px;">投票主题</p>
+				<img id="v_imgUrl" style="max-width:100%;margin-top:10px;" src="" />
+			</div>
+			<div class="cy-people-tx">
+				<span id="v_pattern">单选</span> <span id="v_votePrivacy">(匿名投票)</span> <span class="vote-right" >已投<span id="v_sumVoteCount"">0</span>票</span>
+			</div>
+			<div id="optionsList">
+				<!-- <div class="skillbar clearfix " data-percent="0%">
+					<div class="skillbar-title"><span name="optionsContent">同意</span></div>
+					<div class="skillbar-bar"></div>
+					<div class="skill-bar-percent" name="optionsCount">0票</div>
+				</div>
+				 -->
+			</div>
+			<hr />
+			<div class="vote-join-num">
+				<div class="vote-join-img">
+					<img src=" ${base}/resources/voteFile/img/vote.png" /><a href="javascript:void(0)" id="v_votePeople">参与投票成员（0）</a>
+				</div>
+				<div class="vote-join-img">
+					<img src="${base}/resources/voteFile/img/delete-vote.png" /><a href="javascript:void(0)" id="v_del">删除投票</a>
+					<span>截止时间: <span id="v_endDate">2016-09-09 12:00</span></span>
+				</div>
+				
+			</div>
+		</div>
+			
+		</div>
+			</form>
+		</div>
+		
+		
+		
+	</div>
+	</div>
+	
+		<!--查看参与投票成员  -->
+		<div id="bg"></div>
+		<div class="box3" style="display: none;">
+			<p class="layui-layer-title" style="cursor: move;" move="ok" id="bg_voteUserCount">参与投票4人</p>
+			<div class="voter-munber" id="bg_contentDiv"  style="max-height:400px;overflow-y: auto;">
+			<!-- 	<div class="voter-photo">
+					<div class="vote-img">
+						<img src=" /linle/resources/images/default_user.png" />
+					</div>
+					<div class="vote-mz">
+						<p id="bg_voteUserName">渣渣渣</p>
+						<p id="bg_voteUserCreateDate">昨天 10：00</p>
+					</div>
+				</div> -->
+			</div>
+			<div class="clearfix" style=""></div>
+			<a class="close">关闭</a>
+		</div>
+		
+		
+		<!--投票选项详情  -->
+		<div id="options_bg"></div>
+		<div class="box4" style="display: none;">
+			<p class="layui-layer-title" style="cursor: move;" move="ok">投票选项详情</p>
+			<p class="tip-tk" id="optBg_optionName">选项: 同意</p>
+			<p style="padding-left: 19px;font-size:15px;" id="optBg_optionCount">投此选项的人（2）</p>
+			
+			<div class="voter-munber" id="optBg_contentDiv" style="max-height:400px;overflow-y: auto;">
+		
+			</div>
+			<div class="clearfix" style=""></div>
+			<a class="close">关闭</a>
+		</div>
+		
+
+</body>
+<script type="text/javascript">
+	var basePath = '${base}';
+</script>
+</html>

@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+<head>
+<#include '/common/resources.html'>
+<meta charset="UTF-8">
+<title></title>
+<link rel="stylesheet" media="screen and (min-width: 1580px)" href="${base}/resources/css/sys/kd.css" />
+<link rel="stylesheet" media="screen and (max-width: 1580px)" href="${base}/resources/css/sys/kd-resolving.css" />
+<script src="${base}/resources/js/respond.js" type="text/javascript" async="async"></script>
+</head>
+
+<body>
+	<div class="kdwhole">
+		<ol class="breadcrumb">
+			<li><a href="javascript:void(0)">快递服务</a></li>
+			<li class="active">快递站点信息维护</li>
+		</ol>
+
+		<div class="kdleft">
+			<div class="head">
+				<span class="mes-wh">快递站点信息维护</span><span class="rec"
+					onclick="showBg()">添加</span><img src="${base}/resources/images/add_03.png">
+			</div>
+			<#if (pagelist.results)?exists && pagelist.results?size gt 0>
+			<#list pagelist.results as express>
+			<div class="nr">
+				<div class="avatar-kd">
+					<img src="${base}/${express.logo}">
+				</div>
+				<div class="off-title">
+					<h3>${express.expressName!!}(${express.siteName!!})</h3>
+					<br>
+					<p>${express.phone!!}</p>
+					<p>${express.address}</p>
+				</div>
+				<div class="time-bt">
+					<span>${express.createDate?string('yyyy/MM/dd HH:mm:ss')}</span><img class="edit_"  data='${express}' src="${base}/resources/images/xiugai.png">
+					<img data-reveal-id="dele" data-animation="fade" src="${base}/resources/images/dele.png" eid="${express.id}" class="express_del">
+				</div>
+				<div class="reveal-modal-bg" style="cursor: pointer; display: none;">
+
+				</div>
+			</div>
+			</#list>
+			<#else>
+			<div class="no-data">暂无数据~</div>
+			</#if>
+			</div>
+		<div class="kdrignt">
+			<div class="head">
+				<span>快递站点信息编辑</span>
+			</div>
+			<form action="${base}/communityExpress/add" method="post" id="form1">
+			<input type="hidden" name="id" id="id"/>
+			<div class="Sheet">
+				<div class="s-title">
+					<span class="choice">站点名称：</span>
+					<div class="inp">
+						<input maxlength="20" type="text"
+							onkeyup="javascript:setShowLength(this, 20, 'cost_tpl_title_length');" name="siteName" id="siteName"/>
+						<span class="cue" id="cost_tpl_title_length">0/20</span>
+					</div>
+				</div>
+
+				<div class="s-name">
+					<span class="choice">所属快递：</span>
+					<div class="province">
+						<select name="expressName" id="expressName">
+							<option value="顺丰快递">顺丰快递</option>
+							<option value="申通快递">申通快递</option>
+							<option value="中通快递">中通快递</option>
+							<option value="圆通快递">圆通快递</option>
+							<option value="邮政速运">邮政速运</option>
+							<option value="百世快递">百世快递</option>
+							<option value="韵达快递">韵达快递</option>
+							<option value="菜鸟驿站">菜鸟驿站</option>
+							<option value="其他快递">其他快递</option>
+						</select>
+					</div>
+				</div>
+				<div class="s-address">
+					<span class="choice">详细地址：</span>
+					<div class="ads">
+						<input type="text" placeholder="请输入详细地址" name="address" id="address"/>
+					</div>
+				</div>
+				<div class="s-address">
+					<span class="choice">联系电话：</span>
+					<div class="phone">
+						<div class="phone-inp">
+							<input type="text" name="phone" id="phone"/>
+						</div>
+					</div>
+					<button  class="s-btn" style="cursor: pointer;">确认</button>
+				</div>
+			</div>
+			</form>
+		</div>
+
+	<script type="text/javascript">
+		function showBg() {
+			$(".kdrignt").fadeIn();
+		}
+		
+		$("#form1").submit(function() {
+			var ajax_url = $(this).attr("action"); //表单目标 
+			var ajax_type = $(this).attr('method'); //提交方法 
+			var ajax_data = $(this).serialize(); //表单数据 
+			$.ajax({
+				type : ajax_type, //表单提交类型 
+				url : ajax_url, //表单提交目标 
+				data : ajax_data, //表单数据
+				success : function(data) {
+					 layer.msg(data.msg,{
+					     	shift: 0
+					     }, function(){
+					    	 $(".kdrignt").fadeOut();
+					    	 window.location.reload();
+					     }); 
+				}
+			});
+			return false; //阻止表单的默认提交事件 
+		});
+		
+		$(".express_del").click(function(){
+			var eid = $(this).attr("eid");
+			if(confirm("确认删除该条快递信息么？")){
+				$.ajax({
+					type : "post", //表单提交类型 
+					url : "${base}/communityExpress/del", //表单提交目标 
+					data : {"eid":eid}, //表单数据
+					success : function(data) {
+						 layer.msg(data.msg,{
+						     	shift: 0
+						     }, function(){
+						    	 window.location.reload();
+						     }); 
+					}
+				});
+			}
+		});
+		
+		$(".edit_").click(function(){
+			var data = eval("("+$(this).attr("data")+")");
+			$("#phone").val(data.phone);
+			$("#expressName").val(data.expressName);
+			$("#siteName").val(data.siteName);
+			$("#address").val(data.address);
+			$("#id").val(data.id);
+			$(".kdrignt").fadeIn();
+		})
+	</script>
+	<script>
+		function setShowLength(obj, maxlength, id) {
+			var rem = maxlength - obj.value.length;
+			var wid = id;
+			if (rem < 0) {
+				rem = 0;
+			}
+			document.getElementById(wid).innerHTML = rem + "/" + "20";
+		}
+	</script>
+</body>
+
+</html>

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+		<title>商品详情</title>
+		<#include '/common/base.html'>
+		<style type="text/css">
+			img{
+				max-width: 100%;
+			}
+		</style>
+	</head>
+	
+	<body>
+		<#if commodity??>
+			<div>
+				${commodity.introduction!!}
+			</div>
+		</#if>
+	</body>
+
+</html>

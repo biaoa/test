@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.linle.user.mapper.UserMessageMapper">
+	<resultMap id="userMessageResult" type="UserMessage">
+		<result property="id" column="id" />
+		<result property="user.id" column="user_id" />
+		<result property="messageType" column="business_type" typeHandler="IntEnumTypeHandler"/>
+		<result property="ownerId" column="owner_id"/>
+		<result property="title" column="title"/>
+		<result property="content" column="content"/>
+		<result property="messageStatus" column="msg_status" typeHandler="IntEnumTypeHandler"/>
+		<result property="createDate" column="create_Date"/>
+		<result property="updateDate" column="update_date"/>
+		<result property="enterprise.id" column="enterprise_id" />
+	</resultMap>
+	
+	<insert id="add" useGeneratedKeys="true" keyProperty="id" parameterType="UserMessage">
+		INSERT INTO user_message
+		(user_id,business_type,owner_id,title,content,enterprise_id,msg_status,create_date,update_date)
+		VALUES
+		(#{user.id},#{messageType,typeHandler=IntEnumTypeHandler},#{ownerId},#{title},#{content},#{enterprise.id},#{messageStatus,typeHandler=IntEnumTypeHandler},now(),now())
+	</insert>
+	<update id="update" parameterType="UserMessage">
+		update user_message 
+		<set>
+			<if test="messageStatus != null">
+				msg_status = #{messageStatus,typeHandler=IntEnumTypeHandler},
+			</if>
+				update_date = now()
+		</set>
+		where id=#{id}
+	</update>
+	<select id="getById" parameterType="String" resultMap="userMessageResult">
+		select * from user_message where id=#{value}
+	</select>
+	
+	<delete id="deleteById" parameterType="long">
+		delete from user_message where id = #{value}
+	</delete>
+	
+	<select id="getAllData" resultMap="userMessageResult" parameterType="Page">
+		select * from user_message
+		<where>
+			<if test="params !=null and params.user != null" >
+				user_id = #{params.user.id}
+			</if>
+		</where>
+	</select> 
+	<select id="findByMaxId" resultMap="userMessageResult">
+		select * from user_message where user_id = #{userId}
+		<if test="maxId != null">
+			and id  &lt; #{maxId}
+		</if>	
+		order by msg_status,id DESC
+		limit #{size}
+	</select>
+	<select id="findByPageNo" resultMap="userMessageResult">
+		select * from user_message where user_id = #{userId}
+		order by msg_status,id DESC
+		LIMIT #{begin},#{end}
+	</select>
+	<select id="countRemainder" resultType="Integer">
+		select count(1) from user_message where user_id = #{userId} and msg_status=0
+		<if test="maxId != null">
+			and id  &lt; #{maxId}		
+		</if>
+	</select>
+	<select id="remainCount" resultType="Integer">
+		select count(1) from user_message where user_id = #{userId} and msg_status = #{messageStatus,typeHandler=IntEnumTypeHandler}
+	</select>
+	<select id="getByOwnerId" resultMap="userMessageResult">
+		select * from user_message where owner_id=#{ownerId} and business_type=#{messageType,typeHandler=IntEnumTypeHandler} order by create_date desc limit 1 
+	</select>
+	<update id="updateOwnerId" parameterType="UserMessage">
+		update user_message 
+		<set>
+			<if test="ownerId != null">
+				owner_id = #{ownerId},
+			</if>
+				update_date = now()
+		</set>
+		where id=#{id}
+	</update>
+</mapper>

@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>考勤规则设置</title>
+		<meta name="content-type" content="text/html; charset=UTF-8">
+		<#include '/common/resources.html'>
+		<meta name="keywords" content="" />
+		<meta name="description" content="" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" type="text/css" href="${base}/resources/datetimepicker/jquery.datetimepicker.css"/>
+		<link href="${base}/resources/assets/css/bootstrap.min.css" rel="stylesheet" />
+		<link rel="stylesheet" href="${base}/resources/assets/css/font-awesome.min.css" />
+		<link rel="stylesheet" href="${base}/resources/assets/css/css.css" />
+		<link rel="stylesheet" href="${base}/resources/assets/css/ace.min.css" />
+		<link rel="stylesheet" type="text/css" href="${base}/resources/assets/css/component.css" />
+		<link rel="stylesheet" media="screen and (min-width: 1580px)" href="${base}/resources/css/sys/Check_work.css">
+		<link rel="stylesheet" media="screen and (max-width: 1580px)" href="${base}/resources/css/sys/Check_work-resolving.css">
+	</head>
+	<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=BiW8BVDNAtEMIbFERc0fLqiUNP2t7wrL"></script>
+	<script type="text/javascript" src="${base}/resources/js/linle_common.js"></script>
+	<style>
+		.check_btn:hover {
+			color: white;
+		}
+		
+		.baidumap {
+			position: absolute;
+			z-index: 111;
+			display: none;
+			background: white;
+			width: 500px;
+			height: auto;
+			overflow: hidden;
+		}
+		
+		#kq_search {
+			width: 60%;
+			float: left;
+			padding: 7px;
+			margin-bottom: 15px;
+			margin-top: 10px;
+			margin-left: 50px;
+		}
+		
+		#kq_button {
+			float: left;
+			padding: 7px 10px;
+			margin-bottom: 15px;
+			margin-top: 10px;
+			background: #009CEB;
+			cursor: pointer;
+			color: white;
+		}
+		
+		#l-map {
+			width: 400px;
+			height: 300px;
+			margin: 10px auto;
+		}
+		.not_dk{
+			float: left;max-width: 400px;max-height: 200px;overflow: auto;height: auto;margin-left:10px;
+		}
+	</style>
+
+	<body>
+		<div class="eoffice" style="display: none;">
+			<!---eoffice左侧选择部门--->
+			<div class="tabbable tabs-below office_tab">
+				<ul class="nav nav-tabs" id="myTab2" style="border-bottom:1px solid #d9d9d9; margin:0;">
+					<li class="active">
+						<a data-toggle="tab" href="#home2">按部门</a>
+					</li>
+<!-- 					<div id="sb-search" class="sb-search"> -->
+<!-- 						<form> -->
+<!-- 							<input class="sb-search-input form-control" placeholder="搜索" type="text" value="" name="search" id="search" style="border:0;"> -->
+<!-- 							<span class="sb-search-submit"><i class="icon-close"></i></span> -->
+<!-- 							<span class="sb-icon-search"><i class="icon-search"></i></span> -->
+<!-- 						</form> -->
+<!-- 					</div> -->
+<!-- 					<script src="${base}/resources/assets/js/classie.js"></script> -->
+<!-- 					<script src="${base}/resources/assets/js/uisearch.js"></script> -->
+<!-- 					<script> -->
+<!-- 						new UISearch(document.getElementById('sb-search')); -->
+<!-- 					</script> -->
+
+				</ul>
+
+				<div class="tab-content office_tabcontent">
+					<div id="home2" class="tab-pane in active">
+						<!---选项卡内表格内容---->
+						<a href="#userMeun" class="collapsed" data-toggle="collapse" style="color:#222; line-height:25px;">
+							<i class="icon-chevron-up" style="width:25px; height:25px; display:inline-block"></i>请选择部门 </a>
+							
+						<#if departmentList?exists && departmentList?size gt 0>
+							<ul id="userMeun" class="collapse in">
+							<#list departmentList as department>
+								<li>
+									<a href="#"><span class="eoffice_sp" val="${department.id}"></span>${department.name!!}</a>
+								</li>
+							</#list>
+							</ul>
+						</#if>
+					</div>
+				</div>
+			</div>
+			<!---eoffice右侧选择姓名---->
+			<div class="eoffice_right">
+				<div class="eoffice_right_bg">
+					<a href="javascript:void(0)" class="op_button close_dialog" data-placement="left" title="关闭窗口">
+						<i class="fa fa-times" style="line-height:35px;"></i></a>
+				</div>
+
+				<div class="row"></div>
+				<div class="row">
+					<div class="col-xs-12">
+						<div class="allclear fr"><i class="icon-trash">清空</i></div>
+						<div class="allselect fr"><i class="icon-check">全选</i></div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-12 user_list_main">
+						<#if duserList?exists && duserList?size gt 0>
+							<ul id="duserUL">
+<!-- 							<#list duserList as u> -->
+<!-- 								<li class="user_list" val="${u.uid}">${u.name}</li> -->
+<!-- 							</#list> -->
+							</ul>
+						</#if>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-12 eoffice_right_bg">已选择</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-12">
+						<div class="selected_user"></div>
+					</div>
+				</div>
+			</div>
+
+			<div id="cleaner"></div>
+			<!---eoffice右侧选择姓名---->
+			<div class="eoffice_buttonpane">
+				<div class="button_position fr">
+					<a href="#" class="btn-gray fr">取消</a>
+					<a href="#" class="btn-blue fr employeeConfirm">确定</a>
+					<div id="cleaner"></div>
+				</div>
+
+			</div>
+		</div>
+
+		<ol class="breadcrumb">
+			<li>
+				<a href="javascript:void(0)">物业中心</a>
+			</li>
+			<li class="active">考勤设置</li>
+		</ol>
+		<div class="check-edit">
+			<hr />
+		</div>
+
+		<div class="check_rule">
+			<div class="check_rule_title">
+				<span class="red_tit">*</span><span class="rule_name">规则名称：</span>
+			</div>
+			<div class="check_rule_input">
+				<input type="text" name="name" id="templateName" value="${attendanceTemplate.name!!}"/>
+			</div>
+		</div>
+		<div class="check_rule">
+			<div class="check_rule_title">
+				<span class="red_tit">*</span><span class="rule_name" >考勤人员：</span>
+			</div>
+			<div class="check_rule_input" id="show_name">
+				<#if attendanceTemplate.id??>
+					<#if attendanceTemplate.type==0>
+						<span class="people_name">默认规则中的考勤人员是指除了其他规则中的员工</span>
+					</#if>
+				</#if>
+			</div>
+			<#if attendanceTemplate.id??>
+				<#if attendanceTemplate.type==1>
+					<a class="check_btn kq_menber">编辑</a>
+				</#if>
+				<#else>
+				<a class="check_btn kq_menber">编辑</a>
+			</#if>
+		</div>
+		<div class="check_rule">
+			<div class="check_rule_title">
+				<span class="red_tit">*</span><span class="rule_name">考勤时间：</span>
+			</div>
+			<div class="check_rule_time">
+				<div class="work-time">
+					<span class="time_week"></span>
+					<span class="time_number"></span>
+					<span class="show_work_days">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+				</div>
+
+			</div>
+			<a class="check_btn time_edit">编辑</a>
+		</div>
+		<div class="check_rule">
+			<div class="check_rule_title">
+				<span class="red_tit">*</span><span class="rule_name">考勤提醒：</span>
+			</div>
+			<div class="check_rule_rest">
+				<span>上班:</span>
+				<select name="remind" id="remind">
+					<option value="0">不提醒</option>
+					<option value="15">提前15分钟</option>
+					<option value="30">提前30分钟</option>
+				</select>
+			</div>
+		</div>
+		<hr />
+		<div class="check_rule">
+			<div class="check_rule_title">
+				<span class="rule_name">考勤地点：</span>
+			</div>
+			<div class="check_rule_area">
+				<div class="clearfix2"></div>
+				<div class="kq_area">
+					<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="area_del"></span>
+				</div>
+			</div>
+
+			<a class="check_btn map_add">编辑</a>
+			<p class="rule_tips" style="margin-left: 100px;">可以添加多个考勤点</p>
+		</div>
+		<div class="check_rule">
+			<div class="check_rule_title">
+				<span class="red_tit">*</span><span class="rule_name">考勤距离：</span>
+			</div>
+			<div class="check_rule_input">
+				<input type="text" name="distance" id="distance" value="${attendanceTemplate.distance!!}" placeholder="多少米内考勤有效"/>
+			</div>
+		</div>
+		<hr />
+		<div class="check_rule" style="margin-bottom: 0;">
+			<div class="check_rule_title">
+				<span class="rule_name">特殊日期：</span>
+			</div>
+			
+			<a class="check_btn special-date" val="0">编辑</a>
+			<div class="not_dk">
+				<!-- <div class="add-work"><span>2016-11-11</span><span>放假</span></div> -->
+				<div class="spe_date" id="bfj" style="clear: both;"></div>
+			</div>
+			<p class="rule_tips" style="margin-left: 100px;">可指定某个节假日需要打卡</p>
+		</div>
+		<div class="check_rule">
+			<div class="check_rule_title">
+			</div>
+			
+			<a class="check_btn special-date" val="1">编辑</a>
+			<div class="not_dk">
+				<!-- <div class="add-work"><span>2016-11-11</span><span>放假</span><span class="area_del">删除</span></div> -->
+				<div class="spe_date" id="fj" style="clear: both;"></div>
+			</div>
+			<p class="rule_tips" style="margin-left: 100px;">可指定某个节假日不需要打卡</p>
+		</div>
+		<hr />
+		<a class="check_btn3">取消</a>
+		<a class="check_btn2" id="submitTemplate">确认</a>
+		<div class="kq_time_site">
+			<div class="kq_tit">
+				<span>考勤时间</span><span class="close">X</span>
+			</div>
+			<div class="work_week">
+				<div class="work_day">
+					<span>工作日：</span>
+				</div>
+				<div class="weekends">
+					<label>
+						<input type="checkbox"  name="workDays" value="1" t="星期一"/><span>星期一</span>
+					</label>
+					<label>
+						<input type="checkbox" name="workDays" value="2" t="星期二"/><span>星期二</span>
+					</label>
+					<label>
+						<input type="checkbox" name="workDays" value="3" t="星期三"/><span>星期三</span>
+					</label>
+					<label>
+						<input type="checkbox" name="workDays" value="4" t="星期四"/><span>星期四</span>
+					</label>
+					<label>
+						<input type="checkbox" name="workDays" value="5" t="星期五"/><span>星期五</span>
+					</label>
+					<label>
+						<input type="checkbox" name="workDays" value="6" t="星期六"/><span>星期六</span>
+					</label>
+					<label>
+						<input type="checkbox" name="workDays" value="7" t="星期日"/><span>星期日</span>
+					</label>
+				</div>
+			</div>
+
+			<div class="work_week">
+				<div class="work_day">
+					<span>打卡时间：</span>
+				</div>
+				<div class="weekends">
+					<span>上班时间：</span>
+					<input class="span_datetime" id="beginDate" value="${attendanceTemplate.onDuty!!}"/>
+					<span>--下班时间：</span>
+					<input class="span_datetime" id="endDate" value="${attendanceTemplate.offDuty!!}"/>
+				</div>
+			</div>
+			<div style="clear: both;"></div>
+			<hr />
+			<a class="check_btn3">取消</a>
+			<a class="check_btn2" id="workDayConfrim">确认</a>
+		</div>
+		<div id="bg"></div>
+		<div class="kq_time_site2">
+			<div class="kq_tit">
+				<span>打卡日期/不打卡日期</span><span class="close">X</span>
+			</div>
+			<div class="work_week">
+				<div class="work_day spec_top">
+					<span>日期：</span>
+				</div>
+				<div class="weekends">
+					<input class="spec_time" type="text" id="spec_time" />
+				</div>
+			</div>
+
+			<div class="work_week">
+				<div class="work_day spec_top">
+					<span>事由：</span>
+				</div>
+				<div class="weekends">
+					<input class="spec_thing" type="text" id="remark"/>
+				</div>
+			</div>
+			<div style="clear: both;"></div>
+			<hr />
+			<a class="check_btn3">取消</a>
+			<a class="check_btn2 timeadd">确认</a>
+		</div>
+		<div class="baidumap">
+			<div class="kq_tit">
+				<span>考勤地点</span><span></span>
+			</div>
+			<input type="text" id="kq_search" placeholder="请输入详细地址：如杭州市拱墅区杭行路666号" />
+			<input type="hidden" id="lat" />
+			<input type="hidden" id="lng" />
+			<a id="kq_button">搜索</a>
+			<div id="l-map"></div>
+			<div id="r-result" style="height: auto;max-height: 200px;overflow: auto;"></div>
+			<div style="clear: both;"></div>
+			<hr />
+			<a class="check_btn3 map_qx">取消</a>
+			<input type="hidden" id="id" value="${attendanceTemplate.id!!}" />
+			<a class="check_btn2 area_add">确认</a>
+		</div>
+		<script src="${base}/resources/js/baidumap.js"></script>
+		<script type="text/javascript" src="${base}/resources/js/company-menmber.js" ></script>
+		<script src="${base}/resources/datetimepicker/jquery.datetimepicker.js" ></script>
+		<script type="text/javascript">
+			$('.span_datetime').datetimepicker({
+				datepicker: false,
+				format: 'H:i',
+				step: 5
+			});
+			$('.spec_time').datetimepicker({
+				lang: 'ch',
+				timepicker: false,
+				format: 'Y-m-d',
+				formatDate: 'Y-m-d'
+			
+			});
+		</script>
+		<script src="${base}/resources/bootstrap-3.3.5-dist/js/bootstrap.min.js"></script>
+	</body>
+<script type="text/javascript">
+var type;
+var users_array = new Array();
+var user_name_array = new Array();
+var check_address = new Array();
+var special_date_array = new Array();
+var work_days = new Array();
+var show_workDays = new Array();
+var address_array = new Array();
+	$(document).delegate('.area_del','click', function () {
+		check_address = RemoveArrayItemByval(check_address,$(this).attr("v"));
+		address_array = removeAddressArrayItemByval(address_array,$(this).attr("v"));
+		$(this).parent().remove(); 
+	});
+	
+	$(document).delegate('.date_del','click', function () {
+		special_date_array = RemovedateArrayItemByval(special_date_array,$(this).attr("v"));
+		$(this).parent().remove(); 
+	});
+	
+	$(document).delegate('.eoffice_sp','click', function () {
+		//$(this).attr("val")
+		alert(1);
+	});
+	
+	$("#userMeun li").click(function(){
+		var departmentId = $(this).find(".eoffice_sp").attr("val");
+		　$.post('${base}/attendanceTemplate/getEmployeeByDepartmentId', { id: departmentId }, function (data, status) {
+			//清除ul内容
+			var html="";
+			$("#duserUL").html(html);
+			//追加内容
+			for(var i =0; i<data.length;i++){
+				html+="<li class='user_list' val='"+data[i].uid+"'>"+data[i].name+"</li>";
+			}
+			$("#duserUL").html(html);
+			liBindClick();
+		 });
+	})
+	
+	function liBindClick(){
+		$(".user_list").bind("click",function () {
+			var word = $(this).text();
+			word = $.trim(word);
+			var has = false;
+			$(".selected_user li").each(function() {
+				if($(this).text() == word) {
+					has = true;
+					$(this).remove();
+				}
+			});
+			if(!has) {
+				$(".selected_user").append("<li val="+$(this).attr("val")+">" + word + "<span class='shanchu'><i class='icon-close'></i></span></li>");
+				$(this).prepend("<a class='selected_tip hover' href='javascript:void(0)'><i class='icon-check-circle'></i></a> ");
+			} else {
+				$(this).children("a").remove();
+			}
+		});
+		
+		$(".employeeConfirm").click(function(){
+			users_array= [];
+			user_name_array=[];
+			$("#show_name").html("");
+			var lis = $(".selected_user li");
+			for(var i=0;i<lis.length;i++){
+					var demo=lis[i];
+					users_array.push(lis[i].attributes[0].nodeValue);
+					user_name_array.push(lis[i].innerText);
+				}
+			$("#show_name").append("<span class='people_name' >"+ user_name_array.join(",")+"</span>");
+			$("#bg,.eoffice").css("display", "none");
+		});
+		
+// 		$(document).delegate('.user_list','live', function () {
+// 			var word = $(this).text();
+// 			word = $.trim(word);
+// 			var has = false;
+// 			$(".selected_user li").each(function() {
+// 				if($(this).text() == word) {
+// 					has = true;
+// 					$(this).remove();
+// 				}
+// 			});
+// 			if(!has) {
+// 				$(".selected_user").append("<li>" + word + "<span class='shanchu'><i class='icon-close'></i></span></li>");
+// 				$(this).prepend("<a class='selected_tip hover' href='javascript:void(0)'><i class='icon-check-circle'></i></a> ");
+// 			} else {
+// 				$(this).children("a").remove();
+// 			}
+// 		});
+	}
+	
+	
+	$("#workDayConfrim").click(function(){
+		if($("input[name=workDays]").is(':checked')){
+			if($("#beginDate").val()==''||$("#endDate").val()==''){
+				layer.msg("请选择上下班时间");
+				return false;
+			}
+			show_workDays=[];
+			work_days=[];
+			$("input[name=workDays]").each(function(){
+				if(this.checked){
+					show_workDays.push($(this).attr("t"));
+					work_days.push($(this).val());
+				}
+			})
+			$(".time_number").html("");
+			$(".time_number").append($("#beginDate").val()+"-"+$("#endDate").val());
+			$(".time_week").html("");
+			$(".time_week").append(show_workDays.join(",")+"上班");
+			$("#bg,.kq_time_site").css("display", "none");
+		}else{
+			layer.msg("请选择工作日");
+			return false;
+		}
+	});
+	
+	function create_special_date(date,remark,type)
+	{
+       var object = new Object();
+       object.specialDate = date;
+       object.description = remark;
+	   object.type = type;
+       return object;
+	}
+	
+	function create_attendance_address(address,lat,lng){
+		var _address = new Object();
+		_address.address = address;
+		_address.lat = lat;
+		_address.lng = lng;
+		return _address;
+	}
+	
+	function check_special_date(obj){
+		for(var i=0;i<special_date_array.length;i++){
+			if(special_date_array[i].specialDate==obj.specialDate){
+				layer.msg("已添加过该日期了");
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	$("#submitTemplate").click(function(){
+		var templateName = $("#templateName").val();
+		var remind = $("#remind").val();
+		if(templateName==""){
+			layer.msg("请输入规则名称");
+			return false;
+		}
+		<#if attendanceTemplate.id??>
+			<#if attendanceTemplate.type==1>
+			if(users_array.length==0){
+				layer.msg("请选择考勤人员");
+				return false;
+			}
+			</#if>
+			<#else>
+			if(users_array.length==0){
+				layer.msg("请选择考勤人员");
+				return false;
+			}
+		</#if>
+	
+		if(work_days.length==0){
+			layer.msg("请选则工作日");
+			return false;
+		}
+		
+		if($("#beginDate").val()==''||$("#endDate").val()==''){
+			layer.msg("请选择上下班时间");
+			return false;
+		}
+		
+		if(address_array.length==0){
+			layer.msg("请至少选择一个考勤地点");
+			return false;
+		}
+		if($("#distance").val()==''){
+			layer.msg("请输入考勤有效距离");
+			return false;
+		}else{
+			var reg=/^[0-9]*[1-9][0-9]*$/;
+    		if(!reg.test($("#distance").val())){
+    			layer.msg("考勤有效距离输入有误");
+    			return false;
+    		}
+		}
+	　$.post('${base}/attendanceTemplate/add', 
+			{id:$("#id").val(),name:templateName,uids:users_array.join(","),
+			workDays:work_days.join(","),onDuty:$("#beginDate").val(),
+			offDuty:$("#endDate").val(),showDate:show_workDays.join(","),
+			remind:remind,address:check_address.join(","),
+			specialdateList:JSON.stringify(special_date_array),
+			addressList:JSON.stringify(address_array),
+			distance:$("#distance").val()
+			},
+		function (data, status) {
+				 layer.msg(data.msg,{
+				     	shift: 0
+				     }, function(){
+				    	 window.location.href="${base}/attendanceTemplate/list";
+				     }); 
+	 });
+	});
+	
+	function RemovedateArrayItemByval(array,value){
+		for(var i =0;i<array.length;i++){
+			if(array[i].specialDate==value){
+				array.splice(i,1);
+			}
+		}
+		return array;
+	}
+	
+	function removeAddressArrayItemByval(array,value){
+		for(var i =0;i<array.length;i++){
+			if(array[i].address==value){
+				array.splice(i,1);
+			}
+		}
+		return array;
+	}
+	
+	<#if attendanceTemplate?? && attendanceTemplate.id??>
+		users_array = '${attendanceTemplate.uids}'.split(",");
+		var user_html="";
+		<#list userList as u>
+			user_name_array.push('${u.name}');
+			user_html+="<li val='${u.uid}'>${u.name}<span class='shanchu'><i class='icon-close'></i></span></li>";
+		</#list>
+		$(".selected_user").append(user_html);
+		$("#show_name").append("<span class='people_name' >"+ user_name_array.join(",")+"</span>");
+		$(".time_number").append($("#beginDate").val()+"-"+$("#endDate").val());
+		$(".time_week").append('${attendanceTemplate.showDate}');
+		$('${attendanceTemplate.workDays}'.split(",")).each(function (i,dom){
+		        $(":checkbox[value='"+dom+"']").prop("checked",true);
+		    });	
+		work_days = '${attendanceTemplate.workDays}'.split(",");
+		show_workDays = '${attendanceTemplate.showDate}'.split(",")
+		$("#remind").val('${attendanceTemplate.remind}');
+		
+		<#if dateList?exists && dateList?size gt 0>
+			<#list dateList as data>
+			var obj = create_special_date('${data.specialDate?string('yyyy-MM-dd')}','${data.description}','${data.type}');
+				<#if data.type==0>
+				$("#bfj").after('<div class="add-work"><span>'+'${data.specialDate?string('yyyy-MM-dd')}'+'</span><span>'+'${data.description}'+'</span><span class="date_del" v="'+'${data.specialDate?string('yyyy-MM-dd')}'+'" style="margin-left:10px;float:right;color:red;cursor: pointer;">删除</span></div>'); //在p标签前加入所要生成的代码
+				<#else>
+				$("#fj").after('<div class="add-work"><span>'+'${data.specialDate?string('yyyy-MM-dd')}'+'</span><span>'+'${data.description}'+'</span><span class="date_del" v="'+'${data.specialDate?string('yyyy-MM-dd')}'+'" style="margin-left:10px;float:right;color:red;cursor:pointer;">删除</span></div>'); //在p标签前加入所要生成的代码
+				</#if>
+				special_date_array.push(obj);
+			</#list>
+		</#if>
+// 		地址相关的
+		<#if addressList?exists && addressList?size gt 0>
+			<#list addressList as address>
+				$(".clearfix2").after('<div class="kq_area"><span>${address.address}</span><span class="area_del" v="${address.address}">删除</span></div>'); //在p标签前加入所要生成的代码
+				var address_obj = create_attendance_address('${address.address}','${address.lat}','${address.lng}');
+				address_array.push(address_obj);
+			</#list>
+		</#if>
+	</#if>
+</script>
+</html>

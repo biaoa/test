@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>问题类型管理</title>
+<meta name="content-type" content="text/html; charset=UTF-8">
+<#include '/common/resources.html'>
+<link rel="stylesheet" media="screen and (min-width: 1580px)" href="${base}/resources/css/sys/jquery.tableui.css" />
+<link rel="stylesheet" media="screen and (max-width: 1580px)" href="${base}/resources/css/sys/tableui-resolving.css" />
+<script src="${base}/resources/js/respond.js" type="text/javascript" async="async"></script>	    
+<!-- <script type="text/javascript" src="${base}/resources/js/tooltips.js"></script> -->
+</head>
+<body>
+<div class="whole">
+
+	<ol class="breadcrumb">
+		<li><a href="javascript:void(0)">常见问题管理</a></li>
+		<li class="active">问题类型管理</li>
+	<span style="float: right"><button type="button"
+			class="btn-default" style="float: right;">新增问题类型</button></span>
+	</ol>
+			<div class="o-order">
+				<form action="${base}/problemType/list" id="pagerForm">
+				<div class="o-first">
+						<span class="o-span">属于：</span>
+						<div class="o-div">
+							<select  class="o-select" name="belongTo" id="belongTo">
+								<option value="-1">全部</option>
+								<option value="2">物业</option>
+								<option value="1">商家</option>
+								<option value="0">用户</option>
+							</select>
+						</div>
+				</div>		
+				
+				<div class="o-thrid role-search-btn role-search2">
+					<a class="o-btn search1">搜索</a>
+				</div>
+			</div>
+	<div class="tab_box">
+	<table class="table_solid" border="0" cellspacing="0">
+		<tbody>
+			<tr class="evenRow">
+				<th>序号</th>
+				<th>类型名称</th>
+				<th>排序</th>
+				<th>属于</th>
+				<th>操作</th>
+			</tr>
+			<#if (pagelist.results)?exists && pagelist.results?size gt 0> <#list
+			pagelist.results as problemType>
+			<tr>
+				<td>${(problemType_index+1)+(pagelist.pageNo-1)*pagelist.pageSize}</td>
+				<td>${problemType.typeName!!}</td>
+				<td>${problemType.sort!!}</td>
+				<td>
+				<#if problemType.belongTo==1>
+				     商家
+				   <#elseif problemType.belongTo==0>
+				     用户
+				   <#elseif problemType.belongTo==2>
+				   	物业  
+				</#if>
+				<td>
+				
+					<a class="cz-a btn-default common-btn-cz" href="${base}/problemType/toAddProblemType?id=${problemType.id}">编辑</a>
+					
+					<a class="cz-a btn-default del common-btn-cz" val="${problemType.id}" info="${problemType.typeName}"  href="javascript:void(0)">删除</a>
+				</td>
+			</tr>
+			</#list>
+		</tbody>
+	</table>
+	<div style="clear: both;"></div>
+	<form action="${base}/problemType/list" id="pagerForm"><#include
+		'/common/pagination.html'></form>
+	<#else>
+		<div class="no-data" >暂无数据~</div>
+	</#if>
+	</div>
+	</div>
+</body>
+<script type="text/javascript">
+	
+	$(function() {
+		$("button").click(function() {
+			window.location.href = "${base}/problemType/toAddProblemType";
+		});
+	});
+	
+	$(".del").click(function(){
+		var id = $(this).attr("val");
+		var info = $(this).attr("info");
+		layer.confirm('确定删除:'+info+'?', function(index){
+			$.post("${base}/problemType/delProblemType?id=" + id, function(result) {
+				 layer.msg(result.msg,{
+				     	shift: 0
+				     }, function(){
+				    	 window.location.href="${base}/problemType/list";
+				     }); 
+			}, 'json');
+			  layer.close(index);
+		}); 
+	})
+	
+	$(".search1").click(function(){
+		$("#pagerForm").submit();
+	})
+	
+	<#if belongTo??>
+		$("#belongTo").val(${belongTo});
+	</#if>
+</script>
+<script>
+$(function(){
+        document.onkeydown = function(e){ 
+        var ev = document.all ? window.event : e;
+        if(ev.keyCode==13) {
+            $("#pagerForm").submit();
+            }
+        }
+    });  
+         
+</script>       
+</html>

@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.linle.cTopicComment.mapper.CTopicCommentMapper" >
+  <resultMap id="BaseResultMap" type="com.linle.entity.sys.CTopicComment" >
+    <id column="comment_id" property="commentId" jdbcType="BIGINT" />
+    <result column="topic_id" property="topicId" jdbcType="BIGINT" />
+    <result column="from_user_id" property="fromUserId" jdbcType="BIGINT" />
+    <result column="to_user_id" property="toUserId" jdbcType="BIGINT" />
+    <result column="content" property="content" jdbcType="VARCHAR" />
+    <result column="is_read" property="isRead" jdbcType="BIT" />
+    <result column="is_main" property="isMain" jdbcType="BIT" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="is_del" property="isDel" jdbcType="INTEGER" />
+  </resultMap>
+  
+   <resultMap id="APIResultMap" type="com.linle.mobileapi.v1.model.CTopicCommentVO" >
+    <id column="comment_id" property="commentId" jdbcType="BIGINT" />
+    <result column="from_user_id" property="fromUserId" jdbcType="VARCHAR" />
+    <result column="fromUserName" property="fromUserName" jdbcType="VARCHAR" />
+    <result column="toUserName" property="toUserName" jdbcType="VARCHAR" />
+    <result column="fromUserNameImg" property="fromUserNameImg" jdbcType="VARCHAR" />
+    <result column="content" property="content" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="is_main" property="isMain" jdbcType="BIT" />
+    <result column="identityId" property="identityId" />
+  </resultMap>
+  
+    
+  <resultMap id="APIReplyResultMap" type="com.linle.mobileapi.v1.model.TopicReplyCommentVO" >
+    <id column="comment_id" property="commentId" jdbcType="BIGINT" />
+    <result column="from_user_id" property="fromUserId" jdbcType="VARCHAR" />
+    <result column="fromUserName" property="fromUserName" jdbcType="VARCHAR" />
+    <result column="fromUserNameImg" property="fromUserNameImg" jdbcType="VARCHAR" />
+    <result column="content" property="replyContent" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+     <result column="topic_id" property="topicId"/>
+    <result column="topic_content" property="topicContent" jdbcType="TIMESTAMP" />
+    <collection column="folder_id" property="image"  select="com.linle.system.mapper.SysFileMapper.findOneFilesUrlByFolderId" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    comment_id, topic_id, from_user_id, to_user_id, content, is_read, is_main,create_time,is_del
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from c_topic_comment
+    where comment_id = #{commentId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from c_topic_comment
+    where comment_id = #{commentId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.linle.entity.sys.CTopicComment" useGeneratedKeys="true" keyProperty="commentId">
+    insert into c_topic_comment (comment_id, topic_id, from_user_id, 
+      to_user_id, content, is_read, is_main,create_time,is_del
+      )
+    values (#{commentId,jdbcType=BIGINT}, #{topicId,jdbcType=BIGINT}, #{fromUserId,jdbcType=BIGINT}, 
+      #{toUserId,jdbcType=BIGINT}, #{content,jdbcType=VARCHAR}, #{isRead,jdbcType=BIT}, #{isMain,jdbcType=BIT}, #{createTime,jdbcType=TIMESTAMP}
+      , #{isDel,jdbcType=BIT}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.linle.entity.sys.CTopicComment" useGeneratedKeys="true" keyProperty="commentId">
+    insert into c_topic_comment
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="commentId != null" >
+        comment_id,
+      </if>
+      <if test="topicId != null" >
+        topic_id,
+      </if>
+      <if test="fromUserId != null" >
+        from_user_id,
+      </if>
+      <if test="toUserId != null" >
+        to_user_id,
+      </if>
+      <if test="content != null" >
+        content,
+      </if>
+      <if test="isRead != null" >
+        is_read,
+      </if>
+      <if test="isMain != null" >
+        is_main,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="isDel != null" >
+        is_del,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="commentId != null" >
+        #{commentId,jdbcType=BIGINT},
+      </if>
+      <if test="topicId != null" >
+        #{topicId,jdbcType=BIGINT},
+      </if>
+      <if test="fromUserId != null" >
+        #{fromUserId,jdbcType=BIGINT},
+      </if>
+      <if test="toUserId != null" >
+        #{toUserId,jdbcType=BIGINT},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="isRead != null" >
+        #{isRead,jdbcType=BIT},
+      </if>
+       <if test="isMain != null" >
+        #{isMain,jdbcType=BIT},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+         #{isDel,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.linle.entity.sys.CTopicComment" >
+    update c_topic_comment
+    <set >
+      <if test="topicId != null" >
+        topic_id = #{topicId,jdbcType=BIGINT},
+      </if>
+      <if test="fromUserId != null" >
+        from_user_id = #{fromUserId,jdbcType=BIGINT},
+      </if>
+      <if test="toUserId != null" >
+        to_user_id = #{toUserId,jdbcType=BIGINT},
+      </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="isRead != null" >
+        is_read = #{isRead,jdbcType=BIT},
+      </if>
+      <if test="isMain != null" >
+        is_main = #{isMain,jdbcType=BIT},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDel != null" >
+          is_del = #{isDel,jdbcType=INTEGER},
+      </if>
+    </set>
+    where comment_id = #{commentId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.linle.entity.sys.CTopicComment" >
+    update c_topic_comment
+    set topic_id = #{topicId,jdbcType=BIGINT},
+      from_user_id = #{fromUserId,jdbcType=BIGINT},
+      to_user_id = #{toUserId,jdbcType=BIGINT},
+      content = #{content,jdbcType=VARCHAR},
+      is_read = #{isRead,jdbcType=BIT},
+      is_main = #{isMain,jdbcType=BIT},
+      is_del = #{isDel,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where comment_id = #{commentId,jdbcType=BIGINT}
+  </update>
+  
+    <!-- 获取评论对象 -->
+  <select id="getTopicComment" resultMap="APIResultMap" parameterType="long">
+	  	SELECT comm.comment_id ,comm.content,comm.create_time,comm.is_main,
+	  	 u1.id fromUserId,u1.name fromUserName,u2.name toUserName,u1.logo fromUserNameImg ,u1.identity identityId
+	  	from c_topic_comment comm
+		LEFT JOIN users u1 ON u1.id=comm.from_user_id
+		LEFT JOIN users u2 ON u2.id=comm.to_user_id
+		WHERE comm.comment_id=#{commentId} and (comm.is_del!=1 OR  ISNULL(comm.is_del))
+  </select>
+  
+  <!-- 获取话题的详情 -->
+  <select id="getTopicDetailForApi" resultMap="APIResultMap" parameterType="map">
+	  	SELECT comm.comment_id ,comm.content,comm.create_time,comm.is_main,
+	  	 u1.id fromUserId,u1.name fromUserName,u2.name toUserName,u1.logo fromUserNameImg ,u1.identity identityId
+	  	from c_topic_comment comm
+		LEFT JOIN users u1 ON u1.id=comm.from_user_id
+		LEFT JOIN users u2 ON u2.id=comm.to_user_id
+		WHERE comm.topic_id=#{topicId} and (comm.is_del!=1 OR  ISNULL(comm.is_del))
+		ORDER BY comm.create_time desc
+		 <if test="begin !=null">
+			limit #{begin},#{end}
+		</if>
+  </select>
+  
+  <!-- 回复我的tab列表数据 -->
+  <select id="getTopicReplyListForApi" resultMap="APIReplyResultMap" parameterType="map">
+	  SELECT comm.comment_id ,comm.topic_id,topic.folder_id,topic.topic_content,comm.content,comm.create_time,comm.is_read,comm.from_user_id, u1.name fromUserName,u1.logo,u2.name toUserName,u1.logo fromUserNameImg 
+		from c_topic_comment comm
+		LEFT JOIN users u1 ON u1.id=comm.from_user_id
+		LEFT JOIN users u2 ON u2.id=comm.to_user_id
+		LEFT JOIN c_topic topic ON topic.topic_id=comm.topic_id 
+		WHERE comm.to_user_id=#{userId} and comm.to_user_id!=comm.from_user_id  and (comm.is_del!=1 OR  ISNULL(comm.is_del)) and comm.is_del!=2
+		ORDER BY comm.create_time desc
+	  	limit #{begin},#{end}
+  </select>
+  
+  <!-- 获得所有未读总数-->
+  <select id="getUnReadCount" resultType="int" parameterType="map">
+	   SELECT COUNT(*) from c_topic_comment comm
+	   WHERE comm.to_user_id=#{userId} and comm.to_user_id!=comm.from_user_id and is_read=0  and (comm.is_del!=1 OR  ISNULL(comm.is_del))
+  </select>
+  
+  <!-- 修改评论回复记录为已读-->
+  <update id="updateReadCommentByUserid" parameterType="com.linle.entity.sys.CTopicComment" >
+    update c_topic_comment set is_read=true where to_user_id=#{toUserId} 
+  </update>
+  
+    <!-- 修改评论删除状态-->
+  <update id="updateCommentDelByTopicId" parameterType="com.linle.entity.sys.CTopicComment" >
+    update c_topic_comment set is_del=#{isDel}  where topic_id=#{topicId} 
+  </update>
+  
+</mapper>

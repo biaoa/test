@@ -1,0 +1,348 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.linle.utilitiesChild.mapper.UtilitiesChildMapper" >
+  <resultMap id="BaseResultMap" type="com.linle.utilitiesChild.model.UtilitiesChild" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <id column="ref_id" property="refId" jdbcType="BIGINT" />
+    <result column="community_id" property="communityId" jdbcType="BIGINT" />
+    <result column="house_owner" property="houseOwner" jdbcType="VARCHAR" />
+    <result column="house_number" property="houseNumber" jdbcType="VARCHAR" />
+    <result column="phone" property="phone" jdbcType="VARCHAR" />
+    <result column="last_meter_reading" property="lastMeterReading" jdbcType="REAL" />
+    <result column="this_meter_reading" property="thisMeterReading" jdbcType="REAL" />
+    <result column="actual_consumption" property="actualConsumption" jdbcType="REAL" />
+    <result column="price" property="price" jdbcType="DECIMAL" />
+    <result column="pooled_price" property="pooledPrice" jdbcType="REAL" />
+    <result column="balance" property="balance" jdbcType="DECIMAL" />
+    <result column="amount" property="amount" jdbcType="DECIMAL" />
+    <result column="last_balance" property="lastBalance" jdbcType="DECIMAL" />
+    <result column="actual_amount" property="actualAmount" jdbcType="DECIMAL" />
+    <result column="payable" property="payable" jdbcType="DECIMAL" />
+    <result column="meter_reading_date" property="meterReadingDate" jdbcType="TIMESTAMP" />
+    <result column="year" property="year" jdbcType="INTEGER" />
+    <result column="month" property="month" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="order_no" property="orderNo" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+    <result column="invoice_status" property="invoiceStatus" jdbcType="INTEGER" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id,ref_id, community_id, house_owner, house_number, phone, last_meter_reading, this_meter_reading, 
+    actual_consumption, price, pooled_price, balance,amount,last_balance,actual_amount, payable, meter_reading_date, year, 
+    month, status, order_no, type, invoice_status, remark, create_date, update_date
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from utilities_child
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from utilities_child
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.linle.utilitiesChild.model.UtilitiesChild" >
+    insert into utilities_child (id,ref_id, community_id, house_owner, 
+      house_number, phone, last_meter_reading, 
+      this_meter_reading, actual_consumption, price, 
+      pooled_price, balance,amount,last_balance,actual_amount, payable, 
+      meter_reading_date, year, month, 
+      status, order_no, type, 
+      invoice_status, remark, create_date, 
+      update_date)
+    values (#{id,jdbcType=BIGINT},#{refId,jdbcType=BIGINT}, #{communityId,jdbcType=BIGINT}, #{houseOwner,jdbcType=VARCHAR}, 
+      #{houseNumber,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{lastMeterReading,jdbcType=REAL}, 
+      #{thisMeterReading,jdbcType=REAL}, #{actualConsumption,jdbcType=REAL}, #{price,jdbcType=DECIMAL}, 
+      #{pooledPrice,jdbcType=REAL}, #{balance,jdbcType=DECIMAL}, 
+      #{amount,jdbcType=DECIMAL}, #{lastBalance,jdbcType=DECIMAL}, #{actualAmount,jdbcType=DECIMAL}, #{payable,jdbcType=DECIMAL}, 
+      #{meterReadingDate,jdbcType=TIMESTAMP}, #{year,jdbcType=INTEGER}, #{month,jdbcType=INTEGER}, 
+      #{status,jdbcType=INTEGER}, #{orderNo,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER}, 
+      #{invoiceStatus,jdbcType=INTEGER}, #{remark,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, 
+      #{updateDate,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.linle.utilitiesChild.model.UtilitiesChild" >
+    insert into utilities_child
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+     <if test="refId != null" >
+        ref_id,
+      </if>
+      <if test="communityId != null" >
+        community_id,
+      </if>
+      <if test="houseOwner != null" >
+        house_owner,
+      </if>
+      <if test="houseNumber != null" >
+        house_number,
+      </if>
+      <if test="phone != null" >
+        phone,
+      </if>
+      <if test="lastMeterReading != null" >
+        last_meter_reading,
+      </if>
+      <if test="thisMeterReading != null" >
+        this_meter_reading,
+      </if>
+      <if test="actualConsumption != null" >
+        actual_consumption,
+      </if>
+      <if test="price != null" >
+        price,
+      </if>
+      <if test="pooledPrice != null" >
+        pooled_price,
+      </if>
+      <if test="balance != null" >
+        balance,
+      </if>
+             <if test="amount != null" >
+        amount,
+      </if>
+       <if test="lastBalance != null" >
+        last_balance,
+      </if>
+      <if test="actualAmount != null" >
+        actual_amount,
+      </if>
+      <if test="payable != null" >
+        payable,
+      </if>
+      <if test="meterReadingDate != null" >
+        meter_reading_date,
+      </if>
+      <if test="year != null" >
+        year,
+      </if>
+      <if test="month != null" >
+        month,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="orderNo != null" >
+        order_no,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="invoiceStatus != null" >
+        invoice_status,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="updateDate != null" >
+        update_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="refId != null" >
+        #{refId,jdbcType=BIGINT},
+      </if>
+      <if test="communityId != null" >
+        #{communityId,jdbcType=BIGINT},
+      </if>
+      <if test="houseOwner != null" >
+        #{houseOwner,jdbcType=VARCHAR},
+      </if>
+      <if test="houseNumber != null" >
+        #{houseNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="lastMeterReading != null" >
+        #{lastMeterReading,jdbcType=REAL},
+      </if>
+      <if test="thisMeterReading != null" >
+        #{thisMeterReading,jdbcType=REAL},
+      </if>
+      <if test="actualConsumption != null" >
+        #{actualConsumption,jdbcType=REAL},
+      </if>
+      <if test="price != null" >
+        #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="pooledPrice != null" >
+        #{pooledPrice,jdbcType=REAL},
+      </if>
+      <if test="balance != null" >
+        #{balance,jdbcType=DECIMAL},
+      </if>
+       <if test="amount != null" >
+        #{amount,jdbcType=DECIMAL},
+      </if>
+       <if test="lastBalance != null" >
+        #{lastBalance,jdbcType=DECIMAL},
+      </if>
+       <if test="actualAmount != null" >
+        #{actualAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="payable != null" >
+        #{payable,jdbcType=DECIMAL},
+      </if>
+      <if test="meterReadingDate != null" >
+        #{meterReadingDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="year != null" >
+        #{year,jdbcType=INTEGER},
+      </if>
+      <if test="month != null" >
+        #{month,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="orderNo != null" >
+        #{orderNo,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=INTEGER},
+      </if>
+      <if test="invoiceStatus != null" >
+        #{invoiceStatus,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.linle.utilitiesChild.model.UtilitiesChild" >
+    update utilities_child
+    <set >
+     <if test="refId != null" >
+        ref_id = #{refId,jdbcType=BIGINT},
+      </if>
+      <if test="communityId != null" >
+        community_id = #{communityId,jdbcType=BIGINT},
+      </if>
+      <if test="houseOwner != null" >
+        house_owner = #{houseOwner,jdbcType=VARCHAR},
+      </if>
+      <if test="houseNumber != null" >
+        house_number = #{houseNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="lastMeterReading != null" >
+        last_meter_reading = #{lastMeterReading,jdbcType=REAL},
+      </if>
+      <if test="thisMeterReading != null" >
+        this_meter_reading = #{thisMeterReading,jdbcType=REAL},
+      </if>
+      <if test="actualConsumption != null" >
+        actual_consumption = #{actualConsumption,jdbcType=REAL},
+      </if>
+      <if test="price != null" >
+        price = #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="pooledPrice != null" >
+        pooled_price = #{pooledPrice,jdbcType=REAL},
+      </if>
+      <if test="balance != null" >
+        balance = #{balance,jdbcType=DECIMAL},
+      </if>
+       <if test="amount != null" >
+        amount = #{amount,jdbcType=DECIMAL},
+      </if>
+      <if test="lastBalance != null" >
+        last_balance = #{lastBalance,jdbcType=DECIMAL},
+      </if>
+      <if test="actualAmount != null" >
+        actual_amount = #{actualAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="payable != null" >
+        payable = #{payable,jdbcType=DECIMAL},
+      </if>
+      <if test="meterReadingDate != null" >
+        meter_reading_date = #{meterReadingDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="year != null" >
+        year = #{year,jdbcType=INTEGER},
+      </if>
+      <if test="month != null" >
+        month = #{month,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="orderNo != null" >
+        order_no = #{orderNo,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="invoiceStatus != null" >
+        invoice_status = #{invoiceStatus,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.linle.utilitiesChild.model.UtilitiesChild" >
+    update utilities_child
+    set community_id = #{communityId,jdbcType=BIGINT},
+      ref_id = #{refId,jdbcType=BIGINT},
+      house_owner = #{houseOwner,jdbcType=VARCHAR},
+      house_number = #{houseNumber,jdbcType=VARCHAR},
+      phone = #{phone,jdbcType=VARCHAR},
+      last_meter_reading = #{lastMeterReading,jdbcType=REAL},
+      this_meter_reading = #{thisMeterReading,jdbcType=REAL},
+      actual_consumption = #{actualConsumption,jdbcType=REAL},
+      price = #{price,jdbcType=DECIMAL},
+      pooled_price = #{pooledPrice,jdbcType=REAL},
+      balance = #{balance,jdbcType=DECIMAL},
+      amount = #{amount,jdbcType=DECIMAL},
+      last_balance = #{lastBalance,jdbcType=DECIMAL},
+      actual_amount = #{actualAmount,jdbcType=DECIMAL},
+      payable = #{payable,jdbcType=DECIMAL},
+      meter_reading_date = #{meterReadingDate,jdbcType=TIMESTAMP},
+      year = #{year,jdbcType=INTEGER},
+      month = #{month,jdbcType=INTEGER},
+      status = #{status,jdbcType=INTEGER},
+      order_no = #{orderNo,jdbcType=VARCHAR},
+      type = #{type,jdbcType=INTEGER},
+      invoice_status = #{invoiceStatus,jdbcType=INTEGER},
+      remark = #{remark,jdbcType=VARCHAR},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  <select id="getNewOneUtilitiesChild" parameterType="long" resultMap="BaseResultMap">
+  	SELECT 
+  	 <include refid="Base_Column_List" />
+  	 FROM utilities_child 
+  	WHERE ref_id=#{ref_id}
+  	order by create_date DESC limit 1
+  </select>
+  
+</mapper>

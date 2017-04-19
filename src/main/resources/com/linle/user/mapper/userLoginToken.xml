@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.linle.user.mapper.UserLoginTokenMapper">
+	<resultMap type="LoginToken" id="userLoginTokenMap">
+		<id column="token" property="token" />
+		<result column="user_id" property="user.id" />
+		<result column="user_name" property="userName" />
+		<result column="password" property="password" />
+		<result column="expire_time" property="expireTime" />
+		<result column="create_date" property="createDate" />
+		<result column="update_date" property="updateDate" />
+	</resultMap>
+	<insert id="add" parameterType="LoginToken">
+		INSERT INTO user_login_token
+		(token,user_id,user_name,password,expire_time,create_date,update_date)
+		VALUES
+		(#{token},#{user.id},#{userName},#{password},#{expireTime},now(),now())
+	</insert>
+	<delete id="delByToken">
+		delete from user_login_token
+		where token = #{value}
+	</delete>
+	<delete id="delByUserId">
+		delete from user_login_token
+		where user_id = #{value}
+	</delete>
+	<select id="getByToken" resultMap="userLoginTokenMap">
+		select * from user_login_token
+		where token = #{value} and expire_time >= SYSDATE()
+	</select>
+	<update id="updatePassword" parameterType="LoginToken">
+		update user_login_token
+		<set>
+			<if test="password != null">
+				password = #{password},
+			</if>
+		</set>
+		where user_id=#{user.id}
+	</update>
+	
+	<select id="getSidByUserId" parameterType="Long" resultType="string">
+		select token from user_login_token
+		where user_id = #{uid}
+	</select>
+</mapper>

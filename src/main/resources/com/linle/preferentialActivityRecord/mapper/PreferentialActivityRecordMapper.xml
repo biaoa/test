@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.linle.preferentialActivityRecord.mapper.PreferentialActivityRecordMapper" >
+  <resultMap id="BaseResultMap" type="com.linle.preferentialActivityRecord.model.PreferentialActivityRecord" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="activity_id" property="activityId" jdbcType="BIGINT" />
+    <result column="order_no" property="orderNo" jdbcType="VARCHAR" />
+    <result column="preferential_amount" property="preferentialAmount" jdbcType="DECIMAL" />
+    <result column="pay_flag" property="payFlag" jdbcType="INTEGER" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+    <result column="u_id" property="uid"/>
+  </resultMap>
+  
+  <resultMap id="pageResultMap" type="com.linle.preferentialActivityRecord.model.PreferentialActivityRecord" extends="BaseResultMap">
+  		<association column="u_id" property="user" select="com.linle.user.mapper.UserMapper.selectByPrimaryKey"/>
+  		<association column="activity_id" property="preferentialActivity" select="com.linle.preferentialActivity.mapper.PreferentialActivityMapper.selectByPrimaryKey"/>
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    id, activity_id, order_no, preferential_amount, pay_flag, create_date, update_date,u_id
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from preferential_activity_record
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from preferential_activity_record
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.linle.preferentialActivityRecord.model.PreferentialActivityRecord" >
+    insert into preferential_activity_record (id, activity_id, order_no, 
+      preferential_amount, pay_flag, create_date, 
+      update_date,u_id)
+    values (#{id,jdbcType=BIGINT}, #{activityId,jdbcType=BIGINT}, #{orderNo,jdbcType=VARCHAR}, 
+      #{preferentialAmount,jdbcType=DECIMAL}, #{payFlag,jdbcType=INTEGER}, #{createDate,jdbcType=TIMESTAMP}, 
+      #{updateDate,jdbcType=TIMESTAMP},#{uid})
+  </insert>
+  <insert id="insertSelective" parameterType="com.linle.preferentialActivityRecord.model.PreferentialActivityRecord" >
+    insert into preferential_activity_record
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="activityId != null" >
+        activity_id,
+      </if>
+      <if test="orderNo != null" >
+        order_no,
+      </if>
+      <if test="preferentialAmount != null" >
+        preferential_amount,
+      </if>
+      <if test="payFlag != null" >
+        pay_flag,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="updateDate != null" >
+        update_date,
+      </if>
+      <if test="uid">
+      	u_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="activityId != null" >
+        #{activityId,jdbcType=BIGINT},
+      </if>
+      <if test="orderNo != null" >
+        #{orderNo,jdbcType=VARCHAR},
+      </if>
+      <if test="preferentialAmount != null" >
+        #{preferentialAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="payFlag != null" >
+        #{payFlag,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="uid != null">
+      	#{uid},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.linle.preferentialActivityRecord.model.PreferentialActivityRecord" >
+    update preferential_activity_record
+    <set >
+      <if test="activityId != null" >
+        activity_id = #{activityId,jdbcType=BIGINT},
+      </if>
+      <if test="orderNo != null" >
+        order_no = #{orderNo,jdbcType=VARCHAR},
+      </if>
+      <if test="preferentialAmount != null" >
+        preferential_amount = #{preferentialAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="payFlag != null" >
+        pay_flag = #{payFlag,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="uid != null">
+      	u_id = #{uid},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.linle.preferentialActivityRecord.model.PreferentialActivityRecord" >
+    update preferential_activity_record
+    set activity_id = #{activityId,jdbcType=BIGINT},
+      order_no = #{orderNo,jdbcType=VARCHAR},
+      preferential_amount = #{preferentialAmount,jdbcType=DECIMAL},
+      pay_flag = #{payFlag,jdbcType=INTEGER},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP},
+      u_id = #{uid}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  <!-- 根据用户ID和活动ID 查询用户参加活动记录  -->
+  <select id="getUserJoinPreferentialActivity" parameterType="map" resultMap="BaseResultMap">
+  	 select 
+  	 <include refid="Base_Column_List" />
+  	 from preferential_activity_record
+  	 where u_id = #{uid} and activity_id = #{activityId}
+  </select>
+  
+  <!-- 获得活动已消耗金额 -->
+  <select id="getActivityCostMoney" parameterType="Long" resultType="decimal">
+  	select ifnull(SUM(preferential_amount),0) from preferential_activity_record
+	where activity_id = #{activityId}
+  </select>
+  
+  <select id="getPreferentialActivityRecord" parameterType="Long" resultMap="BaseResultMap">
+  	 select 
+  	 <include refid="Base_Column_List" />
+  	 from preferential_activity_record
+  	 where  activity_id = #{activityId}
+  </select>
+  
+  <!-- 根据订单编号 获得优惠记录 -->
+  <select id="selectByOrderNo" parameterType="String" resultMap="BaseResultMap">
+  	 select 
+  	 <include refid="Base_Column_List" />
+  	 from preferential_activity_record
+  	 where order_no = #{orderNo}
+  </select>
+  
+   <select id="getAllData" resultMap="pageResultMap" parameterType="page" >
+    select 
+    <include refid="Base_Column_List" />
+    from preferential_activity_record
+    order by create_date desc 
+  </select>
+</mapper>

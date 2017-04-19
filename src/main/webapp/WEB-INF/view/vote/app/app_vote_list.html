@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>投票列表</title> <#include '/common/base.html'>
+<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<link rel="stylesheet" href="${base}/resources/mui/mui.min.css">
+<link rel="stylesheet" type="text/css" href="${base}/resources/mui/refresh-load.css" />
+</head>
+
+<body>
+	<!--下拉刷新容器-->
+	<div id="pullrefresh" class="mui-content mui-scroll-wrapper">
+		<div class="mui-scroll">
+			<!--数据列表-->
+			<ul class="mui-table-view mui-table-view-chevron">
+			</ul>
+		</div>
+	</div>
+	<script src="${base}/resources/mui/mui.min.js"></script>
+	<script>
+		mui('body').on('tap','a',function(){
+			document.location.href=this.href;
+		});
+		
+		 
+		var pageSize = 5;
+		var pageNuber = -1;
+		var pageCount = 1;
+		var count = 0;
+		var result_count = 0;
+		var hasNext=false;
+		var ul = $(".mui-table-view-chevron");
+		mui.init({
+			pullRefresh : {
+				container : '#pullrefresh',
+				down : {
+					callback : pulldownRefresh
+				},
+				up : {
+					contentrefresh : '正在加载...',
+					callback : pullupRefresh
+				}
+			}
+		});
+		/**
+		 * 下拉刷新具体业务实现
+		 */
+		function pulldownRefresh() {
+			//alert(' 下拉刷新');
+			pageNuber=0;
+			count=0;
+			setTimeout(
+					function() {
+						ul.html("");
+						load_data(pageSize,pageNuber);
+						mui('#pullrefresh').pullRefresh().endPulldownToRefresh(); //refresh completed
+		            	//mui('#pullrefresh').pullRefresh().enablePullupToRefresh();
+					}, 1500);
+		}
+		var count = 0;
+		/**
+		 * 上拉加载具体业务实现
+		 */
+		function pullupRefresh() {
+			//alert('上拉加载');
+			pageNuber++;
+			setTimeout(
+					function() {
+						hasNext = ++count > pageCount;
+						mui('#pullrefresh').pullRefresh().endPullupToRefresh((hasNext)); //参数为true代表没有更多数据了。
+						if(!hasNext){
+							load_data(pageSize,pageNuber);
+						}
+						
+					}, 1500);
+		}
+		if (mui.os.plus) {
+			mui.plusReady(function() {
+				setTimeout(function() {
+					mui('#pullrefresh').pullRefresh().pullupLoading();
+				}, 1000);
+
+			});
+		} else {
+			mui.ready(function() {
+				mui('#pullrefresh').pullRefresh().pullupLoading();
+			});
+		}
+		jQuery(document).ready(function() {
+			jQuery('.skillbar').each(function() {
+				jQuery(this).find('.skillbar-bar').animate({
+					width : jQuery(this).attr('data-percent')
+				});
+			});
+		});
+		
+        //加载数据
+		function load_data(pageSize,pageNuber){
+			$.ajax({
+		        async: false,
+		        type : "POST",
+		        data : {
+		        	pageSize:pageSize,
+		        	pageNuber:pageNuber
+		        },
+		        url : '${base}/api/1/LoadVoteList',
+		        dataType : 'json',
+		        success : function(response) {
+	        		var data = response.list;
+	        		result_count = response.resultCount;
+	        		var html_info="";
+	        		//没有列表数据时提示样式
+	        		$("[name=tipNoDataDiv]").remove();
+	        		if(result_count==0){
+						//html_info+="<div  style='width:100%;height:100%;text-align:center;padding-top:20px;'>暂时没有数据</div>";
+						//ul.append(html_info);
+	        			//ul.after("<div style='text-align: center;margin-top: 30%;position: absolute;left: 0;right: 0;' name='tipNoDataDiv' style='margin-top: 50%;' class='mui-pull-bottom-pocket mui-block mui-visibility'><img src='${base}/resources/images/noVoteData.png'/><div class='mui-pull'><div class='mui-pull-caption mui-pull-caption-nomore'>暂无投票</div></div></div>");
+	        			var bbb='';
+	        			bbb+="<div name='tipNoDataDiv' style='text-align: center;margin-top: 30%;'>"
+	        			bbb+="<img src='${base}/resources/images/noVoteData.png' />"
+	        			bbb+="<p>暂无投票~</p>"
+	        			bbb+="</div>"
+	        			ul.after(bbb);
+	        		}
+					
+	        		pageCount=result_count%pageSize===0?result_count/pageSize:parseInt(result_count/pageSize)+1;
+					for (var i = 0; i < data.length; i++) {
+						var button_info="";
+						html_info="<li name='voteLi' themeId='"+data[i].themeId+"' status='"+data[i].status+"' userVoteCount='"+data[i].userVoteCount+"' style='border-bottom: 1px solid #d2d0d0;'>";
+						html_info+="<div class='vote-list'><div class='vote-list-title'><div class='vote-new-list-img'>";
+						html_info+="<img src='${base}/"+data[i].user.logo+"'/></div>";
+						html_info+="<div class='vote-new-mz'>";
+						html_info+="<p>"+data[i].user.userName+"</p><p>"+data[i].createDateStr+"</p></div>";
+						if(data[i].status==1){
+							html_info+="<a href='javascript:void(0)' class='voter-zter'>进行中</a>";
+						}else if(data[i].status==2){
+							html_info+="<a href='javascript:void(0)' class='voter-zter-end'>已结束</a></div>";
+						}
+						if(data[i].userVoteCount==0&&data[i].status==1){//未投票，且进行中
+							button_info+="<a class='vote-rightnow'  href='${base}/api/1/addVoteUser?themeId="+data[i].themeId+"'>立即投票</a>";
+						}else if(data[i].userVoteCount>0){
+							button_info+="<a class='vote-rightnow' href='${base}/api/1/getAppVoteById?themeId="+data[i].themeId+"'>已投票，查看结果</a>";
+						}else if(data[i].userVoteCount==0&&data[i].status==2){//未投票，且已结束
+							button_info+="<a class='vote-rightnow' href='${base}/api/1/getAppVoteById?themeId="+data[i].themeId+"'>投票截止，查看结果</a>";
+						}
+						
+						html_info+="<div class='voter-list-mytitle'>";
+						html_info+="<p>"+data[i].content+"</p>";
+						if(data[i].imgUrl!=''){
+							html_info+="<img src='${base}/"+data[i].imgUrl+"' />";
+						}
+						html_info+="</div>";
+						if(data[i].userVoteCount==0&&data[i].status==1){
+							html_info+="<div class='vote-list-one'><span>"+(data[i].pattern==1?'单选':'多选')+"</span></div>"
+							  +"<div class='vote-list-style'><a href='#'><span>共"+data[i].voteCount+"票</span></div>"
+							for(var j=0;j<data[i].voteOptionsList.length;j++){
+								var voteOption=data[i].voteOptionsList[j];
+								var width = voteOption.optionsCount/data[i].voteCount*100;
+								html_info+="<div class='skillbar clearfix'><div class='skillbar-title'>";
+								html_info+="<span class='vote-content-style'>"+voteOption.content+"</span></div><div class='skillbar-bar' style='width:"+width+"%;'></div>";
+								html_info+="<div class='skillbar-votenum'><span>"+voteOption.optionsCount+"票</span></div></div>";
+							}
+						}
+						html_info+=button_info;
+						
+						html_info+="</div></li>";
+						
+						ul.append(html_info);
+					}
+		        }
+		 	});
+			
+			mui('#pullrefresh').pullRefresh().endPulldownToRefresh();
+		}
+		
+	/* 	mui('[name=voteLi]').on('tap', function(){
+			alert(11);
+			var themeId = $(this).attr("themeId");
+			alert(themeId);
+			 window.location.href="${base}/api/1/getAppVoteUsersById?themeId="+themeId;
+		});
+		 */
+			mui('body').on('tap','li',function(){
+				var themeId=$(this).attr("themeId");
+				var status=$(this).attr("status");
+				var userVoteCount=$(this).attr("userVoteCount");
+				if(userVoteCount==0&&status==1){//未投票，且进行中
+					document.location.href="${base}/api/1/addVoteUser?themeId="+themeId;
+				}else if(userVoteCount>0){//已投票
+					document.location.href="${base}/api/1/getAppVoteById?themeId="+themeId;
+				}else if(userVoteCount==0&&status==2){//未投票，且已结束
+					document.location.href="${base}/api/1/getAppVoteById?themeId="+themeId;
+				}
+			});
+	</script>
+</body>
+
+</html>
+
+

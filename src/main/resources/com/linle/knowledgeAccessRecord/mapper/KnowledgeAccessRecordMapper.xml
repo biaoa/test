@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.linle.knowledgeAccessRecord.mapper.KnowledgeAccessRecordMapper" >
+  <resultMap id="BaseResultMap" type="com.linle.knowledgeAccessRecord.model.KnowledgeAccessRecord" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="uid" property="uid" jdbcType="BIGINT" />
+    <result column="community_id" property="communityId" jdbcType="BIGINT" />
+    <result column="knowledge_id" property="knowledgeId" jdbcType="BIGINT" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, uid, community_id, knowledge_id, create_date, update_date
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from knowledge_access_record
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from knowledge_access_record
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.linle.knowledgeAccessRecord.model.KnowledgeAccessRecord" >
+    insert into knowledge_access_record (id, uid, community_id, 
+      knowledge_id, create_date, update_date
+      )
+    values (#{id,jdbcType=BIGINT}, #{uid,jdbcType=BIGINT}, #{communityId,jdbcType=BIGINT}, 
+      #{knowledgeId,jdbcType=BIGINT}, #{createDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.linle.knowledgeAccessRecord.model.KnowledgeAccessRecord" >
+    insert into knowledge_access_record
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="uid != null" >
+        uid,
+      </if>
+      <if test="communityId != null" >
+        community_id,
+      </if>
+      <if test="knowledgeId != null" >
+        knowledge_id,
+      </if>
+    	create_date,update_date
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="uid != null" >
+        #{uid,jdbcType=BIGINT},
+      </if>
+      <if test="communityId != null" >
+        #{communityId,jdbcType=BIGINT},
+      </if>
+      <if test="knowledgeId != null" >
+        #{knowledgeId,jdbcType=BIGINT},
+      </if>
+     	now(),now()
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.linle.knowledgeAccessRecord.model.KnowledgeAccessRecord" >
+    update knowledge_access_record
+    <set >
+      <if test="uid != null" >
+        uid = #{uid,jdbcType=BIGINT},
+      </if>
+      <if test="communityId != null" >
+        community_id = #{communityId,jdbcType=BIGINT},
+      </if>
+      <if test="knowledgeId != null" >
+        knowledge_id = #{knowledgeId,jdbcType=BIGINT},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.linle.knowledgeAccessRecord.model.KnowledgeAccessRecord" >
+    update knowledge_access_record
+    set uid = #{uid,jdbcType=BIGINT},
+      community_id = #{communityId,jdbcType=BIGINT},
+      knowledge_id = #{knowledgeId,jdbcType=BIGINT},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>
