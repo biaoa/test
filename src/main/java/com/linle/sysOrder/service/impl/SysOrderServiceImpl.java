@@ -128,6 +128,7 @@ public class SysOrderServiceImpl extends CommonServiceAdpter<SysOrder> implement
 	@Autowired
 	private BroadbandFeeService broadbandFeeService;
 	
+	
 	ObjectMapper objM=new ObjectMapper();
 	
 	@Override
@@ -540,6 +541,9 @@ public class SysOrderServiceImpl extends CommonServiceAdpter<SysOrder> implement
 			return BaseResponse.ServerException;
 		}
 	}
+	/***
+	 * 判断订单是否是做活动的，判断订单包含商品是否有活动商品，若有一个商品，则该订单就是活动订单，目前活动商家录入的商品都是活动商品
+	 */
 	@Override
 	public boolean checkOrderIsJoinActivity(long orderId){
 		return mapper.checkOrderIsJoinActivity(orderId)==1?true:false;
@@ -586,11 +590,17 @@ public class SysOrderServiceImpl extends CommonServiceAdpter<SysOrder> implement
 		return page;
 	}
 
+	/**
+	 * 获得交易订单
+	 */
 	@Override
 	public SysOrder getCommodityOrderDetail(Map<String, Object> detailMap) {
 		return mapper.getCommodityOrderDetail(detailMap);
 	}
 
+	/**
+	 * 商品交易订单发货信息
+	 */
 	@Override
 	public CommodityOrderSendInfo getSendInfo(String orderNo) {
 		return mapper.getSendInfo(orderNo);
@@ -655,6 +665,9 @@ public class SysOrderServiceImpl extends CommonServiceAdpter<SysOrder> implement
 		return mapper.shoperOperateOrder(map)>0;
 	}
 
+	/**
+	 * 退货订单
+	 */
 	@Override
 	public BaseResponse refundOrder(SysOrder order,RefundOrderRequest req,Long folderId) {
 		List<String> toUserIds = new ArrayList<>();
@@ -969,7 +982,19 @@ public class SysOrderServiceImpl extends CommonServiceAdpter<SysOrder> implement
 		if(utilitiesList.size()>0){
 			for (Utilities utilities : utilitiesList) {
 				if(utilities.getPayable().compareTo(BigDecimal.ZERO)==1){//大于0
-					utilitiesService.createFeeOrderAndDetail(utilities, users);
+					//如果已经创建了，则不再生成，如果未创建，则生成一条新的
+					boolean isCanCreate=true;
+					
+					//SysOrder order = mapper.getOrderByOrderNo(utilities.getOrderNo(), users.getId());
+					SysOrder order = this.getOrderByOrderNo(utilities.getOrderNo(), users.getId());
+					if(order != null){//如果订单已生成，则不再生成
+						isCanCreate = false;
+					}
+					
+					if(isCanCreate){
+						utilitiesService.createFeeOrderAndDetail(utilities, users);
+					}
+					
 				}
 			}
 		}
@@ -978,7 +1003,17 @@ public class SysOrderServiceImpl extends CommonServiceAdpter<SysOrder> implement
 		if(propertyFeeList.size()>0){
 			for (PropertyFee propertyFee : propertyFeeList) {
 				if(propertyFee.getPayable().compareTo(BigDecimal.ZERO)==1){//大于0
-					propertyFeeService.createFeeOrderAndDetail(propertyFee, users);
+					//如果已经创建了，则不再生成，如果未创建，则生成一条新的
+					boolean isCanCreate=true;
+					
+					SysOrder order = this.getOrderByOrderNo(propertyFee.getOrderNo(), users.getId());
+					if(order != null){//如果订单已生成，则不再生成
+						isCanCreate = false;
+					}
+					
+					if(isCanCreate){
+						propertyFeeService.createFeeOrderAndDetail(propertyFee, users);
+					}
 				}
 			}
 		}
@@ -987,7 +1022,17 @@ public class SysOrderServiceImpl extends CommonServiceAdpter<SysOrder> implement
 		if(broadbandFeeList.size()>0){
 			for (BroadbandFee broadbandFee : broadbandFeeList) {
 				if(broadbandFee.getPayable().compareTo(BigDecimal.ZERO)==1){//大于0
-					broadbandFeeService.createFeeOrderAndDetail(broadbandFee, users);
+					//如果已经创建了，则不再生成，如果未创建，则生成一条新的
+					boolean isCanCreate=true;
+					
+					SysOrder order = this.getOrderByOrderNo(broadbandFee.getOrderNo(), users.getId());
+					if(order != null){//如果订单已生成，则不再生成
+						isCanCreate = false;
+					}
+					
+					if(isCanCreate){
+						broadbandFeeService.createFeeOrderAndDetail(broadbandFee, users);
+					}
 				}
 			}
 		}
