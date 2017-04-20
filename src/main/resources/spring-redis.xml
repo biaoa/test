@@ -31,42 +31,16 @@
 		<!-- <property name="whenExhaustedAction" value="1"></property> -->
 	</bean>
 	<bean id="jedis.shardInfo" class="redis.clients.jedis.JedisShardInfo">
-        <constructor-arg index="0" value="127.0.0.1" />
+        <constructor-arg index="0" value="192.168.1.114" />
         <constructor-arg index="1" value="6379" />   
     </bean>
-   <bean id="jedis.shardInfo1" class="redis.clients.jedis.JedisShardInfo">
-        <constructor-arg index="0" value="http://116.62.59.57/" />
-        <constructor-arg index="1" value="6379" />
-       
-    </bean>
-     <bean id="jedis.shardInfo2" class="redis.clients.jedis.JedisShardInfo">
-        <constructor-arg index="0" value="r-bp15a8cbecdd41d4.redis.rds.aliyuncs.com" />
-        <constructor-arg index="1" value="6379" />
-        <property name="password" value="linleKeji2017"></property>        
-    </bean>
+  
 	<bean id="shardedJedisPool" class="redis.clients.jedis.ShardedJedisPool"
 		destroy-method="destroy">
 		<constructor-arg index="0" ref="jedisPoolConfig"></constructor-arg>
 		<constructor-arg index="1" >
 			<list>
-			<ref bean="jedis.shardInfo" />
-			<!-- <ref bean="jedis.shardInfo2" /> -->
-			<!-- 
-			|
-			|<bean class="redis.clients.jedis.JedisShardInfo">
-			 -->
-				
-					<!-- <constructor-arg value="127.0.0.1"></constructor-arg>
-					<constructor-arg value="6379"></constructor-arg> -->
-					<!-- <constructor-arg value="127.0.0.1"></constructor-arg>
-					<constructor-arg value="6379"></constructor-arg>
-					<property name="password" value="M0rtal123"></property> -->
-					<!-- <constructor-arg value="121.41.89.247"></constructor-arg>
-					<constructor-arg value="6389"></constructor-arg>
-					<property name="password" value="M0rtal123"></property> -->
-					<!-- 
-				</bean>
-				 -->
+				<ref bean="jedis.shardInfo" />			
 			</list>
 		</constructor-arg>
 	</bean>
