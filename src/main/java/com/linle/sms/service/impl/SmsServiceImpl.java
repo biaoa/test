@@ -68,7 +68,7 @@ public class SmsServiceImpl implements SmsService {
 	@Override
 	public String sendValidateSms(SmsValidateType type, String phone) {
 		SmsInterface smsInterface=getSmsInterface(type.getIntValue());//获取通知短信模板
-		String code = creatValidateCode();
+		String code = creatValidateCode(); //生成六位验证码
 		Map<String, String> smsData = getParsedSMSDataMap(phone, code,smsInterface);
 		String repContent = SendAcion(smsInterface, smsData);
 		//添加短信记录	
@@ -211,9 +211,9 @@ public class SmsServiceImpl implements SmsService {
 		return vc;
 	}
 
+	//发送短信签名
 	@Override
 	public boolean sendCode(String smsFreeSignName, String param, String phone, String templteCode,String code,int type) {
-		
 		String result = SMSutil.sendMsg(smsFreeSignName,param,phone,templteCode);
 		logger.info("用户："+phone+",短信发送结果:"+result+"");
 		SmsRecord record = new SmsRecord();

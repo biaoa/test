@@ -361,10 +361,10 @@ public class MobileApiUserController extends BaseMobileapiController {
 			String smsFreeSignName = "";
 			int smsType = 0; // 1 注册 2 忘记密码
 			if (!PhoneUtil.verifyPhone(phone)) {
-				return ApiResponse.PhoneNumberWrongInstance;
+				return ApiResponse.PhoneNumberWrongInstance;  //手机号码格式错误
 			}
 			if (!StringUtil.isNotNull(type)) {
-				return ApiResponse.SMSTypeISNotEmpty;
+				return ApiResponse.SMSTypeISNotEmpty; //短信类型不能为空
 			}
 			String code = String.valueOf(PhoneUtil.CreateValidateCode());
 			// 注册
@@ -373,35 +373,35 @@ public class MobileApiUserController extends BaseMobileapiController {
 				Users user = new Users();
 				user = userInfoService.findUserInfoByPhone(phone);
 				if (user != null) {
-					return ApiResponse.PhoneExist;
+					return ApiResponse.PhoneExist; //该号码已注册
 				}
 				templteCode = "SMS_5620216";
 				param = "{'code':'" + code + "','product':'邻乐社区'}";
-				smsFreeSignName = "注册验证";
+				smsFreeSignName = "邻乐社区";
 				smsType = SmsValidateType.registe.getIntValue();
 			}
 			if ("forgetPassword".equals(type)) {
 				Users user = new Users();
 				user = userInfoService.findUserInfoByPhone(phone);
 				if (user == null) {
-					return ApiResponse.UserNotExist;
+					return ApiResponse.UserNotExist;  //用户不存在
 				}
 				templteCode = "SMS_5620214";
 				param = "{'code':'" + code + "','product':'邻乐社区'}";
-				smsFreeSignName = "变更验证";
+				smsFreeSignName = "邻乐社区";
 				smsType = SmsValidateType.forgotPassword.getIntValue();
 			}
 			if ("changePhone".equals(type)) {
 				templteCode = "SMS_5620214";
 				param = "{'code':'" + code + "','product':'邻乐社区'}";
-				smsFreeSignName = "变更验证";
+				smsFreeSignName = "邻乐社区";
 				smsType = SmsValidateType.changePhone.getIntValue();
 			}
 			boolean sendResult = smsService.sendCode(smsFreeSignName, param, phone, templteCode, code, smsType);
 			return sendResult ? new BaseResponse(0, "短信发送成功") : new BaseResponse(1, "短信发送失败");
 		} catch (Exception e) {
 			_logger.error("出错了", e);
-			return BaseResponse.ServerException;
+			return BaseResponse.ServerException;  //服务异常
 		}
 		
 	}
@@ -418,10 +418,10 @@ public class MobileApiUserController extends BaseMobileapiController {
 		} catch (Exception e) {
 			try {
 				_logger.error("注册出现错误参数为:"+m.writeValueAsString(req));
-				return BaseResponse.ServerException;
+				return BaseResponse.ServerException;  //服务异常
 			} catch (JsonProcessingException e1) {
 				e1.printStackTrace();
-				return BaseResponse.ServerException;
+				return BaseResponse.ServerException;  //服务异常
 			}
 		}
 	}

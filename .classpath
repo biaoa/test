@@ -34,5 +34,15 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/ali-2.0.jar"/>
+	<classpathentry kind="lib" path="/Applications/Eclipse.app/Contents/MacOS/~/.m2/repository/dom4j/dom4j/1.6.1/dom4j-1.6.1.jar">
+		<attributes>
+			<attribute name="maven.pomderived" value="true"/>
+			<attribute name="org.eclipse.jst.component.nondependency" value=""/>
+			<attribute name="maven.groupId" value="dom4j"/>
+			<attribute name="maven.artifactId" value="dom4j"/>
+			<attribute name="maven.version" value="1.6.1"/>
+			<attribute name="maven.scope" value="test"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

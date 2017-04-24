@@ -29,6 +29,10 @@ public class PhoneUtil {
 		return true;
 	}
 	
+	/**
+	 * 创建验证码
+	 * @return
+	 */
 	  public static int CreateValidateCode() {
 	        return new Random().nextInt(9000) + 1000;
 	    }
