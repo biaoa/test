@@ -2,7 +2,6 @@ package com.linle.user.controller;
 
 import java.util.List;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
@@ -42,107 +41,119 @@ import com.taobao.api.ApiException;
 @Controller
 public class LoginController extends BaseUserController {
 
-	@Autowired
-	private CommunityService communityService;
-	
-	@Autowired
-	private RedisManager redisManager;
-	
-	@RequestMapping(value = "/login", method = RequestMethod.GET)
-	public ModelAndView login() {
-		ModelAndView mv = new ModelAndView();
-		mv.setViewName("system/login");
-		return mv;
-	}
+    @Autowired
+    private CommunityService communityService;
 
-	@RequestMapping(value = "/login", method = RequestMethod.POST)
-	public @ResponseBody ResponseMsg login(@Valid Login user, BindingResult errors, HttpServletRequest request) {
-		ModelAndView mv = new ModelAndView();
-		UserLoginToken loginToken = new UserLoginToken();
-		loginToken.setUsername(user.getUserName());
-		loginToken.setPassword(user.getPassword() != null ? user.getPassword().toCharArray() : null);
-		Subject subject = SecurityUtils.getSubject();
-		try {
-			loginToken.setLoginMode(LoginMode.password);
-			subject.login(loginToken);
-			Session session = subject.getSession();
-			Users userInfo = userInfoService.findUserInfoByUserName(user.getUserName());
-			tokenService.addToken(user.getUserName());
-			if (userInfo.getIdentity() == UserType.JM) {
-				return new ResponseMsg(1, "无权限登陆", null);
-			}
-			session.setAttribute("cUser", userInfo);
-			if (userInfo.getIdentity() == UserType.SZ) {
-				List<Community> communityList = communityService
-						.getCommunityByPresident(getCommunityPresident().getId());
-				session.setAttribute("communityList", communityList);
-				session.setAttribute("selectedCommunity", !communityList.isEmpty() ? communityList.get(0).getId() : 0);
-			}
-			applicationContext.publishEvent(new UserLogEvent(IPUtil.getIpAddress(request), UserAction.login, userInfo));
-			if(userInfo.getIdentity() == UserType.SJ || userInfo.getIdentity() == UserType.XQ){
-				//将用户id存入redis中的userMsgList中
-				redisManager.sAdd("userMsgList", userInfo.getId());
-				//商家/小区登陆后发送一条最新的消息给他们
-				
-			}
-		} catch (UnknownAccountException uae) {
-			_logger.debug("账户不存在!");
-			mv.setViewName("login");
-			return new ResponseMsg(1, "用户名或密码错误", null);
-		} catch (IncorrectCredentialsException ice) {
-			_logger.debug("密码不正确!");
-			mv.setViewName("login");
-			return new ResponseMsg(1, "用户名或密码错误", null);
-		} catch (LockedAccountException lae) {
-			_logger.debug("账户不可用!");
-			mv.setViewName("login");
-			return new ResponseMsg(2, "账户被禁用,请联系客服", null);
-		} catch (AuthenticationException ae) {
-			_logger.debug("认证错误!");
-			mv.setViewName("login");
-			return new ResponseMsg(2, "账户异常", null);
-		}
-		return new ResponseMsg(0, "登录成功", null);
-	}
+    @Autowired
+    private RedisManager redisManager;
 
-	@RequiresAuthentication
-	@RequestMapping(value = "/logout", method = RequestMethod.GET)
-	public String logout(HttpServletRequest request) {
-		Subject subject = SecurityUtils.getSubject();
-		Users user = (Users) subject.getSession().getAttribute("cUser");
-		applicationContext.publishEvent(new UserLogEvent(request.getRemoteAddr(), UserAction.login, user));
-		subject.logout();
-		tokenService.delTokenByToken(getSidByUserId(user.getId()));
-		redisManager.sRemove("userMsgList", user.getId().toString());
-		return "redirect:/login";
-	}
+    @RequestMapping(value = "/login", method = RequestMethod.GET)
+    public ModelAndView login() {
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("system/login");
+        return mv;
+    }
 
-	public static void main(String[] args) throws ApiException {
+    /**
+     * 返回结果：异步返回（返回状态，返回信息，返回参数）
+     * @param user   验证用户
+     * @param errors  参数验证
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseMsg login(@Valid Login user, BindingResult errors, HttpServletRequest request) {
+        ModelAndView mv = new ModelAndView();
+        UserLoginToken loginToken = new UserLoginToken();
+        loginToken.setUsername(user.getUserName());
+        loginToken.setPassword(user.getPassword() != null ? user.getPassword().toCharArray() : null);
+        Subject subject = SecurityUtils.getSubject();  //shiro权限验证
+        try {
+            loginToken.setLoginMode(LoginMode.password);
+            subject.login(loginToken);
+            Session session = subject.getSession();
+            Users userInfo = userInfoService.findUserInfoByUserName(user.getUserName());
+            tokenService.addToken(user.getUserName());
+            if (userInfo.getIdentity() == UserType.JM) {  //如果用户类型为小区居民
+                return new ResponseMsg(1, "无权限登陆", null);
+            }
+            session.setAttribute("cUser", userInfo);
+            if (userInfo.getIdentity() == UserType.SZ) {  //如果用户类型为社长
+                List<Community> communityList = communityService
+                        .getCommunityByPresident(getCommunityPresident().getId());
+                //绑定社长列表
+                session.setAttribute("communityList", communityList);
+                session.setAttribute("selectedCommunity", !communityList.isEmpty() ? communityList.get(0).getId() : 0);
+            }
+            //事件传播
+            applicationContext.publishEvent(new UserLogEvent(IPUtil.getIpAddress(request), UserAction.login, userInfo));
+            //如果用户类型为商家或者小区
+            if (userInfo.getIdentity() == UserType.SJ || userInfo.getIdentity() == UserType.XQ) {
+                //将用户id存入redis中的userMsgList中
+                redisManager.sAdd("userMsgList", userInfo.getId());
+                //商家/小区登陆后发送一条最新的消息给他们
 
-	}
+            }
+        } catch (UnknownAccountException uae) {
+            _logger.debug("账户不存在!");
+            mv.setViewName("login");   //返回登录页面
+            return new ResponseMsg(1, "用户名或密码错误", null);
+        } catch (IncorrectCredentialsException ice) {
+            _logger.debug("密码不正确!");
+            mv.setViewName("login");
+            return new ResponseMsg(1, "用户名或密码错误", null);
+        } catch (LockedAccountException lae) {
+            _logger.debug("账户不可用!");
+            mv.setViewName("login");
+            return new ResponseMsg(2, "账户被禁用,请联系客服", null);
+        } catch (AuthenticationException ae) {
+            _logger.debug("认证错误!");
+            mv.setViewName("login");
+            return new ResponseMsg(2, "账户异常", null);
+        }
+        return new ResponseMsg(0, "登录成功", null);
+    }
 
-	@RequestMapping(value = "/welcome1", method = RequestMethod.GET)
-	public String welcome() {
-		return "welcome1";
-	}
+    @RequiresAuthentication
+    @RequestMapping(value = "/logout", method = RequestMethod.GET)
+    public String logout(HttpServletRequest request) {
+        Subject subject = SecurityUtils.getSubject();
+        Users user = (Users) subject.getSession().getAttribute("cUser");
+        applicationContext.publishEvent(new UserLogEvent(request.getRemoteAddr(), UserAction.login, user));
+        subject.logout();
+        tokenService.delTokenByToken(getSidByUserId(user.getId()));
+        redisManager.sRemove("userMsgList", user.getId().toString());
+        return "redirect:/login";   //重定向到首页
+    }
 
-	@RequestMapping(value = "/webIMtokenFail", method = RequestMethod.POST)
-	@ResponseBody
-	public BaseResponse webIMtokenFail(HttpServletRequest request) {
-		try {
-			//第一步修改用户token
-			Subject subject = SecurityUtils.getSubject();
-			Session session = subject.getSession();
-			Users user = (Users) subject.getSession().getAttribute("cUser");
-			GetTokenResult result = rongService.getUserRongToken(user);
-			System.out.println("修改的结果是"+m.writeValueAsString(result));
-			//第二步更新session中用户信息
-			Users userInfo = userInfoService.findUserInfoByUserName(user.getUserName());
-			session.setAttribute("cUser", userInfo);
-			return BaseResponse.OperateSuccess;
-		} catch (Exception e) {
-			e.printStackTrace(); _logger.error("出错了", e);
-			return BaseResponse.ServerException;
-		}
-	}
+    public static void main(String[] args) throws ApiException {
+
+    }
+
+    @RequestMapping(value = "/welcome1", method = RequestMethod.GET)
+    public String welcome() {
+        return "welcome1";
+    }
+
+    @RequestMapping(value = "/webIMtokenFail", method = RequestMethod.POST)
+    @ResponseBody
+    public BaseResponse webIMtokenFail(HttpServletRequest request) {
+        try {
+            //第一步修改用户token
+            Subject subject = SecurityUtils.getSubject();
+            Session session = subject.getSession();
+            Users user = (Users) subject.getSession().getAttribute("cUser");
+            GetTokenResult result = rongService.getUserRongToken(user);
+            System.out.println("修改的结果是" + m.writeValueAsString(result));
+            //第二步更新session中用户信息
+            Users userInfo = userInfoService.findUserInfoByUserName(user.getUserName());
+            session.setAttribute("cUser", userInfo);
+            return BaseResponse.OperateSuccess;
+        } catch (Exception e) {
+            e.printStackTrace();
+            _logger.error("出错了", e);
+            return BaseResponse.ServerException;
+        }
+    }
 }

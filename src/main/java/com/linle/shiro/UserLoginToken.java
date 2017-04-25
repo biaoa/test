@@ -18,6 +18,7 @@ public class UserLoginToken  extends UsernamePasswordToken {
 		this.loginMode = loginMode;
 	}
 
+	//enum声明定义的类型就是一个类
 	public enum LoginMode {
 		password, token;
 	}

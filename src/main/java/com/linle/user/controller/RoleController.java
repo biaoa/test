@@ -106,7 +106,7 @@ public class RoleController extends BaseUserController{
 	
 	/**
 	 * 删除角色
-	 * @param userRole
+	 * @param roleId
 	 * @return
 	 */
 	@RequiresPermissions("system_userRoleManage")
@@ -201,7 +201,7 @@ public class RoleController extends BaseUserController{
 	/**
 	 * 根据角色初始化权限树
 	 * @param permissionList
-	 * @param rolePermissionRelation
+	 * @param roleId
 	 * @return
 	 */
 	private List<Permission> initPagePermission(List<Permission> permissionList, Long roleId){
